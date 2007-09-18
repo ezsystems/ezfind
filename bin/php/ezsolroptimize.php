@@ -34,7 +34,7 @@ include_once( 'kernel/classes/ezscript.php' );
 include_once( 'lib/ezutils/classes/ezcli.php' );
 include_once( 'kernel/classes/ezsearch.php' );
 
-$cli =& eZCLI::instance();
+$cli = eZCLI::instance();
 
 $scriptSettings = array();
 $scriptSettings['description'] = 'Sends an optimize update message to the Solr search server';
@@ -42,7 +42,7 @@ $scriptSettings['use-session'] = true;
 $scriptSettings['use-modules'] = true;
 $scriptSettings['use-extensions'] = true;
 
-$script =& eZScript::instance( $scriptSettings );
+$script = eZScript::instance( $scriptSettings );
 $script->startup();
 
 $config = '';

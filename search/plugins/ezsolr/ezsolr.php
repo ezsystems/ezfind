@@ -38,14 +38,14 @@ class eZSolr
     function eZSolr()
     {
         eZDebug::createAccumulatorGroup( 'solr', 'Solr search plugin' );
-        $this->SolrINI =& eZINI::instance( 'solr.ini' );
-        $this->FindINI =& eZINI::instance( 'ezfind.ini' );
+        $this->SolrINI = eZINI::instance( 'solr.ini' );
+        $this->FindINI = eZINI::instance( 'ezfind.ini' );
         $this->SearchServerURI = $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' );
         $this->Solr = new eZSolrBase( $this->SearchServerURI );
         $realm = $this->SolrINI->variable( 'SolrBase', 'Realm' );
         if ( $realm == 'default' )
         {
-            $SiteINI =& eZINI::instance( 'site.ini' );
+            $SiteINI = eZINI::instance( 'site.ini' );
             $this->Realm = $SiteINI->variable( 'DatabaseSettings', 'Database' );
         }
         else
@@ -79,7 +79,7 @@ class eZSolr
     /*!
      \brief Adds a content object to the Solr search server
     */
-    function addObject( &$contentObject, $doCommit = true )
+    function addObject( $contentObject, $doCommit = true )
     {
         $ini = eZINI::instance();
 
@@ -758,7 +758,7 @@ class eZSolr
         {
             return $this->InstallationID;
         }
-        $db =& eZDB::instance();
+        $db = eZDB::instance();
 
         $resultSet = $db->arrayQuery( 'SELECT value FROM ezsite_data WHERE name=\'ezfind_site_id\'' );
 

@@ -57,7 +57,7 @@ class eZFindResultNode extends eZContentObjectTreeNode
     /*!
      \reimp
     */
-    function &attribute( $attr, $noFunction = false )
+    function attribute( $attr, $noFunction = false )
     {
         $retVal = null;
 
@@ -170,7 +170,7 @@ class eZFindResultObject extends eZContentObject
     /*!
      \reimp
     */
-    function &attribute( $attr, $noFunction = false )
+    function attribute( $attr, $noFunction = false )
     {
         $retVal = null;
         switch ( $attr )
