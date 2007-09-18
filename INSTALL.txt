@@ -1,0 +1,44 @@
+*Installing eZFind
+
+
+Requirements:
+- eZ Publish 3.10 or later.
+- Java Runtime Environment 5.0 or later. ( http://java.sun.com/javase/downloads/index.jsp )
+
+
+Recommended:
+- PHP Curl extension ( http://php.net/manual/en/ref.curl.php )
+
+
+Installing:
+1. Extract the ezfind extension, and place it in the extensions folder. 
+
+2. Start the Java based search engine ( based on Solr ).
+   Enter extension/ezfind/java
+   Start the Solr engine with the command: java -jar start.jar
+   ( See configuration for more details )
+
+3. Enable the extension in eZ Publish. Do this by opening settings/override/site.ini.append.php ,
+   and add in the [ExtensionSettings] block:
+   ActiveExtensions[]=ezfind
+   To get the correct templates for ezwebin, ezfind must be enabled before the ezwebin extension.
+
+4. Clear template override cache with the command: php bin/php/ezcache.php --clear-id=template-override
+
+5. Re-index the site content by running: php extension/ezfind/update/common/scripts/updatesearchindexsolr.php -s <admin siteaccess>
+
+
+Configuration:
+
+- Configuring eZ Publish:
+  See extension/ezfind/settings/ezfind.ini.append.php for options.
+
+- Configuring Solr ( Java based search engine ):
+  One instance of Solr is able to serve multiple eZ Publish installations.
+  For shared servers, it's recommended to only run one instance Solr.
+
+  Index options:
+  Solr will store the search index in extension/ezfind/java/solr/data/index
+  This may be changed, by altering the configuration file 
+  extension/ezfind/java/solr/conf/solrconfig.xml . Change the config->dataDir
+  setting to alter the index path.

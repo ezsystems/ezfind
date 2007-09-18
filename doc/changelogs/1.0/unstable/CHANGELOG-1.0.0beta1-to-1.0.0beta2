@@ -1,0 +1,14 @@
+Changes from 1.0.0beta1 to 1.0.0beta2
+
+*Features:
+- Boost documents on local installation compared to remote installations.
+- Boost documents with high language priority.
+
+*Bugfixes:
+- Fixed fatal error when indexing objects without main node.
+- Fixed bug with missing includes of eZContentObjectTreeNode.
+  ( Reported by Massimo Sanna ).
+- Fixed bug searching with class attribute limitation.
+  ( Reported by Gunntein Lye ).
+- Fixed indexing related objects.
+  ( Reported by  Björn Dieding ).
