@@ -47,7 +47,8 @@ class eZFindInfo
             array ( 'name' => 'Solr',
                     'copyright' => 'The Apache Software Foundation.',
                     'license' => 'Apache License, Version 2.0',
-                    'info_url' => 'http://lucene.apache.org/solr/' )
+                    'info_url' => 'http://lucene.apache.org/solr/' ),
+            'ezp_target' => '4.0'
             );
     }
 }

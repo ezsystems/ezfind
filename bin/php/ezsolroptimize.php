@@ -26,10 +26,6 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
-// WARNING!!
-// The entire API may change in future releases until it hits a stable release
-// Major versions changes denote a possible change in the API as well
-
 include_once( 'kernel/classes/ezscript.php' );
 include_once( 'lib/ezutils/classes/ezcli.php' );
 include_once( 'kernel/classes/ezsearch.php' );

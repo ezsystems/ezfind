@@ -41,26 +41,26 @@ $cli = eZCLI::instance();
 $endl = $cli->endlineString();
 
 $script = eZScript::instance( array( 'description' => ( "eZ publish search index updater.\n\n" .
-                                                         "Goes trough all objects and reindexes the meta data to the search engine" .
-                                                         "\n" .
-                                                         "updatesearchindex.php"),
-                                      'use-session' => true,
-                                      'use-modules' => true,
-                                      'use-extensions' => true ) );
+							 "Goes trough all objects and reindexes the meta data to the search engine" .
+							 "\n" .
+							 "updatesearchindex.php"),
+				      'use-session' => true,
+				      'use-modules' => true,
+				      'use-extensions' => true ) );
 
 $script->startup();
 
 $options = $script->getOptions( "[db-host:][db-user:][db-password:][db-database:][db-type:|db-driver:][sql][clean]",
-                                "",
-                                array( 'db-host' => "Database host",
-                                       'db-user' => "Database user",
-                                       'db-password' => "Database password",
-                                       'db-database' => "Database name",
-                                       'db-driver' => "Database driver",
-                                       'db-type' => "Database driver, alias for --db-driver",
-                                       'sql' => "Display sql queries",
-                                       'clean' =>  "Remove all search data before beginning indexing"
-                                       ) );
+				"",
+				array( 'db-host' => "Database host",
+				       'db-user' => "Database user",
+				       'db-password' => "Database password",
+				       'db-database' => "Database name",
+				       'db-driver' => "Database driver",
+				       'db-type' => "Database driver, alias for --db-driver",
+				       'sql' => "Display sql queries",
+				       'clean' =>  "Remove all search data before beginning indexing"
+				       ) );
 $script->initialize();
 
 $dbUser = $options['db-user'] ? $options['db-user'] : false;
@@ -132,9 +132,9 @@ if ( $cleanupSearch )
 
 // Get top node
 $topNodeArray = eZPersistentObject::fetchObjectList( eZContentObjectTreeNode::definition(),
-                                                      null,
-                                                      array( 'parent_node_id' => 1,
-                                                             'depth' => 1 ) );
+						      null,
+						      array( 'parent_node_id' => 1,
+							     'depth' => 1 ) );
 $subTreeCount = 0;
 foreach ( array_keys ( $topNodeArray ) as $key  )
 {
@@ -157,10 +157,9 @@ $start=microtime_float();
 foreach ( $topNodeArray as $node  )
 {
     $offset = 0;
-    $subTree = $node->subTree( array( 'Offset' => $offset, 'Limit' => $limit,
-                                      'Limitation' => array(),
-                                      'MainNodeOnly' => true ) );
-    while ( $subTree != null )
+    while ( $subTree = $node->subTree( array( 'Offset' => $offset, 'Limit' => $limit,
+                                              'Limitation' => array(),
+                                              'MainNodeOnly' => true ) ) )
     {
         foreach ( $subTree as $innerNode )
         {
@@ -171,12 +170,12 @@ foreach ( $topNodeArray as $node  )
             }
             //eZSearch::removeObject( $object );
             //pass false as we are going to do a commit at the end
-            // 
+            //
             $searchEngine->addObject( $object, false );
             ++$i;
             ++$iCommit;
             ++$dotCount;
-            // counter: use for debugging, index first 200 objects 
+            // counter: use for debugging, index first 200 objects
             ++$counter;
             if ($counter > $counterInterrupt) break 3;
             print( "." );
@@ -188,19 +187,14 @@ foreach ( $topNodeArray as $node  )
             }
             if ($iCommit > $commitLimit )
             {
-                  print ($endl . " ==intermediate optimize== " . $endl);
-                  $searchEngine->optimize();
-                  $iCommit = 0;
-                  include_once( 'kernel/classes/ezcontentobject.php' );
-                  eZContentObject::clearCache();
-            
+                print ($endl . " ==intermediate optimize== " . $endl);
+                $searchEngine->optimize();
+                $iCommit = 0;
+                include_once( 'kernel/classes/ezcontentobject.php' );
+                eZContentObject::clearCache();
             }
         }
         $offset += $limit;
-        //exit;
-        $subTree = $node->subTree( array( 'Offset' => $offset, 'Limit' => $limit,
-                                          'Limitation' => array(),
-                                          'MainNodeOnly' => true ) );
     }
 }
 

@@ -25,12 +25,22 @@
 //
 include_once ( eZExtension::baseDirectory() . '/ezfind/lib/ezsolrdoc.php' );
 
+/*!
+ eZSolrBase is a PHP library for connecting and performing operations
+ on the Solr server.
+
+ It's recommended to have the PHP-CURL extension enabled with this class,
+ but not required.
+ */
 class eZSolrBase
 {
     var $SearchServerURI;
 
     /*!
+     \constructor
      \brief Constructor
+
+     \param string Solr server URL
     */
     function eZSolrBase( $baseURI = 'http://localhost:8983/solr' )
     {
@@ -39,9 +49,14 @@ class eZSolrBase
 
 
     /*!
-     \build a HTTP GET query
+     Build a HTTP GET query
+
+     \param Solr request type name.
+     \param Query parameters ( associative array )
+
+     \return Complete HTTP get URL.
     */
-    function buildHTTPGetQuery( $baseURL, $queryParams )
+    function buildHTTPGetQuery( $request, $queryParams )
     {
         foreach ( $queryParams as $name => $value )
         {
@@ -58,11 +73,18 @@ class eZSolrBase
             }
         }
 
-        $url = $baseURL . '?' . implode( '&', $encodedQueryParams );
-        return $url;
+        return $this->SearchServerURI . $request . '?' . implode( '&', $encodedQueryParams );
     }
 
 
+    /*!
+     \protected
+     Build HTTP Post string.
+
+     \param Query parameters, associative array
+
+     \return POST part of HTML request
+     */
 	function buildPostString( $queryParams )
     {
         foreach ( $queryParams as $name => $value )
@@ -80,29 +102,47 @@ class eZSolrBase
             }
         }
 
-        $post = implode( '&', $encodedQueryParams );
-        return $post;
+        return implode( '&', $encodedQueryParams );
     }
 
+    /*!
+     Send HTTP Post query to Solr engine
+
+     \param string request name
+     \param string post data
+     \param string contentType
+
+     \return Result of HTTP Request ( without HTTP headers ).
+    */
     function postQuery( $request, $postData, $contentType = 'application/x-www-form-urlencoded' )
     {
         $url = $this->SearchServerURI . $request;
         return $this->sendHTTPRequest( $url, $postData, $contentType );
     }
 
+    /*!
+     Send HTTP Get query to Solr engine
+
+     \param string request name
+     \param string HTTP GET parameters
+
+     \return Result of HTTP Request ( without HTTP headers ).
+    */
     function getQuery( $request, $getParams )
     {
-        return $this->sendHTTPRequest( eZSolrBase::buildHTTPGetQuery( $this->SearchServerURI . $request, $getParams ) );
+        return $this->sendHTTPRequest( eZSolrBase::buildHTTPGetQuery( $request, $getParams ) );
     }
 
 
-    /**
-     * Can be used for anything, uses the post method
-     * ResponseWriter wt=php is default, alternative: json or phps
-     *
-     * @param $request refers to the request handler called
-     * @param $params is an array of post variables to include. The actual values
-     *        are urlencoded in the buildPostString() call
+    /*!
+      OBS ! Experimental.
+
+      Can be used for anything, uses the post method
+      ResponseWriter wt=php is default, alternative: json or phps
+
+      \param $request refers to the request handler called
+      \param $params is an array of post variables to include. The actual values
+             are urlencoded in the buildPostString() call
      */
     function rawSolrRequest ( $request = '', $params = array(), $wt = 'php' )
     {
@@ -148,27 +188,28 @@ class eZSolrBase
         return $resultArray;
     }
 
+    /*!
+      OBS ! Experimental.
+    */
     function ping ( $wt = 'php' )
     {
         return $this->rawSolrRequest ( '/admin/ping' );
     }
 
 
-    /**
-     * Performs a commit in Solr, which means the index is made live after performing
-     * all pending additions and deletes
-     * @todo: add optional Solr parameters
+    /*!
+      Performs a commit in Solr, which means the index is made live after performing
+      all pending additions and deletes
      */
     function commit()
     {
         return $this->postQuery (  '/update', '<commit/>', 'text/xml' );
     }
 
-    /**
-     * Performs an optimize in Solr, which means the index is compacted
-     * for maximum performance.
-     * @param $withCommit means a commit is performed first
-     * @todo: add optional Solr parameters
+    /*!
+      Performs an optimize in Solr, which means the index is compacted
+      for maximum performance.
+      \param $withCommit means a commit is performed first
      */
     function optimize( $withCommit = false )
     {
@@ -180,11 +221,12 @@ class eZSolrBase
     }
 
 
-    /**
-     * Adds an array of docs (of type eZSolrDoc) to the Solr index
-     * for maximum performance.
-     * @param $commit means a commit is performed afterwards
-     * @todo: add optional Solr parameters
+    /*!
+      Adds an array of docs (of type eZSolrDoc) to the Solr index
+      for maximum performance.
+
+      \param array associative array of documents to add.
+      \param boolean $commit means a commit is performed afterwards
      */
     function addDocs ( $docs = array(), $commit = false  )
     {
@@ -200,7 +242,7 @@ class eZSolrBase
         else
         {
             $postString = '<add>';
-            foreach ($docs as $doc)
+            foreach ( $docs as $doc )
             {
                 $postString .= $doc->docToXML();
             }
@@ -216,10 +258,13 @@ class eZSolrBase
 
     }
 
-    /**
-     * Adds an array of docID's from the Solr index
-     * @param $commit means a commit is performed afterwards
-     * @todo: add optional Solr parameters
+    /*!
+      Adds an array of docID's from the Solr index
+
+      \param array List of document IDs to delete. If set to <empty>,
+                   $query will be used to delete documents instead.
+      \param string Solr Query. This will be ignored if \a$docIDs is set.
+      \param $commit means a commit is performed afterwards ( optional, default value: false )
      */
     function deleteDocs ( $docIDs = array(), $query = false, $commit = false )
     {
@@ -383,7 +428,4 @@ class eZSolrBase
             return $buf;
         }
     }
-
-
-
-} //end class eZSolrBase
+}

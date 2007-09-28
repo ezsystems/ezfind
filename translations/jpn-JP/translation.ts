@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="no_NO">
+<!DOCTYPE TS><TS version="1.1" language="ja_JP">
+<defaultcodec></defaultcodec>
 <context>
     <name>design/base</name>
     <message>
@@ -16,7 +17,7 @@
         <location filename="" line="0"/>
         <source>For more options try the %1Advanced search%2</source>
         <comment>The parameters are link start and end tags.</comment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">。</translation>
     </message>
     <message>
         <location filename="" line="0"/>
@@ -256,27 +257,27 @@
     <message>
         <location filename="" line="0"/>
         <source>Search time: %1 msecs</source>
-        <translation>Søketid: %1 ms</translation>
+        <translation>検索時間：%1ミリ秒</translation>
     </message>
     <message>
         <location filename="" line="0"/>
         <source>Core search time: %1 msecs</source>
-        <translation>Søketid i kjerne: %1 ms</translation>
+        <translation>コア検索時間：%1秒</translation>
     </message>
     <message>
         <location filename="" line="0"/>
         <source>N/A</source>
-        <translation>Ikke tilgjengelig</translation>
+        <translation>該当せず (データがありません)</translation>
     </message>
     <message>
         <location filename="" line="0"/>
         <source>Server not running</source>
-        <translation>Server er ikke aktiv</translation>
+        <translation>サ－バ－が作動していません</translation>
     </message>
     <message>
         <location filename="" line="0"/>
         <source>eZ Find search plugin &amp;copy; 2007 eZ Systems AS, eZ Labs</source>
-        <translation>eZ Find søkeplugin &amp;copy; 2007 eZ Systems AS, eZ Labs</translation>
+        <translation>eZ Find search plugin &amp;copy; 2007 eZ Systems AS, eZ Labs</translation>
     </message>
 </context>
 </TS>

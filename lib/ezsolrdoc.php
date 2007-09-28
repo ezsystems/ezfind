@@ -24,10 +24,16 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
-
+/*!
+ Solr Document class. Converts an associative array to Solr acceptacle XML.
+*/
 class eZSolrDoc
 {
+    /*!
+     \constructor
 
+     \param boolean Document boost, optional
+    */
     function eZSolrDoc( $boost = false )
     {
         $this->Doc = array();
@@ -39,6 +45,11 @@ class eZSolrDoc
         $this->Doc['value'] = array();
     }
 
+    /*!
+     Set document boost
+
+     \param float Document boost
+    */
     function setBoost ( $boost = false )
     {
         if ( $boost && is_numeric( $boost ) )
@@ -47,6 +58,13 @@ class eZSolrDoc
         }
     }
 
+    /*!
+     Add document field
+
+     \param string Field name
+     \param string Field content
+     \param float Field boost
+     */
     function addField ( $name, $content, $boost = false )
     {
 
@@ -76,15 +94,19 @@ class eZSolrDoc
     }
     /*!
      \brief Utility: set atttributes of an xml element, expects an assoc array
+
+     \param array Attribute array. Example: array( <name1>  => <value1>, <name2> => ... )
+
+     \return string Attributerepresentation.
     */
 	function xmlAttributes( $attr = array() )
 	{
-		if (is_array($attr))
+		if ( is_array( $attr ) )
 		{
 			$str = '';
-			foreach ($attr as $key => $value)
+			foreach ( $attr as $key => $value )
 			{
-				$str .= " $key=".'"'. htmlspecialchars($value, ENT_QUOTES, 'UTF-8') .'"';
+				$str .= " $key=".'"'. htmlspecialchars( $value, ENT_QUOTES, 'UTF-8' ) .'"';
             }
             return $str;
         }
@@ -93,25 +115,32 @@ class eZSolrDoc
 
 	/*!
      \brief Utility: simple array to xml functions, recursive. If first level key is numeric, then for each assoc array which is supposed to be there
+
+     \param array Associative array.
+
+     \return string XML string.
     */
 	function docArrayToXML ( $assocArray = array() )
 	{
 		$outputString = '';
-	    foreach ($assocArray as $element => $value)
+	    foreach( $assocArray as $element => $value )
 		{
-			if (is_numeric($element))
+			if ( is_numeric( $element ) )
 			{
-				if ($value['element'])
+				if ( $value['element'] )
 				{
 					$outputString .= '<'. $value['element'];
-					if (isset($value['attr']) && is_array($value['attr']))
+					if ( isset( $value['attr'] ) && is_array( $value['attr'] ) )
 					{
-						$outputString .= $this->xmlAttributes($value['attr']);
+						$outputString .= $this->xmlAttributes( $value['attr'] );
 					}
 
-					if ($value['value'] != '')
+					if ( $value['value'] != '' )
 					{
-						$outputString .= '>'. (is_array($value['value']) ? $this->docArrayToXML($value['value']) : htmlspecialchars($value['value'], ENT_NOQUOTES, 'UTF-8')) .'</'. $value['element'] . ">\n";
+						$outputString .= '>' . ( is_array( $value['value'] ) ?
+                                                 $this->docArrayToXML( $value['value'] ) :
+                                                 htmlspecialchars( $value['value'], ENT_NOQUOTES, 'UTF-8' ) ) .
+                            '</'. $value['element'] . ">\n";
 					}
                     else
 				    {
@@ -121,19 +150,25 @@ class eZSolrDoc
 			}
 			else
 			{
-				$outputString .= '<'. $element .'>'. (is_array($value) ?  $this->docArrayToXML($value) : htmlspecialchars($value, ENT_NOQUOTES, 'UTF-8')) ."</$element>\n";
+				$outputString .= '<'. $element .'>'. ( is_array( $value ) ?
+                                                       $this->docArrayToXML( $value ) :
+                                                       htmlspecialchars( $value, ENT_NOQUOTES, 'UTF-8' ) ) ."</$element>\n";
 			}
 		}
 		return $outputString;
 	}
 
+    /*!
+     Convert current object to XML string
+
+     \return String XML string.
+    */
 	function docToXML()
 	{
         return $this->docArrayToXML( array( $this->Doc ) );
 	}
 
     var $Doc;
-
 }
 
 

@@ -82,10 +82,11 @@
          org.apache.solr.(search|update|request|core|analysis)
      -->
 
-    <!-- autocommit pending docs if certain criteria are met -->
+    <!-- autocommit pending docs if certain criteria are met.
+         Time is given in milliseconds -->
     <autoCommit> 
       <maxDocs>10000</maxDocs>
-      <maxTime>1000</maxTime>
+      <maxTime>60000</maxTime>
     </autoCommit>
     
     <!-- The RunExecutableListener executes an external command.

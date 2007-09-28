@@ -30,6 +30,9 @@ include_once( eZExtension::baseDirectory() . '/ezfind/lib/ezsolrbase.php' );
 include_once( eZExtension::baseDirectory() . '/ezfind/lib/ezsolrdoc.php' );
 include_once( eZExtension::baseDirectory() . '/ezfind/lib/ezfindresultobject.php' );
 
+/*!
+  eZSolr is a search plugin to eZ Publish.
+*/
 class eZSolr
 {
     /*!
@@ -77,9 +80,15 @@ class eZSolr
     }
 
     /*!
-     \brief Adds a content object to the Solr search server
+     \brief Adds a content object to the Solr search server.
+
+     Adds object to eZFind search engine.
+
+     \param eZContentObject object to add to search engine.
+     \param boolean commit flag. Set if commit should be run after adding object.
+            If commit flag is set, run optimize() as well every 1000nd time this function is run.
     */
-    function addObject( $contentObject, $doCommit = true )
+    function addObject( $contentObject, $commit = true )
     {
         $ini = eZINI::instance();
 
@@ -152,6 +161,7 @@ class eZSolr
 
             eZContentObject::recursionProtectionStart();
 
+            // Loop through all eZContentObjectAttributes and add them to the Solr document.
             foreach ( $currentVersion->contentObjectAttributes( $languageCode ) as $attribute )
             {
                 $metaDataText = '';
@@ -179,13 +189,22 @@ class eZSolr
             $docList[] = $doc;
         }
 
-        $this->Solr->addDocs( $docList );
+        $this->Solr->addDocs( $docList, $commit );
+
+        if ( $commit )
+        {
+            // For every 1000 time, call optimize
+            if ( mt_rand( 0, 999 ) == 1 )
+            {
+                $this->optimize();
+            }
+        }
     }
 
     /*!
-     \return a Lucene/Solr query string which can be used as filter query for Solr
-     \todo Handle "group" value of Owner limitation
-     \todo Investigate if we can group multiple clauses to a single field: http://lucene.apache.org/java/docs/queryparsersyntax.html#Field%20Grouping
+     Create policy limitation query.
+
+     \return string Lucene/Solr query string which can be used as filter query for Solr
     */
     function policyLimitationFilterQuery()
     {
@@ -249,6 +268,10 @@ class eZSolr
                             }
                         } break;
 
+                        case 'Group':
+                        {
+                            // Not supported
+                        } break;
 
                         case 'Owner':
                         {
@@ -316,18 +339,22 @@ class eZSolr
         return $filterQuery;
     }
 
+    /*!
+     Send commit message to eZ Find engine
+    */
     function commit()
     {
         //$updateURI = $this->SearchServerURI . '/update';
         $this->Solr->commit();
     }
 
-
+    /*!
+     Send optimize message to eZ Find engine
+     */
     function optimize( $withCommit = false )
     {
         $this->Solr->optimize( $withCommit );
     }
-
 
     /*!
      \brief Removes an object from the Solr search server
@@ -342,8 +369,10 @@ class eZSolr
     /*!
      \brief get an array of class attribute identifiers based on a list of class ids, prepended with attr_
 
-     \param $classIDArray ( if set to false, fetch for all existing classes )
-     \param $classAttributeID ( if set to false, fetch for all )
+     \param array $classIDArray ( if set to false, fetch for all existing classes )
+     \param array $classAttributeID ( if set to false, fetch for all )
+
+     \return array List of field names.
     */
     function getClassAttributes( $classIDArray = false, $classAttributeIDArray = false )
     {
@@ -375,36 +404,25 @@ class eZSolr
         }
         else
         {
-            $classArray = array();
             // Fetch class list.
-            if ( is_numeric( $classIDArray ) and  $classIDArray > 0 )
+            if ( is_numeric( $classIDArray ) and $classIDArray > 0 )
             {
-                $classArray[] = eZContentClass::fetch( $classIDArray );
+                $classIDArray = array( $classIDArray );
             }
-            else if ( is_array( $classIDArray ) )
+            else if ( !is_array( $classIDArray ) )
             {
-                foreach ( $classIDArray as $sccID )
-                {
-                    $classArray[] = eZContentClass::fetch( $sccID );
-                }
-            }
-            else
-            {
-                $classArray = eZContentClass::fetchList();
+                $classIDArray = false;
             }
 
-            // Fetch class attribute list.
-            foreach ( $classArray as $class )
+            $condArray = array( "is_searchable" => 1,
+                                "version" => EZ_CLASS_VERSION_STATUS_DEFINED );
+            if ( is_array( $classIDArray ) )
             {
-                //eZDebug::writeDebug( $class, ' In class array loop ' );
-                if ( is_object( $class ) )
-                {
-                    $attribs = $class->fetchSearchableAttributes();
-                    foreach( $attribs as $attrib )
-                    {
-                        $fieldArray[] = 'attr_' . $attrib->attribute( 'identifier' );
-                    }
-                }
+                $condArray['contentclass_id'] = array( $classIDArray );
+            }
+            foreach( eZContentClassAttribute::fetchFilteredList( $condArray, false ) as $classAttrisbute )
+            {
+                $fieldArray[] = 'attr_' . $classAttrisbute['identifier'];
             }
         }
         //eZDebug::writeDebug( $fieldArray, ' Field array ' );
@@ -415,7 +433,17 @@ class eZSolr
 
     /*!
      \brief Search on the Solr search server
-     \todo see if we can use eZHTTPTool::sendHTTPRequest instead
+
+     \param string search term
+     \param array parameters.
+            Example: array( 'SearchOffset' => <offset>,
+                            'SearchLimit' => <limit>,
+                            'SearchSubTreeArray' => array( <node ID1>[, <node ID2>]... ),
+                            'SearchContentClassID' => array( <class ID1>[, <class ID2>]... ),
+                            'SearchContentClassAttributeID' => <class attribute ID> )
+     \param array search types. Reserved.
+
+     \return array List of eZFindResultNode objects.
     */
     function search( $searchText, $params = array(), $searchTypes = array() )
     {
@@ -593,20 +621,52 @@ class eZSolr
             $searchCount = $result['numFound'];
             $maxScore = $result['maxScore'];
             $docs = $result['docs'];
+            $localNodeIDList = array();
             $objectRes = array();
-            $docExtras = array();
+            $nodeRowList = array();
+
+            // Loop through result, and get eZContentObjectTreeNode ID
+            foreach ( $docs as $idx => $doc )
+            {
+                if ( $doc['m_installation_id'] == $this->installationID() )
+                {
+                    $localNodeIDList[] = $doc['m_main_node_id'];
+                }
+            }
+
+            if ( count( $localNodeIDList ) )
+            {
+                $tmpNodeRowList = eZContentObjectTreeNode::fetch( $localNodeIDList, false, false );
+                // Workaround for eZContentObjectTreeNode::fetch behaviour
+                if ( count( $localNodeIDList ) === 1 )
+                {
+                    $tmpNodeRowList = array( $tmpNodeRowList );
+                }
+                if ( $tmpNodeRowList )
+                {
+                    foreach( $tmpNodeRowList as $nodeRow )
+                    {
+                        $nodeRowList[$nodeRow['node_id']] = $nodeRow;
+                    }
+                }
+                unset( $tmpNodeRowList );
+            }
+
             foreach ( $docs as $idx => $doc )
             {
                 if ( $doc['m_installation_id'] == $this->installationID() )
                 {
                     // Search result document is from current installation
-                    $docExtras[$idx]['is_local_installation'] = true;
-                    $objectTreeRow = eZPersistentObject::fetchObject( eZContentObjectTreeNode::definition(),
-                                                                      null,
-                                                                      array( 'node_id' => $doc['m_main_node_id'] ),
-                                                                      false );
-                    $resultTree = new eZFindResultNode( $objectTreeRow );
+                    $resultTree = new eZFindResultNode( $nodeRowList[$doc['m_main_node_id']] );
+                    $resultTree->setContentObject( new eZContentObject( $nodeRowList[$doc['m_main_node_id']] ) );
                     $resultTree->setAttribute( 'is_local_installation', true );
+                    if ( !$resultTree->attribute( 'can_read' ) )
+                    {
+                        eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $doc['m_main_node_id'],
+                                              'eZSolr::search()' );
+                        continue;
+                    }
+
 
                     $globalURL = $doc['m_main_url_alias'] . '/(language)/' . $doc['m_language_code'];
                     eZURI::transformURI( $globalURL );
@@ -643,7 +703,6 @@ class eZSolr
             'SearchCount' => $searchCount,
             'StopWordArray' => $stopWordArray,
             'SearchExtras' => array(
-                'DocExtras' => $docExtras,
 //                   'FacetArray' => $resultArray['facet_counts'],
                 'ResponseHeader' => $resultArray['responseHeader'],
                 'Error' => '',
@@ -674,6 +733,10 @@ class eZSolr
         return $boostQuery;
     }
 
+
+    /*!
+     Experimental
+    */
     function supportedSearchTypes()
     {
         $searchTypes = array( array( 'type' => 'attribute',
@@ -762,13 +825,15 @@ class eZSolr
 
         $resultSet = $db->arrayQuery( 'SELECT value FROM ezsite_data WHERE name=\'ezfind_site_id\'' );
 
-        if ( count( $resultSet ) == 1 )
+        if ( count( $resultSet ) >= 1 )
         {
-            return $resultSet[0]['value'];
+            $this->InstallationID = $resultSet[0]['value'];
         }
-
-        $this->InstallationID = md5( mktime() . '-' . mt_rand() );
-        $db->query( 'INSERT INTO ezsite_data ( name, value ) values( \'ezfind_site_id\', \'' . $this->InstallationID . '\' )' );
+        else
+        {
+            $this->InstallationID = md5( mktime() . '-' . mt_rand() );
+            $db->query( 'INSERT INTO ezsite_data ( name, value ) values( \'ezfind_site_id\', \'' . $this->InstallationID . '\' )' );
+        }
 
         return $this->InstallationID;
     }
