@@ -25,7 +25,7 @@ Installing:
 
 4. Clear template override cache with the command: php bin/php/ezcache.php --clear-id=template-override
 
-5. Re-index the site content by running: php extension/ezfind/update/common/scripts/updatesearchindexsolr.php -s <admin siteaccess>
+5. Re-index the site content by running: php extension/ezfind/bin/php/updatesearchindexsolr.php -s <admin siteaccess>
 
 
 Configuration:

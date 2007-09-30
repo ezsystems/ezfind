@@ -856,7 +856,7 @@ class eZSolr
     */
     function cleanup()
     {
-        $this->Solr->deleteDocs( array(), 'm_installation_id:' . $this->installationID() );
+        $this->Solr->deleteDocs( array(), 'm_installation_id:' . $this->installationID(), true );
     }
 
     /*!

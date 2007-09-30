@@ -264,9 +264,9 @@ class eZSolrBase
       \param array List of document IDs to delete. If set to <empty>,
                    $query will be used to delete documents instead.
       \param string Solr Query. This will be ignored if \a$docIDs is set.
-      \param $commit means a commit is performed afterwards ( optional, default value: false )
+      \param boolean $optimize means an optimize is performed afterwards ( optional, default value: false )
      */
-    function deleteDocs ( $docIDs = array(), $query = false, $commit = false )
+    function deleteDocs ( $docIDs = array(), $query = false, $optimize = false )
     {
         $postString = '<delete>';
         if ( empty( $query ) )
@@ -282,9 +282,9 @@ class eZSolrBase
         }
         $postString .= '</delete>';
         $this->postQuery ( '/update', $postString, 'text/xml' );
-        if ( $commit )
+        if ( $optimize )
         {
-            $this->commit();
+            $this->optimize();
         }
         return true;
     }

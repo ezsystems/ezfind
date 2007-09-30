@@ -18,7 +18,7 @@
         </div>
 
         <div class="attribute-short">
-            <i>{$node.score_percent}% - <a href="{$node.global_url_alias}">{$node.global_url_alias|shorten(70, '...', 'middle')|wash}</a> - {$node.object.published|l10n(shortdatetime)}</i>
+            <i>{$node.score_percent|wash}% - <a href="{$node.global_url_alias}">{$node.global_url_alias|shorten(70, '...', 'middle')|wash}</a> - {$node.object.published|l10n(shortdatetime)}</i>
         </div>
     </div>
 </div>

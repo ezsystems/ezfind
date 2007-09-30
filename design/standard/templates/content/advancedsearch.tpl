@@ -127,7 +127,7 @@
 {/if}
 
 {foreach $search_sub_tree as $subtree}
-<input type="hidden" name="SubTreeArray[]" value="{$subtree}" />
+<input type="hidden" name="SubTreeArray[]" value="{$subtree|wash}" />
 {/foreach}
 
 

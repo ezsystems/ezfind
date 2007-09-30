@@ -37,10 +37,10 @@ include_once( 'kernel/classes/ezscript.php' );
 include_once( 'kernel/classes/ezcontentobjecttreenode.php' );
 
 
-$cli = eZCLI::instance();
+$cli =& eZCLI::instance();
 $endl = $cli->endlineString();
 
-$script = eZScript::instance( array( 'description' => ( "eZ publish search index updater.\n\n" .
+$script =& eZScript::instance( array( 'description' => ( "eZ publish search index updater.\n\n" .
 							 "Goes trough all objects and reindexes the meta data to the search engine" .
 							 "\n" .
 							 "updatesearchindex.php"),
@@ -80,7 +80,7 @@ if ( $siteAccess )
 function changeSiteAccessSetting( &$siteaccess, $optionData )
 {
     global $isQuiet;
-    $cli = eZCLI::instance();
+    $cli =& eZCLI::instance();
     if ( file_exists( 'settings/siteaccess/' . $optionData ) )
     {
         $siteaccess = $optionData;
@@ -101,7 +101,7 @@ include_once( "lib/ezutils/classes/ezdebug.php" );
 include_once( "kernel/classes/ezsearch.php" );
 include_once( eZExtension::baseDirectory() . '/ezfind/search/plugins/ezsolr/ezsolr.php' );
 
-$db = eZDB::instance();
+$db =& eZDB::instance();
 
 if ( $dbHost or $dbName or $dbUser or $dbImpl )
 {
@@ -117,7 +117,7 @@ if ( $dbHost or $dbName or $dbUser or $dbImpl )
         $params['password'] = $dbPassword;
     if ( $dbName !== false )
         $params['database'] = $dbName;
-    $db = eZDB::instance( $dbImpl, $params, true );
+    $db =& eZDB::instance( $dbImpl, $params, true );
     eZDB::setInstance( $db );
 }
 
