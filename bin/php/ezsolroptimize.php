@@ -26,10 +26,6 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
-include_once( 'kernel/classes/ezscript.php' );
-include_once( 'lib/ezutils/classes/ezcli.php' );
-include_once( 'kernel/classes/ezsearch.php' );
-
 $cli = eZCLI::instance();
 
 $scriptSettings = array();

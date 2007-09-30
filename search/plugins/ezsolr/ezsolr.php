@@ -24,12 +24,6 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
-
-
-include_once( eZExtension::baseDirectory() . '/ezfind/lib/ezsolrbase.php' );
-include_once( eZExtension::baseDirectory() . '/ezfind/lib/ezsolrdoc.php' );
-include_once( eZExtension::baseDirectory() . '/ezfind/lib/ezfindresultobject.php' );
-
 /*!
   eZSolr is a search plugin to eZ Publish.
 */
@@ -208,7 +202,6 @@ class eZSolr
     */
     function policyLimitationFilterQuery()
     {
-        include_once( 'kernel/classes/datatypes/ezuser/ezuser.php' );
         $currentUser = eZUser::currentUser();
         $accessResult = $currentUser->hasAccessTo( 'content', 'read' );
 
@@ -378,7 +371,6 @@ class eZSolr
     {
         eZDebug::createAccumulator( 'solr_classattribute_list', 'solr' );
         eZDebug::accumulatorStart( 'solr_classattribute_list' );
-        include_once( 'kernel/classes/ezcontentclass.php' );
         $fieldArray = array();
 
         $classAttributeArray = array();
@@ -415,7 +407,7 @@ class eZSolr
             }
 
             $condArray = array( "is_searchable" => 1,
-                                "version" => EZ_CLASS_VERSION_STATUS_DEFINED );
+                                "version" => eZContentClass::VERSION_STATUS_DEFINED );
             if ( is_array( $classIDArray ) )
             {
                 $condArray['contentclass_id'] = array( $classIDArray );

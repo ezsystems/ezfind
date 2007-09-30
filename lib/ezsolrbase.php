@@ -23,7 +23,6 @@
 //
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
-include_once ( eZExtension::baseDirectory() . '/ezfind/lib/ezsolrdoc.php' );
 
 /*!
  eZSolrBase is a PHP library for connecting and performing operations

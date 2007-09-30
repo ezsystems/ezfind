@@ -33,9 +33,6 @@
 
 */
 
-include_once( 'kernel/classes/ezcontentobjecttreenode.php' );
-include_once( 'kernel/classes/ezcontentobject.php' );
-
 class eZFindResultNode extends eZContentObjectTreeNode
 {
     /*!

@@ -32,11 +32,6 @@ function microtime_float()
 }
 set_time_limit( 0 );
 
-include_once( 'lib/ezutils/classes/ezcli.php' );
-include_once( 'kernel/classes/ezscript.php' );
-include_once( 'kernel/classes/ezcontentobjecttreenode.php' );
-
-
 $cli =& eZCLI::instance();
 $endl = $cli->endlineString();
 
@@ -95,11 +90,6 @@ function changeSiteAccessSetting( &$siteaccess, $optionData )
 }
 
 print( "Starting object re-indexing\n" );
-
-include_once( 'lib/ezutils/classes/ezexecution.php' );
-include_once( "lib/ezutils/classes/ezdebug.php" );
-include_once( "kernel/classes/ezsearch.php" );
-include_once( eZExtension::baseDirectory() . '/ezfind/search/plugins/ezsolr/ezsolr.php' );
 
 $db =& eZDB::instance();
 
@@ -190,7 +180,6 @@ foreach ( $topNodeArray as $node  )
                 print ($endl . " ==intermediate optimize== " . $endl);
                 $searchEngine->optimize();
                 $iCommit = 0;
-                include_once( 'kernel/classes/ezcontentobject.php' );
                 eZContentObject::clearCache();
             }
         }
