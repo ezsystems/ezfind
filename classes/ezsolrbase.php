@@ -24,6 +24,7 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
+
 /*!
  eZSolrBase is a PHP library for connecting and performing operations
  on the Solr server.

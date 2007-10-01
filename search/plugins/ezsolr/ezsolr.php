@@ -24,6 +24,8 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
+
+
 /*!
   eZSolr is a search plugin to eZ Publish.
 */

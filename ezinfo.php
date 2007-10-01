@@ -38,18 +38,16 @@ class eZFindInfo
     function info()
     {
         return array(
-            'name' => "eZ Find",
-            'version' => "1.0.0beta1",
-            'copyright' => "Copyright © 2007 eZ Systems AS.",
-            'info_url' => "http://ez.no",
-            'license' => "GNU General Public License v2.0",
+            'Name' => "eZ Find",
+            'Version' => "1.0.x",
+            'Copyright' => "Copyright © 2007 eZ Systems AS.",
+            'Info_url' => "http://ez.no",
+            'License' => "GNU General Public License v2.0",
             '3rdparty_software' =>
             array ( 'name' => 'Solr',
                     'copyright' => 'The Apache Software Foundation.',
                     'license' => 'Apache License, Version 2.0',
-                    'info_url' => 'http://lucene.apache.org/solr/' ),
-            'ezp_target' => '4.0'
-            );
+                    'info_url' => 'http://lucene.apache.org/solr/' ) );
     }
 }
 

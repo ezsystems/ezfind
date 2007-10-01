@@ -33,6 +33,7 @@
 
 */
 
+
 class eZFindResultNode extends eZContentObjectTreeNode
 {
     /*!
