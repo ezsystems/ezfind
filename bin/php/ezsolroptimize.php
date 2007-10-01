@@ -26,6 +26,8 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
+require 'autoload.php';
+
 $cli = eZCLI::instance();
 
 $scriptSettings = array();
@@ -48,7 +50,7 @@ $script->initialize();
 
 $searchEngine = eZSearch::getEngine();
 
-if ( strtolower( get_class( $searchEngine ) ) != 'ezsolr' )
+if ( !( $searchEngine instanceof eZSolr ) )
 {
     $script->shutdown( 1, 'The current search engine plugin is not eZSolr' );
 }

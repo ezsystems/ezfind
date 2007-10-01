@@ -25,6 +25,9 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 //
+
+require 'autoload.php';
+
 function microtime_float()
 {
     list($usec, $sec) = explode(" ", microtime());
@@ -32,10 +35,10 @@ function microtime_float()
 }
 set_time_limit( 0 );
 
-$cli =& eZCLI::instance();
+$cli = eZCLI::instance();
 $endl = $cli->endlineString();
 
-$script =& eZScript::instance( array( 'description' => ( "eZ publish search index updater.\n\n" .
+$script = eZScript::instance( array( 'description' => ( "eZ publish search index updater.\n\n" .
 							 "Goes trough all objects and reindexes the meta data to the search engine" .
 							 "\n" .
 							 "updatesearchindex.php"),
@@ -75,7 +78,7 @@ if ( $siteAccess )
 function changeSiteAccessSetting( &$siteaccess, $optionData )
 {
     global $isQuiet;
-    $cli =& eZCLI::instance();
+    $cli = eZCLI::instance();
     if ( file_exists( 'settings/siteaccess/' . $optionData ) )
     {
         $siteaccess = $optionData;
@@ -91,7 +94,7 @@ function changeSiteAccessSetting( &$siteaccess, $optionData )
 
 print( "Starting object re-indexing\n" );
 
-$db =& eZDB::instance();
+$db = eZDB::instance();
 
 if ( $dbHost or $dbName or $dbUser or $dbImpl )
 {
@@ -107,7 +110,7 @@ if ( $dbHost or $dbName or $dbUser or $dbImpl )
         $params['password'] = $dbPassword;
     if ( $dbName !== false )
         $params['database'] = $dbName;
-    $db =& eZDB::instance( $dbImpl, $params, true );
+    $db = eZDB::instance( $dbImpl, $params, true );
     eZDB::setInstance( $db );
 }
 
@@ -122,9 +125,9 @@ if ( $cleanupSearch )
 
 // Get top node
 $topNodeArray = eZPersistentObject::fetchObjectList( eZContentObjectTreeNode::definition(),
-						      null,
-						      array( 'parent_node_id' => 1,
-							     'depth' => 1 ) );
+                                                     null,
+                                                     array( 'parent_node_id' => 1,
+                                                            'depth' => 1 ) );
 $subTreeCount = 0;
 foreach ( array_keys ( $topNodeArray ) as $key  )
 {
@@ -142,7 +145,7 @@ $iCommit = 0;
 $counter = 0;
 $counterInterrupt = 10000000;
 
-$searchEngine = new ezSolr;
+$searchEngine = new eZSolr;
 $start=microtime_float();
 foreach ( $topNodeArray as $node  )
 {
@@ -187,7 +190,7 @@ foreach ( $topNodeArray as $node  )
     }
 }
 
-if ( strtolower( get_class( $searchEngine ) ) != 'ezsolr' )
+if ( !( $searchEngine instanceof eZSolr ) )
 {
     $script->shutdown( 1, 'The current search engine plugin is not eZSolr' );
 }
