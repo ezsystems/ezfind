@@ -2,7 +2,7 @@
 //
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 // SOFTWARE NAME: eZ Find
-// SOFTWARE RELEASE: 1.0.x
+// SOFTWARE RELEASE: 1.0.0beta1
 // COPYRIGHT NOTICE: Copyright (C) 2007 eZ Systems AS
 // SOFTWARE LICENSE: GNU General Public License v2.0
 // NOTICE: >
@@ -39,7 +39,7 @@ class eZFindInfo
     {
         return array(
             'Name' => "eZ Find",
-            'Version' => "1.0.x",
+            'Version' => "1.0.0beta1",
             'Copyright' => "Copyright © 2007 eZ Systems AS.",
             'Info_url' => "http://ez.no",
             'License' => "GNU General Public License v2.0",
