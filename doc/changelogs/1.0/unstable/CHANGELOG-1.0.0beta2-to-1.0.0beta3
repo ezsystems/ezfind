@@ -1,6 +1,0 @@
-Changes from 1.0.0beta2 to 1.0.0beta3
-
-
-*Bugfixes:
-- Updated doc to use: extension/ezfind/update/common/scripts/updatesearchindexsolr.php
-- Fixed typo in extension/ezfind/update/common/scripts/updatesearchindexsolr.php
