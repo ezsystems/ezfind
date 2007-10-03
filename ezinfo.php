@@ -35,7 +35,7 @@
 
 class eZFindInfo
 {
-    function info()
+    static function info()
     {
         return array(
             'Name' => "eZ Find",
