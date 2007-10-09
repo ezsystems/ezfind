@@ -825,7 +825,7 @@ class eZSolr
         }
         else
         {
-            $this->InstallationID = md5( mktime() . '-' . mt_rand() );
+            $this->InstallationID = md5( time() . '-' . mt_rand() );
             $db->query( 'INSERT INTO ezsite_data ( name, value ) values( \'ezfind_site_id\', \'' . $this->InstallationID . '\' )' );
         }
 
