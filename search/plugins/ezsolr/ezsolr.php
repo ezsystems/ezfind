@@ -721,6 +721,10 @@ class eZSolr
         $languageBoostList = array( '1.2', '1.0', '0.8' );
         foreach ( $ini->variable( 'RegionalSettings', 'SiteLanguageList' ) as $idx => $languageCode )
         {
+            if ( empty( $languageBoostList[$idx] ) )
+            {
+                break;
+            }
             $boostQuery .= ' m_language_code:' . $languageCode . '^' . $languageBoostList[$idx];
         }
 
