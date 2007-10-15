@@ -35,6 +35,7 @@
 class eZSolrBase
 {
     var $SearchServerURI;
+    var $SolrINI;
 
     /*!
      \constructor
@@ -45,6 +46,7 @@ class eZSolrBase
     function eZSolrBase( $baseURI = 'http://localhost:8983/solr' )
     {
         $this->SearchServerURI = $baseURI;
+        $this->SolrINI = eZINI::instance( 'solr.ini' );
     }
 
 
@@ -307,20 +309,18 @@ class eZSolrBase
     */
     function sendHTTPRequest( $url, $postData = false, $contentType = '', $userAgent = 'eZ Publish' )
     {
+        $connectionTimeout = $this->SolrINI->variable( 'SolrBase', 'ConnectionTimeout' );
+
         if ( extension_loaded( 'curl' ) )
         {
             $ch = curl_init();
-            if ( $postData === false )
+            curl_setopt( $ch, CURLOPT_URL, $url );
+            curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+            curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, $connectionTimeout );
+            if ( $postData !== false )
             {
-                curl_setopt( $ch, CURLOPT_URL, $url );
-                curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-            }
-            else
-            {
-                curl_setopt( $ch, CURLOPT_URL, $url );
                 curl_setopt( $ch, CURLOPT_POST, 1 );
                 curl_setopt( $ch, CURLOPT_POSTFIELDS, $postData );
-                curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
                 if ( $contentType != '' )
                 {
                     curl_setopt( $ch, CURLOPT_HTTPHEADER, array ( 'Content-Type: ' . $contentType ) );
@@ -371,10 +371,13 @@ class eZSolrBase
                 return false;
             }
 
-            $fp = fsockopen( $filename, $port );
+            $errorNo = 0;
+            $errorStr = '';
+            $fp = @fsockopen( $filename, $port, $errorNo, $errorStr, $connectionTimeout );
             if ( !$fp )
             {
-                eZDebug::writeDebug( 'Could not open connection to: ' . $filename, 'eZSolr::sendHTTPRequest()' );
+                eZDebug::writeDebug( 'Could not open connection to: ' . $filename . ':' . $port . '. Error: ' . $errorStr,
+                                     'eZSolr::sendHTTPRequest()' );
                 return false;
             }
 
