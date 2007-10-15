@@ -8,6 +8,8 @@ SearchServerURI=http://localhost:8983/solr
 # To set up physically separated indexes, you should run multiple instances of Solr
 # See the Solr wiki on how to do this (Jetty, Tomcat)
 Realm=nfpro
+# Solr connection timeout in seconds
+ConnectionTimeout=10
 
 [HighLight]
 HighLight=yes

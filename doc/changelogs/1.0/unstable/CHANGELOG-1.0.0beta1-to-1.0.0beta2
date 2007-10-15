@@ -4,6 +4,7 @@ Changes from 1.0.0beta1 to 1.0.0beta2
 *Bugfixes:
 - Fixed issue #11603: replace mktime() with time().
   ( Merged from trunk rev. 1908 )
-- Fixed issue #11603: replace mktime() with time().
 - Fixed issue #11604: Error in Solr request.
   ( Merged from trunk rev. 1940 )
+- Fixed issue #11617: Publishing times out on Windows when Solr is not running.
+  ( Merged from trunk rev. 1972 )
