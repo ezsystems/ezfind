@@ -29,7 +29,7 @@
  http://wiki.apache.org/solr/SchemaXml
 -->
 
-<schema name="ezpublish" version="1.1">
+<schema name="ezfind" version="1.1">
   <!-- attribute "name" is the name of this schema and is only used for display purposes.
        Applications should change this to reflect the nature of the search collection.
        version="1.1" is Solr's version number for the schema syntax and semantics.  It should
@@ -73,7 +73,7 @@
     <!-- numeric field types that store and index the text
          value verbatim (and hence don't support range queries, since the
          lexicographic ordering isn't equal to the numeric ordering) -->
-    <fieldType name="integer" class="solr.IntField" omitNorms="true"/>
+    <fieldType name="int" class="solr.IntField" omitNorms="true"/>
     <fieldType name="long" class="solr.LongField" omitNorms="true"/>
     <fieldType name="float" class="solr.FloatField" omitNorms="true"/>
     <fieldType name="double" class="solr.DoubleField" omitNorms="true"/>
@@ -276,29 +276,29 @@
        best performance.
    -->
 
-   <field name="m_guid" type="string" indexed="true" stored="true" /> <!-- Global unique ID ( per installation per object per language ) -->
+   <field name="meta_guid_s" type="string" indexed="true" stored="true" /> <!-- Global unique ID ( per installation per object per language ) -->
 
    <!-- Installation information -->
-   <field name="m_installation_id" type="string" indexed="true" stored="true" />               <!-- Installation identified -->
-   <field name="m_installation_url" type="string" indexed="true" stored="true"/>
+   <field name="meta_installation_id_s" type="string" indexed="true" stored="true" />               <!-- Installation identified -->
+   <field name="meta_installation_url_s" type="string" indexed="true" stored="true"/>
 
    <!-- Object information -->
-   <field name="m_id" type="string" indexed="true" stored="true"/>                     <!-- Object ID -->
-   <field name="m_published" type="string" indexed="true" stored="true"/>              <!-- Object ID -->
-   <field name="m_name" type="text" indexed="true" stored="true" termVectors="true"/>  <!-- Object name -->
-   <field name="m_main_node_id" type="string" indexed="true" stored="true"/>           <!-- Main node ID -->
-   <field name="m_language_code" type="string" indexed="true" stored="true"/>          <!-- Language code --> 
-   <field name="m_anon_access" type="boolean" indexed="true" stored="false" />         <!-- Anonymous user access to object -->
+   <field name="meta_id_si" type="sint" indexed="true" stored="true"/>                     <!-- Object ID -->
+   <field name="meta_published_dt" type="date" indexed="true" stored="true"/>              <!-- Object ID -->
+   <field name="meta_name_t" type="text" indexed="true" stored="true" termVectors="true"/>  <!-- Object name -->
+   <field name="meta_main_node_id_s" type="string" indexed="true" stored="true"/>           <!-- Main node ID -->
+   <field name="meta_language_code_s" type="string" indexed="true" stored="true"/>          <!-- Language code --> 
+   <field name="meta_anon_access_b" type="boolean" indexed="true" stored="false" />         <!-- Anonymous user access to object -->
 
    <!-- Location information ( may be multiple ) -->
-   <field name="m_main_url_alias" type="string" indexed="true" stored="true"/>                     <!-- Main location URL aliases -->
-   <field name="m_node_id" type="string" indexed="true" stored="true" multiValued="true"/>         <!-- Location node ID -->
-   <field name="m_path_string" type="string" indexed="true" stored="true" multiValued="true"/>     <!-- Location path string -->
-   <field name="m_depth" type="string" indexed="true" stored="true" multiValued="true"/>           <!-- Location depths -->
-   <field name="m_url_alias" type="string" indexed="true" stored="true" multiValued="true"/>       <!-- Location URL aliases -->
-   <field name="m_children_count" type="string" indexed="true" stored="true" multiValued="true"/>  <!-- Location URL alias -->
-   <field name="m_sort_field" type="string" indexed="true" stored="true" multiValued="true"/>      <!-- Location sort field -->
-   <field name="m_sort_order" type="string" indexed="true" stored="true" multiValued="true"/>      <!-- Location sort order -->
+   <field name="meta_main_url_alias_s" type="string" indexed="true" stored="true"/>                <!-- Main location URL aliases -->
+   <field name="meta_node_id_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- Location node ID -->
+   <field name="meta_path_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- Location path IDs -->
+   <field name="meta_path_string_s" type="string" indexed="true" stored="true" multiValued="true"/> <!-- Location path string -->
+   <field name="meta_depth_si" type="sint" indexed="true" stored="true" multiValued="true"/>       <!-- Location depths -->
+   <field name="meta_url_alias_s" type="string" indexed="true" stored="true" multiValued="true"/>   <!-- Location URL aliases -->
+   <field name="meta_sort_field_s" type="string" indexed="true" stored="true" multiValued="true"/>  <!-- Location sort field -->
+   <field name="meta_sort_order_s" type="string" indexed="true" stored="true" multiValued="true"/>  <!-- Location sort order -->
 
 
    <!-- Here, default is used to create a "timestamp" field indicating
@@ -315,42 +315,42 @@
         EXAMPLE:  name="*_i" will match any field ending in _i (like myid_i, z_i)
         Longer patterns will be matched first.  if equal size patterns
         both match, the first appearing in the schema will be used.  -->
-   <dynamicField name="*_i"  type="sint"    indexed="true"  stored="true"/>
-   <dynamicField name="*_s"  type="string"  indexed="true"  stored="true"/>
-   <dynamicField name="*_l"  type="slong"   indexed="true"  stored="true"/>
-   <dynamicField name="*_t"  type="text"    indexed="true"  stored="true"/>
-   <dynamicField name="*_b"  type="boolean" indexed="true"  stored="true"/>
-   <dynamicField name="*_f"  type="sfloat"  indexed="true"  stored="true"/>
-   <dynamicField name="*_d"  type="sdouble" indexed="true"  stored="true"/>
-   <dynamicField name="*_dt" type="date"    indexed="true"  stored="true"/>
-
-   <dynamicField name="random*" type="random" />
+   <dynamicField name="*_i"        type="int"     indexed="true"  stored="true" multiValued="true"/>
+   <dynamicField name="*_f"        type="float"   indexed="true"  stored="true" multiValued="true"/>
+   <dynamicField name="*_d"        type="double"  indexed="true"  stored="true" multiValued="true"/>
+   <dynamicField name="*_si"       type="sint"    indexed="true"  stored="true" multiValued="true"/>
+   <dynamicField name="*_sf"       type="sfloat"  indexed="true"  stored="true" multiValued="true"/>
+   <dynamicField name="*_sd"       type="sdouble" indexed="true"  stored="true" multiValued="true"/>
+   <dynamicField name="*_s"        type="string"  indexed="true"  stored="true" multiValued="true"/>
+   <dynamicField name="*_sl"       type="slong"   indexed="true"  stored="true" multiValued="true"/>
+   <dynamicField name="*_t"        type="text"    indexed="true"  stored="true" multiValued="true"/>
+   <dynamicField name="*_b"        type="boolean" indexed="true"  stored="true" multiValued="true"/>
+   <dynamicField name="*_dt"       type="date"    indexed="true"  stored="true" multiValued="true"/>
+   <dynamicField name="*_random"   type="random"  indexed="true"  stored="true" multiValued="true"/>
 
    <!-- uncomment the following to ignore any fields that don't already match an existing 
         field name or dynamic field, rather than reporting them as an error. 
         alternately, change the type="ignored" to some other type e.g. "text" if you want 
         unknown fields indexed and/or stored by default --> 
    <!--dynamicField name="*" type="ignored" /-->
-   <dynamicField name="attr_*" type="text"    indexed="true"  stored="true" termVectors="true"/>
-   <dynamicField name="m_*" type="string"    indexed="true"  stored="true" multiValued="true"/>
-   <dynamicField name="sort_*" type="string"    indexed="true"  stored="false"/>
    
 <!-- "default" fields to use, a combination of all other fields
      also for highlighting -->
 
-   <field name="df_attr" type="text"    indexed="true"  stored="true" multiValued="true" termVectors="true"/>
-   <field name="df_meta" type="string"    indexed="true"  stored="true" multiValued="true"/>
+<!--   <field name="df_attr" type="text"    indexed="true"  stored="true" multiValued="true" termVectors="true"/>
+   <field name="df_meta" type="string"    indexed="true"  stored="true" multiValued="true"/> -->
 
+   <field name="m_name" type="string"    indexed="true"  stored="true" multiValued="true"/>
    
  </fields>
 
  <!-- Field to use to determine and enforce document uniqueness. 
       Unless this field is marked with required="false", it will be a required field
    -->
- <uniqueKey>m_guid</uniqueKey>
+ <uniqueKey>meta_guid_s</uniqueKey>
 
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
- <defaultSearchField>df_attr</defaultSearchField>
+<!-- <defaultSearchField>df_attr</defaultSearchField> -->
 
  <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
  <solrQueryParser defaultOperator="OR"/>
@@ -358,9 +358,8 @@
   <!-- copyField commands copy one field to another at the time a document
         is added to the index.  It's used either to index the same field differently,
         or to add multiple fields to the same field for easier/faster searching.  -->
- <copyField source="attr_*" dest="df_attr"/>
- <copyField source="m_*" dest="df_meta"/>
- <copyField source="m_name" dest="sp_words"/>
+<!-- <copyField source="attr_*" dest="df_attr"/> -->
+<!-- <copyField source="meta_name_t" dest="sp_words"/> -->
 
  <!-- Similarity is the scoring routine for each document vs. a query.
       A custom similarity may be specified here, but the default is fine

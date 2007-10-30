@@ -1,0 +1,4 @@
+Changes from 1.0.0beta1 to 1.1.0alpha1
+
+*Features:
+- Added indexing of native types. See also: doc/design/1.1/native_types.txt

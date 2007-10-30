@@ -168,6 +168,8 @@ class eZSolrDoc
         return $this->docArrayToXML( array( $this->Doc ) );
 	}
 
+    /// Vars
+
     var $Doc;
 }
 

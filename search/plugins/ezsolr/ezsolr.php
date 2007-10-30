@@ -41,38 +41,79 @@ class eZSolr
         $this->FindINI = eZINI::instance( 'ezfind.ini' );
         $this->SearchServerURI = $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' );
         $this->Solr = new eZSolrBase( $this->SearchServerURI );
-        $realm = $this->SolrINI->variable( 'SolrBase', 'Realm' );
-        if ( $realm == 'default' )
-        {
-            $SiteINI = eZINI::instance( 'site.ini' );
-            $this->Realm = $SiteINI->variable( 'DatabaseSettings', 'Database' );
-        }
-        else
-        {
-            $this->Realm = $realm;
-        }
+        $this->SolrDocumentFieldName = new ezfSolrDocumentFieldName();
     }
 
-    /*!
-     Returns a list of meta attributes to post to the search server
-    */
-    function metaAttributes()
+    /**
+     * Get list of meta attributes and their field types.
+     *
+     * @return array List of meta attributes and the field types.
+     */
+    static function metaAttributes()
     {
-        $metaAttributes = array(
-            'id',
-            'class_name',
-            'section_id',
-            'owner_id',
-            'contentclass_id',
-            'current_version',
-            'remote_id',
-            'class_identifier',
-            'main_node_id',
-            'modified',
-            'published',
-            'main_parent_node_id'
-            );
-        return $metaAttributes;
+        return array(
+            'id' => 'sint',
+            'class_name' => 'text',
+            'section_id' => 'sint',
+            'owner_id' => 'sint',
+            'contentclass_id' => 'sint',
+            'current_version' => 'sint',
+            'remote_id' => 'string',
+            'class_identifier' => 'string',
+            'main_node_id' => 'sint',
+            'modified' => 'date',
+            'published' => 'date',
+            'main_parent_node_id' => 'sint' );
+    }
+
+    /**
+     * Get list of Node attributes and their field types
+     *
+     * @return array List of node attributes and field types.
+     */
+    static function nodeAttributes()
+    {
+        return array( 'node_id' => 'sint',
+                      'path_string' => 'string',
+                      'url_alias' => 'string',
+                      'sort_field' => 'string',
+                      'sort_order' => 'string' );
+    }
+
+    /**
+     * Get meta attribute Solr document field type
+     *
+     * @param string Meta attribute name
+     *
+     * @return string Solr document field type
+     */
+    protected function getMetaAttributeType( $name )
+    {
+        $attributeList = array_merge( array( 'guid' => 'string',
+                                             'installation_id' => 'string',
+                                             'installation_url' => 'string',
+                                             'name' => 'text',
+                                             'anon_access' => 'boolean',
+                                             'language_code' => 'string',
+                                             'main_url_alias' => 'string',
+                                             'owner_name' => 'text',
+                                             'path' => 'sint' ),
+                                      self::metaAttributes(),
+                                      self::nodeAttributes() );
+        return $attributeList[$name];
+    }
+
+    /**
+     * Get meta attribute field name
+     *
+     * @param string Meta attribute field name ( base )
+     *
+     * @return string Solr doc field name
+     */
+    protected function getMetaFieldName( $baseName )
+    {
+        return $this->SolrDocumentFieldName->lookupSchemaName( 'meta_' . $baseName,
+                                                               eZSolr::getMetaAttributeType( $baseName ) );
     }
 
     /*!
@@ -100,10 +141,26 @@ class eZSolr
         }
         $pathArray = $mainNode->attribute( 'path_array' );
         $currentVersion = $contentObject->currentVersion();
+
+        // Get object meta attributes.
         $metaAttributeValues = array();
-        foreach( eZSolr::metaAttributes() as $attributeName )
+        foreach( eZSolr::metaAttributes() as $attributeName => $fieldType )
         {
-            $metaAttributeValues[$attributeName] = $contentObject->attribute( $attributeName );
+            $metaAttributeValues[] = array( 'name' => $attributeName,
+                                            'value' => $contentObject->attribute( $attributeName ),
+                                            'fieldType' => $fieldType );
+        }
+
+        // Get node attributes.
+        $nodeAttributeValues = array();
+        foreach( $contentObject->attribute( 'assigned_nodes' ) as $contentNode )
+        {
+            foreach( eZSolr::nodeAttributes() as $attributeName => $fieldType )
+            {
+                $nodeAttributeValues[] = array( 'name' => $attributeName,
+                                                'value' => $contentNode->attribute( $attributeName ),
+                                                'fieldType' => $fieldType );
+            }
         }
 
         // Check anonymous user access.
@@ -126,33 +183,41 @@ class eZSolr
         foreach( $currentVersion->translationList( false, false ) as $languageCode )
         {
             $doc = new eZSolrDoc();
-
-
             // Set global unique object ID
-            $doc->addField( 'm_guid', $this->guid( $contentObject, $languageCode ) );
+            $doc->addField( $this->getMetaFieldName( 'guid' ), $this->guid( $contentObject, $languageCode ) );
 
-            // Set realm and installation ident.
-            $doc->addField( 'm_realm', $this->Realm );
-            $doc->addField( 'm_installation_id', $this->installationID() );
-            $doc->addField( 'm_installation_url',
+            // Set installation identifier
+            $doc->addField( $this->getMetaFieldName( 'installation_id' ), $this->installationID() );
+            $doc->addField( $this->getMetaFieldName( 'installation_url' ),
                             $this->FindINI->variable( 'SiteSettings', 'URLProtocol' ) . $ini->variable( 'SiteSettings', 'SiteURL' ) . '/' );
 
             // Set Object attributes
-            $doc->addField( 'm_name', $contentObject->name( false, $languageCode ) );
-            $doc->addField( 'm_anon_access', $anonymousAccess );
-            $doc->addField( 'm_language_code', $languageCode );
+            $doc->addField( $this->getMetaFieldName( 'name' ), $contentObject->name( false, $languageCode ) );
+            $doc->addField( $this->getMetaFieldName( 'anon_access' ), $anonymousAccess );
+            $doc->addField( $this->getMetaFieldName( 'language_code' ), $languageCode );
+            $doc->addField( $this->getMetaFieldName( 'owner_name' ),
+                            $contentObject->attribute( 'owner' )->name( false, $languageCode ) );
 
-            foreach ( $metaAttributeValues as $name => $value )
+            // Set content object meta attribute values.
+            foreach ( $metaAttributeValues as $metaInfo )
             {
-                $doc->addField ( 'm_' . $name, $value );
+                $doc->addField( $this->getMetaFieldName( $metaInfo['name'] ),
+                                ezfSolrDocumentFieldBase::preProcessValue( $metaInfo['value'], $metaInfo['fieldType'] ) );
+            }
+
+            // Set content node meta attribute values.
+            foreach ( $nodeAttributeValues as $metaInfo )
+            {
+                $doc->addField( $this->getMetaFieldName( $metaInfo['name'] ),
+                                ezfSolrDocumentFieldBase::preProcessValue( $metaInfo['value'], $metaInfo['fieldType'] ) );
             }
 
             // Add main url_alias
-            $doc->addField( 'm_main_url_alias', $mainNode->attribute( 'url_alias' ) );
+            $doc->addField( $this->getMetaFieldName( 'main_url_alias' ), $mainNode->attribute( 'url_alias' ) );
 
             foreach ( $pathArray as $pathNodeID )
             {
-                $doc->addField( 'm_path', $pathNodeID );
+                $doc->addField( $this->getMetaFieldName( 'path' ), $pathNodeID );
             }
 
             eZContentObject::recursionProtectionStart();
@@ -164,20 +229,8 @@ class eZSolr
                 $classAttribute = $attribute->contentClassAttribute();
                 if ( $classAttribute->attribute( 'is_searchable' ) == 1 )
                 {
-                    $metaData = $attribute->metaData();
-                    if ( is_array( $metaData ) )
-                    {
-                        foreach( $metaData as $metaDataElement )
-                        {
-                            $metaDataText .= ' ' . $metaDataElement['text'];
-                        }
-                    }
-                    else
-                    {
-                        $metaDataText = $metaData;
-                    }
-                    $doc->addField( 'attr_' . $classAttribute->attribute( 'identifier' ),
-                                    $metaDataText );
+                    $documentFieldBase = ezfSolrDocumentFieldBase::getInstance( $attribute );
+                    $this->addFieldBaseToDoc( $documentFieldBase, $doc );
                 }
             }
             eZContentObject::recursionProtectionEnd();
@@ -193,6 +246,30 @@ class eZSolr
             if ( mt_rand( 0, 999 ) == 1 )
             {
                 $this->optimize();
+            }
+        }
+    }
+
+    /**
+     * Add instance of ezfSolrDocumentFieldBase to Solr document.
+     *
+     * @param ezfSolrDocumentFieldBase Instance of ezfSolrDocumentFieldBase
+     * @param eZSolrDoc Solr document
+     */
+    function addFieldBaseToDoc( ezfSolrDocumentFieldBase $fieldBase, eZSolrDoc $doc )
+    {
+        if ( $fieldBase->isCollection() )
+        {
+            foreach( $fieldBase->getCollectionData() as $collectionBase )
+            {
+                $this->addFieldBaseToDoc( $collectionBase, $doc );
+            }
+        }
+        else
+        {
+            foreach( $fieldBase->getData() as $key => $value )
+            {
+                $doc->addField( $key, $value );
             }
         }
     }
@@ -215,13 +292,13 @@ class eZSolr
             $policies = $accessResult['policies'];
 
             $limitationHash = array(
-                'Class'        => 'm_contentclass_id',
-                'Section'      => 'm_section_id',
-                'User_Section' => 'm_section_id',
-                'Subtree'      => 'm_path_string',
-                'User_Subtree' => 'm_path_string',
-                'Node'         => 'm_main_node_id',
-                'Owner'        => 'm_owner_id' );
+                'Class'        => $this->getMetaFieldName( 'contentclass_id' ),
+                'Section'      => $this->getMetaFieldName( 'section_id' ),
+                'User_Section' => $this->getMetaFieldName( 'section_id' ),
+                'Subtree'      => $this->getMetaFieldName( 'path_string' ),
+                'User_Subtree' => $this->getMetaFieldName( 'path_string' ),
+                'Node'         => $this->getMetaFieldName( 'main_node_id' ),
+                'Owner'        => $this->getMetaFieldName( 'owner_id' ) );
 
             $filterQueryPolicies = array();
 
@@ -247,7 +324,7 @@ class eZSolr
                                 $pathArray = explode( '/', $pathString );
                                 // we only take the last node ID in the path identification string
                                 $subtreeNodeID = array_shift( $pathArray );
-                                $filterQueryPolicyLimitationParts[] = 'm_path:' . $subtreeNodeID;
+                                $filterQueryPolicyLimitationParts[] = $this->getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
                             }
                         } break;
 
@@ -259,7 +336,7 @@ class eZSolr
                                 $pathArray = explode( '/', $pathString );
                                 // we only take the last node ID in the path identification string
                                 $nodeID = array_shift( $pathArray );
-                                $filterQueryPolicyLimitationParts[] = 'm_main_node_id:' . $nodeID;
+                                $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $nodeID;
                             }
                         } break;
 
@@ -270,7 +347,7 @@ class eZSolr
 
                         case 'Owner':
                         {
-                            $filterQueryPolicyLimitationParts[] = 'm_owner_id:' . $currentUser->attribute ( 'contentobject_id' );
+                            $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $currentUser->attribute ( 'contentobject_id' );
                         } break;
 
                         case 'Class':
@@ -309,24 +386,24 @@ class eZSolr
         $anonymousPart = '';
         if ( $this->FindINI->variable( 'SiteSettings', 'SearchOtherInstallations' ) == 'enabled' )
         {
-            $anonymousPart = ' OR m_anon_access:true ';
+            $anonymousPart = ' OR ' . $this->getMetaFieldName( 'anon_access' ) . ':true ';
         }
 
         if ( !empty( $filterQuery ) )
         {
-            $filterQuery = '( ( m_installation_id:' . $this->installationID() . ' AND ' . $filterQuery . ' ) ' . $anonymousPart . ' )';
+            $filterQuery = '( ( ' . $this->getMetaFieldName( 'installation_id' ) . ':' . $this->installationID() . ' AND ' . $filterQuery . ' ) ' . $anonymousPart . ' )';
         }
         else
         {
-            $filterQuery = '( m_installation_id:' . $this->installationID() . $anonymousPart . ' )';
+            $filterQuery = '( ' . $this->getMetaFieldName( 'installation_id' ) . ':' . $this->installationID() . $anonymousPart . ' )';
         }
 
         // Add limitations based on allowed languages.
         $ini = eZINI::instance();
         if ( $ini->variable( 'RegionalSettings', 'SiteLanguageList' ) )
         {
-            $filterQuery = '( ' . $filterQuery . ' AND ( m_language_code:' .
-                implode( ' OR m_language_code:', $ini->variable( 'RegionalSettings', 'SiteLanguageList' ) ) . ' ) )';
+            $filterQuery = '( ' . $filterQuery . ' AND ( ' . $this->getMetaFieldName( 'language_code' ) . ':' .
+                implode( ' OR ' . $this->getMetaFieldName( 'language_code' ) . ':', $ini->variable( 'RegionalSettings', 'SiteLanguageList' ) ) . ' ) )';
         }
 
         eZDebug::writeDebug( $filterQuery, 'eZSolr::policyLimitationFilterQuery' );
@@ -357,19 +434,22 @@ class eZSolr
     function removeObject( $contentObject )
     {
         $this->Solr->deleteDocs( array(),
-                                 'm_id:' . $contentObject->attribute( 'id' ) . ' AND '.
-                                 'm_installation_id:' . $this->installationID() );
+                                 $this->getMetaFieldName( 'id' ) . ':' . $contentObject->attribute( 'id' ) . ' AND '.
+                                 $this->getMetaFieldName( 'installation_id' ) . ':' . $this->installationID() );
     }
 
-    /*!
-     \brief get an array of class attribute identifiers based on a list of class ids, prepended with attr_
-
-     \param array $classIDArray ( if set to false, fetch for all existing classes )
-     \param array $classAttributeID ( if set to false, fetch for all )
-
-     \return array List of field names.
-    */
-    function getClassAttributes( $classIDArray = false, $classAttributeIDArray = false )
+    /**
+     * Get an array of class attribute identifiers based on a list of class ids, prepended with attr_
+     *
+     * @param array $classIDArray ( if set to false, fetch for all existing classes )
+     * @param array $classAttributeID ( if set to false, fetch for all )
+     * @param array $fieldTypeExcludeList filter list. List of field types to exclude. ( set to empty array by default ).
+     *
+     * @return array List of field names.
+     */
+    function getClassAttributes( $classIDArray = false,
+                                 $classAttributeIDArray = false,
+                                 $fieldTypeExcludeList = null )
     {
         eZDebug::createAccumulator( 'solr_classattribute_list', 'solr' );
         eZDebug::accumulatorStart( 'solr_classattribute_list' );
@@ -393,7 +473,12 @@ class eZSolr
         {
             foreach( $classAttributeArray as $classAttribute )
             {
-                $fieldArray[] = 'attr_' . $classAttribute->attribute( 'identifier' );
+                if ( empty( $fieldTypeExcludeList ) ||
+                     !in_array( ezfSolrDocumentFieldBase::getClassAttributeType( $classAttribute ),
+                                $fieldTypeExcludeList ) )
+                {
+                    $fieldArray[] = ezfSolrDocumentFieldBase::getFieldName( $classAttribute );
+                }
             }
         }
         else
@@ -414,9 +499,14 @@ class eZSolr
             {
                 $condArray['contentclass_id'] = array( $classIDArray );
             }
-            foreach( eZContentClassAttribute::fetchFilteredList( $condArray, false ) as $classAttrisbute )
+            foreach( eZContentClassAttribute::fetchFilteredList( $condArray ) as $classAttribute )
             {
-                $fieldArray[] = 'attr_' . $classAttrisbute['identifier'];
+                if ( empty( $fieldTypeExcludeList ) ||
+                     !in_array( ezfSolrDocumentFieldBase::getClassAttributeType( $classAttribute ),
+                                $fieldTypeExcludeList ) )
+                {
+                    $fieldArray[] = ezfSolrDocumentFieldBase::getFieldName( $classAttribute );
+                }
             }
         }
         //eZDebug::writeDebug( $fieldArray, ' Field array ' );
@@ -452,15 +542,13 @@ class eZSolr
         $sectionID = isset( $params['SearchSectionID'] ) && $params['SearchSectionID'] > 0 ? $params['SearchSectionID'] : false;
         $filterQuery = array();
         //FacetFields and FacetQueries not used yet! Need to add it to the module as well
-        $facetFields = ( isset( $params['FacetFields'] ) && $params['FacetFields'] ) ? $params['FacetFields'] : array('m_class_name');
-        $facetQueries = ( isset( $params['FacetQueries'] ) && $params['FacetQueries'] ) ? $params['FacetQueries'] : array();
 
         if ( count( $subtrees ) > 0 )
         {
             $subtreeQueryParts = array();
             foreach ( $subtrees as $subtreeNodeID )
             {
-                $subtreeQueryParts[] = 'm_path:' . $subtreeNodeID;
+                $subtreeQueryParts[] = $this->getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
             }
 
             $filterQuery[] = implode( ' OR ', $subtreeQueryParts );
@@ -482,7 +570,7 @@ class eZSolr
                 {
                     if ( is_int( (int)$classID ) and  (int)$classID != 0 )
                     {
-                        $classQueryParts[] = 'm_contentclass_id:' . $classID;
+                        $classQueryParts[] = $this->getMetaFieldName( 'contentclass_id' ) . ':' . $classID;
                     }
                     elseif ( is_string( $classID ) and  $classID != "" )
                     {
@@ -490,7 +578,7 @@ class eZSolr
                         if ( $class )
                         {
                             $classID = $class->attribute( 'id' );
-                            $classQueryParts[] = 'm_contentclass_id:' . $classID;
+                            $classQueryParts[] = $this->getMetaFieldName( 'contentclass_id' ) . ':' . $classID;
                         }
                         else
                         {
@@ -506,7 +594,7 @@ class eZSolr
             }
             elseif ( is_int( (int)$contentClassID ) and  (int)$contentClassID != 0 )
             {
-                $filterQuery[] = 'm_contentclass_id:' . $contentClassID;
+                $filterQuery[] = $this->getMetaFieldName( 'contentclass_id' ) . ':' . $contentClassID;
             }
             elseif ( is_string( $contentClassID ) and  $contentClassID != "" )
             {
@@ -514,7 +602,7 @@ class eZSolr
                 if ( $class )
                 {
                     $contentClassID = $class->attribute( 'id' );
-                    $filterQuery[] = 'm_contentclass_id:' . $contentClassID;
+                    $filterQuery[] = $this->getMetaFieldName( 'contentclass_id' ) . ':' . $contentClassID;
                 }
                 else
                 {
@@ -529,17 +617,16 @@ class eZSolr
 
         if ( $sectionID )
         {
-            $filterQuery[] = 'm_section_id:' . $sectionID;
+            $filterQuery[] = $this->getMetaFieldName( 'section_id' ) . ':' . $sectionID;
         }
 
-        if ( $this->Realm )
-        {
-        }
+        // Pre-process search text, and see if some field types must be excluded from the search.
+        $fieldTypeExcludeList = $this->fieldTypeExludeList( $searchText );
 
         //the array_unique below is necessary because attribute identifiers are not unique .. and we get as
         //much highlight snippets as there are duplicate attribute identifiers
         //these are also in the list of query fields (dismax, ezpublish) request handlers
-        $queryFields = array_unique( $this->getClassAttributes( $contentClassID, $contentClassAttributeID ) );
+        $queryFields = array_unique( $this->getClassAttributes( $contentClassID, $contentClassAttributeID, $fieldTypeExcludeList ) );
 
         //$queryFields = array ('df_attr');
         //highlighting only in the attributes, otherwise the object name is repeated in the highlight, which is already
@@ -547,8 +634,8 @@ class eZSolr
         //maybe we should add meta data to the index to filter them out.
 
         $highLightFields = $queryFields;
-        $queryFields[] = 'm_name^2.0';
-        $queryFields[] = 'm_owner_name^1.5';
+        $queryFields[] = $this->getMetaFieldName( 'name' ) . '^2.0';
+        $queryFields[] = $this->getMetaFieldName( 'owner_name' ) . '^1.5';
         $queryParams = array(
             'start' => $offset,
             'rows' => $limit,
@@ -558,14 +645,13 @@ class eZSolr
             'qf' => implode( ' ', $queryFields ),
             'bq' => $this->boostQuery(),
             'fl' =>
-            'm_guid m_installation_id m_main_url_alias m_installation_url m_id m_main_node_id ' .
-            'm_language_code m_name score m_published',
+            $this->getMetaFieldName( 'guid' ) . ' ' . $this->getMetaFieldName( 'installation_id' ) . ' ' .
+            $this->getMetaFieldName( 'main_url_alias' ) . ' ' . $this->getMetaFieldName( 'installation_url' ) . ' ' .
+            $this->getMetaFieldName( 'id' ) . ' ' . $this->getMetaFieldName( 'main_node_id' ) . ' ' .
+            $this->getMetaFieldName( 'language_code' ) . ' ' . $this->getMetaFieldName( 'name' ) .
+            ' score ' . $this->getMetaFieldName( 'published' ),
             'q' => $searchText,
             'fq' => $filterQuery,
-//            'facet' => 'true',
-//            'facet.field' => 'm_class_name',
-//            'facet.mincount' => '1',
-//            'facet.sort' => 'true',
             'hl' => 'true',
             'hl.fl' => $highLightFields,
             'hl.snippets' => 2,
@@ -622,9 +708,9 @@ class eZSolr
             // Loop through result, and get eZContentObjectTreeNode ID
             foreach ( $docs as $idx => $doc )
             {
-                if ( $doc['m_installation_id'] == $this->installationID() )
+                if ( $doc[$this->getMetaFieldName( 'installation_id' )] == $this->installationID() )
                 {
-                    $localNodeIDList[] = $doc['m_main_node_id'];
+                    $localNodeIDList[] = $doc[$this->getMetaFieldName( 'main_node_id' )][0];
                 }
             }
 
@@ -648,38 +734,40 @@ class eZSolr
 
             foreach ( $docs as $idx => $doc )
             {
-                if ( $doc['m_installation_id'] == $this->installationID() )
+                if ( $doc[$this->getMetaFieldName( 'installation_id' )] == $this->installationID() )
                 {
                     // Search result document is from current installation
-                    $resultTree = new eZFindResultNode( $nodeRowList[$doc['m_main_node_id']] );
-                    $resultTree->setContentObject( new eZContentObject( $nodeRowList[$doc['m_main_node_id']] ) );
+                    $resultTree = new eZFindResultNode( $nodeRowList[$doc[$this->getMetaFieldName( 'main_node_id' )][0]] );
+                    $resultTree->setContentObject( new eZContentObject( $nodeRowList[$doc[$this->getMetaFieldName( 'main_node_id' )][0]] ) );
                     $resultTree->setAttribute( 'is_local_installation', true );
                     if ( !$resultTree->attribute( 'can_read' ) )
                     {
-                        eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $doc['m_main_node_id'],
+                        eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $doc[$this->getMetaFieldName( 'main_node_id' )],
                                               'eZSolr::search()' );
                         continue;
                     }
 
 
-                    $globalURL = $doc['m_main_url_alias'] . '/(language)/' . $doc['m_language_code'];
+                    $globalURL = $doc[$this->getMetaFieldName( 'main_url_alias' )] .
+                        '/(language)/' . $doc[$this->getMetaFieldName( 'language_code' )];
                     eZURI::transformURI( $globalURL );
-
                 }
                 else
                 {
                     $resultTree = new eZFindResultNode();
                     $resultTree->setAttribute( 'is_local_installation', false );
-                    $globalURL = $doc['m_installation_url'] . $doc['m_main_url_alias'] .
-                        '/(language)/' . $doc['m_language_code'];
+                    $globalURL = $doc[$this->getMetaFieldName( 'installation_url' )] .
+                        $doc[$this->getMetaFieldName( 'main_url_alias' )] .
+                        '/(language)/' . $doc[$this->getMetaFieldName( 'language_code' )];
                 }
 
-                $resultTree->setAttribute( 'name', $doc['m_name'] );
-                $resultTree->setAttribute( 'published', $doc['m_published'] );
+                $resultTree->setAttribute( 'name', $doc[$this->getMetaFieldName( 'name' )] );
+                $resultTree->setAttribute( 'published', $doc[$this->getMetaFieldName( 'published' )] );
                 $resultTree->setAttribute( 'global_url_alias', $globalURL );
-                $resultTree->setAttribute( 'highlight', isset( $highLights[$doc['m_guid']] ) ? $highLights[$doc['m_guid']] : null );
+                $resultTree->setAttribute( 'highlight', isset( $highLights[$doc[$this->getMetaFieldName( 'guid' )]] ) ?
+                                           $highLights[$doc[$this->getMetaFieldName( 'guid' )]] : null );
                 $resultTree->setAttribute( 'score_percent', (int) ( ( $doc['score'] / $maxScore ) * 100 ) );
-                $resultTree->setAttribute( 'language_code', $doc['m_language_code'] );
+                $resultTree->setAttribute( 'language_code', $doc[$this->getMetaFieldName( 'language_code' )] );
                 $objectRes[] = $resultTree;
             }
         }
@@ -704,6 +792,30 @@ class eZSolr
             );
     }
 
+    /**
+     * Check if search string requires certain field types to be excluded from the search
+     *
+     * @param string Search string
+     *
+     * @return array List of field types to exclude from the search
+     */
+    protected function fieldTypeExludeList( $searchText )
+    {
+        $excludeFieldList = array();
+        // Check if search text is a date.
+        if ( strtotime( $searchText ) === false )
+        {
+            $excludeFieldList[] = 'date';
+        }
+        if  ( strtolower( $searchText ) !== 'true' &&
+              strtolower( $searchText ) !== 'false' )
+        {
+            $excludeFieldList[] = 'boolean';
+        }
+
+        return $excludeFieldList;
+    }
+
     /*!
      Generate boost query on search. This boost is configured boost the following criterias:
      - local installation
@@ -714,7 +826,7 @@ class eZSolr
     function boostQuery()
     {
         // Local installation boost
-        $boostQuery = 'm_installation_id:' . $this->installationID() . '^1.5';
+        $boostQuery = $this->getMetaFieldName( 'installation_id' ) . ':' . $this->installationID() . '^1.5';
         $ini = eZINI::instance();
 
         // Language boost. Only boost 3 first languages.
@@ -725,7 +837,7 @@ class eZSolr
             {
                 break;
             }
-            $boostQuery .= ' m_language_code:' . $languageCode . '^' . $languageBoostList[$idx];
+            $boostQuery .= ' ' . $this->getMetaFieldName( 'language_code' ) . ':' . $languageCode . '^' . $languageBoostList[$idx];
         }
 
         return $boostQuery;
@@ -854,7 +966,7 @@ class eZSolr
     */
     function cleanup()
     {
-        $this->Solr->deleteDocs( array(), 'm_installation_id:' . $this->installationID(), true );
+        $this->Solr->deleteDocs( array(), $this->getMetaFieldName( 'installation_id' ) . ':' . $this->installationID(), true );
     }
 
     /*!
@@ -871,8 +983,9 @@ class eZSolr
     var $InstallationID;
     var $SolrINI;
     var $SearchSeverURI;
-    var $Realm;
     var $FindINI;
+    var $SolrDocumentFieldName;
+    var $SolrDocumentFieldBase;
 }
 
 ?>
