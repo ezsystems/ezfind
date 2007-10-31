@@ -23,9 +23,11 @@ Installing:
    ActiveExtensions[]=ezfind
    To get the correct templates for ezwebin, ezfind must be enabled before the ezwebin extension.
 
-4. Clear template override cache with the command: php bin/php/ezcache.php --clear-id=template-override
+4. Update the class autoloads by running the script: php bin/php/ezpgenerateautoloads.php
 
-5. Re-index the site content by running: php extension/ezfind/bin/php/updatesearchindexsolr.php -s <admin siteaccess>
+5. Clear template override cache with the command: php bin/php/ezcache.php --clear-id=template-override
+
+6. Re-index the site content by running: php extension/ezfind/bin/php/updatesearchindexsolr.php -s <admin siteaccess>
 
 
 Configuration:

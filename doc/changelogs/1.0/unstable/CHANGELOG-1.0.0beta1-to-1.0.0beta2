@@ -10,3 +10,5 @@ Changes from 1.0.0beta1 to 1.0.0beta2
   ( Merged from trunk rev. 1972 )
 - Fixed issue #11673: Add isolatin1 filter to standard text analysis
   ( Merged from trunk rev. 1987 )
+- Fixed issue #11796: Information about bin/php/ezpgenerateautoloads.php missing 
+  from installation documentation.
