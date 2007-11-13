@@ -95,15 +95,17 @@ class ezfModuleFunctionCollection
      * @param int Limit
      * @param array Facet definition
      * @param array Filter parameters
+     * @param array Sort by parameters
      *
      * @return array Search result
      */
-    public function search( $query, $offset = 0, $limit = 10, $facet = null, $filter = null )
+    public function search( $query, $offset = 0, $limit = 10, $facet = null, $filter = null, $sortBy = null )
     {
         $solrSearch = new eZSolr();
         $params = array( 'SearchOffset' => $offset,
                          'SearchLimit' => $limit,
                          'Facet' => $facet,
+                         'SortBy' => $sortBy,
                          'Filter' => $filter );
         return array( 'result' => $solrSearch->search( $query, $params ) );
     }

@@ -59,6 +59,8 @@ class ezfeZPSolrQueryBuilder
      *        'SearchContentClassAttributeID' => <class attribute ID>,
      *        'Facet' => array( array( 'field' => <class identifier>/<attribute identifier>[/<option>], ... ) ) ),
      *        'Filter' => array( <base_name> => <value>, <base_name2> => <value2> )
+     *        'SortBy' => array( <field> => <asc|desc> [, <field2> => <asc|desc> [,...]] ) |
+                          array( array( <field> => <asc|desc> )[, array( <field2> => <asc|desc> )[,...]] )
      * </code>
      * For full facet description, see facets design document.
      * @param array Search types. Reserved.
@@ -126,6 +128,9 @@ class ezfeZPSolrQueryBuilder
         // Pre-process search text, and see if some field types must be excluded from the search.
         $fieldTypeExcludeList = $this->fieldTypeExludeList( $searchText );
 
+        // Create sort parameters based on the parameters.
+        $sortParameter = $this->buildSortParameter( $params );
+
         //the array_unique below is necessary because attribute identifiers are not unique .. and we get as
         //much highlight snippets as there are duplicate attribute identifiers
         //these are also in the list of query fields (dismax, ezpublish) request handlers
@@ -143,6 +148,7 @@ class ezfeZPSolrQueryBuilder
             array(
                 'start' => $offset,
                 'rows' => $limit,
+                'sort' => $sortParameter,
                 'indent' => 'on',
                 'version' => '2.2',
                 'qt' => 'ezpublish',
@@ -167,6 +173,113 @@ class ezfeZPSolrQueryBuilder
             $facetQueryParamList );
 
         return $queryParams;
+    }
+
+    /**
+     * Build sort parameter based on params provided.
+     *
+     * @param array Parameter list array. SortBy element contains sort
+     * definition.
+     *
+     * @return string Sort description. Default sort string is 'score desc'.
+     */
+    protected function buildSortParameter( $parameterList )
+    {
+        $sortString = 'score desc';
+
+        if ( !empty( $parameterList['SortBy'] ) )
+        {
+            $sortString = '';
+            foreach( $parameterList['SortBy'] as $field => $order )
+            {
+                // If array, set key and order from array values
+                if ( is_array( $order ) )
+                {
+                    $field = $order[0];
+                    $order = $order[1];
+                }
+
+                // Fixup field name
+                switch( $field )
+                {
+                    case 'score':
+                    case 'relevance':
+                    {
+                        $field = 'score';
+                    } break;
+
+                    case 'published':
+                    case 'modified':
+                    case 'class_name':
+                    case 'class_identifier':
+                    case 'name':
+                    case 'path':
+                    case 'section_id':
+                    {
+                        $field = eZSolr::getMetaFieldName( $field );
+                    } break;
+
+                    case 'author':
+                    {
+                        $field = eZSolr::getMetaFieldName( 'owner_name' );
+                    } break;
+
+                    default:
+                    {
+                        $fieldDef = explode( '/', $field );
+                        if ( count( $fieldDef ) == 2 )
+                        {
+                            list( $classIdentifier, $attributeIdentifier ) = $fieldDef;
+                        }
+                        else if ( count( $fieldDef ) == 3 )
+                        {
+                            list( $classIdentifier, $attributeIdentifier, $options ) = $fieldDef;
+                        }
+                        if ( !empty( $classIdentifier ) &&
+                             !empty( $attributeIdentifier ) )
+                        {
+                            $contectClassAttributeID = eZContentObjectTreeNode::classAttributeIDByIdentifier( $classIdentifier . '/' . $attributeIdentifier );
+                        }
+
+                        if ( empty( $contectClassAttributeID ) )
+                        {
+                            eZDebug::writeError( 'Sort field does not exist in local installation, but may still be valid: ' .
+                                                 $field,
+                                                 'ezfeZPSolrQueryBuilder::buildSortParameter()' );
+                            continue;
+                        }
+                        $contectClassAttribute = eZContentClassAttribute::fetch( $contectClassAttributeID );
+                        $field = ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $options );
+                    } break;
+                }
+
+                // Fixup order name.
+                switch( strtolower( $order ) )
+                {
+                    case 'desc':
+                    case 'asc':
+                    {
+                        $order = strtolower( $order );
+                    } break;
+
+                    default:
+                    {
+                        eZDebug::writeDebug( 'Unrecognized sort order. Settign for order for default: "desc"',
+                                             'ezfeZPSolrQueryBuilder::buildSortParameter()' );
+                        $order = $order;
+                    } break;
+                }
+
+                if ( $sortString !== '' )
+                {
+                    $sortString .= ',';
+                }
+
+                $sortString .= $field . ' ' . $order;
+            }
+        }
+
+        return $sortString;
     }
 
     /**

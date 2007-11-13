@@ -55,6 +55,10 @@ $FunctionList['search'] = array( 'name' => 'search',
                                                         array( 'name' => 'filter',
                                                                'type' => 'array',
                                                                'required' => false,
+                                                               'default' => null ),
+                                                        array( 'name' => 'sort_by',
+                                                               'type' => 'array',
+                                                               'required' => false,
                                                                'default' => null ) ) );
 
 $FunctionList['facetParameters'] = array( 'name' => 'facetParameters',

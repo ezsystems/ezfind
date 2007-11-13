@@ -5,6 +5,7 @@
                         hash( 'query', $search_text,
                               'offset', $view_parameters.offset,
                               'limit', $page_limit,
+                              'sort_by', hash( 'score', 'desc' ),
                               'facet', fetch( ezfind, facetParameters ),
                               'filter', fetch( ezfind, filterParameters ) ) )}
     {set $search_result=$search['SearchResult']}
