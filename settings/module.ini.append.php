@@ -1,0 +1,6 @@
+<?php /*
+
+[ModuleSettings]
+ExtensionRepositories[]=ezfind
+
+*/ ?>

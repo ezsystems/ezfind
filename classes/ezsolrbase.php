@@ -103,7 +103,6 @@ class eZSolrBase
                 $encodedQueryParams[] = urlencode( $name ) . '=' . urlencode( $value );
             }
         }
-
         return implode( '&', $encodedQueryParams );
     }
 

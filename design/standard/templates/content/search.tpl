@@ -40,8 +40,8 @@
   {case match=0}
   <div class="warning">
   <h2>{'No results were found when searching for "%1"'|i18n("design/base",,array($search_text|wash))}</h2>
-  {if is_set($search_extras['Error'])}
-      {$search_extras['Error']}
+  {if $search_extras.hasError}
+      {$search_extras.error|wash}
   {/if}
   </div>
     <p>{'Search tips'|i18n('design/base')}</p>
@@ -55,7 +55,7 @@
   {case}
   <div class="feedback">
   <h2>{'Search for "%1" returned %2 matches'|i18n("design/base",,array($search_text|wash,$search_count))}</h2>
-  <p>{'Core search time: %1 msecs'|i18n( 'ezfind',,array( $search_extras.ResponseHeader.QTime|wash ) )}</p>
+  <p>{'Core search time: %1 msecs'|i18n( 'ezfind',,array( $search_extras.responseHeader.QTime|wash ) )}</p>
   </div>
   {/case}
 {/switch}
@@ -89,6 +89,6 @@
          item_limit=$page_limit}
 
 </form>
-<p class="small"><i>{$search_extras.Engine}</i></p>
+<p class="small"><i>{$search_extras.engine}</i></p>
 {*$search_extras|attribute(show)*}
 </div>

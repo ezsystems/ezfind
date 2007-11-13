@@ -129,14 +129,44 @@ class ezfSolrDocumentFieldBase
     }
 
     /**
-     * Get Field name
+     * Get Field name. Classes extending ezfSolrDocumentFieldBase should extend this functions if
+     * they provide custom field names.
      *
      * @param eZContentClassAttribute Instance of eZContentClassAttribute.
+     * @param mixed Additional conditions for creating the field name. What
+     *              this value may be depends on the Datatype used for the
+     *              eZContentClassAttribute. Default value: null.
      *
      * @return string Field name.
      */
-    static function getFieldName( eZContentClassAttribute $classAttribute )
+    static function getCustomFieldName( eZContentClassAttribute $classAttribute, $options = null )
     {
+        return null;
+    }
+
+    /**
+     * Get Field name
+     *
+     * @param eZContentClassAttribute Instance of eZContentClassAttribute.
+     * @param mixed Additional conditions for creating the field name. What
+     *              this value may be depends on the Datatype used for the
+     *              eZContentClassAttribute. Default value: null.
+     *
+     * @return string Field name.
+     */
+    static function getFieldName( eZContentClassAttribute $classAttribute, $options = null )
+    {
+        $datatypeString = $classAttribute->attribute( 'data_type_string' );
+        $customMapList = self::$FindINI->variable( 'SolrFieldMapSettings', 'CustomMap' );
+        if ( array_key_exists( $datatypeString, $customMapList ) )
+        {
+            if ( $returnValue = call_user_func_array( array( $customMapList[$datatypeString], 'getCustomFieldName' ),
+                                                      array( $classAttribute, $options ) ) )
+            {
+                return $returnValue;
+            }
+        }
+
         return self::$DocumentFieldName->lookupSchemaName( 'attr_' . $classAttribute->attribute( 'identifier' ),
                                                            self::getClassAttributeType( $classAttribute ) );
     }
@@ -205,7 +235,7 @@ class ezfSolrDocumentFieldBase
      *
      * @return string Solr datetime
      */
-    protected function convertTimestampToDate( $timestamp )
+    static function convertTimestampToDate( $timestamp )
     {
         return strftime( '%Y-%m-%dT%TZ', (int)$timestamp );
     }
