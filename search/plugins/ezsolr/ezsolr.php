@@ -229,8 +229,11 @@ class eZSolr
             $doc->addField( self::getMetaFieldName( 'name' ), $contentObject->name( false, $languageCode ) );
             $doc->addField( self::getMetaFieldName( 'anon_access' ), $anonymousAccess );
             $doc->addField( self::getMetaFieldName( 'language_code' ), $languageCode );
-            $doc->addField( self::getMetaFieldName( 'owner_name' ),
-                            $contentObject->attribute( 'owner' )->name( false, $languageCode ) );
+            if ( $owner = $contentObject->attribute( 'owner' ) )
+            {
+                $doc->addField( self::getMetaFieldName( 'owner_name' ),
+                                $owner->name( false, $languageCode ) );
+            }
 
             // Set content object meta attribute values.
             foreach ( $metaAttributeValues as $metaInfo )
