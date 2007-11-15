@@ -235,7 +235,8 @@ class ezfUpdateSearchIndexSolr
 
         $searchEngine = new eZSolr();
 
-        $processLimit = min( $this->Options['conc'] ? $this->Options['conc'] : 1, 10 ); // Maximum 10 processes
+        $processLimit = min( $this->Options['conc'] ? $this->Options['conc'] : 1,
+                             10 ); // Maximum 10 processes
         $useFork = ( function_exists( 'pcntl_fork' ) &&
                      function_exists( 'posix_kill' ) );
         if ( $useFork )
@@ -246,6 +247,8 @@ class ezfUpdateSearchIndexSolr
         {
             $processLimit = 1;
         }
+
+        $this->CLI->output( 'Using ' . $processLimit . ' concurent process(es)' );
 
         $processList = array();
         for( $i = 0; $i < $processLimit; $i++ )
@@ -281,7 +284,7 @@ class ezfUpdateSearchIndexSolr
                              !posix_kill( $pid, 0 ) )
                         {
                             $newPid = $this->forkAndExecute( $nodeID, $offset, $this->Limit );
-                            $this->CLI->output( 'Creating a new thread: ' . $newPid );
+                            $this->CLI->output( "\n" . 'Creating a new thread: ' . $newPid );
                             if ( $newPid > 0 )
                             {
                                 $offset += $this->Limit;
@@ -290,7 +293,7 @@ class ezfUpdateSearchIndexSolr
                             }
                             else
                             {
-                                $this->CLI->output( 'Returned invalid PID: ' . $newPid );
+                                $this->CLI->output( "\n" . 'Returned invalid PID: ' . $newPid );
                             }
                         }
                     }
@@ -309,17 +312,12 @@ class ezfUpdateSearchIndexSolr
                 }
 
                 // If using fork, the main process must sleep a bit to avoid
-                // 100% cpu usage. Sleep for 1000 millisec.
+                // 100% cpu usage. Sleep for 100 millisec.
                 if ( $useFork )
                 {
-                    usleep( 1000000 );
-                }
-
-                if ( $offset % 1000 === 0 )
-                {
-                    $this->CLI->output( "\n" . 'Comitting and optimizing index ...' );
-                    $searchEngine->optimize();
-                    eZContentObject::clearCache();
+                    $status = 0;
+                    pcntl_wait( $status, WNOHANG );
+                    usleep( 100000 );
                 }
             }
         }
@@ -348,6 +346,9 @@ class ezfUpdateSearchIndexSolr
                 }
             }
             // Sleep for 500 msec.
+            $status = 0;
+            pcntl_wait( $status, WNOHANG );
+
             usleep( 500000 );
         }
 
@@ -372,6 +373,7 @@ class ezfUpdateSearchIndexSolr
         {
             $count = $this->Limit;
         }
+
         for( $iterateCount = 0; $iterateCount < $count; ++$iterateCount )
         {
             if ( ++$this->IterateCount > $this->ObjectCount )
@@ -379,6 +381,14 @@ class ezfUpdateSearchIndexSolr
                 break;
             }
             $this->Script->iterate( $this->CLI, true );
+
+            if ( $this->IterateCount % 1000 === 0 )
+            {
+                $this->CLI->output( "\n" . 'Comitting and optimizing index ...' );
+                $searchEngine = new eZSolr();
+                $searchEngine->optimize();
+                eZContentObject::clearCache();
+            }
         }
     }
 
@@ -398,12 +408,13 @@ class ezfUpdateSearchIndexSolr
         }
         else if ( $pid )
         {
+            // Main process
             return $pid;
         }
         else
         {
-            // We are the child
-            $this->execute( $nodeID, $offset, $limit );
+            // We are the child process
+            $this->execute( $nodeID, $offset, $limit, true );
             $this->Script->shutdown();
             exit();
         }
@@ -415,10 +426,11 @@ class ezfUpdateSearchIndexSolr
      * @param int Top node ID
      * @param int Offset
      * @param int Limit
+     * @param boolean Is sub process.
      *
      * @return int Number of objects indexed.
      */
-    protected function execute( $nodeID, $offset, $limit )
+    protected function execute( $nodeID, $offset, $limit, $isSubProcess = false )
     {
         global $argv;
         // Create options string.
@@ -443,7 +455,14 @@ class ezfUpdateSearchIndexSolr
 
         $output = array();
         $command = $this->Executable . ' ' . $argv[0] . $paramString;
-        exec( $command, $output );
+        if ( $isSubProcess )
+        {
+            exec( $command, $output );
+        }
+        else
+        {
+            exec( $command, $output );
+        }
 
         if ( !empty( $output[0] ) &&
              is_numeric( $output[0] ) )
@@ -552,7 +571,7 @@ class ezfUpdateSearchIndexSolr
     var $OffsetList;
     var $Executable;
     var $IterateCount = 0;
-    var $Limit = 10;
+    var $Limit = 200;
     var $ObjectCount;
 }
 
