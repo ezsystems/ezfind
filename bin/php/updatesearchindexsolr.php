@@ -39,26 +39,26 @@ $cli = eZCLI::instance();
 $endl = $cli->endlineString();
 
 $script = eZScript::instance( array( 'description' => ( "eZ publish search index updater.\n\n" .
-							 "Goes trough all objects and reindexes the meta data to the search engine" .
-							 "\n" .
-							 "updatesearchindex.php"),
-				      'use-session' => true,
-				      'use-modules' => true,
-				      'use-extensions' => true ) );
+                                                        "Goes trough all objects and reindexes the meta data to the search engine" .
+                                                        "\n" .
+                                                        "updatesearchindex.php"),
+                                     'use-session' => true,
+                                     'use-modules' => true,
+                                     'use-extensions' => true ) );
 
 $script->startup();
 
 $options = $script->getOptions( "[db-host:][db-user:][db-password:][db-database:][db-type:|db-driver:][sql][clean]",
-				"",
-				array( 'db-host' => "Database host",
-				       'db-user' => "Database user",
-				       'db-password' => "Database password",
-				       'db-database' => "Database name",
-				       'db-driver' => "Database driver",
-				       'db-type' => "Database driver, alias for --db-driver",
-				       'sql' => "Display sql queries",
-				       'clean' =>  "Remove all search data before beginning indexing"
-				       ) );
+                                "",
+                                array( 'db-host' => "Database host",
+                                       'db-user' => "Database user",
+                                       'db-password' => "Database password",
+                                       'db-database' => "Database name",
+                                       'db-driver' => "Database driver",
+                                       'db-type' => "Database driver, alias for --db-driver",
+                                       'sql' => "Display sql queries",
+                                       'clean' =>  "Remove all search data before beginning indexing"
+                                       ) );
 $script->initialize();
 
 $dbUser = $options['db-user'] ? $options['db-user'] : false;
