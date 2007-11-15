@@ -29,148 +29,78 @@
 */
 class eZSolrDoc
 {
-    /*!
-     \constructor
-
-     \param boolean Document boost, optional
-    */
+    /**
+     * @constructor
+     *
+     * @param int Document boost, optional
+     */
     function eZSolrDoc( $boost = false )
     {
-        $this->Doc = array();
-        $this->Doc['element'] = 'doc';
+        $this->Doc = new DOMDocument( '1.0', 'utf-8' );
+        $this->RootElement = $this->Doc->createElement( 'doc' );
+        $this->Doc->appendChild( $this->RootElement );
+
         if ( $boost && is_numeric( $boost ) )
         {
-            $this->Doc['attr'] = array ( 'boost' => $boost );
-        }
-        $this->Doc['value'] = array();
-    }
-
-    /*!
-     Set document boost
-
-     \param float Document boost
-    */
-    function setBoost ( $boost = false )
-    {
-        if ( $boost && is_numeric( $boost ) )
-        {
-            $this->Doc['attr'] = array ( 'boost' => $boost );
+            $this->setAttribute( 'boost', $boost );
         }
     }
 
-    /*!
-     Add document field
-
-     \param string Field name
-     \param string Field content
-     \param float Field boost
+    /**
+     * Set document boost
+     *
+     * @param float Document boost
      */
-    function addField ( $name, $content, $boost = false )
+    public function setBoost ( $boost = false )
     {
-
         if ( $boost && is_numeric( $boost ) )
         {
-            $attrArray = array( 'name' => $name, 'boost' => $boost );
+            $this->RootElement->setAttribute( 'boost', $boost );
         }
-        else
-        {
-            $attrArray = array( 'name' => $name );
-        }
+    }
 
-        //check for multiple values
-        if ( is_array( $content ) )
+    /**
+     * Add document field
+     *
+     * @param string Field name
+     * @param mixed Field content. $content may be a value or an array containing values.
+     * @param float Field boost ( optional ).
+     */
+    public function addField ( $name, $content, $boost = false )
+    {
+        if ( !is_array( $content ) )
         {
-            foreach ($content as $value)
+            $content = array( $content );
+        }
+        foreach( $content as $value )
+        {
+            $fieldElement = $this->Doc->createElement( 'field', $value );
+            $fieldElement->setAttribute( 'name', $name );
+
+            if ( $boost && is_numeric( $boost ) )
             {
-                $this->Doc['value'][] = array( 'element' => 'field', 'value' => $value, 'attr' => $attrArray );
+                $fieldElement->setAttribute( 'boost', $boost );
             }
 
-        }
-        else
-        {
-            $this->Doc['value'][] = array( 'element' => 'field', 'value' => $content, 'attr' => $attrArray );
-        }
-
-    }
-    /*!
-     \brief Utility: set atttributes of an xml element, expects an assoc array
-
-     \param array Attribute array. Example: array( <name1>  => <value1>, <name2> => ... )
-
-     \return string Attributerepresentation.
-    */
-	function xmlAttributes( $attr = array() )
-	{
-		if ( is_array( $attr ) )
-		{
-			$str = '';
-			foreach ( $attr as $key => $value )
-			{
-				$str .= " $key=".'"'. htmlspecialchars( $value, ENT_QUOTES, 'UTF-8' ) .'"';
-            }
-            return $str;
+            $this->RootElement->appendChild( $fieldElement );
         }
     }
 
-
-	/*!
-     \brief Utility: simple array to xml functions, recursive. If first level key is numeric, then for each assoc array which is supposed to be there
-
-     \param array Associative array.
-
-     \return string XML string.
-    */
-	function docArrayToXML ( $assocArray = array() )
-	{
-		$outputString = '';
-	    foreach( $assocArray as $element => $value )
-		{
-			if ( is_numeric( $element ) )
-			{
-				if ( $value['element'] )
-				{
-					$outputString .= '<'. $value['element'];
-					if ( isset( $value['attr'] ) && is_array( $value['attr'] ) )
-					{
-						$outputString .= $this->xmlAttributes( $value['attr'] );
-					}
-
-					if ( $value['value'] != '' )
-					{
-						$outputString .= '>' . ( is_array( $value['value'] ) ?
-                                                 $this->docArrayToXML( $value['value'] ) :
-                                                 htmlspecialchars( $value['value'], ENT_NOQUOTES, 'UTF-8' ) ) .
-                            '</'. $value['element'] . ">\n";
-					}
-                    else
-				    {
-                        $outputString .= " />\n";
-					}
-                }
-			}
-			else
-			{
-				$outputString .= '<'. $element .'>'. ( is_array( $value ) ?
-                                                       $this->docArrayToXML( $value ) :
-                                                       htmlspecialchars( $value, ENT_NOQUOTES, 'UTF-8' ) ) ."</$element>\n";
-			}
-		}
-		return $outputString;
-	}
-
-    /*!
-     Convert current object to XML string
-
-     \return String XML string.
-    */
+    /**
+     * Convert current object to XML string
+     *
+     * @return string XML string.
+     */
 	function docToXML()
 	{
-        return $this->docArrayToXML( array( $this->Doc ) );
+        return $this->Doc->saveXML( $this->RootElement );
 	}
+
 
     /// Vars
 
     var $Doc;
+    var $RootElement;
 }
 
 
