@@ -17,6 +17,8 @@ Installing:
    Enter extension/ezfind/java
    Start the Solr engine with the command: java -jar start.jar
    ( See configuration for more details )
+   Make sure that the user running the java application has write access to
+   extension/ezfind/java/solr/data and extension/ezfind/java/logs .
 
 3. Enable the extension in eZ Publish. Do this by opening settings/override/site.ini.append.php ,
    and add in the [ExtensionSettings] block:
