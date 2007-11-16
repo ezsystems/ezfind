@@ -28,11 +28,21 @@
 
 require 'autoload.php';
 
+if ( !function_exists( 'readline' ) )
+{
+    function readline( $prompt = '' )
+        {
+            echo $prompt . ' ';
+            return trim( fgets( STDIN ) );
+        }
+}
+
 function microtime_float()
 {
     list($usec, $sec) = explode(" ", microtime());
     return ((float)$usec + (float)$sec);
 }
+
 set_time_limit( 0 );
 
 $cli = eZCLI::instance();
@@ -46,160 +56,526 @@ $script = eZScript::instance( array( 'description' => ( "eZ publish search index
 				      'use-modules' => true,
 				      'use-extensions' => true ) );
 
-$script->startup();
+$solrUpdate = new ezfUpdateSearchIndexSolr( $script, $cli );
+$solrUpdate->run();
 
-$options = $script->getOptions( "[db-host:][db-user:][db-password:][db-database:][db-type:|db-driver:][sql][clean]",
-				"",
-				array( 'db-host' => "Database host",
-				       'db-user' => "Database user",
-				       'db-password' => "Database password",
-				       'db-database' => "Database name",
-				       'db-driver' => "Database driver",
-				       'db-type' => "Database driver, alias for --db-driver",
-				       'sql' => "Display sql queries",
-				       'clean' =>  "Remove all search data before beginning indexing"
-				       ) );
-$script->initialize();
+$script->shutdown();
 
-$dbUser = $options['db-user'] ? $options['db-user'] : false;
-$dbPassword = $options['db-password'] ? $options['db-password'] : false;
-$dbHost = $options['db-host'] ? $options['db-host'] : false;
-$dbName = $options['db-database'] ? $options['db-database'] : false;
-$dbImpl = $options['db-driver'] ? $options['db-driver'] : false;
-$showSQL = $options['sql'] ? true : false;
-$siteAccess = $options['siteaccess'] ? $options['siteaccess'] : false;
-$cleanupSearch = $options['clean'] ? true : false;
-
-if ( $siteAccess )
+/**
+ * Class containing controlling functions for updating the search index.
+ */
+class ezfUpdateSearchIndexSolr
 {
-    changeSiteAccessSetting( $siteaccess, $siteAccess );
-}
-
-function changeSiteAccessSetting( &$siteaccess, $optionData )
-{
-    global $isQuiet;
-    $cli = eZCLI::instance();
-    if ( file_exists( 'settings/siteaccess/' . $optionData ) )
+    /**
+     * Constructor
+     *
+     * @param eZScript Script instance
+     * @param eZCLI CLI instance
+     */
+    function ezfUpdateSearchIndexSolr( eZScript $script, eZCLI $cli )
     {
-        $siteaccess = $optionData;
-        if ( !$isQuiet )
-            $cli->notice( "Using siteaccess $siteaccess for search index update" );
+        $this->Script = $script;
+        $this->CLI = $cli;
+        $this->Options = null;
     }
-    else
+
+    /**
+     * Startup and run script.
+     */
+    public function run()
     {
-        if ( !$isQuiet )
-            $cli->notice( "Siteaccess $optionData does not exist, using default siteaccess" );
-    }
-}
+        $this->Script->startup();
 
-print( "Starting object re-indexing\n" );
+        $this->Options = $this->Script->getOptions( "[db-host:][db-user:][db-password:][db-database:][db-type:|db-driver:][sql][clean][conc:][offset:][limit:][topNodeID:][php-exec:]",
+                                                    "",
+                                                    array( 'db-host' => "Database host",
+                                                           'db-user' => "Database user",
+                                                           'db-password' => "Database password",
+                                                           'db-database' => "Database name",
+                                                           'db-driver' => "Database driver",
+                                                           'db-type' => "Database driver, alias for --db-driver",
+                                                           'sql' => "Display sql queries",
+                                                           'clean' =>  "Remove all search data before beginning indexing",
+                                                           'conc' => 'Parallelization, number of concurent processes to use',
+                                                           'php-exec' => 'Full path to PHP executable',
+                                                           'offset' => '*For internal use only*',
+                                                           'limit' => '*For internal use only*',
+                                                           'topNodeID' => '*For internal use only*',
+                                                           ) );
+        $this->Script->initialize();
 
-$db = eZDB::instance();
-
-if ( $dbHost or $dbName or $dbUser or $dbImpl )
-{
-    $params = array();
-    if ( $dbHost !== false )
-        $params['server'] = $dbHost;
-    if ( $dbUser !== false )
-    {
-        $params['user'] = $dbUser;
-        $params['password'] = '';
-    }
-    if ( $dbPassword !== false )
-        $params['password'] = $dbPassword;
-    if ( $dbName !== false )
-        $params['database'] = $dbName;
-    $db = eZDB::instance( $dbImpl, $params, true );
-    eZDB::setInstance( $db );
-}
-
-$db->setIsSQLOutputEnabled( $showSQL );
-
-if ( $cleanupSearch )
-{
-    print( "{eZSearchEngine: Cleaning up search data" );
-    eZSearch::cleanup();
-    print( "}$endl" );
-}
-
-// Get top node
-$topNodeArray = eZPersistentObject::fetchObjectList( eZContentObjectTreeNode::definition(),
-                                                     null,
-                                                     array( 'parent_node_id' => 1,
-                                                            'depth' => 1 ) );
-$subTreeCount = 0;
-foreach ( array_keys ( $topNodeArray ) as $key  )
-{
-    $subTreeCount += $topNodeArray[$key]->subTreeCount( array( 'Limitation' => false, 'MainNodeOnly' => true ) );
-}
-
-print( "Number of objects to index: $subTreeCount $endl" );
-
-$i = 0;
-$dotMax = 70;
-$dotCount = 0;
-$limit = 200;
-$commitLimit = 1000;
-$iCommit = 0;
-$counter = 0;
-$counterInterrupt = 10000000;
-
-$searchEngine = new eZSolr;
-$start=microtime_float();
-foreach ( $topNodeArray as $node  )
-{
-    $offset = 0;
-    while ( $subTree = $node->subTree( array( 'Offset' => $offset, 'Limit' => $limit,
-                                              'Limitation' => array(),
-                                              'MainNodeOnly' => true ) ) )
-    {
-        foreach ( $subTree as $innerNode )
+        // Fix siteaccess
+        $siteAccess = $this->Options['siteaccess'] ? $this->Options['siteaccess'] : false;
+        if ( $siteAccess )
         {
-            $object = $innerNode->attribute( 'object' );
-            if ( !$object )
+            $this->changeSiteAccessSetting( $siteAccess );
+        }
+
+        $this->initializeDB();
+
+        $this->cleanUp();
+
+        // Check if current instance is main or sub process.
+        // Main process can not have offset or limit set.
+        // sub process MUST have offset and limit set.
+        $offset = $this->Options['offset'];
+        $limit = $this->Options['limit'];
+        $topNodeID = $this->Options['topNodeID'];
+        if ( !is_numeric( $offset ) &&
+             !is_numeric( $limit ) &&
+             !is_numeric( $topNodeID ) )
+        {
+            $this->CLI->output( 'Starting object re-indexing' );
+
+            // Get PHP executable from user.
+            $this->getPHPExecutable();
+
+            $this->runMain();
+        }
+        elseif ( is_numeric( $offset ) &&
+                 is_numeric( $limit ) &&
+                 is_numeric( $topNodeID ) )
+        {
+            $this->runSubProcess( $topNodeID, $offset, $limit );
+        }
+        else
+        {
+            //OBS !!, invalid.
+            $this->CLI->output( 'Invalid parameters provided.' );
+            $this->Script->shutdown();
+            exit();
+        }
+    }
+
+    /**
+     * Run sub process.
+     *
+     * @param int $topNodeID
+     * @param int Offset
+     * @param int Limit
+     */
+    protected function runSubProcess( $nodeID, $offset, $limit )
+    {
+        $count = 0;
+        $node = eZContentObjectTreeNode::fetch( $nodeID );
+        $searchEngine = new eZSolr();
+
+        if ( $subTree = $node->subTree( array( 'Offset' => $offset, 'Limit' => $limit,
+                                                  'Limitation' => array(),
+                                                  'MainNodeOnly' => true ) ) )
+        {
+            foreach ( $subTree as $innerNode )
             {
-                continue;
+                $object = $innerNode->attribute( 'object' );
+                if ( !$object )
+                {
+                    continue;
+                }
+                //eZSearch::removeObject( $object );
+                //pass false as we are going to do a commit at the end
+                //
+                $searchEngine->addObject( $object, false );
+                ++$count;
             }
-            //eZSearch::removeObject( $object );
-            //pass false as we are going to do a commit at the end
-            //
-            $searchEngine->addObject( $object, false );
-            ++$i;
-            ++$iCommit;
-            ++$dotCount;
-            // counter: use for debugging, index first 200 objects
-            ++$counter;
-            if ($counter > $counterInterrupt) break 3;
-            print( "." );
-            if ( $dotCount >= $dotMax or $i >= $subTreeCount )
+        }
+
+        $this->CLI->output( $count );
+        $this->Script->shutdown();
+        exit();
+    }
+
+    /**
+     * Get PHP executable from user input. Exit if no executable is entered.
+     */
+    protected function getPHPExecutable()
+    {
+        $validExecutable = false;
+        $output = array();
+        if ( !empty( $this->Options['php-exec'] ) )
+        {
+            $exec = $this->Options['php-exec'];
+            exec( $exec . ' -v', $output );
+
+            if ( count( $output ) &&
+                 strpos( $output[0], 'PHP' ) !== false )
             {
-                $dotCount = 0;
-                $percent = (float)( ($i*100.0) / $subTreeCount );
-                print( " " . $percent . "%" . $endl );
+                $validExecutable = true;
+                $this->Executable = $exec;
             }
-            if ($iCommit > $commitLimit )
+
+        }
+
+        while( !$validExecutable )
+        {
+            $input = readline( 'Enter path to PHP-CLI executable ( or [q] to quit )' );
+            if ( $input === 'q' )
             {
-                print ($endl . " ==intermediate optimize== " . $endl);
+                $this->Script->shutdown();
+                exit();
+            }
+
+            exec( $input . ' -v', $output );
+
+            if ( count( $output ) &&
+                 strpos( $output[0], 'PHP' ) !== false )
+            {
+                $validExecutable = true;
+                $this->Executable = $input;
+            }
+        }
+    }
+
+    /**
+     * Run main process
+     */
+    protected function runMain()
+    {
+        $startTS = microtime_float();
+
+        $searchEngine = new eZSolr();
+
+        $processLimit = min( $this->Options['conc'] ? $this->Options['conc'] : 2,
+                             10 ); // Maximum 10 processes
+        $useFork = ( function_exists( 'pcntl_fork' ) &&
+                     function_exists( 'posix_kill' ) );
+        if ( $useFork )
+        {
+            $this->CLI->output( 'Using fork.' );
+        }
+        else
+        {
+            $processLimit = 1;
+        }
+
+        $this->CLI->output( 'Using ' . $processLimit . ' concurent process(es)' );
+
+        $processList = array();
+        for( $i = 0; $i < $processLimit; $i++ )
+        {
+            $processList[$i] = -1;
+        }
+
+        $this->ObjectCount = $this->objectCount();
+        $this->CLI->output( 'Number of objects to index: ' . $this->ObjectCount );
+        $this->Script->resetIteration( $this->ObjectCount, 0 );
+
+        $topNodeArray = eZPersistentObject::fetchObjectList( eZContentObjectTreeNode::definition(),
+                                                             null,
+                                                             array( 'parent_node_id' => 1,
+                                                                    'depth' => 1 ) );
+        // Loop through top nodes.
+        foreach ( $topNodeArray as $node )
+        {
+            $nodeID = $node->attribute( 'node_id' );
+            $offset = 0;
+
+            $subtreeCount = $node->subTreeCount( array( 'Limitation' => false, 'MainNodeOnly' => true ) );
+            // While $offset < subtree count, loop through the nodes.
+            while( $offset < $subtreeCount )
+            {
+                // Loop trough the available processes, and see if any has finished.
+                for ( $i = 0; $i < $processLimit; $i++ )
+                {
+                    $pid = $processList[$i];
+                    if ( $useFork )
+                    {
+                        if ( $pid === -1 ||
+                             !posix_kill( $pid, 0 ) )
+                        {
+                            $newPid = $this->forkAndExecute( $nodeID, $offset, $this->Limit );
+                            $this->CLI->output( "\n" . 'Creating a new thread: ' . $newPid );
+                            if ( $newPid > 0 )
+                            {
+                                $offset += $this->Limit;
+                                $this->iterate();
+                                $processList[$i] = $newPid;
+                            }
+                            else
+                            {
+                                $this->CLI->output( "\n" . 'Returned invalid PID: ' . $newPid );
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Executre in same process
+                        $count = $this->execute( $nodeID, $offset, $this->Limit );
+                        $this->iterate( $count );
+                        $offset += $this->Limit;
+                    }
+
+                    if ( $offset >= $subtreeCount )
+                    {
+                        break;
+                    }
+                }
+
+                // If using fork, the main process must sleep a bit to avoid
+                // 100% cpu usage. Sleep for 100 millisec.
+                if ( $useFork )
+                {
+                    $status = 0;
+                    pcntl_wait( $status, WNOHANG );
+                    usleep( 100000 );
+                }
+            }
+        }
+
+        // Wait for all processes to finish.
+        $break = false;
+        while ( $useFork &&
+                !$break )
+        {
+            $break = true;
+            for ( $i = 0; $i < $processLimit; $i++ )
+            {
+                $pid = $processList[$i];
+                if ( $pid !== -1 )
+                {
+                    // Check if process is still alive.
+                    if ( posix_kill( $pid, 0 ) )
+                    {
+                        $break = false;
+                    }
+                    else
+                    {
+                        $this->CLI->output( 'Process finished: ' . $pid );
+                        $processList[$i] = -1;
+                    }
+                }
+            }
+            // Sleep for 500 msec.
+            $status = 0;
+            pcntl_wait( $status, WNOHANG );
+
+            usleep( 500000 );
+        }
+
+        $this->CLI->output( 'Optimizing. Please wait ...' );
+        $searchEngine->optimize( true );
+        $endTS = microtime_float();
+
+        $this->CLI->output( 'Indexing took ' . ( $endTS - $startTS ) . ' secs ' .
+                            '( average: ' . ( $this->ObjectCount / ( $endTS - $startTS ) ) . ' objects/sec )' );
+
+        $this->CLI->output( 'Finished updating the search index.' );
+    }
+
+    /**
+     * Iterate index counter
+     *
+     * @param int Iterate count ( optional )
+     */
+    protected function iterate( $count = false )
+    {
+        if ( !$count )
+        {
+            $count = $this->Limit;
+        }
+
+        for( $iterateCount = 0; $iterateCount < $count; ++$iterateCount )
+        {
+            if ( ++$this->IterateCount > $this->ObjectCount )
+            {
+                break;
+            }
+            $this->Script->iterate( $this->CLI, true );
+
+            if ( $this->IterateCount % 1000 === 0 )
+            {
+                $this->CLI->output( "\n" . 'Comitting and optimizing index ...' );
+                $searchEngine = new eZSolr();
                 $searchEngine->optimize();
-                $iCommit = 0;
                 eZContentObject::clearCache();
             }
         }
-        $offset += $limit;
     }
-}
 
-if ( !( $searchEngine instanceof eZSolr ) )
-{
-    $script->shutdown( 1, 'The current search engine plugin is not eZSolr' );
+    /**
+     * Fork and executre
+     *
+     * @param int Top node ID
+     * @param int Offset
+     * @param int Limit
+     */
+    protected function forkAndExecute( $nodeID, $offset, $limit )
+    {
+        $pid = pcntl_fork();
+
+        if ($pid == -1)
+        {
+            die('could not fork');
+        }
+        else if ( $pid )
+        {
+            // Main process
+            return $pid;
+        }
+        else
+        {
+            // We are the child process
+            $this->execute( $nodeID, $offset, $limit, true );
+            $this->Script->shutdown();
+            exit();
+        }
+    }
+
+    /**
+     * Execute indexing of subtree
+     *
+     * @param int Top node ID
+     * @param int Offset
+     * @param int Limit
+     * @param boolean Is sub process.
+     *
+     * @return int Number of objects indexed.
+     */
+    protected function execute( $nodeID, $offset, $limit, $isSubProcess = false )
+    {
+        global $argv;
+        // Create options string.
+        $paramString = '';
+        $paramList = array( 'db-host', 'db-user', 'db-password', 'db-type', 'db-driver' );
+        foreach( $paramList as $param )
+        {
+            if ( !empty( $this->Options[$param] ) )
+            {
+                $optionString .= ' --' . $param . '=' . escapeshellarg( $this->Options['db-host'] );
+            }
+        }
+
+        if ( $this->Options['siteaccess'] )
+        {
+            $paramString .= ' -s ' . escapeshellarg( $this->Options['siteaccess'] );
+        }
+
+        $paramString .= ' --limit=' . $limit .
+            ' --offset=' . $offset .
+            ' --topNodeID=' . $nodeID;
+
+        $output = array();
+        $command = $this->Executable . ' ' . $argv[0] . $paramString;
+        if ( $isSubProcess )
+        {
+            exec( $command, $output );
+        }
+        else
+        {
+            exec( $command, $output );
+        }
+
+        if ( !empty( $output ) )
+        {
+            $num = array_pop( $output );
+            if ( is_numeric( $num ) )
+            {
+                return $num;
+            }
+        }
+
+        $this->CLI->output( "\n" . 'Did not index content correctly: ' . "\n" . var_export( $output, 1 ) );
+
+        return 0;
+    }
+
+    /**
+     * Get total number of objects
+     *
+     * @return int Total object count
+     */
+    protected function objectCount()
+    {
+        $topNodeArray = eZPersistentObject::fetchObjectList( eZContentObjectTreeNode::definition(),
+                                                             null,
+                                                             array( 'parent_node_id' => 1,
+                                                                    'depth' => 1 ) );
+        $subTreeCount = 0;
+        foreach ( array_keys ( $topNodeArray ) as $key  )
+        {
+            $subTreeCount += $topNodeArray[$key]->subTreeCount( array( 'Limitation' => false, 'MainNodeOnly' => true ) );
+        }
+
+        return $subTreeCount;
+    }
+
+    /**
+     * Cleanup search index.
+     * Only clean up if --clean option is set.
+     */
+    protected function cleanUp()
+    {
+        if ( $this->Options['clean'] )
+        {
+            $this->CLI->output( "eZSearchEngine: Cleaning up search data" );
+            eZSearch::cleanup();
+        }
+    }
+
+    /**
+     * Ccreate custom DB connection if DB options provided
+     *
+     * @param array Options
+     */
+    protected function initializeDB()
+    {
+        $dbUser = $this->Options['db-user'] ? $this->Options['db-user'] : false;
+        $dbPassword = $this->Options['db-password'] ? $this->Options['db-password'] : false;
+        $dbHost = $this->Options['db-host'] ? $this->Options['db-host'] : false;
+        $dbName = $this->Options['db-database'] ? $this->Options['db-database'] : false;
+        $dbImpl = $this->Options['db-driver'] ? $this->Options['db-driver'] : false;
+        $showSQL = $this->Options['sql'] ? true : false;
+
+        $db = eZDB::instance();
+
+        if ( $dbHost or $dbName or $dbUser or $dbImpl )
+        {
+            $params = array();
+            if ( $dbHost !== false )
+                $params['server'] = $dbHost;
+            if ( $dbUser !== false )
+            {
+                $params['user'] = $dbUser;
+                $params['password'] = '';
+            }
+            if ( $dbPassword !== false )
+                $params['password'] = $dbPassword;
+            if ( $dbName !== false )
+                $params['database'] = $dbName;
+            $db = eZDB::instance( $dbImpl, $params, true );
+            eZDB::setInstance( $db );
+        }
+
+        $db->setIsSQLOutputEnabled( $showSQL );
+    }
+
+
+    /**
+     * Change siteaccess
+     *
+     * @param string siteacceee name
+     */
+    protected function changeSiteAccessSetting( $siteaccess )
+    {
+        global $isQuiet;
+        $cli = eZCLI::instance();
+        if ( !file_exists( 'settings/siteaccess/' . $siteaccess ) )
+        {
+            if ( !$isQuiet )
+                $cli->notice( "Siteaccess $optionData does not exist, using default siteaccess" );
+        }
+    }
+
+
+    /// Vars
+
+    var $CLI;
+    var $Script;
+    var $Options;
+    var $OffsetList;
+    var $Executable;
+    var $IterateCount = 0;
+    var $Limit = 200;
+    var $ObjectCount;
 }
-$end_index = microtime_float();
-print ($endl . "Start optimize and commit...");
-$searchEngine->optimize( true );
-print( $endl . "done" . $endl );
-$end_all = microtime_float();
-print ('Indexing took ' . ($end_index-$start) . ' secs (average: ' . ($counter / ($end_index-$start)) . ' objects/sec)' . $endl);
-$script->shutdown();
 
 ?>

@@ -12,3 +12,5 @@ Changes from 1.0.0beta1 to 1.0.0beta2
   ( Merged from trunk rev. 1987 )
 - Fixed issue #11796: Information about bin/php/ezpgenerateautoloads.php missing 
   from installation documentation.
+- Fixed issue #11933: Internal PHP reference counter overflow.
+  ( Merged from ezp4/trunk )
