@@ -3,3 +3,6 @@ Changes from 1.0.0beta1 to 1.1.0alpha1
 *Features:
 - Added indexing of native types. See also: doc/design/1.1/native_types.txt
 - Implemented #11928: eZ Find for ezp4 should use DOM to create document XML.
+
+*Bugs:
+- Fixed issue #11933: Internal PHP reference counter overflow.

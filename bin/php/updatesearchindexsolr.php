@@ -235,7 +235,7 @@ class ezfUpdateSearchIndexSolr
 
         $searchEngine = new eZSolr();
 
-        $processLimit = min( $this->Options['conc'] ? $this->Options['conc'] : 1,
+        $processLimit = min( $this->Options['conc'] ? $this->Options['conc'] : 2,
                              10 ); // Maximum 10 processes
         $useFork = ( function_exists( 'pcntl_fork' ) &&
                      function_exists( 'posix_kill' ) );
