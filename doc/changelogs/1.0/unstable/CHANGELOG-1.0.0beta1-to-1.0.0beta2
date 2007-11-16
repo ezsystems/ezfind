@@ -14,3 +14,6 @@ Changes from 1.0.0beta1 to 1.0.0beta2
   from installation documentation.
 - Fixed issue #11933: Internal PHP reference counter overflow.
   ( Merged from ezp4/trunk )
+- Fixed issue #11824: eZ Find installation documentation missing setup 
+  information about permissions.
+  ( Merged from ezp3/stable, rev. 2156 )
