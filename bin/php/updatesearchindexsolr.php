@@ -402,6 +402,11 @@ class ezfUpdateSearchIndexSolr
     protected function forkAndExecute( $nodeID, $offset, $limit )
     {
         $pid = pcntl_fork();
+        $db = eZDB::instance();
+        $db->IsConnected = false;
+        eZDB::setInstance( null );
+        $this->initializeDB();
+
         if ($pid == -1)
         {
             die('could not fork');
@@ -464,13 +469,16 @@ class ezfUpdateSearchIndexSolr
             exec( $command, $output );
         }
 
-        if ( !empty( $output[0] ) &&
-             is_numeric( $output[0] ) )
+        if ( !empty( $output ) )
         {
-            return $output[0];
+            $num = array_pop( $output );
+            if ( is_numeric( $num ) )
+            {
+                return $num;
+            }
         }
 
-        $this->CLI->output( 'Did not index content correctly: ' . $command );
+        $this->CLI->output( "\n" . 'Did not index content correctly: ' . "\n" . var_export( $output, 1 ) );
 
         return 0;
     }
