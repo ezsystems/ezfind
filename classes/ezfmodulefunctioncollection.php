@@ -96,17 +96,20 @@ class ezfModuleFunctionCollection
      * @param array Facet definition
      * @param array Filter parameters
      * @param array Sort by parameters
+     * @param mixed Content class ID or list of content class IDs
      *
      * @return array Search result
      */
-    public function search( $query, $offset = 0, $limit = 10, $facet = null, $filter = null, $sortBy = null )
+    public function search( $query, $offset = 0, $limit = 10, $facet = null,
+                            $filter = null, $sortBy = null, $classID = null )
     {
         $solrSearch = new eZSolr();
         $params = array( 'SearchOffset' => $offset,
                          'SearchLimit' => $limit,
                          'Facet' => $facet,
                          'SortBy' => $sortBy,
-                         'Filter' => $filter );
+                         'Filter' => $filter,
+                         'SearchContentClassID' => $classID );
         return array( 'result' => $solrSearch->search( $query, $params ) );
     }
 }
