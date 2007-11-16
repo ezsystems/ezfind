@@ -2,6 +2,8 @@ Changes from 1.0.0beta1 to 1.1.0alpha1
 
 *Features:
 - Added indexing of native types. See also: doc/design/1.1/native_types.txt
+- Added support for facets. See also: doc/design/1.1/facets.txt
+- Added support for sorting. See also: doc/design/1.1/sorting.txt
 - Implemented #11928: eZ Find for ezp4 should use DOM to create document XML.
 
 *Bugs:
