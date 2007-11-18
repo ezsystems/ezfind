@@ -365,6 +365,11 @@ class ezfeZPSolrQueryBuilder
                     $queryPart['field'] = eZSolr::getMetaFieldName( 'contentclass_id' );
                 } break;
 
+                case 'installation':
+                {
+                    $queryPart['field'] = eZSolr::getMetaFieldName( 'installation_id' );
+                } break;
+
                 case 'translation':
                 {
                     $queryPart['field'] = eZSolr::getMetaFieldName( 'language_code' );

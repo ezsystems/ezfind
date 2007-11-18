@@ -139,6 +139,25 @@ class ezfSearchResultInfo
                             $facetArray[] = $fieldInfo;
                         } break;
 
+                        // instalaltion facet field
+                        case eZSolr::getMetaFieldName( 'installation_id' ):
+                        {
+                            $findINI = eZINI::instance( 'ezfind.ini' );
+                            $siteNameMapList = $findINI->variable( 'FacetSettings', 'SiteNameList' );
+                            $fieldInfo = array( 'field' => 'installation',
+                                                'count' => count( $facetField ),
+                                                'nameList' => array(),
+                                                'queryLimit' => array(),
+                                                'countList' => array() );
+                            foreach( $facetField as $installationID => $count )
+                            {
+                                $fieldInfo['nameList'][$installationID] = isset( $siteNameMapList[$installationID] ) ?
+                                    $siteNameMapList[$installationID] : $installationID;
+                                $fieldInfo['queryLimit'][$installationID] = 'installation_id:' . $installationID;
+                                $fieldInfo['countList'][$installationID] = $count;
+                            }
+                        } break;
+
                         // author facet field
                         case eZSolr::getMetaFieldName( 'owner_id' ):
                         {
