@@ -338,6 +338,11 @@ class ezfeZPSolrQueryBuilder
         $parameterList = array_change_key_case( $parameterList, CASE_LOWER );
         $queryParamList = array();
 
+        if ( empty( $parameterList['facet'] ) )
+        {
+            return $queryParamList;
+        }
+
         // Loop through facet definitions, and build facet query.
         foreach( $parameterList['facet'] as $facetDefinition )
         {
