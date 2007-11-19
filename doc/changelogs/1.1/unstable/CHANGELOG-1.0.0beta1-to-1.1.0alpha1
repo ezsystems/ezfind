@@ -5,7 +5,9 @@ Changes from 1.0.0beta1 to 1.1.0alpha1
 - Added support for facets. See also: doc/design/1.1/facets.txt
 - Added support for sorting. See also: doc/design/1.1/sorting.txt
 - Implemented #11928: eZ Find for ezp4 should use DOM to create document XML.
-- Implemented #11967: Add default facet - installation.
+- Implemented #11967: Add facet - installation.
+- Implemented #11973: Add possibility to use all meta data fields for facets.
+
 
 *Bugs:
 - Fixed issue #11933: Internal PHP reference counter overflow.

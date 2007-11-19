@@ -377,27 +377,35 @@ class ezfeZPSolrQueryBuilder
 
                 default:
                 {
-                    // Get class and attribute identifiers + optional option.
-                    $options = null;
-                    $fieldDef = explode( '/', $facetDefinition['field'] );
-                    if ( count( $fieldDef ) == 2 )
+                    // If the facet field is meta data, use it directly
+                    if ( eZSolr::hasMetaAttributeType( $facetDefinition['field'] ) )
                     {
-                        list( $classIdentifier, $attributeIdentifier ) = $fieldDef;
+                        $queryPart['field'] = eZSolr::getMetaFieldName( $facetDefinition['field'] );
                     }
-                    else if ( count( $fieldDef ) == 3 )
+                    else
                     {
-                        list( $classIdentifier, $attributeIdentifier, $options ) = $fieldDef;
+                        // Get class and attribute identifiers + optional option.
+                        $options = null;
+                        $fieldDef = explode( '/', $facetDefinition['field'] );
+                        if ( count( $fieldDef ) == 2 )
+                        {
+                            list( $classIdentifier, $attributeIdentifier ) = $fieldDef;
+                        }
+                        else if ( count( $fieldDef ) == 3 )
+                        {
+                            list( $classIdentifier, $attributeIdentifier, $options ) = $fieldDef;
+                        }
+                        $contectClassAttributeID = eZContentObjectTreeNode::classAttributeIDByIdentifier( $classIdentifier . '/' . $attributeIdentifier );
+                        if ( !$contectClassAttributeID )
+                        {
+                            eZDebug::writeNotice( 'Facet field does not exist in local installation, but may still be valid: ' .
+                                                  $facetDefinition['field'],
+                                                  'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
+                            continue;
+                        }
+                        $contectClassAttribute = eZContentClassAttribute::fetch( $contectClassAttributeID );
+                        $queryPart['field'] = ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $options );
                     }
-                    $contectClassAttributeID = eZContentObjectTreeNode::classAttributeIDByIdentifier( $classIdentifier . '/' . $attributeIdentifier );
-                    if ( !$contectClassAttributeID )
-                    {
-                        eZDebug::writeNotice( 'Facet field does not exist in local installation, but may still be valid: ' .
-                                              $facetDefinition['field'],
-                                              'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
-                        continue;
-                    }
-                    $contectClassAttribute = eZContentClassAttribute::fetch( $contectClassAttributeID );
-                    $queryPart['field'] = ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $options );
                 } break;
             }
 
