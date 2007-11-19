@@ -11,7 +11,7 @@
     {set $search_result=$search['SearchResult']}
     {set $search_count=$search['SearchCount']}
     {def $search_extras=$search['SearchExtras']}
-    {def $facetField=$search_extras.facet.main.field}
+    {def $facetField=$search_extras.facet_fields.0.field}
     {set $stop_word_array=$search['StopWordArray']}
     {set $search_data=$search}
 {/if}
@@ -86,8 +86,8 @@
           </div>
           <div class="block"><strong>{'Groups'|i18n( 'design/ezwebin/content/search' )}:</strong>&nbsp;
               <a href={concat( $baseURI, '&facet_field=', $facetField|wash )|ezurl}>{'All'|i18n( 'design/ezwebin/content/search' )}</a> -
-              {foreach $search_extras.facet.main.nameList as $facetID => $name}
-                  <a href={concat( $baseURI, '&facet_field=', $facetField|wash, '&filter[]=', $search_extras.facet.main.queryLimit[$facetID]|wash )|ezurl}>{$name|wash}</a>({$search_extras.facet.main.countList[$facetID]})
+              {foreach $search_extras.facet_fields.0.nameList as $facetID => $name}
+                  <a href={concat( $baseURI, '&facet_field=', $facetField|wash, '&filter[]=', $search_extras.facet_fields.0.queryLimit[$facetID]|wash )|ezurl}>{$name|wash}</a>({$search_extras.facet_fields.0.countList[$facetID]})
               {delimiter}-{/delimiter}
               {/foreach}
           </div>

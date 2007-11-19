@@ -336,77 +336,73 @@ class ezfeZPSolrQueryBuilder
     protected function buildFacetQueryParamList( $parameterList )
     {
         $parameterList = array_change_key_case( $parameterList, CASE_LOWER );
-        $queryParamList = array( 'facet' => 'true' );
-        if ( empty( $parameterList['facet'] ) )
-        {
-            $parameterList['facet'][] = array( 'field' => 'class' );
-        }
+        $queryParamList = array();
 
         // Loop through facet definitions, and build facet query.
         foreach( $parameterList['facet'] as $facetDefinition )
         {
-            if ( empty( $facetDefinition['field'] ) )
+            if ( empty( $facetDefinition['field'] ) &&
+                 empty( $facetDefinition['query'] ) )
             {
-                eZDebug::writeError( 'No facet field provided.',
+                eZDebug::writeError( 'No facet field or query provided.',
                                      'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
                 continue;
             }
 
             $queryPart = array();
-            switch( $facetDefinition['field'] )
+            if ( !empty( $facetDefinition['field'] ) )
             {
-                case 'author':
+                switch( $facetDefinition['field'] )
                 {
-                    $queryPart['field'] = eZSolr::getMetaFieldName( 'owner_id' );
-                } break;
-
-                case 'class':
-                {
-                    $queryPart['field'] = eZSolr::getMetaFieldName( 'contentclass_id' );
-                } break;
-
-                case 'installation':
-                {
-                    $queryPart['field'] = eZSolr::getMetaFieldName( 'installation_id' );
-                } break;
-
-                case 'translation':
-                {
-                    $queryPart['field'] = eZSolr::getMetaFieldName( 'language_code' );
-                } break;
-
-                default:
-                {
-                    // If the facet field is meta data, use it directly
-                    if ( eZSolr::hasMetaAttributeType( $facetDefinition['field'] ) )
+                    case 'author':
                     {
-                        $queryPart['field'] = eZSolr::getMetaFieldName( $facetDefinition['field'] );
-                    }
-                    else
+                        $queryPart['field'] = eZSolr::getMetaFieldName( 'owner_id' );
+                    } break;
+
+                    case 'class':
                     {
-                        // Get class and attribute identifiers + optional option.
-                        $options = null;
-                        $fieldDef = explode( '/', $facetDefinition['field'] );
-                        if ( count( $fieldDef ) == 2 )
-                        {
-                            list( $classIdentifier, $attributeIdentifier ) = $fieldDef;
-                        }
-                        else if ( count( $fieldDef ) == 3 )
-                        {
-                            list( $classIdentifier, $attributeIdentifier, $options ) = $fieldDef;
-                        }
-                        $contectClassAttributeID = eZContentObjectTreeNode::classAttributeIDByIdentifier( $classIdentifier . '/' . $attributeIdentifier );
-                        if ( !$contectClassAttributeID )
+                        $queryPart['field'] = eZSolr::getMetaFieldName( 'contentclass_id' );
+                    } break;
+
+                    case 'installation':
+                    {
+                        $queryPart['field'] = eZSolr::getMetaFieldName( 'installation_id' );
+                    } break;
+
+                    case 'translation':
+                    {
+                        $queryPart['field'] = eZSolr::getMetaFieldName( 'language_code' );
+                    } break;
+
+                    default:
+                    {
+                        $fieldName = eZSolr::getFieldName( $facetDefinition['field'] );
+                        if ( !$fieldName )
                         {
                             eZDebug::writeNotice( 'Facet field does not exist in local installation, but may still be valid: ' .
                                                   $facetDefinition['field'],
                                                   'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
                             continue;
                         }
-                        $contectClassAttribute = eZContentClassAttribute::fetch( $contectClassAttributeID );
-                        $queryPart['field'] = ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $options );
-                    }
-                } break;
+                        $queryPart['field'] = $fieldName;
+                    } break;
+                }
+            }
+
+            // Get query part.
+            if ( !empty( $facetDefinition['query'] ) )
+            {
+                list( $field, $query ) = explode( ':', $facetDefinition['query'] );
+
+                $field = eZSolr::getFieldName( $field );
+                if ( !$field )
+                {
+                    eZDebug::writeNotice( 'Invalid query field provided: ' . $facetDefinition['query'],
+                                          'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
+                    continue;
+                }
+
+                $queryPart['query'] = $field . ':' . $query;
             }
 
             // Get prefix.
@@ -527,6 +523,11 @@ class ezfeZPSolrQueryBuilder
                     $queryParamList['facet.' . $key][] = $value;
                 }
             }
+        }
+
+        if ( count( $queryParamList ) )
+        {
+            $queryParamList['facet'] = 'true';
         }
 
         return $queryParamList;

@@ -59,7 +59,8 @@ class ezfSearchResultInfo
      */
     public function attributes()
     {
-        return array( 'facet',
+        return array( 'facet_fields',
+                      'facet_queries',
                       'engine',
                       'hasError',
                       'error',
@@ -95,11 +96,11 @@ class ezfSearchResultInfo
                 }
             };
 
-            case 'facet':
+            case 'facet_queries':
             {
-                if ( !empty( $this->Facet ) )
+                if ( !empty( $this->FacetQueries ) )
                 {
-                    return $this->Facet;
+                    return $this->FacetQueries;
                 }
 
                 // If the facets count is empty, an error has occured.
@@ -109,7 +110,34 @@ class ezfSearchResultInfo
                 }
 
                 $facetArray = array();
-                $mainFacet = null;
+                foreach( $this->ResultArray['facet_counts']['facet_queries'] as $query => $count )
+                {
+                    list( $field, $fieldValue ) = explode( ':', $query );
+                    $fieldInfo = array( 'field' => $field,
+                                        'count' => $count,
+                                        'queryLimit' => $query,
+                                        'fieldValue' => $fieldValue );
+                    $facetArray[] = $fieldInfo;
+                }
+
+                $this->FacetQueries = $facetArray;
+                return $this->FacetQueries;
+            } break;
+
+            case 'facet_fields':
+            {
+                if ( !empty( $this->FacetFields ) )
+                {
+                    return $this->FacetFields;
+                }
+
+                // If the facets count is empty, an error has occured.
+                if ( empty( $this->ResultArray['facet_counts'] ) )
+                {
+                    return null;
+                }
+
+                $facetArray = array();
                 foreach( $this->ResultArray['facet_counts']['facet_fields'] as $field => $facetField )
                 {
                     switch( $field )
@@ -216,15 +244,10 @@ class ezfSearchResultInfo
                             $facetArray[] = $fieldInfo;
                         } break;
                     }
-                    if ( !$mainFacet && $facetArray )
-                    {
-                        $mainFacet = $facetArray[0];
-                    }
                 }
 
-                $this->Facet = $facetArray;
-                $this->Facet['main'] = $mainFacet;
-                return $this->Facet;
+                $this->FacetFields = $facetArray;
+                return $this->FacetFields;
             } break;
 
             case 'engine':
@@ -253,7 +276,8 @@ class ezfSearchResultInfo
 
 
     /// Member vars
-    protected $Facet;
+    protected $FacetFields;
+    protected $FacetQueries;
     protected $ResultArray;
 }
 

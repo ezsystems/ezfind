@@ -107,6 +107,48 @@ class eZSolr
     }
 
     /**
+     * Get solr field name, from base name. The base name may either be a
+     * meta data name, or an eZ Publish content class attribute, specified by
+     * <class identifier>/<attribute identifier>[/<option>]
+     *
+     * @param string Base field name.
+     *
+     * @return string Internal base name. Returns null if no valid base name was provided.
+     */
+    static function getFieldName( $baseName )
+    {
+        // If the base name is a meta field, get the correct field name.
+        if ( eZSolr::hasMetaAttributeType( $baseName ) )
+        {
+            return eZSolr::getMetaFieldName( $baseName );
+        }
+        else
+        {
+            // Get class and attribute identifiers + optional option.
+            $options = null;
+            $fieldDef = explode( '/', $baseName );
+            if ( count( $fieldDef ) == 2 )
+            {
+                list( $classIdentifier, $attributeIdentifier ) = $fieldDef;
+            }
+            else if ( count( $fieldDef ) == 3 )
+            {
+                list( $classIdentifier, $attributeIdentifier, $options ) = $fieldDef;
+            }
+            $contectClassAttributeID = eZContentObjectTreeNode::classAttributeIDByIdentifier( $classIdentifier . '/' . $attributeIdentifier );
+            if ( !$contectClassAttributeID )
+            {
+                eZDebug::writeNotice( 'Could not get content class from base name: ' . $baseName,
+                                      'eZSolr::getFieldName()' );
+                return null;
+            }
+            $contectClassAttribute = eZContentClassAttribute::fetch( $contectClassAttributeID );
+            return  ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $options );
+        }
+    }
+
+
+    /**
      * Check if eZSolr has meta attribute type.
      *
      * @param string Meta attribute name

@@ -8,6 +8,7 @@ Changes from 1.0.0beta1 to 1.1.0alpha1
 - Implemented #11967: Add facet - installation.
 - Implemented #11973: Add possibility to use all meta data fields for facets.
 - Implemented #11974: Add subtree_array limitation to template fetch function.
+- Implemented #11975: Add facet.query support to query handling.
 
 
 *Bugs:
