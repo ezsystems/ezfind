@@ -312,16 +312,40 @@ class ezfeZPSolrQueryBuilder
             {
                 foreach( $value as $subValue )
                 {
-                    $filterQueryList[] = $baseName . ':"' . $subValue . '"';
+                    $quote = self::getFilterQuote( $subValue );
+                    $filterQueryList[] = $baseName . ':' . $quote . $subValue . $quote;
                 }
             }
             else
             {
-                $filterQueryList[] = $baseName . ':"' . $value . '"';
+                $quote = self::getFilterQuote( $value );
+                $filterQueryList[] = $baseName . ':' . $quote . $value . $quote;
             }
         }
 
         return implode( ' AND ', $filterQueryList );
+    }
+
+    /**
+     * Analyze the value, and decide if quotes should be added or not.
+     *
+     * @param string Value
+     *
+     * @return string '"' of quotes are used, '' or not.
+     */
+    static function getFilterQuote( $value )
+    {
+        $quote = '';
+        if ( strpos( ' ', $value ) !== false )
+        {
+            $quote = '"';
+            if ( strpos( '(', $value ) !== false )
+            {
+                $quote = '';
+            }
+        }
+
+        return $quote;
     }
 
     /**
