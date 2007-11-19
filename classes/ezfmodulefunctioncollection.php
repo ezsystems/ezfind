@@ -97,11 +97,13 @@ class ezfModuleFunctionCollection
      * @param array Filter parameters
      * @param array Sort by parameters
      * @param mixed Content class ID or list of content class IDs
+     * @param array list of subtree limitation node IDs
      *
      * @return array Search result
      */
     public function search( $query, $offset = 0, $limit = 10, $facet = null,
-                            $filter = null, $sortBy = null, $classID = null )
+                            $filter = null, $sortBy = null, $classID = null,
+                            $subtreeArray = null )
     {
         $solrSearch = new eZSolr();
         $params = array( 'SearchOffset' => $offset,
@@ -109,7 +111,8 @@ class ezfModuleFunctionCollection
                          'Facet' => $facet,
                          'SortBy' => $sortBy,
                          'Filter' => $filter,
-                         'SearchContentClassID' => $classID );
+                         'SearchContentClassID' => $classID,
+                         'SearchSubTreeArray' => $subtreeArray );
         return array( 'result' => $solrSearch->search( $query, $params ) );
     }
 }
