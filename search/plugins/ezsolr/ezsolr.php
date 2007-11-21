@@ -154,6 +154,7 @@ class eZSolr
             {
                 $doc->addField( 'm_path', $pathNodeID );
             }
+            $doc->addField( 'm_is_invisible', $mainNode->attribute( 'is_invisible' ) ? 'true' : 'false' );
 
             eZContentObject::recursionProtectionStart();
 
@@ -327,6 +328,12 @@ class eZSolr
         {
             $filterQuery = '( ' . $filterQuery . ' AND ( m_language_code:' .
                 implode( ' OR m_language_code:', $ini->variable( 'RegionalSettings', 'SiteLanguageList' ) ) . ' ) )';
+        }
+
+        // Add visibility condition
+        if ( !eZContentObjectTreeNode::showInvisibleNodes() )
+        {
+            $filterQuery .= ' AND m_is_invisible:false';
         }
 
         eZDebug::writeDebug( $filterQuery, 'eZSolr::policyLimitationFilterQuery' );
