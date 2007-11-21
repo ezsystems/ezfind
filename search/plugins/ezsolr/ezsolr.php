@@ -75,6 +75,8 @@ class eZSolr
         return array( 'node_id' => 'sint',
                       'path_string' => 'string',
                       'url_alias' => 'string',
+                      'is_hidden' => 'boolean',
+                      'is_invisible' => 'boolean',
                       'sort_field' => 'string',
                       'sort_order' => 'string' );
     }
@@ -233,8 +235,17 @@ class eZSolr
         {
             foreach( eZSolr::nodeAttributes() as $attributeName => $fieldType )
             {
+                $value = $contentNode->attribute( $attributeName );
+                switch( $fieldType )
+                {
+                    case 'boolean':
+                    {
+                        $value = $value ? 'true' : 'false';
+                    } break;
+                }
+
                 $nodeAttributeValues[] = array( 'name' => $attributeName,
-                                                'value' => $contentNode->attribute( $attributeName ),
+                                                'value' => $value,
                                                 'fieldType' => $fieldType );
             }
         }

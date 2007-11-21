@@ -16,3 +16,4 @@ Changes from 1.0.0beta1 to 1.1.0alpha1
 - Fixed issue #11824: eZ Find installation documentation missing setup 
   information about permissions.
   ( Merged from ezp3/stable, rev. 2156 )
+- Fixed issue #12015: Hidden status not respected.

@@ -804,6 +804,12 @@ class ezfeZPSolrQueryBuilder
                 implode( ' OR ' . eZSolr::getMetaFieldName( 'language_code' ) . ':', $ini->variable( 'RegionalSettings', 'SiteLanguageList' ) ) . ' ) )';
         }
 
+        // Add visibility condition
+        if ( !eZContentObjectTreeNode::showInvisibleNodes() )
+        {
+            $filterQuery .= ' AND ' . eZSolr::getMetaFieldName( 'is_invisible' ) . ':false';
+        }
+
         eZDebug::writeDebug( $filterQuery,
                              'ezfeZPSolrQueryBuilder::policyLimitationFilterQuery' );
 
