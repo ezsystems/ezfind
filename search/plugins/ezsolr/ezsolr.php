@@ -235,17 +235,8 @@ class eZSolr
         {
             foreach( eZSolr::nodeAttributes() as $attributeName => $fieldType )
             {
-                $value = $contentNode->attribute( $attributeName );
-                switch( $fieldType )
-                {
-                    case 'boolean':
-                    {
-                        $value = $value ? 'true' : 'false';
-                    } break;
-                }
-
                 $nodeAttributeValues[] = array( 'name' => $attributeName,
-                                                'value' => $value,
+                                                'value' => $contentNode->attribute( $attributeName ),
                                                 'fieldType' => $fieldType );
             }
         }

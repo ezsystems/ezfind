@@ -218,6 +218,14 @@ class ezfSolrDocumentFieldBase
                 }
             } break;
 
+            case 'boolean':
+            {
+                if ( is_numeric( $value ) )
+                {
+                    $value = $value ? 'true' : 'false';
+                }
+            } break;
+
             default:
             {
                 // Do nothing yet.
