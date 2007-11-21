@@ -144,6 +144,7 @@ class ezfSolrDocumentFieldName
                                   'sfloat' => 'sf',
                                   'sdouble' => 'sd',
                                   'string' => 's',
+                                  'long' => 'l',
                                   'slong' => 'sl',
                                   'text' => 't',
                                   'boolean' => 'b',

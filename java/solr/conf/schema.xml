@@ -323,6 +323,7 @@
    <dynamicField name="*_sd"       type="sdouble" indexed="true"  stored="true" multiValued="true"/>
    <dynamicField name="*_s"        type="string"  indexed="true"  stored="true" multiValued="true"/>
    <dynamicField name="*_sl"       type="slong"   indexed="true"  stored="true" multiValued="true"/>
+   <dynamicField name="*_l"        type="long"    indexed="true"  stored="true" multiValued="true"/>
    <dynamicField name="*_t"        type="text"    indexed="true"  stored="true" multiValued="true"/>
    <dynamicField name="*_b"        type="boolean" indexed="true"  stored="true" multiValued="true"/>
    <dynamicField name="*_dt"       type="date"    indexed="true"  stored="true" multiValued="true"/>
