@@ -1,4 +1,4 @@
-eZ Components - Authentication, Design
+eZ Find - Authentication, Design
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 :Author:   Kåre Køhler Høvik
 :Revision: 

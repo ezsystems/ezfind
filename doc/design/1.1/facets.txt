@@ -1,4 +1,4 @@
-eZ Components - Facets, Design
+eZ Find - Facets, Design
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 :Author:   Kåre Køhler Høvik
 :Revision: 

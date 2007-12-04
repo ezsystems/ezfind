@@ -1,4 +1,4 @@
-eZ Components - Facets, Design
+eZ Find - Search, Design
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 :Author:   Kåre Køhler Høvik
 :Revision: 
@@ -20,7 +20,7 @@ Design
 Sort options for fetch( ezfind, search, hash( ... ) ) are specified in the
 hash parameter by 'sort_by'. The possible sort options are:
 - relevance | score ( default )
-- <class_name>/<attribute_name>
+- <class_name>/<attribute_name>[/<sub_structure>]
 - modified
 - published
 - author

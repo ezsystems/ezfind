@@ -226,30 +226,14 @@ class ezfeZPSolrQueryBuilder
 
                     default:
                     {
-                        $fieldDef = explode( '/', $field );
-                        if ( count( $fieldDef ) == 2 )
+                        $field = eZSolr::getFieldName( $field );
+                        if ( !$field )
                         {
-                            list( $classIdentifier, $attributeIdentifier ) = $fieldDef;
-                        }
-                        else if ( count( $fieldDef ) == 3 )
-                        {
-                            list( $classIdentifier, $attributeIdentifier, $options ) = $fieldDef;
-                        }
-                        if ( !empty( $classIdentifier ) &&
-                             !empty( $attributeIdentifier ) )
-                        {
-                            $contectClassAttributeID = eZContentObjectTreeNode::classAttributeIDByIdentifier( $classIdentifier . '/' . $attributeIdentifier );
-                        }
-
-                        if ( empty( $contectClassAttributeID ) )
-                        {
-                            eZDebug::writeError( 'Sort field does not exist in local installation, but may still be valid: ' .
-                                                 $field,
-                                                 'ezfeZPSolrQueryBuilder::buildSortParameter()' );
+                            eZDebug::writeNotice( 'Sort field does not exist in local installation, but may still be valid: ' .
+                                                  $facetDefinition['field'],
+                                                  'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
                             continue;
                         }
-                        $contectClassAttribute = eZContentClassAttribute::fetch( $contectClassAttributeID );
-                        $field = ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $options );
                     } break;
                 }
 
