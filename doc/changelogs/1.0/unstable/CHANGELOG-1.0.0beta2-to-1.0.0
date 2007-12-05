@@ -1,0 +1,6 @@
+Changes from 1.0.0beta2 to 1.0.0
+
+
+*Bugfixes:
+- Fixed issue #12105: Empty Search doesn't get disabled.
+  ( Merged from ezp4/trunk rev. 2384 )

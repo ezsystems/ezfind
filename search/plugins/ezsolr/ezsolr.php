@@ -39,13 +39,13 @@ class eZSolr
         eZDebug::createAccumulatorGroup( 'solr', 'Solr search plugin' );
         $this->SolrINI = eZINI::instance( 'solr.ini' );
         $this->FindINI = eZINI::instance( 'ezfind.ini' );
+        $this->SiteINI = eZINI::instance( 'site.ini' );
         $this->SearchServerURI = $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' );
         $this->Solr = new eZSolrBase( $this->SearchServerURI );
         $realm = $this->SolrINI->variable( 'SolrBase', 'Realm' );
         if ( $realm == 'default' )
         {
-            $SiteINI = eZINI::instance( 'site.ini' );
-            $this->Realm = $SiteINI->variable( 'DatabaseSettings', 'Database' );
+            $this->Realm = $this->SiteINI->variable( 'DatabaseSettings', 'Database' );
         }
         else
         {
@@ -86,8 +86,6 @@ class eZSolr
     */
     function addObject( $contentObject, $commit = true )
     {
-        $ini = eZINI::instance();
-
         // Add all translations to the document list
         $docList = array();
 
@@ -109,7 +107,7 @@ class eZSolr
         // Check anonymous user access.
         if ( $this->FindINI->variable( 'SiteSettings', 'IndexPubliclyAvailable' ) == 'enabled' )
         {
-            $anonymousUserID = $ini->variable( 'UserSettings', 'AnonymousUserID' );
+            $anonymousUserID = $this->SiteINI->variable( 'UserSettings', 'AnonymousUserID' );
             $currentUserID = eZUser::currentUserID();
             $user = eZUser::instance( $anonymousUserID );
             eZUser::setCurrentlyLoggedInUser( $user, $anonymousUserID );
@@ -135,7 +133,7 @@ class eZSolr
             $doc->addField( 'm_realm', $this->Realm );
             $doc->addField( 'm_installation_id', $this->installationID() );
             $doc->addField( 'm_installation_url',
-                            $this->FindINI->variable( 'SiteSettings', 'URLProtocol' ) . $ini->variable( 'SiteSettings', 'SiteURL' ) . '/' );
+                            $this->FindINI->variable( 'SiteSettings', 'URLProtocol' ) . $this->SiteINI->variable( 'SiteSettings', 'SiteURL' ) . '/' );
 
             // Set Object attributes
             $doc->addField( 'm_name', $contentObject->name( false, $languageCode ) );
@@ -448,8 +446,23 @@ class eZSolr
     */
     function search( $searchText, $params = array(), $searchTypes = array() )
     {
+        if ( $this->SiteINI->variable( 'SearchSettings', 'AllowEmptySearch' ) == 'disabled' &&
+             trim( $searchText ) == '' )
+        {
+            return array(
+                'SearchResult' => false,
+                'SearchCount' => 0,
+                'StopWordArray' => array(),
+                'SearchExtras' => array(
+                    'DocExtras' => array(),
+                    'ResponseHeader' => false,
+                    'Error' => ezi18n( 'ezfind', 'Empty search not allowed' ),
+                    'Engine' => $this->engineText() ) );
+        }
+
         eZDebug::writeDebug( $params, 'search params' );
         $searchCount = 0;
+        $error = 'Server not running';
 
         $offset = ( isset( $params['SearchOffset'] ) && $params['SearchOffset'] ) ? $params['SearchOffset'] : 0;
         $limit = ( isset( $params['SearchLimit']  ) && $params['SearchLimit'] ) ? $params['SearchLimit'] : 20;
@@ -880,6 +893,7 @@ class eZSolr
     var $SearchSeverURI;
     var $Realm;
     var $FindINI;
+    var $SiteINI;
 }
 
 ?>
