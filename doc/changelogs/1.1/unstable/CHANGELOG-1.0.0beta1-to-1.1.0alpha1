@@ -17,3 +17,4 @@ Changes from 1.0.0beta1 to 1.1.0alpha1
   information about permissions.
   ( Merged from ezp3/stable, rev. 2156 )
 - Fixed issue #12015: Hidden status not respected.
+- Fixed issue #12105: Empty Search doesn't get disabled.

@@ -39,6 +39,7 @@ class eZSolr
         eZDebug::createAccumulatorGroup( 'solr', 'Solr search plugin' );
         $this->SolrINI = eZINI::instance( 'solr.ini' );
         $this->FindINI = eZINI::instance( 'ezfind.ini' );
+        $this->SiteINI = eZINI::instance( 'site.ini' );
         $this->SearchServerURI = $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' );
         $this->Solr = new eZSolrBase( $this->SearchServerURI );
     }
@@ -205,8 +206,6 @@ class eZSolr
     */
     function addObject( $contentObject, $commit = true )
     {
-        $ini = eZINI::instance();
-
         // Add all translations to the document list
         $docList = array();
 
@@ -244,7 +243,7 @@ class eZSolr
         // Check anonymous user access.
         if ( $this->FindINI->variable( 'SiteSettings', 'IndexPubliclyAvailable' ) == 'enabled' )
         {
-            $anonymousUserID = $ini->variable( 'UserSettings', 'AnonymousUserID' );
+            $anonymousUserID = $this->SiteINI->variable( 'UserSettings', 'AnonymousUserID' );
             $currentUserID = eZUser::currentUserID();
             $user = eZUser::instance( $anonymousUserID );
             eZUser::setCurrentlyLoggedInUser( $user, $anonymousUserID );
@@ -267,7 +266,7 @@ class eZSolr
             // Set installation identifier
             $doc->addField( self::getMetaFieldName( 'installation_id' ), self::installationID() );
             $doc->addField( self::getMetaFieldName( 'installation_url' ),
-                            $this->FindINI->variable( 'SiteSettings', 'URLProtocol' ) . $ini->variable( 'SiteSettings', 'SiteURL' ) . '/' );
+                            $this->FindINI->variable( 'SiteSettings', 'URLProtocol' ) . $this->SiteINI->variable( 'SiteSettings', 'SiteURL' ) . '/' );
 
             // Set Object attributes
             $doc->addField( self::getMetaFieldName( 'name' ), $contentObject->name( false, $languageCode ) );
@@ -395,17 +394,29 @@ class eZSolr
     {
         eZDebug::createAccumulator( 'Search', 'eZ Find' );
         eZDebug::accumulatorStart( 'Search' );
+        $error = 'Server not running';
 
-        eZDebug::createAccumulator( 'Query build', 'eZ Find' );
-        eZDebug::accumulatorStart( 'Query build' );
-        $queryBuilder = new ezfeZPSolrQueryBuilder();
-        $queryParams = $queryBuilder->buildSearch( $searchText, $params, $searchTypes );
-        eZDebug::accumulatorStop( 'Query build' );
+        if ( $this->SiteINI->variable( 'SearchSettings', 'AllowEmptySearch' ) == 'disabled' &&
+             trim( $searchText ) == '' )
+        {
+            $error = 'Empty search is not allowed.';
+            eZDebug::writeNotice( $error,
+                                  'eZSolr::search()' );
+            $resultArray = null;
+        }
+        else
+        {
+            eZDebug::createAccumulator( 'Query build', 'eZ Find' );
+            eZDebug::accumulatorStart( 'Query build' );
+            $queryBuilder = new ezfeZPSolrQueryBuilder();
+            $queryParams = $queryBuilder->buildSearch( $searchText, $params, $searchTypes );
+            eZDebug::accumulatorStop( 'Query build' );
 
-        eZDebug::createAccumulator( 'Engine time', 'eZ Find' );
-        eZDebug::accumulatorStart( 'Engine time' );
-        $resultArray = $this->Solr->rawSearch( $queryParams );
-        eZDebug::accumulatorStop( 'Engine time' );
+            eZDebug::createAccumulator( 'Engine time', 'eZ Find' );
+            eZDebug::accumulatorStart( 'Engine time' );
+            $resultArray = $this->Solr->rawSearch( $queryParams );
+            eZDebug::accumulatorStop( 'Engine time' );
+        }
 
         if (! $resultArray )
         {
@@ -414,7 +425,7 @@ class eZSolr
                 'SearchResult' => false,
                 'SearchCount' => 0,
                 'StopWordArray' => array(),
-                'SearchExtras' => new ezfSearchResultInfo( array( 'error' => ezi18n( 'ezfind', 'Server not running' ) ) ) );
+                'SearchExtras' => new ezfSearchResultInfo( array( 'error' => ezi18n( 'ezfind', $error ) ) ) );
         }
 
         $highLights = array();
@@ -659,6 +670,7 @@ class eZSolr
     var $SolrINI;
     var $SearchSeverURI;
     var $FindINI;
+    var $SiteINI;
     var $SolrDocumentFieldBase;
 
     static $InstallationID;
