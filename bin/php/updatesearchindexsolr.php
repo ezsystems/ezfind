@@ -402,7 +402,11 @@ class ezfUpdateSearchIndexSolr
     protected function forkAndExecute( $nodeID, $offset, $limit )
     {
         $pid = pcntl_fork();
-
+        $db = eZDB::instance();
+        $db->IsConnected = false;
+        $db = null;
+        eZDB::setInstance( $db );
+        $this->initializeDB();
         if ($pid == -1)
         {
             die('could not fork');
