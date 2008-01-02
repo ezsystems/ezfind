@@ -679,7 +679,8 @@ class ezfeZPSolrQueryBuilder
                 'Subtree'      => eZSolr::getMetaFieldName( 'path_string' ),
                 'User_Subtree' => eZSolr::getMetaFieldName( 'path_string' ),
                 'Node'         => eZSolr::getMetaFieldName( 'main_node_id' ),
-                'Owner'        => eZSolr::getMetaFieldName( 'owner_id' ) );
+                'Owner'        => eZSolr::getMetaFieldName( 'owner_id' ),
+                'Group'        => eZSolr::getMetaFieldName( 'owner_group_id' ) );
 
             $filterQueryPolicies = array();
 
@@ -723,7 +724,10 @@ class ezfeZPSolrQueryBuilder
 
                         case 'Group':
                         {
-                            // Not supported
+                            foreach( eZUser::currentUser()->attribute( 'contentobject' )->attribute( 'parent_nodes' ) as $groupID )
+                            {
+                                $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $groupID;
+                            }
                         } break;
 
                         case 'Owner':

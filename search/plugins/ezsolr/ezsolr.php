@@ -99,6 +99,7 @@ class eZSolr
                                              'language_code' => 'string',
                                              'main_url_alias' => 'string',
                                              'owner_name' => 'text',
+                                             'owner_group_id' => 'sint',
                                              'path' => 'sint' ),
                                       self::metaAttributes(),
                                       self::nodeAttributes() );
@@ -274,8 +275,15 @@ class eZSolr
             $doc->addField( self::getMetaFieldName( 'language_code' ), $languageCode );
             if ( $owner = $contentObject->attribute( 'owner' ) )
             {
+                // Set owner name
                 $doc->addField( self::getMetaFieldName( 'owner_name' ),
                                 $owner->name( false, $languageCode ) );
+
+                // Set owner group ID
+                foreach( $owner->attribute( 'parent_nodes' ) as $groupID )
+                {
+                    $doc->addField( self::getMetaFieldName( 'owner_group_id' ), $groupID );
+                }
             }
 
             // Set content object meta attribute values.
