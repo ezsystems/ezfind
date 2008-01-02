@@ -125,7 +125,6 @@ class eZSolr
         {
             $doc = new eZSolrDoc();
 
-
             // Set global unique object ID
             $doc->addField( 'm_guid', $this->guid( $contentObject, $languageCode ) );
 
@@ -153,6 +152,22 @@ class eZSolr
                 $doc->addField( 'm_path', $pathNodeID );
             }
             $doc->addField( 'm_is_invisible', $mainNode->attribute( 'is_invisible' ) ? 'true' : 'false' );
+
+            // Add owner information.
+            if ( $owner = $contentObject->attribute( 'owner' ) )
+            {
+                // Set owner ID
+                $doc->addField( 'm_owner_id', $owner->attribute( 'id' ) );
+
+                // Set owner name
+                $doc->addField( 'm_owner_name', $owner->name( false, $languageCode ) );
+
+                // Set owner group ID
+                foreach( $owner->attribute( 'parent_nodes' ) as $groupID )
+                {
+                    $doc->addField( 'm_owner_group_id', $groupID );
+                }
+            }
 
             eZContentObject::recursionProtectionStart();
 
@@ -220,6 +235,7 @@ class eZSolr
                 'Subtree'      => 'm_path_string',
                 'User_Subtree' => 'm_path_string',
                 'Node'         => 'm_main_node_id',
+                'Group'        => 'm_owner_group_id',
                 'Owner'        => 'm_owner_id' );
 
             $filterQueryPolicies = array();
@@ -264,12 +280,15 @@ class eZSolr
 
                         case 'Group':
                         {
-                            // Not supported
+                            foreach( eZUser::currentUser()->attribute( 'contentobject' )->attribute( 'parent_nodes' ) as $groupID )
+                            {
+                                $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $groupID;
+                            }
                         } break;
 
                         case 'Owner':
                         {
-                            $filterQueryPolicyLimitationParts[] = 'm_owner_id:' . $currentUser->attribute ( 'contentobject_id' );
+                            $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $currentUser->attribute ( 'contentobject_id' );
                         } break;
 
                         case 'Class':
