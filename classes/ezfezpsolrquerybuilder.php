@@ -777,11 +777,11 @@ class ezfeZPSolrQueryBuilder
 
         if ( !empty( $filterQuery ) )
         {
-            $filterQuery = '( ( ' . eZSolr::getMetaFieldName( 'installation_id' ) . ':' . eZSolr::installationID() . ' AND ' . $filterQuery . ' ) ' . $anonymousPart . ' )';
+            $filterQuery = '((' . eZSolr::getMetaFieldName( 'installation_id' ) . ':' . eZSolr::installationID() . ' AND (' . $filterQuery . ')) ' . $anonymousPart . ' )';
         }
         else
         {
-            $filterQuery = '( ' . eZSolr::getMetaFieldName( 'installation_id' ) . ':' . eZSolr::installationID() . $anonymousPart . ' )';
+            $filterQuery = '(' . eZSolr::getMetaFieldName( 'installation_id' ) . ':' . eZSolr::installationID() . $anonymousPart . ')';
         }
 
         // Add limitations based on allowed languages.
