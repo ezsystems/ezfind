@@ -332,11 +332,11 @@ class eZSolr
 
         if ( !empty( $filterQuery ) )
         {
-            $filterQuery = '( ( m_installation_id:' . $this->installationID() . ' AND ' . $filterQuery . ' ) ' . $anonymousPart . ' )';
+            $filterQuery = '((m_installation_id:' . $this->installationID() . ' AND (' . $filterQuery . ')) ' . $anonymousPart . ' )';
         }
         else
         {
-            $filterQuery = '( m_installation_id:' . $this->installationID() . $anonymousPart . ' )';
+            $filterQuery = '(m_installation_id:' . $this->installationID() . $anonymousPart . ' )';
         }
 
         // Add limitations based on allowed languages.
