@@ -1,0 +1,71 @@
+#! /bin/sh
+#
+# eZ Find init script for debian.
+# 
+# Usage:
+# 
+# Set the correct SOLR_HOME value, and copy this file to /etc/init.d
+# Symlink to /etc/init.d/solr to /etc/rc3.d/S70solr and /etc/rc5.d/S70solr
+#
+# Example:
+# cp solr /etc/init.d/solr
+# cd /etc/init.d && chmod 755 solr
+# cd /etc/rc3.d && ln -s ../init.d/solr S70solr
+# cd /etc/rc5.d && ln -s ../init.d/solr S70solr
+
+set -e
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DESC="Solr indexing server"
+NAME=solr
+SOLR_HOME= #INSERT Solr path here, example: /var/www/ezpublish/extension/ezfind/java
+DAEMON=$SOLR_HOME/$NAME.sh
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+
+# Gracefully exit if the package has been removed.
+test -x $DAEMON || exit 0
+
+#
+#	Function that starts the daemon/service.
+#
+d_start() {
+	start-stop-daemon --start --pidfile $PIDFILE \
+                --chdir $SOLR_HOME --background --make-pidfile \
+		--exec $DAEMON
+}
+
+#
+#	Function that stops the daemon/service.
+#
+d_stop() {
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE \
+		--name java
+        rm -f $PIDFILE 
+}
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: $NAME"
+	d_start
+	echo "."
+	;;
+  stop)
+	echo -n "Stopping $DESC: $NAME"
+	d_stop
+	echo "."
+	;;
+  restart|force-reload)
+	echo -n "Restarting $DESC: $NAME"
+	d_stop
+	sleep 1
+	d_start
+	echo "."
+	;;
+  *)
+	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0
