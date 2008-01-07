@@ -320,10 +320,10 @@ class ezfeZPSolrQueryBuilder
     static function getFilterQuote( $value )
     {
         $quote = '';
-        if ( strpos( ' ', $value ) !== false )
+        if ( strpos( $value, ' ' ) !== false )
         {
             $quote = '"';
-            if ( strpos( '(', $value ) !== false )
+            if ( strpos( $value, '(' ) !== false )
             {
                 $quote = '';
             }

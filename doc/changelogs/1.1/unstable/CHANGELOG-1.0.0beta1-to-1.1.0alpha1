@@ -22,3 +22,5 @@ Changes from 1.0.0beta1 to 1.1.0alpha1
 - Fixed issue #12124: Roles assigned to groups with limitations are not supported.
 - Fixed issue #12263: policyLimitationFilterQuery paranthesis problem.
 - Fixed issue #12017: Indexing problems in trunk (2203).
+- Fixed issue #12293: Spaces does not work for facets.
+
