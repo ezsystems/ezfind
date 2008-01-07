@@ -12,6 +12,8 @@
 # cd /etc/init.d && chmod 755 solr
 # cd /etc/rc3.d && ln -s ../init.d/solr S70solr
 # cd /etc/rc5.d && ln -s ../init.d/solr S70solr
+# cd /etc/rc3.d && ln -s ../init.d/solr K70solr
+# cd /etc/rc5.d && ln -s ../init.d/solr K70solr
 
 set -e
 
