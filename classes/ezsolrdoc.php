@@ -74,7 +74,17 @@ class eZSolrDoc
         }
         foreach( $content as $value )
         {
-            $fieldElement = $this->Doc->createElement( 'field', $value );
+            // $value should never be array. Log the value and the stack trace.
+            if ( is_array( $value ) )
+            {
+                $backtrace = debug_backtrace();
+                $dump = array( $backtrace[0], $backtrace[1] );
+                eZDebug::writeError( 'Tried to index array value: ' . $name . "\nValue: " . var_export( $value, 1 ) .
+                                     "\nStack trace: " . var_export( $dump, 1 ) );
+                continue;
+            }
+            $fieldElement = $this->Doc->createElement( 'field' );
+            $fieldElement->appendChild( $this->Doc->createTextNode( $value ) );
             $fieldElement->setAttribute( 'name', $name );
 
             if ( $boost && is_numeric( $boost ) )

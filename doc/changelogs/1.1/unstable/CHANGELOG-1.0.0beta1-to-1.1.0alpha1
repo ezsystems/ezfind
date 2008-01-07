@@ -21,3 +21,4 @@ Changes from 1.0.0beta1 to 1.1.0alpha1
 - Fixed issue #12130: Problem populating the index when using updatesearchindexsolr.php .
 - Fixed issue #12124: Roles assigned to groups with limitations are not supported.
 - Fixed issue #12263: policyLimitationFilterQuery paranthesis problem.
+- Fixed issue #12017: Indexing problems in trunk (2203).
