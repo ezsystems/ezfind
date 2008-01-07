@@ -181,10 +181,7 @@ class eZSolr
                     $metaData = $attribute->metaData();
                     if ( is_array( $metaData ) )
                     {
-                        foreach( $metaData as $metaDataElement )
-                        {
-                            $metaDataText .= ' ' . $metaDataElement['text'];
-                        }
+                        $metaDataText = $this->implode( $metaData );
                     }
                     else
                     {
@@ -209,6 +206,34 @@ class eZSolr
                 $this->optimize();
             }
         }
+    }
+
+    /**
+     * Join array to string ( recursive )
+     * Used to convert metadata array to string.
+     *
+     * @param array Array data
+     *
+     * @return string String representation of array. Return empty string '' if
+     *         the array is empty.
+     */
+    function implode( $array )
+    {
+        $retString = '';
+        if ( empty( $array ) )
+        {
+            return '';
+        }
+        foreach( $array as $key => $value )
+        {
+            if ( is_array( $value ) )
+            {
+                $value = $this->implode( $value );
+            }
+            $retString .= $key . ' ' . $value . ' ';
+        }
+
+        return $retString;
     }
 
     /*!

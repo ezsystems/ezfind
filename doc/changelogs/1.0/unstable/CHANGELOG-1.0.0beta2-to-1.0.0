@@ -10,3 +10,4 @@ Changes from 1.0.0beta2 to 1.0.0
   ( Merged from ezp4/trunk rev. 2443 )
 - Fixed issue #12263: policyLimitationFilterQuery paranthesis problem.
   ( Merged from ezp4/trunk rev. 2446 )
+- Fixed issue #12319: Error during indexing.
