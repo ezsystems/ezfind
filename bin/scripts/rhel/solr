@@ -17,8 +17,7 @@
 
 DESC="Solr indexing server"
 NAME=solr
-SOLR_HOME=/home/hovik/dev/extensions/ezfind/ezp4/trunk/extension/ezfind/java
- #INSERT Solr path here, example: /var/www/ezpublish/extension/ezfind/java
+SOLR_HOME= # Insert Solr path here, example: /var/www/ezpublish/extension/ezfind/java
 JAVA_HOME= # Set java home here if java is not available in /usr/bin/java or /usr/local/bin/java
 
 source /etc/rc.d/init.d/functions
