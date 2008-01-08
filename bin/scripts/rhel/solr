@@ -17,30 +17,47 @@
 
 DESC="Solr indexing server"
 NAME=solr
-SOLR_HOME= #INSERT Solr path here, example: /var/www/ezpublish/extension/ezfind/java
-DAEMON=$SOLR_HOME/$NAME.sh
+SOLR_HOME=/home/hovik/dev/extensions/ezfind/ezp4/trunk/extension/ezfind/java
+ #INSERT Solr path here, example: /var/www/ezpublish/extension/ezfind/java
+JAVA_HOME= # Set java home here if java is not available in /usr/bin/java or /usr/local/bin/java
 
 source /etc/rc.d/init.d/functions
-
-[ -x $DAEMON ] || exit 1
 
 RETVAL=0
 
 start() {
     echo -n $"Starting $DESC ($NAME): "
-    daemon $DAEMON
+    for JAVA in "$JAVA_HOME/bin/java" "/usr/bin/java" "/usr/local/bin/java"
+      do
+      if [ -x $JAVA ]
+	  then
+	  break
+      fi
+    done
+    if [ ! -x $JAVA ]
+	then
+	echo "Unable to locate java. Please set JAVA_HOME environment variable."
+	exit
+    fi
+    CURRENT_DIR=`pwd`
+    cd $SOLR_HOME
+    daemon --check $NAME --pidfile /var/run/solr.pid nohup java -jar start.jar > /dev/null 2>&1 &
     RETVAL=$?
+    sleep 1 # Sleep 1 second, to make sure java is registered.
+    pid=`pidof java`
+    echo $pid > /var/run/solr.pid
+    cd $CURRENT_DIR
     echo
-    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$NAME.sh
+    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$NAME
     return $RETVAL
 }
 
 stop() {
     echo -n $"Shutting down $DESC ($NAME): "
-    killproc $DAEMON
+    killproc -p /var/run/solr.pid $NAME
     RETVAL=$?
     echo
-    [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/$NAME.sh
+    [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/$NAME
     return $RETVAL
 }
 
@@ -52,7 +69,7 @@ restart() {
 
 reload() {
     echo -n $"Reloading $DESC ($NAME): "
-    killproc $DAEMON -HUP
+    killproc -p /var/run/solr.pid $NAME -HUP
     RETVAL=$?
     echo
     return $RETVAL
@@ -72,7 +89,7 @@ case "$1" in
     reload
     ;;
   status)
-    status $DAEMON
+    status -p /var/run/solr.pid $NAME
     RETVAL=$?
     ;;
   *)
