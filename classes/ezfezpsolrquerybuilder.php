@@ -566,6 +566,15 @@ class ezfeZPSolrQueryBuilder
         {
             $excludeFieldList[] = 'boolean';
         }
+        if ( !is_numeric( $searchText ) )
+        {
+            $excludeFieldList[] = 'int';
+            $excludeFieldList[] = 'float';
+            $excludeFieldList[] = 'double';
+            $excludeFieldList[] = 'sint';
+            $excludeFieldList[] = 'sfloat';
+            $excludeFieldList[] = 'sdouble';
+        }
 
         return $excludeFieldList;
     }

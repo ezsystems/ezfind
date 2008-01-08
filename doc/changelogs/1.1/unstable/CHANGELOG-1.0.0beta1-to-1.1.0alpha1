@@ -23,4 +23,5 @@ Changes from 1.0.0beta1 to 1.1.0alpha1
 - Fixed issue #12263: policyLimitationFilterQuery paranthesis problem.
 - Fixed issue #12017: Indexing problems in trunk (2203).
 - Fixed issue #12293: Spaces does not work for facets.
+- Fixed issue #12312: $parameters['SortBy'] not compatible with ezsearch.
 

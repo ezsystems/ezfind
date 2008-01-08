@@ -131,15 +131,30 @@ class eZSolr
             // Get class and attribute identifiers + optional option.
             $options = null;
             $fieldDef = explode( '/', $baseName );
-            if ( count( $fieldDef ) == 2 )
+            // Check if content class attribute ID is provided.
+            if ( is_numeric( $fieldDef[0] ) )
             {
-                list( $classIdentifier, $attributeIdentifier ) = $fieldDef;
+                if ( count( $fieldDef ) == 1 )
+                {
+                    $contectClassAttributeID = $fieldDef[0];
+                }
+                else if ( count( $fieldDef ) == 2 )
+                {
+                    list( $contectClassAttributeID, $options ) = $fieldDef;
+                }
             }
-            else if ( count( $fieldDef ) == 3 )
+            else
             {
-                list( $classIdentifier, $attributeIdentifier, $options ) = $fieldDef;
+                if ( count( $fieldDef ) == 2 )
+                {
+                    list( $classIdentifier, $attributeIdentifier ) = $fieldDef;
+                }
+                else if ( count( $fieldDef ) == 3 )
+                {
+                    list( $classIdentifier, $attributeIdentifier, $options ) = $fieldDef;
+                }
+                $contectClassAttributeID = eZContentObjectTreeNode::classAttributeIDByIdentifier( $classIdentifier . '/' . $attributeIdentifier );
             }
-            $contectClassAttributeID = eZContentObjectTreeNode::classAttributeIDByIdentifier( $classIdentifier . '/' . $attributeIdentifier );
             if ( !$contectClassAttributeID )
             {
                 eZDebug::writeNotice( 'Could not get content class from base name: ' . $baseName,
@@ -150,7 +165,6 @@ class eZSolr
             return  ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $options );
         }
     }
-
 
     /**
      * Check if eZSolr has meta attribute type.

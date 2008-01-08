@@ -20,7 +20,7 @@ Design
 Sort options for fetch( ezfind, search, hash( ... ) ) are specified in the
 hash parameter by 'sort_by'. The possible sort options are:
 - relevance | score ( default )
-- <class_name>/<attribute_name>[/<sub_structure>]
+- <class_name>/<attribute_name>[/<sub_structure>] | <class_attribute_id>[/<sub_structure>]
 - modified
 - published
 - author
