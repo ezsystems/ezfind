@@ -46,3 +46,11 @@ Configuration:
   This may be changed, by altering the configuration file 
   extension/ezfind/java/solr/conf/solrconfig.xml . Change the config->dataDir
   setting to alter the index path.
+
+
+Running as service:
+It is possible to run eZ Find as a service in Linux. The scripts to do this are located in 
+extension/ezfind/bin/scripts/<dist>. The supported distributions are Debian and RHEL ( including CentOS, Fedora,
+Mandriva and other RedHat based distributions )
+Open the script for your distribution to see installations instructions.
+
