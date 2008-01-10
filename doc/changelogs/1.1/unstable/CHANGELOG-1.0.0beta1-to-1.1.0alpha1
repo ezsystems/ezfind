@@ -25,3 +25,4 @@ Changes from 1.0.0beta1 to 1.1.0alpha1
 - Fixed issue #12293: Spaces does not work for facets.
 - Fixed issue #12312: $parameters['SortBy'] not compatible with ezsearch.
 - Fixed issue #12348: Fix design templates for eZ Publish Now
+- Fixed issue #12367: $node.object.published return invalid timestamp for remote objects.

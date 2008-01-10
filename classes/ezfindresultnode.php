@@ -86,6 +86,11 @@ class eZFindResultNode extends eZContentObjectTreeNode
                 if ( in_array( $attr, $this->LocalAttributeNameList ) )
                 {
                     $retVal = isset( $this->LocalAttributeValueList[$attr] ) ? $this->LocalAttributeValueList[$attr] : null;
+                    // Timestamps are stored as strings for remote objects, so it must be converted.
+                    if ( $attr == 'published' )
+                    {
+                        $retVal = strtotime( $retVal );
+                    }
                 }
                 else if ( $this->attribute( 'is_local_installation' ) )
                 {
