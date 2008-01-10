@@ -16,6 +16,58 @@
     {set $search_data=$search}
 {/if}
 {def $baseURI=concat( '/content/search?SearchText=', $search_text )}
+
+<script language="JavaScript" TYPE="text/javascript">
+<!--{literal}
+    // toggle block
+    function ezfToggleBlock( id )
+    {
+        var value = (document.getElementById(id).style.display == 'none') ? 'block' : 'none';
+		ezfSetBlock( id, value );
+        ezfSetCookie( id, value );
+    }
+
+    function ezfSetBlock( id, value )
+    {
+		document.getElementById(id).style.display = value;
+    }
+
+    function ezfTrim( str )
+    {
+        return str.replace(/^\s+|\s+$/g, '') ;
+    }
+
+    function ezfGetCookie( name )
+    {
+	var cookieName = 'eZFind_' + name;
+	var cookie = document.cookie;
+
+	cookieList = cookie.split( ";" );
+
+    for( var idx in cookieList )
+    {
+		cookie = cookieList[idx].split( "=" );
+
+		if ( ezfTrim( cookie[0] ) == cookieName )
+        {
+			return( cookie[1] );
+		}
+	}
+
+	return 'none';
+    }
+
+    function ezfSetCookie( name, value )
+    {
+	var cookieName = 'eZFind_' + name;
+	var expires = new Date();
+
+	expires.setTime( expires.getTime() + (365 * 24 * 60 * 60 * 1000));
+
+	document.cookie = cookieName + "=" + value + "; expires=" + expires + ";";
+    }
+{/literal}--></script>
+
 <div class="border-box">
 <div class="border-tl"><div class="border-tr"><div class="border-tc"></div></div></div>
 <div class="border-ml"><div class="border-mr"><div class="border-mc float-break">
@@ -65,8 +117,17 @@
   {case}
   <div class="feedback">
   <h2>{'Search for "%1" returned %2 matches'|i18n("design/ezwebin/content/search",,array($search_text|wash,$search_count))}</h2>
+
       <fieldset>
-          <legend>{'Facets'|i18n( 'design/ezwebin/content/search' )}</legend>
+          <legend onclick="ezfToggleBlock( 'ezfHelp' );">{'Help'|i18n( 'design/ezwebin/content/search' )} [+/-]</legend>
+          <div id="ezfHelp" style="display: none;">
+              {'eZ Find is a powerful search extension for eZ Publish.'|i18n( 'design/ezwebin/content/search' )}
+          </div>
+      </fieldset>
+
+      <fieldset>
+          <legend onclick="ezfToggleBlock( 'ezfFacets' );">{'Facets'|i18n( 'design/ezwebin/content/search' )} [+/-]</legend>
+          <div id="ezfFacets" style="display: none;">
           <div class="block"><strong>{'Facets'|i18n( 'design/ezwebin/content/search' )}:</strong>&nbsp;
               {if $facetField|eq( 'class' )}
                   <span style="background-color: #F2F1ED">{'Class'|i18n( 'design/ezwebin/content/search' )}</span>
@@ -90,6 +151,7 @@
                   <a href={concat( $baseURI, '&facet_field=', $facetField|wash, '&filter[]=', $search_extras.facet_fields.0.queryLimit[$facetID]|wash )|ezurl}>{$name|wash}</a>({$search_extras.facet_fields.0.countList[$facetID]})
               {delimiter}-{/delimiter}
               {/foreach}
+          </div>
           </div>
       </fieldset>
 
@@ -121,3 +183,10 @@
 </div></div></div>
 <div class="border-bl"><div class="border-br"><div class="border-bc"></div></div></div>
 </div>
+
+
+<script language="JavaScript" TYPE="text/javascript">
+<!--{literal}
+ezfSetBlock( 'ezfFacets', ezfGetCookie( 'ezfFacets' ) );
+ezfSetBlock( 'ezfHelp', ezfGetCookie( 'ezfHelp' ) );
+{/literal}--></script>
