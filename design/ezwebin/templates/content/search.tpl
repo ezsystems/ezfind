@@ -17,7 +17,7 @@
 {/if}
 {def $baseURI=concat( '/content/search?SearchText=', $search_text )}
 
-<script language="JavaScript" TYPE="text/javascript">
+<script language="JavaScript" type="text/javascript">
 <!--{literal}
     // toggle block
     function ezfToggleBlock( id )
@@ -42,7 +42,7 @@
 	var cookieName = 'eZFind_' + name;
 	var cookie = document.cookie;
 
-	cookieList = cookie.split( ";" );
+	var cookieList = cookie.split( ";" );
 
     for( var idx in cookieList )
     {
@@ -121,7 +121,12 @@
       <fieldset>
           <legend onclick="ezfToggleBlock( 'ezfHelp' );">{'Help'|i18n( 'design/ezwebin/content/search' )} [+/-]</legend>
           <div id="ezfHelp" style="display: none;">
-              {'eZ Find is a powerful search extension for eZ Publish.'|i18n( 'design/ezwebin/content/search' )}
+              <ul>
+                  <li>{'The search is case insensitive. Upper and lower case characters may be used.'|i18n( 'design/ezfind/search' )}</li>
+                  <li>{'The search result contains all search terms.'|i18n( 'design/ezfind/search' )}</li>
+                  <li>{'Phrase search can be achieved by using quotes, example: "No TV and no beer make Homer go something something"'|i18n( 'design/ezfind/search' )}</li>
+                  <li>{'Words may be excluded by using a minus ( - ) character, example: free -beer'|i18n( 'design/ezfind/search' )}</li>
+              </ul>
           </div>
       </fieldset>
 
@@ -185,7 +190,7 @@
 </div>
 
 
-<script language="JavaScript" TYPE="text/javascript">
+<script language="JavaScript" type="text/javascript">
 <!--{literal}
 ezfSetBlock( 'ezfFacets', ezfGetCookie( 'ezfFacets' ) );
 ezfSetBlock( 'ezfHelp', ezfGetCookie( 'ezfHelp' ) );
