@@ -39,8 +39,7 @@ if ( !function_exists( 'readline' ) )
 
 function microtime_float()
 {
-    list($usec, $sec) = explode(" ", microtime());
-    return ((float)$usec + (float)$sec);
+    return microtime( true );
 }
 
 set_time_limit( 0 );
