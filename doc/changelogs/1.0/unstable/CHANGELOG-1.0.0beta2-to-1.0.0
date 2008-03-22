@@ -1,5 +1,8 @@
 Changes from 1.0.0beta2 to 1.0.0
 
+*Features:
+- Fixed issue #12451: Could you add a "-Dsolr" option to the shell scripts java command line?
+  ( Merged from ezp4/trunk rev. 2772 )
 
 *Bugfixes:
 - Fixed issue #12105: Empty Search doesn't get disabled.
