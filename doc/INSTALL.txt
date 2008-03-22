@@ -15,7 +15,7 @@ Installing:
 
 2. Start the Java based search engine ( based on Solr ).
    Enter extension/ezfind/java
-   Start the Solr engine with the command: java -jar start.jar
+   Start the Solr engine with the command: java -Dezfind -jar start.jar
    ( See configuration for more details )
    Make sure that the user running the java application has write access to
    extension/ezfind/java/solr/data and extension/ezfind/java/logs .
@@ -46,6 +46,10 @@ Configuration:
   This may be changed, by altering the configuration file 
   extension/ezfind/java/solr/conf/solrconfig.xml . Change the config->dataDir
   setting to alter the index path.
+
+  Java options:
+  The -Dezfind option is to make it easier to identify the eZ Find java process. The -Dezfind option
+  will be visible in the process listing on unix systems.
 
 
 Running as service:
