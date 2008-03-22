@@ -145,13 +145,25 @@ class eZSolr
             }
             else
             {
-                if ( count( $fieldDef ) == 2 )
+                switch( count( $fieldDef ) )
                 {
-                    list( $classIdentifier, $attributeIdentifier ) = $fieldDef;
-                }
-                else if ( count( $fieldDef ) == 3 )
-                {
-                    list( $classIdentifier, $attributeIdentifier, $options ) = $fieldDef;
+                    case 1:
+                    {
+                        // Return fieldname as is.
+                        return $baseName;
+                    } break;
+
+                    case 2:
+                    {
+                        // Field def contains class indentifier and class attribute identifier.
+                        list( $classIdentifier, $attributeIdentifier ) = $fieldDef;
+                    } break;
+
+                    case 3:
+                    {
+                        // Field def contains class indentifier, class attribute identifier and optional specification.
+                        list( $classIdentifier, $attributeIdentifier, $options ) = $fieldDef;
+                    } break;
                 }
                 $contectClassAttributeID = eZContentObjectTreeNode::classAttributeIDByIdentifier( $classIdentifier . '/' . $attributeIdentifier );
             }

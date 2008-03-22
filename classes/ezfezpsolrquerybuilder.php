@@ -273,6 +273,7 @@ class ezfeZPSolrQueryBuilder
      *              The array is of type: array( '<field name>', <value> ).
      *              The value may an array containing values.
      *              The value may also be a string, or range, example: [10 to *].
+     *              The value may be the <basename>:<value>, example: array( 'Filter' => array( 'car/make:audi' ) )
      *
      * @return string Filter Query. Null if no filter parameters are in
      * the $parameterList
@@ -287,23 +288,23 @@ class ezfeZPSolrQueryBuilder
         $filterQueryList = array();
         foreach( $parameterList['Filter'] as $baseName => $value )
         {
-            if ( eZSolr::hasMetaAttributeType( $baseName ) )
+            if ( strpos( $value, ':' ) !== false )
             {
-                $baseName = eZSolr::getMetaFieldName( $baseName );
+                list( $baseName, $value ) = explode( ':', $value );
             }
 
+            // Get internal field name.
+            $baseName = eZSolr::getFieldName( $baseName );
             if ( is_array( $value ) )
             {
                 foreach( $value as $subValue )
                 {
-                    $quote = self::getFilterQuote( $subValue );
-                    $filterQueryList[] = $baseName . ':' . $quote . $subValue . $quote;
+                    $filterQueryList[] = $baseName . ':' . self::quoteIfNeeded( $subValue );
                 }
             }
             else
             {
-                $quote = self::getFilterQuote( $value );
-                $filterQueryList[] = $baseName . ':' . $quote . $value . $quote;
+                $filterQueryList[] = $baseName . ':' . self::quoteIfNeeded( $value );
             }
         }
 
@@ -311,25 +312,24 @@ class ezfeZPSolrQueryBuilder
     }
 
     /**
-     * Analyze the value, and decide if quotes should be added or not.
+     * Analyze the string, and decide if quotes should be added or not.
      *
-     * @param string Value
+     * @param string String
      *
-     * @return string '"' of quotes are used, '' or not.
+     * @return string String with quotes added if needed.
      */
-    static function getFilterQuote( $value )
+    static function quoteIfNeeded( $value )
     {
         $quote = '';
         if ( strpos( $value, ' ' ) !== false )
         {
             $quote = '"';
-            if ( strpos( $value, '(' ) !== false )
+            if ( strpos( trim( $value ), '(' ) === 0 )
             {
                 $quote = '';
             }
         }
-
-        return $quote;
+        return $quote . $value . $quote;
     }
 
     /**
