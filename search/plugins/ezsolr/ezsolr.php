@@ -413,6 +413,7 @@ class eZSolr
         $this->Solr->deleteDocs( array(),
                                  self::getMetaFieldName( 'id' ) . ':' . $contentObject->attribute( 'id' ) . ' AND '.
                                  self::getMetaFieldName( 'installation_id' ) . ':' . self::installationID() );
+        $this->commit();
     }
 
     /**

@@ -13,7 +13,7 @@ Changes from 1.0.0beta1 to 1.1.0alpha1
 
 *Bugs:
 - Fixed issue #11933: Internal PHP reference counter overflow.
-- Fixed issue #11824: eZ Find installation documentation missing setup 
+- Fixed issue #11824: eZ Find installation documentation missing setup
   information about permissions.
   ( Merged from ezp3/stable, rev. 2156 )
 - Fixed issue #12015: Hidden status not respected.
@@ -28,4 +28,5 @@ Changes from 1.0.0beta1 to 1.1.0alpha1
 - Fixed issue #12367: $node.object.published return invalid timestamp for remote objects.
 - Fixed issue #11711: JS based help dropdown.
 - Fixed issue #12547: Filtering handled isuficiently.
+- Fixed issue #13153: Deleted objects are not immediately cleared in the active Solr Index
 
