@@ -285,7 +285,7 @@ class eZSolrBase
         $this->postQuery ( '/update', $postString, 'text/xml' );
         if ( $optimize )
         {
-            $this->optimize();
+            $this->optimize( true );
         }
         return true;
     }
