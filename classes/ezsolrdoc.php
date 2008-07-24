@@ -42,7 +42,7 @@ class eZSolrDoc
 
         if ( $boost && is_numeric( $boost ) )
         {
-            $this->setAttribute( 'boost', $boost );
+            $this->RootElement->setAttribute( 'boost', $boost );
         }
     }
 
