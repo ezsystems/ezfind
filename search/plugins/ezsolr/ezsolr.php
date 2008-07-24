@@ -283,10 +283,29 @@ class eZSolr
         {
             $anonymousAccess = 'false';
         }
+        
+        // Load index time boost factors if any
+        //$boostMetaFields = $this->FindINI->variable( "IndexBoost", "MetaField" );
+        $boostClasses = $this->FindINI->variable( 'IndexBoost', 'Class' );
+        $boostAttributes = $this->FindINI->variable( 'IndexBoost', 'Attribute' );
+        $boostDatatypes = $this->FindINI->variable( 'IndexBoost', 'Datatype' );
+        $reverseRelatedScale = $this->FindINI->variable( 'IndexBoost', 'ReverseRelatedScale' );
+        
+        // Initialise default doc boost
+        $docBoost = 1.0;
+        $contentClassIdentifier = $contentObject->attribute( 'class_identifier' );
+        // Just test if the boost factor is defined by checking if it has a numeric value
+        if ( is_numeric( $boostClasses[$contentClassIdentifier] ) )
+        {
+            $docBoost += $boostClasses[$contentClassIdentifier];
+        }
+        // Google like boosting, using eZ Publish reverseRelatedObjectCount
+        $reverseRelatedObjectCount = $contentObject->reverseRelatedObjectCount();
+        $docBoost += $ReverseRelatedScale * $reverseRelatedObjectCount;
 
         foreach( $currentVersion->translationList( false, false ) as $languageCode )
         {
-            $doc = new eZSolrDoc();
+            $doc = new eZSolrDoc( $docBoost );
             // Set global unique object ID
             $doc->addField( self::getMetaFieldName( 'guid' ), $this->guid( $contentObject, $languageCode ) );
 
@@ -341,10 +360,21 @@ class eZSolr
             {
                 $metaDataText = '';
                 $classAttribute = $attribute->contentClassAttribute();
+                $attributeIdentifier = $classAttribute->attribute( 'identifier' );
+                $combinedIdentifier = $contentClassIdentifier . '/' . $attributeIdentifier;
+                $boostAttribute = false; 
+                if ( is_numeric( $boostAttributes[$attributeIdentifier]))
+                {
+                    $boostAttribute = $boostAttributes[$attributeIdentifier];
+                }
+                if ( is_numeric( $boostAttributes[$combinedIdentifier]))
+                {
+                    $boostAttribute += $boostAttributes[$combinedIdentifier];
+                }
                 if ( $classAttribute->attribute( 'is_searchable' ) == 1 )
                 {
                     $documentFieldBase = ezfSolrDocumentFieldBase::getInstance( $attribute );
-                    $this->addFieldBaseToDoc( $documentFieldBase, $doc );
+                    $this->addFieldBaseToDoc( $documentFieldBase, $doc, $boostAttribute );
                 }
             }
             eZContentObject::recursionProtectionEnd();
@@ -698,7 +728,7 @@ class eZSolr
     */
     static function engineText()
     {
-        return ezi18n( 'ezfind', 'eZ Find search plugin &copy; 2007 eZ Systems AS' );
+        return ezi18n( 'ezfind', 'eZ Find search plugin &copy; 2008 eZ Systems AS' );
     }
 
     /// Object vars

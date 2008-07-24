@@ -101,10 +101,10 @@ class eZSolrDoc
      *
      * @return string XML string.
      */
-	function docToXML()
-	{
+    function docToXML()
+    {
         return $this->Doc->saveXML( $this->RootElement );
-	}
+    }
 
 
     /// Vars

@@ -602,6 +602,9 @@ class ezfeZPSolrQueryBuilder
             }
             $boostQuery .= ' ' . eZSolr::getMetaFieldName( 'language_code' ) . ':' . $languageCode . '^' . $languageBoostList[$idx];
         }
+        
+        // User defined boosts through ini settings
+        
 
         return $boostQuery;
     }
