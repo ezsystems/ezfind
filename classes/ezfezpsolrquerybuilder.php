@@ -116,10 +116,23 @@ class ezfeZPSolrQueryBuilder
         }
 
         // Add Filter from function parameters
+        // but add the sitelanguage first (only current language is searched)  
+        // maybe we'll make this configurable later on
+        $ini = eZINI::instance();
+        $languages = $ini->variable( 'RegionalSettings', 'SiteLanguageList' );
+        $mainLanguage = $languages[0];
+        $params['Filter'][] = array ( 'language_code' => $mainLanguage );
         $paramFilterQuery = $this->getParamFilterQuery( $params );
         if ( $paramFilterQuery )
         {
             $filterQuery[] = $paramFilterQuery;
+        }
+        
+        //add raw filters
+        $rawFilters = self::$FindINI->variable( 'SearchFilters', 'RawFilterList' );
+        if ( is_array( $rawFilters ) ) 
+        {
+            $filterQuery = array_merge( $filterQuery, $rawFilters );
         }
 
         // Build and get facet query prameters.
@@ -141,7 +154,6 @@ class ezfeZPSolrQueryBuilder
         //maybe we should add meta data to the index to filter them out.
 
         $highLightFields = $queryFields;
-        $queryFields = array_merge( $queryFields, array( 'attr_car_attributes_price_i', 'attr_car_attributes_year_t', 'attr_car_attributes_kilometers_i' ) );
         $queryFields[] = eZSolr::getMetaFieldName( 'name' ) . '^2.0';
         $queryFields[] = eZSolr::getMetaFieldName( 'owner_name' ) . '^1.5';
         return array_merge(

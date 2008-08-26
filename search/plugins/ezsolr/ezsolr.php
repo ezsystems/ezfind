@@ -235,7 +235,14 @@ class eZSolr
     {
         // Add all translations to the document list
         $docList = array();
-
+        
+        // Check if we need to index this object after all
+        // Exclude if class identifier is in the exclude list for classes
+        $excludeClasses = $this->FindINI->variable( 'IndexExclude', 'ClassIdentifierList' );
+        if ( $excludeClasses && in_array( $contentObject->attribute( 'class_identifier' ), $excludeClasses ) )
+        {
+            return;
+        }
         // Get global object values
         $mainNode = $contentObject->attribute( 'main_node' );
         if ( !$mainNode )
@@ -460,6 +467,7 @@ class eZSolr
         eZDebug::createAccumulator( 'Search', 'eZ Find' );
         eZDebug::accumulatorStart( 'Search' );
         $error = 'Server not running';
+        $searchCount = 0;
 
         if ( $this->SiteINI->variable( 'SearchSettings', 'AllowEmptySearch' ) == 'disabled' &&
              trim( $searchText ) == '' )

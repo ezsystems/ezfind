@@ -78,5 +78,18 @@ Datatype[]
 ReverseRelatedScale=0
 #ReverseRelatedScale=0.5
 
+[IndexExclude]
+#exclude certain objects from indexing alltogether
+#only classes supported for now
+
+ClassIdentifierList[]
+#ClassIdentifierList[]=folder
+#ClassIdentifierList[]=secret
+
+[SearchFilters]
+#Search filters to be applied for every query made 
+#Currently support for one filter type, a raw Solr query string
+RawFilterList[]
+#RawFilterList[]='meta_class_identifier_string:[* TO *] -meta_class_identifier_string:folder'
 
 */ ?>
