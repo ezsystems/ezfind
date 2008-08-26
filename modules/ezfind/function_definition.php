@@ -85,4 +85,25 @@ $FunctionList['filterParameters'] = array( 'name' => 'filterParameters',
                                            'parameter_type' => 'standard',
                                            'parameters' => array( ) );
 
+
+//experimental, useful to query foreign Solr indexes    
+$FunctionList['rawSolrRequest'] = array( 'name' => 'rawSolrRequest',
+                                         'operation_types' => 'read',
+                                         'call_method' => array( 'class' => 'ezfModuleFunctionCollection',
+                                                                   'include_file' => 'extension/ezfind/classes/ezfmodulefunctioncollection.php',
+                                                                   'method' => 'rawRequest' ),
+                                         'parameter_type' => 'standard',
+                                         'parameters' => array( array( 'name' => 'baseURL',
+                                                                       'type' => 'string',
+                                                                       'required' => true,
+                                                                       'default' => '' ),
+                                                                array( 'name' => 'request',
+                                                                       'type' => 'string',
+                                                                       'required' => true,
+                                                                       'default' => 0 ),
+                                                                array( 'name' => 'parameters',
+                                                                       'type' => 'array',
+                                                                       'required' => false,
+                                                                       'default' => null ) ) );
+    
 ?>

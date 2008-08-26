@@ -115,6 +115,13 @@ class ezfModuleFunctionCollection
                          'SearchSubTreeArray' => $subtreeArray );
         return array( 'result' => $solrSearch->search( $query, $params ) );
     }
+    
+    // experimental, useful to query foreign Solr indexes outside of eZ Publish
+    public function rawSolrRequest( $base, $request, $parameters = array() )
+    {
+        $solr = new eZSolrBase( $base );
+        return array( 'result' => $solr->rawSolrRequest( $request, $parameters ) );
+    }
 }
 
 ?>
