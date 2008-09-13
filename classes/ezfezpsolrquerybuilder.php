@@ -119,9 +119,10 @@ class ezfeZPSolrQueryBuilder
         // but add the sitelanguage first (only current language is searched)  
         // maybe we'll make this configurable later on
         $ini = eZINI::instance();
+        // TODO - check ini settings wether or not to search main language only
         $languages = $ini->variable( 'RegionalSettings', 'SiteLanguageList' );
         $mainLanguage = $languages[0];
-        $params['Filter'][] = array ( 'language_code' => $mainLanguage );
+        $params['Filter']['language_code'] =  $mainLanguage;
         $paramFilterQuery = $this->getParamFilterQuery( $params );
         if ( $paramFilterQuery )
         {
