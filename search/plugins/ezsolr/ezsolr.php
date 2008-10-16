@@ -308,7 +308,7 @@ class eZSolr
         }
         // Google like boosting, using eZ Publish reverseRelatedObjectCount
         $reverseRelatedObjectCount = $contentObject->reverseRelatedObjectCount();
-        $docBoost += $ReverseRelatedScale * $reverseRelatedObjectCount;
+        $docBoost += $reverseRelatedScale * $reverseRelatedObjectCount;
 
         foreach( $currentVersion->translationList( false, false ) as $languageCode )
         {
@@ -455,6 +455,7 @@ class eZSolr
 
     /**
      * Search on the Solr search server
+     * @todo: add functionality not to call the DB to recreate objects : $asObjects == false
      *
      * @param string search term
      * @param array parameters. @see ezfeZPSolrQueryBuilder::buildSearch()
@@ -604,32 +605,179 @@ class eZSolr
             'StopWordArray' => $stopWordArray,
             'SearchExtras' => new ezfSearchResultInfo( $resultArray ) );
     }
+    
 
-/*
+    /**
+     * More like this is pretty similar to normal search, but usually only the object or node id are sent to Solr
+     * However, streams or a search text body can also be passed .. Solr will extract the important terms and build a
+     * query for us
+     * @todo: add functionality not to call the DB to recreate objects : $asObjects == false
+     * @param string $queryType is one of 'noid', 'oid', 'url', 'text'
+     * @param $queryValue the node id, object id, url or text body to use
+     * @param array parameters. @see ezfeZPSolrQueryBuilder::buildMoreLikeThis()
+     *
+     * @return array List of eZFindResultNode objects.
+     */
+    function moreLikeThis( $queryType, $queryValue, $params = array() )
+    {
+        eZDebug::createAccumulator( 'MoreLikeThis', 'eZ Find' );
+        eZDebug::accumulatorStart( 'MoreLikeThis' );
+        $error = 'Server not running';
+        $searchCount = 0;
+
+        if ( trim( $queryType ) == '' || trim( $queryValue ) )
+        {
+            $error = 'Missing query argument for More Like This';
+            eZDebug::writeNotice( $error,
+                                  'eZSolr::moreLikeThis()' );
+            $resultArray = null;
+        }
+        else
+        {
+            eZDebug::createAccumulator( 'Query build', 'eZ Find' );
+            eZDebug::accumulatorStart( 'Query build' );
+            $queryBuilder = new ezfeZPSolrQueryBuilder();
+            $queryParams = $queryBuilder->buildMoreLikeThis( $queryType, $queryValue, $params );
+            eZDebug::accumulatorStop( 'Query build' );
+
+            eZDebug::createAccumulator( 'Engine time', 'eZ Find' );
+            eZDebug::accumulatorStart( 'Engine time' );
+            $resultArray = $this->Solr->rawSolrRequest( '/mlt', $queryParams );
+            eZDebug::accumulatorStop( 'Engine time' );
+        }
+
+        if (! $resultArray )
+        {
+            eZDebug::accumulatorStop( 'Search' );
+            return array(
+                'SearchResult' => false,
+                'SearchCount' => 0,
+                'StopWordArray' => array(),
+                'SearchExtras' => new ezfSearchResultInfo( array( 'error' => ezi18n( 'ezfind', $error ) ) ) );
+        }
+
+        if ( count($resultArray) > 0 )
+        {
+            $result = $resultArray['response'];
+            $searchCount = $result['numFound'];
+            $maxScore = $result['maxScore'];
+            $docs = $result['docs'];
+            $localNodeIDList = array();
+            $objectRes = array();
+            $nodeRowList = array();
+
+            // Loop through result, and get eZContentObjectTreeNode ID
+            foreach ( $docs as $idx => $doc )
+            {
+                if ( $doc[self::getMetaFieldName( 'installation_id' )] == self::installationID() )
+                {
+                    $localNodeIDList[] = $doc[self::getMetaFieldName( 'main_node_id' )][0];
+                }
+            }
+
+            if ( count( $localNodeIDList ) )
+            {
+                $tmpNodeRowList = eZContentObjectTreeNode::fetch( $localNodeIDList, false, false );
+                // Workaround for eZContentObjectTreeNode::fetch behaviour
+                if ( count( $localNodeIDList ) === 1 )
+                {
+                    $tmpNodeRowList = array( $tmpNodeRowList );
+                }
+                if ( $tmpNodeRowList )
+                {
+                    foreach( $tmpNodeRowList as $nodeRow )
+                    {
+                        $nodeRowList[$nodeRow['node_id']] = $nodeRow;
+                    }
+                }
+                unset( $tmpNodeRowList );
+            }
+
+            foreach ( $docs as $idx => $doc )
+            {
+                if ( $doc[self::getMetaFieldName( 'installation_id' )] == self::installationID() )
+                {
+                    // Search result document is from current installation
+//                    var_dump( self::getMetaFieldName( 'main_node_id' ), $doc, $nodeRowList );die();
+                    $resultTree = new eZFindResultNode( $nodeRowList[$doc[self::getMetaFieldName( 'main_node_id' )][0]] );
+                    $resultTree->setContentObject( new eZContentObject( $nodeRowList[$doc[self::getMetaFieldName( 'main_node_id' )][0]] ) );
+                    $resultTree->setAttribute( 'is_local_installation', true );
+                    if ( !$resultTree->attribute( 'can_read' ) )
+                    {
+                        eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $doc[self::getMetaFieldName( 'main_node_id' )][0],
+                                              'eZSolr::search()' );
+                        continue;
+                    }
+
+
+                    $globalURL = $doc[self::getMetaFieldName( 'main_url_alias' )] .
+                        '/(language)/' . $doc[self::getMetaFieldName( 'language_code' )];
+                    eZURI::transformURI( $globalURL );
+                }
+                else
+                {
+                    $resultTree = new eZFindResultNode();
+                    $resultTree->setAttribute( 'is_local_installation', false );
+                    $globalURL = $doc[self::getMetaFieldName( 'installation_url' )] .
+                        $doc[self::getMetaFieldName( 'main_url_alias' )] .
+                        '/(language)/' . $doc[self::getMetaFieldName( 'language_code' )];
+                }
+
+                $resultTree->setAttribute( 'name', $doc[self::getMetaFieldName( 'name' )] );
+                $resultTree->setAttribute( 'published', $doc[self::getMetaFieldName( 'published' )] );
+                $resultTree->setAttribute( 'global_url_alias', $globalURL );
+                $resultTree->setAttribute( 'highlight', isset( $highLights[$doc[self::getMetaFieldName( 'guid' )]] ) ?
+                                           $highLights[$doc[self::getMetaFieldName( 'guid' )]] : null );
+                $resultTree->setAttribute( 'score_percent', (int) ( ( $doc['score'] / $maxScore ) * 100 ) );
+                $resultTree->setAttribute( 'language_code', $doc[self::getMetaFieldName( 'language_code' )] );
+                $objectRes[] = $resultTree;
+            }
+        }
+
+        $stopWordArray = array();
+
+        eZDebug::accumulatorStop( 'Search' );
+        return array(
+            'SearchResult' => $objectRes,
+            'SearchCount' => $searchCount,
+            'StopWordArray' => $stopWordArray,
+            'SearchExtras' => new ezfSearchResultInfo( $resultArray ) );
+    }
+
+
+
+
+    /**
+     * Initialise / rebuild the Spell checker
+     *
+     * 
+     * @return array Solr result set.
+     */
     function initSpellChecker()
     {
 
-	$return = $this->Solr->rawSearch( array( 'q' => 'solr', 'qt' => 'spellchecker', 'wt' => 'php', 'cmd' => 'rebuild') );
+        $return = $this->Solr->rawSearch( array( 'q' => 'solr', 'qt' => 'spellchecker', 'wt' => 'php', 'cmd' => 'rebuild') );
 
     }
 
 
 
+    /**
+     * Experimental: search independent spell check
+     * use spellcheck option in search for spellchecking search results
+     *
+     * @return array Solr result set.
+     */
     function spellCheck ( $string, $onlyMorePopular = false, $suggestionCount = 1, $accuracy=0.5 )
     {
-	$onlyMorePopularString = $onlyMorePopular ? 'true' : 'false';
-	return $this->Solr->rawSearch( '/select', array( 'q' => $string, 'qt' => 'spellchecker',
-						 'suggestionCount' => $suggestionCount, 'wt' => 'php',
-						 'accuracy' => $accuracy, 'onlyMorePopular' => $onlyMorePopularString ) );
+        $onlyMorePopularString = $onlyMorePopular ? 'true' : 'false';
+        return $this->Solr->rawSearch( array( 'q' => $string, 'qt' => 'spellchecker',
+                             'suggestionCount' => $suggestionCount, 'wt' => 'php',
+                             'accuracy' => $accuracy, 'onlyMorePopular' => $onlyMorePopularString ) );
 
     }
 
 
-    function moreLikeThis ( $objectID )
-    {
-	return $this->rawSolrRequest ( '/mlt' , array( 'q' => 'm_id:' . $objectID, 'wt' => 'php', 'fl' => 'm_id' ) );
-    }
-*/
 
     /*!
      Get eZFind installation ID
@@ -736,7 +884,7 @@ class eZSolr
     */
     static function engineText()
     {
-        return ezi18n( 'ezfind', 'eZ Find search plugin &copy; 2008 eZ Systems AS' );
+        return ezi18n( 'ezfind', 'eZ Find search plugin &copy; 2008 eZ Systems AS, powered by Apache Solr' );
     }
 
     /// Object vars

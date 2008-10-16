@@ -6,7 +6,7 @@ ExtensionDirectories[]=ezfind
 SearchEngine=ezsolr
 SearchViewHandling=template
 
-# Empty search is allowed by defualt for eZ Find, since it does not
+# Empty search is allowed by default for eZ Find, since it does not
 # use extra resources compared to regular search.
 AllowEmptySearch=enabled
 

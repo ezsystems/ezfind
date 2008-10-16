@@ -45,6 +45,22 @@ class ezfeZPSolrQueryBuilder
     {
     }
 
+
+    /**
+     * @since eZ Find 2.0
+     * build a multi field query, basically doing the same as a Lucene MultiField query
+     * not always safe
+     * @param string $searchText
+     * @param array $solrFields 
+     * @param string $mode
+     * 
+     */
+    public function buildMultiFieldQuery( $searchText, $solrFields = array(), $mode = null )
+    {
+
+    }
+
+
     /**
      * Search on the Solr search server
      *
@@ -65,7 +81,8 @@ class ezfeZPSolrQueryBuilder
      * For full facet description, see facets design document.
      * @param array Search types. Reserved.
      *
-     * @return array Solt query parameters.
+     * @return array Solr query results.
+
      */
     public function buildSearch( $searchText, $params = array(), $searchTypes = array() )
     {
@@ -102,7 +119,6 @@ class ezfeZPSolrQueryBuilder
         }
 
         // Add content class query filter
-        // TODO - add function for this.
         $classLimitationFilter = $this->getContentClassFilterQuery( $contentClassID );
         if ( $classLimitationFilter !== null )
         {
@@ -116,7 +132,7 @@ class ezfeZPSolrQueryBuilder
         }
 
         // Add Filter from function parameters
-        // but add the sitelanguage first (only current language is searched)  
+        // but add the sitelanguage first (only current language is searched)
         // maybe we'll make this configurable later on
         $ini = eZINI::instance();
         // TODO - check ini settings wether or not to search main language only
@@ -128,10 +144,10 @@ class ezfeZPSolrQueryBuilder
         {
             $filterQuery[] = $paramFilterQuery;
         }
-        
+
         //add raw filters
         $rawFilters = self::$FindINI->variable( 'SearchFilters', 'RawFilterList' );
-        if ( is_array( $rawFilters ) ) 
+        if ( is_array( $rawFilters ) )
         {
             $filterQuery = array_merge( $filterQuery, $rawFilters );
         }
@@ -189,8 +205,142 @@ class ezfeZPSolrQueryBuilder
     }
 
     /**
-     * Build sort parameter based on params provided.
+     * @since eZ Find 2.0
      *
+     * More Like This similarity searches
+     * @param query
+     *
+     * @return
+     */
+    public function buildMoreLikeThis( $queryType, $query, $params = array() )
+    {
+        eZDebug::writeDebug( $queryType, 'mlt querytype' );
+        eZDebug::writeDebug( $query, 'mlt query' );
+        eZDebug::writeDebug( $params, 'mlt params' );
+        $searchCount = 0;
+
+        $offset = ( isset( $params['SearchOffset'] ) && $params['SearchOffset'] ) ? $params['SearchOffset'] : 0;
+        $limit = ( isset( $params['SearchLimit']  ) && $params['SearchLimit'] ) ? $params['SearchLimit'] : 10;
+        $subtrees = isset( $params['SearchSubTreeArray'] ) ? $params['SearchSubTreeArray'] : array();
+        $contentClassID = ( isset( $params['SearchContentClassID'] ) && $params['SearchContentClassID'] <> -1 ) ? $params['SearchContentClassID'] : false;
+        $sectionID = isset( $params['SearchSectionID'] ) && $params['SearchSectionID'] > 0 ? $params['SearchSectionID'] : false;
+        $filterQuery = array();
+
+
+        // Add subtree query filter
+        if ( count( $subtrees ) > 0 )
+        {
+            $subtreeQueryParts = array();
+            foreach ( $subtrees as $subtreeNodeID )
+            {
+                $subtreeQueryParts[] = eZSolr::getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
+            }
+
+            $filterQuery[] = implode( ' OR ', $subtreeQueryParts );
+        }
+
+        // Add policy limitation query filter
+        $policyLimitationFilterQuery = $this->policyLimitationFilterQuery();
+        if ( $policyLimitationFilterQuery !== false )
+        {
+            $filterQuery[] = $policyLimitationFilterQuery;
+        }
+
+        // Add content class query filter
+        $classLimitationFilter = $this->getContentClassFilterQuery( $contentClassID );
+        if ( $classLimitationFilter !== null )
+        {
+            $filterQuery[] = $classLimitationFilter;
+        }
+
+        // Add section to query filter.
+        if ( $sectionID )
+        {
+            $filterQuery[] = eZSolr::getMetaFieldName( 'section_id' ) . ':' . $sectionID;
+        }
+
+        // Add Filter from function parameters
+        // but add the sitelanguage first (only current language is searched)
+        // maybe we'll make this configurable later on
+        $ini = eZINI::instance();
+        // @todo 2.0 - check ini settings wether or not to search main language only
+        $languages = $ini->variable( 'RegionalSettings', 'SiteLanguageList' );
+        $mainLanguage = $languages[0];
+        $params['Filter']['language_code'] =  $mainLanguage;
+        $paramFilterQuery = $this->getParamFilterQuery( $params );
+        if ( $paramFilterQuery )
+        {
+            $filterQuery[] = $paramFilterQuery;
+        }
+
+        //add raw filters
+        $rawFilters = self::$FindINI->variable( 'SearchFilters', 'RawFilterList' );
+        if ( is_array( $rawFilters ) )
+        {
+            $filterQuery = array_merge( $filterQuery, $rawFilters );
+        }
+
+        // Build and get facet query prameters.
+        $facetQueryParamList = $this->buildFacetQueryParamList( $params );
+
+        // Pre-process search text, and see if some field types must be excluded from the search.
+        $fieldTypeExcludeList = $this->fieldTypeExludeList( $searchText );
+
+        // Create sort parameters based on the parameters.
+        $sortParameter = $this->buildSortParameter( $params );
+
+        //the array_unique below is necessary because attribute identifiers are not unique .. and we get as
+        //much highlight snippets as there are duplicate attribute identifiers
+        //these are also in the list of query fields (dismax, ezpublish) request handlers
+        $queryFields = array_unique( $this->getClassAttributes( $contentClassID, $contentClassAttributeID, $fieldTypeExcludeList ) );
+
+        //query type can vary for MLT q, or stream
+        $mltVariant = 'q';
+        switch ( strtolower ($queryType) )
+        {
+            case 'nid':
+            {
+                $mltQuery = eZSolr::getMetaFieldName( 'main_node_id') . ':' . $query;
+            }
+            case 'oid':
+            {
+                $mltQuery = eZSolr::getMetaFieldName( 'object_id') . ':' . $query;
+            }
+            case 'url':
+            {
+                $mltVariant = 'stream.url';
+                $mltQuery = $query;
+            }
+            case 'text':
+            {
+                $mltVariant = 'stream.body';
+                $mltQuery = $query;
+            }
+        }
+
+        // @todo decide which of the hard-coded mlt parameters should become input parameters or ini settings
+        return array_merge(
+            array(
+                'start' => $offset,
+                'rows' => $limit,
+                'sort' => $sortParameter,
+                'indent' => 'on',
+                'version' => '2.2',
+                'mlt.match.include' => 'false', // exclude the doc itself
+                'mlt.interestingTerms' => 'list', // useful for debug output
+                'mlt.boost' => 'true', // boost the highest ranking terms
+                //'mlt.qf' => implode( ' ', $queryFields ),
+                'mlt.fl' => implode( ' ', $queryFields ),
+                $mltVariant => $searchText,
+                'fq' => $filterQuery,
+                'wt' => 'php' ),
+            $facetQueryParamList );
+
+        return $queryParams;
+    }
+    /**
+     * Build sort parameter based on params provided.
+     * @todo specify dedicated sorting fields
      * @param array Parameter list array. SortBy element contains sort
      * definition.
      *
@@ -348,6 +498,8 @@ class ezfeZPSolrQueryBuilder
     /**
      * Build facet parameter list. This function extracts the facet parameter from
      * the ezfeZPSolrQueryBuilder::search( ...,$params parameter.
+     *
+     * @todo specify dedicated facet fields (may be mapped to sort fields)
      *
      * @param array Parameter list array
      *
@@ -615,9 +767,9 @@ class ezfeZPSolrQueryBuilder
             }
             $boostQuery .= ' ' . eZSolr::getMetaFieldName( 'language_code' ) . ':' . $languageCode . '^' . $languageBoostList[$idx];
         }
-        
+
         // User defined boosts through ini settings
-        
+
 
         return $boostQuery;
     }

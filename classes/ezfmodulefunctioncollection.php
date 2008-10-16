@@ -101,26 +101,82 @@ class ezfModuleFunctionCollection
      *
      * @return array Search result
      */
-    public function search( $query, $offset = 0, $limit = 10, $facet = null,
-                            $filter = null, $sortBy = null, $classID = null,
-                            $subtreeArray = null )
+    public function search( $query, $offset = 0, $limit = 10, $facets = null,
+                            $filters = null, $sortBy = null, $classID = null,
+                            $subtreeArray = null, $asObjects = true, $spellCheck = null )
     {
         $solrSearch = new eZSolr();
         $params = array( 'SearchOffset' => $offset,
                          'SearchLimit' => $limit,
-                         'Facet' => $facet,
+                         'Facet' => $facets,
                          'SortBy' => $sortBy,
-                         'Filter' => $filter,
+                         'Filter' => $filters,
                          'SearchContentClassID' => $classID,
                          'SearchSubTreeArray' => $subtreeArray );
         return array( 'result' => $solrSearch->search( $query, $params ) );
     }
     
-    // experimental, useful to query foreign Solr indexes outside of eZ Publish
+    /**
+     * rawSolrRequest function
+     *
+     * @param base specifies the Solr server/shard to use
+     * @param request the base request
+     * @param parameters all parameters for the request
+     *
+     * @return array result as a PHP array
+     */
     public function rawSolrRequest( $base, $request, $parameters = array() )
     {
         $solr = new eZSolrBase( $base );
         return array( 'result' => $solr->rawSolrRequest( $request, $parameters ) );
+    }
+    
+    /**
+     * moreLikeThis function
+     *
+     * @param string Query string ('nid:<nodeid> | oid:<object id> | '<text>' | url:<url> )
+     * @param int Offset
+     * @param int Limit
+     * @param array Facet definition
+     * @param array Filter parameters
+     * @param array Sort by parameters
+     * @param mixed Content class ID or list of content class IDs
+     * @param array list of subtree limitation node IDs
+     * @param boolean asObjects return regular eZPublish objects if true, stored Solr content if false
+     *
+     * @return array result as a PHP array
+     */
+    public function moreLikeThis( $queryType, $query, $offset = 0, $limit = 10, $facet = null,
+                                  $filter = null, $sortBy = null, $classID = null,
+                                  $subtreeArray = null, $asObjects = true )
+                              
+    {
+        $solrSearch = new eZSolr();
+        $params = array( 'SearchOffset' => $offset,
+                         'SearchLimit' => $limit,
+                         'Facet' => $facets,
+                         'SortBy' => $sortBy,
+                         'Filter' => $filters,
+                         'SearchContentClassID' => $classID,
+                         'SearchSubTreeArray' => $subtreeArray );
+        return array( 'result' => $solrSearch->moreLikeThis( $queryType, $query, $params ) );
+
+        
+    }
+    
+    /**
+     * spellCheck function, see also the search integrated spell check
+     *
+     * @param string contains the string/word 
+     * @param parameters all parameters for the request
+     * @param realm the ini configured parameters grouped into a realm
+     *
+     * @return array result as a PHP array
+     */
+    public function spellCheck( $string, $parameters = array(), $realm = null )
+    {
+        //TODO: configure a spellCheck request handler and implemnt a raw Solr request to it
+        return false;
     }
 }
 

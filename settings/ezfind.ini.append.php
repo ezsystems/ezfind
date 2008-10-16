@@ -9,6 +9,32 @@ IndexPubliclyAvailable=enabled
 # Search other installations
 SearchOtherInstallations=enabled
 
+[SearchHandler]
+# DefaultSearchHandler: can be any of standard, simplestandard, dismax, heuristic
+# standard: the Solr standard handler is called with all syntax supported,
+#    searching is done against all searcheable fields
+# simplestandard: the Solr standard handler is called with all all syntax
+#    supported, searching is done against the aggregated field ezf_df_text
+# ezpublish: the recommended handler (Solr dismax based) for typical user
+#    searches using keywords without boolean or other operators
+#    except for + (required) and - (excluding)
+# heuristic: depending on the presence  of special characters indicating boolean,
+#    wildcard or fuzzy expressions, either the standard or dismax handler is called
+DefaultSearchHandler=heuristic
+
+
+[LanguageSearch]
+#It is possible to search all languages simultaneously, but the common use case is to search only the main language
+SearchMainLanguageOnly=enabled
+
+[SpellCheck]
+#SpellCheck = enabled | disabled
+SpellCheck=enabled
+#SpellCheckType: index only for now, realms (for example per language, or using
+#   external dictionaries) to be supported later
+DefaultSpellCheckType=index
+
+
 [FacetSettings]
 # Installation name map. The key is the installation ID,
 # and the value is the name displayed in the design templates.
@@ -31,7 +57,7 @@ CustomMap[ezobjectrelationlist]=ezfSolrDocumentFieldObjectRelation
 # Datatype to field type map.
 #
 # Example:
-# DatatypeMap[eztext]=text
+DatatypeMap[eztext]=text
 DatatypeMap[ezboolean]=boolean
 DatatypeMap[ezdate]=date
 DatatypeMap[ezdatetime]=date
@@ -87,9 +113,11 @@ ClassIdentifierList[]
 #ClassIdentifierList[]=secret
 
 [SearchFilters]
-#Search filters to be applied for every query made 
+#Search filters to be applied for every query made
+#Expert settings!
 #Currently support for one filter type, a raw Solr query string
 RawFilterList[]
+#Example to exclude certain classes
 #RawFilterList[]='meta_class_identifier_string:[* TO *] -meta_class_identifier_string:folder'
 
 */ ?>
