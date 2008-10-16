@@ -525,30 +525,15 @@
   <searchComponent name="spellcheck" class="solr.SpellCheckComponent">
 
     <str name="queryAnalyzerFieldType">textSpell</str>
-	<str name="buildOnCommit">true</str>
-
+	
     <lst name="spellchecker">
       <str name="name">default</str>
       <str name="field">ezf_sp_words</str>
       <str name="spellcheckIndexDir">./ezfspellchecker</str>
+      <str name="buildOnCommit">true</str>
 
     </lst>
-    <lst name="spellchecker">
-      <str name="name">jarowinkler</str>
-      <str name="field">spell</str>
-      <!-- Use a different Distance Measure -->
-      <str name="distanceMeasure">org.apache.lucene.search.spell.JaroWinklerDistance</str>
-      <str name="spellcheckIndexDir">./spellchecker2</str>
-
-    </lst>
-
-    <lst name="spellchecker">
-      <str name="classname">solr.FileBasedSpellChecker</str>
-      <str name="name">file</str>
-      <str name="sourceLocation">spellings.txt</str>
-      <str name="characterEncoding">UTF-8</str>
-      <str name="spellcheckIndexDir">./spellcheckerFile</str>
-    </lst>
+    
   </searchComponent>
 
   <!-- a request handler utilizing the spellcheck component -->
