@@ -102,7 +102,7 @@ class ezfModuleFunctionCollection
      * @return array Search result
      */
     public function search( $query, $offset = 0, $limit = 10, $facets = null,
-                            $filters = null, $sortBy = null, $classID = null,
+                            $filters = null, $sortBy = null, $classID = null, $sectionID = null,
                             $subtreeArray = null, $asObjects = true, $spellCheck = null )
     {
         $solrSearch = new eZSolr();
@@ -112,10 +112,11 @@ class ezfModuleFunctionCollection
                          'SortBy' => $sortBy,
                          'Filter' => $filters,
                          'SearchContentClassID' => $classID,
+                         'SearchSectionID' => $sectionID,
                          'SearchSubTreeArray' => $subtreeArray );
         return array( 'result' => $solrSearch->search( $query, $params ) );
     }
-    
+
     /**
      * rawSolrRequest function
      *
@@ -130,7 +131,7 @@ class ezfModuleFunctionCollection
         $solr = new eZSolrBase( $base );
         return array( 'result' => $solr->rawSolrRequest( $request, $parameters ) );
     }
-    
+
     /**
      * moreLikeThis function
      *
@@ -147,9 +148,9 @@ class ezfModuleFunctionCollection
      * @return array result as a PHP array
      */
     public function moreLikeThis( $queryType, $query, $offset = 0, $limit = 10, $facet = null,
-                                  $filter = null, $sortBy = null, $classID = null,
+                                  $filter = null, $sortBy = null, $classID = null, $sectionID = null,
                                   $subtreeArray = null, $asObjects = true )
-                              
+
     {
         $solrSearch = new eZSolr();
         $params = array( 'SearchOffset' => $offset,
@@ -158,12 +159,13 @@ class ezfModuleFunctionCollection
                          'SortBy' => $sortBy,
                          'Filter' => $filters,
                          'SearchContentClassID' => $classID,
+                         'SearchSectionID' => $sectionID,
                          'SearchSubTreeArray' => $subtreeArray );
         return array( 'result' => $solrSearch->moreLikeThis( $queryType, $query, $params ) );
 
-        
+
     }
-    
+
     /**
      * spellCheck function, see also the search integrated spell check
      *
@@ -175,7 +177,7 @@ class ezfModuleFunctionCollection
      */
     public function spellCheck( $string, $parameters = array(), $realm = null )
     {
-        //TODO: configure a spellCheck request handler and implemnt a raw Solr request to it
+        //@todo: configure a spellCheck request handler and implement a raw Solr request to it
         return false;
     }
 }
