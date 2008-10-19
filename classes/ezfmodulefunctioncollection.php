@@ -103,7 +103,7 @@ class ezfModuleFunctionCollection
      */
     public function search( $query, $offset = 0, $limit = 10, $facets = null,
                             $filters = null, $sortBy = null, $classID = null, $sectionID = null,
-                            $subtreeArray = null, $asObjects = true, $spellCheck = null )
+                            $subtreeArray = null, $asObjects = true, $spellCheck = null, $queryHandler = 'ezpublish' )
     {
         $solrSearch = new eZSolr();
         $params = array( 'SearchOffset' => $offset,
@@ -113,7 +113,10 @@ class ezfModuleFunctionCollection
                          'Filter' => $filters,
                          'SearchContentClassID' => $classID,
                          'SearchSectionID' => $sectionID,
-                         'SearchSubTreeArray' => $subtreeArray );
+                         'SearchSubTreeArray' => $subtreeArray,
+                         'AsObjects' => $asObjects,
+                         'SpellCheck' => $spellCheck,
+                         'QueryHandler' => $queryHandler );
         return array( 'result' => $solrSearch->search( $query, $params ) );
     }
 
@@ -160,7 +163,8 @@ class ezfModuleFunctionCollection
                          'Filter' => $filters,
                          'SearchContentClassID' => $classID,
                          'SearchSectionID' => $sectionID,
-                         'SearchSubTreeArray' => $subtreeArray );
+                         'SearchSubTreeArray' => $subtreeArray,
+                         'AsObjects' => $asObjects);
         return array( 'result' => $solrSearch->moreLikeThis( $queryType, $query, $params ) );
 
 

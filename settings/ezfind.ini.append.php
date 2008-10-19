@@ -30,9 +30,10 @@ SearchMainLanguageOnly=enabled
 [SpellCheck]
 #SpellCheck = enabled | disabled
 SpellCheck=enabled
-#SpellCheckType: index only for now, realms (for example per language, or using
+#DefaultDictionary: default only for now, realms (for example per language, or using
 #   external dictionaries) to be supported later
-DefaultSpellCheckType=index
+#   this can also be specied in the spellcheck parameters in search requests
+DefaultDictionary=default
 
 
 [FacetSettings]

@@ -625,9 +625,9 @@ class eZSolr
         $error = 'Server not running';
         $searchCount = 0;
 
-        if ( trim( $queryType ) == '' || trim( $queryValue ) )
+        if ( trim( $queryType ) == '' || trim( $queryValue ) == '' )
         {
-            $error = 'Missing query argument for More Like This';
+            $error = 'Missing query arguments for More Like This' . 'querytype = ' . $queryType . ', Query Value = ' . $queryValue;
             eZDebug::writeNotice( $error,
                                   'eZSolr::moreLikeThis()' );
             $resultArray = null;
@@ -749,8 +749,10 @@ class eZSolr
 
     /**
      * Initialise / rebuild the Spell checker
+     * not needed in current implementation with an index based spell checker
+     * and autorebuilds upon commits
      *
-     * 
+     * @package unfinished
      * @return array Solr result set.
      */
     function initSpellChecker()
@@ -765,8 +767,11 @@ class eZSolr
     /**
      * Experimental: search independent spell check
      * use spellcheck option in search for spellchecking search results
-     *
+     * 
+     * @package unfinished
      * @return array Solr result set.
+     * @todo: configure different spell check handlers
+     *
      */
     function spellCheck ( $string, $onlyMorePopular = false, $suggestionCount = 1, $accuracy=0.5 )
     {
@@ -884,7 +889,7 @@ class eZSolr
     */
     static function engineText()
     {
-        return ezi18n( 'ezfind', 'eZ Find search plugin &copy; 2008 eZ Systems AS, powered by Apache Solr' );
+        return ezi18n( 'ezfind', 'eZ Find 2.0 search plugin &copy; 2008 eZ Systems AS, powered by Apache Solr 1.3' );
     }
 
     /// Object vars

@@ -17,8 +17,8 @@
 -->
 
 <config>
-  <!-- Set this to 'false' if you want solr to continue working after it has 
-       encountered an severe configuration error.  In a production environment, 
+  <!-- Set this to 'false' if you want solr to continue working after it has
+       encountered an severe configuration error.  In a production environment,
        you may want solr to keep working even if one handler is mis-configured.
 
        You may also set this to false using by setting the system property:
@@ -367,6 +367,9 @@
        <str name="version">2.1</str>
         -->
      </lst>
+     <arr name="last-components">
+       <str>spellcheck</str>
+     </arr>
   </requestHandler>
 
 
@@ -407,6 +410,9 @@
      <str name="f.name.hl.alternateField">name</str>
      <str name="f.text.hl.fragmenter">regex</str> <!-- defined below -->
     </lst>
+    <arr name="last-components">
+      <str>spellcheck</str>
+    </arr>
   </requestHandler>
 
   <!-- Note how you can register the same handler multiple times with
@@ -486,6 +492,9 @@
 		  <int name="ps">100</int>
 		  <str name="q.alt">*:*</str>
 	  </lst>
+      <arr name="last-components">
+         <str>spellcheck</str>
+      </arr>
   </requestHandler>
 
   <!--

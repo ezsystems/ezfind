@@ -191,7 +191,7 @@ class ezfSolrDocumentFieldBase
     {
         $datatypeString = $classAttribute->attribute( 'data_type_string' );
         $customMapList = self::$FindINI->variable( 'SolrFieldMapSettings', 'CustomMap' );
-        print_r ($customMapList);
+        //print_r ($customMapList);
         if ( array_key_exists( $datatypeString, $customMapList ) )
         {
             if ( $returnValue = call_user_func_array( array( $customMapList[$datatypeString], 'getCustomFieldName' ),

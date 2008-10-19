@@ -64,7 +64,13 @@ class ezfSearchResultInfo
                       'engine',
                       'hasError',
                       'error',
-                      'responseHeader' );
+                      'responseHeader',
+                      'spellcheck',
+                      // spellcheck_collation is part of spellcheck suggestions,
+                      // but a border case is present when "collation"
+                      // is also a word searched for and not present in the
+                      // spellcheck dictionary/index -- Solr php response writer "bug"
+                      'spellcheck_collation');
     }
 
     /**
@@ -254,6 +260,36 @@ class ezfSearchResultInfo
             {
                 return eZSolr::engineText();
             } break;
+
+
+            //may or may not be active, so returns false if not present
+            case 'spellcheck':
+            {
+                if ( isset( $this->ResultArray['spellcheck'] ) && $this->ResultArray['spellcheck']['suggestions'] > 0 )
+                {
+                    return $this->ResultArray['spellcheck']['suggestions'];
+                }
+                else
+                {
+                    return false;
+                }
+            } break;
+
+            case 'spellcheck_collation':
+            {
+                if ( isset( $this->ResultArray['spellcheck']['suggestions']['collation'] ) )
+                {
+                    // work around border case if 'collation' is searched for but does not exist in the spell check index
+                    // the collation string is the last element of the suggestions array
+                    return end($this->ResultArray['spellcheck']['suggestions']);
+
+                }
+                else
+                {
+                    return false;
+                }
+            } break;
+
 
             default:
             {

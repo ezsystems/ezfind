@@ -83,7 +83,11 @@
 <p>
     <input class="halfbox" type="text" size="20" name="SearchText" id="Search" value="{$search_text|wash}" />
     <input class="button" name="SearchButton" type="submit" value="{'Search'|i18n('design/ezwebin/content/search')}" />
+    
 </p>
+{if $search_extras.spellcheck_collation}
+     <p>Spel check suggestion: did you mean <b>{$search_extras.spellcheck_collation}</b> ?</p>
+{/if}
 
     {def $adv_url=concat('/content/advancedsearch/',$search_text|count_chars()|gt(0)|choose('',concat('?SearchText=',$search_text|urlencode)))|ezurl}
     <label>{"For more options try the %1Advanced search%2"|i18n("design/ezwebin/content/search","The parameters are link start and end tags.",array(concat("<a href=",$adv_url,">"),"</a>"))}</label>
@@ -184,7 +188,7 @@
 </div>
 
 <p class="small"><i>{$search_extras.engine}</i></p>
-
+{*$search|attribute(show,2)*}
 </div></div></div>
 <div class="border-bl"><div class="border-br"><div class="border-bc"></div></div></div>
 </div>

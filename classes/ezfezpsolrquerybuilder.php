@@ -82,6 +82,8 @@ class ezfeZPSolrQueryBuilder
      * @param array Search types. Reserved.
      *
      * @return array Solr query results.
+     *
+     * @todo implement case $asObjects == false
 
      */
     public function buildSearch( $searchText, $params = array(), $searchTypes = array() )
@@ -95,6 +97,10 @@ class ezfeZPSolrQueryBuilder
         $contentClassID = ( isset( $params['SearchContentClassID'] ) && $params['SearchContentClassID'] <> -1 ) ? $params['SearchContentClassID'] : false;
         $contentClassAttributeID = ( isset( $params['SearchContentClassAttributeID'] ) && $params['SearchContentClassAttributeID'] <> -1 ) ? $params['SearchContentClassAttributeID'] : false;
         $sectionID = isset( $params['SearchSectionID'] ) && $params['SearchSectionID'] > 0 ? $params['SearchSectionID'] : false;
+        $asObjects = isset( $params['AsObjects'] ) && $params['AsObjects'] ? $params['AsObjects'] : true;
+        $spellCheck = isset( $params['SpellCheck'] ) && $params['SpellCheck'] > 0 ? $params['SpellCheck'] : array();
+        $queryHandler = isset( $params['QueryHandler'] ) && $params['QueryHandler'] > 0 ? $params['QueryHandler'] : 'ezpublish';
+
         $filterQuery = array();
 
         //FacetFields and FacetQueries not used yet! Need to add it to the module as well
@@ -173,6 +179,21 @@ class ezfeZPSolrQueryBuilder
         $highLightFields = $queryFields;
         $queryFields[] = eZSolr::getMetaFieldName( 'name' ) . '^2.0';
         $queryFields[] = eZSolr::getMetaFieldName( 'owner_name' ) . '^1.5';
+
+        $spellCheckParamList = array();
+        // @param $spellCheck expects array (true|false, dictionary identifier, ...)
+        if ( $spellCheck[0] || self::$FindINI->variable( 'SpellCheck', 'SpellCheck' ) == 'enabled' )
+        {
+            $dictionary = isset( $spellCheck[1]) ? $spellCheck[1] : self::$FindINI->variable( 'SpellCheck', 'DefaultDictionary' );
+            $spellCheckParamList = array(
+                'spellcheck' => 'true',
+                'spellcheck.dictionary' => $dictionary,
+                'spellcheck.collate' => 'true',
+                'spellcheck.extendedResults' => 'true',
+                'spellcheck.onlyMorePopular' => 'true',
+                'spellcheck.count' => 1);
+        }
+
         return array_merge(
             array(
                 'start' => $offset,
@@ -199,7 +220,8 @@ class ezfeZPSolrQueryBuilder
                 'hl.simple.pre' => '<b>',
                 'hl.simple.post' => '</b>',
                 'wt' => 'php' ),
-            $facetQueryParamList );
+            $facetQueryParamList,
+            $spellCheckParamList );
 
         return $queryParams;
     }
@@ -295,32 +317,31 @@ class ezfeZPSolrQueryBuilder
         $queryFields = array_unique( $this->getClassAttributes( $contentClassID, $contentClassAttributeID, $fieldTypeExcludeList ) );
 
         //query type can vary for MLT q, or stream
+        //if no valid match for the mlt query variant is obtained, it is treated as text
         $mltVariant = 'q';
         switch ( strtolower ($queryType) )
         {
             case 'nid':
-            {
-                $mltQuery = eZSolr::getMetaFieldName( 'main_node_id') . ':' . $query;
-            }
+                $mltQuery = eZSolr::getMetaFieldName( 'node_id') . ':' . $query;
+                break;
             case 'oid':
-            {
                 $mltQuery = eZSolr::getMetaFieldName( 'object_id') . ':' . $query;
-            }
+                break;
             case 'url':
-            {
                 $mltVariant = 'stream.url';
                 $mltQuery = $query;
-            }
+                break;
             case 'text':
-            {
+            default:
                 $mltVariant = 'stream.body';
                 $mltQuery = $query;
-            }
+                break;
         }
 
         // @todo decide which of the hard-coded mlt parameters should become input parameters or ini settings
         return array_merge(
             array(
+                $mltVariant => $query,
                 'start' => $offset,
                 'rows' => $limit,
                 'sort' => $sortParameter,
@@ -331,7 +352,12 @@ class ezfeZPSolrQueryBuilder
                 'mlt.boost' => 'true', // boost the highest ranking terms
                 //'mlt.qf' => implode( ' ', $queryFields ),
                 'mlt.fl' => implode( ' ', $queryFields ),
-                $mltVariant => $searchText,
+                'fl' =>
+                eZSolr::getMetaFieldName( 'guid' ) . ' ' . eZSolr::getMetaFieldName( 'installation_id' ) . ' ' .
+                eZSolr::getMetaFieldName( 'main_url_alias' ) . ' ' . eZSolr::getMetaFieldName( 'installation_url' ) . ' ' .
+                eZSolr::getMetaFieldName( 'id' ) . ' ' . eZSolr::getMetaFieldName( 'main_node_id' ) . ' ' .
+                eZSolr::getMetaFieldName( 'language_code' ) . ' ' . eZSolr::getMetaFieldName( 'name' ) .
+                ' score ' . eZSolr::getMetaFieldName( 'published' ),
                 'fq' => $filterQuery,
                 'wt' => 'php' ),
             $facetQueryParamList );
