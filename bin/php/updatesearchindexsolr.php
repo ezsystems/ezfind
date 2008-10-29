@@ -459,14 +459,16 @@ class ezfUpdateSearchIndexSolr
 
         $output = array();
         $command = $this->Executable . ' ' . $argv[0] . $paramString;
-        if ( $isSubProcess )
-        {
-            exec( $command, $output );
-        }
-        else
-        {
-            exec( $command, $output );
-        }
+        exec( $command, $output );
+//        wtf code follows, but leave it here commented for future enhancements
+//        if ( $isSubProcess )
+//        {
+//            exec( $command, $output );
+//        }
+//        else
+//        {
+//            exec( $command, $output );
+//        }
 
         if ( !empty( $output ) )
         {
