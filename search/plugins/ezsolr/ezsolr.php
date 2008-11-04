@@ -393,11 +393,7 @@ class eZSolr
 
         if ( $commit )
         {
-            // For every 1000 time, call optimize
-            if ( mt_rand( 0, 999 ) == 1 )
-            {
-                $this->optimize();
-            }
+            $this->optimize( true );
         }
     }
 
