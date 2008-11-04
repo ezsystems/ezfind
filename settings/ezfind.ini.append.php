@@ -5,12 +5,12 @@
 URLProtocol=http://
 # Site index public available. For changes to take effect, the search
 # index must be updated by running bin/php/updatesearchindex.php
-IndexPubliclyAvailable=enabled
+IndexPubliclyAvailable=disabled
 # Search other installations
-SearchOtherInstallations=enabled
+SearchOtherInstallations=disabled
 
 [SearchHandler]
-# DefaultSearchHandler: can be any of standard, simplestandard, dismax, heuristic
+# DefaultSearchHandler: can be any of standard, simplestandard, ezpublish, heuristic
 # standard: the Solr standard handler is called with all syntax supported,
 #    searching is done against all searcheable fields
 # simplestandard: the Solr standard handler is called with all all syntax
