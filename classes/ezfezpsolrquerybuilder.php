@@ -57,6 +57,15 @@ class ezfeZPSolrQueryBuilder
      */
     public function buildMultiFieldQuery( $searchText, $solrFields = array(), $mode = null )
     {
+        // simple implode implying an OR functionality, $mode is ignored
+        $multiFieldQuery = '';
+        foreach ($solrFields as $field)
+        {
+            //don't mind the last extra space, it's ignored by Solr
+            $multiFieldQuery .= $field . ':(' . $searchText . ') ';
+        }
+        return $multiFieldQuery;
+
 
     }
 
@@ -84,6 +93,7 @@ class ezfeZPSolrQueryBuilder
      * @return array Solr query results.
      *
      * @todo implement case $asObjects == false
+     * @todo add a field list parameter for use if $asObjects == false
 
      */
     public function buildSearch( $searchText, $params = array(), $searchTypes = array() )
@@ -99,11 +109,9 @@ class ezfeZPSolrQueryBuilder
         $sectionID = isset( $params['SearchSectionID'] ) && $params['SearchSectionID'] > 0 ? $params['SearchSectionID'] : false;
         $asObjects = isset( $params['AsObjects'] ) && $params['AsObjects'] ? $params['AsObjects'] : true;
         $spellCheck = isset( $params['SpellCheck'] ) && $params['SpellCheck'] > 0 ? $params['SpellCheck'] : array();
-        $queryHandler = isset( $params['QueryHandler'] ) && $params['QueryHandler'] > 0 ? $params['QueryHandler'] : 'ezpublish';
+        $queryHandler = isset( $params['QueryHandler'] )  ?  $params['QueryHandler'] : self::$FindINI->variable( 'SearchHandler', 'DefaultSearchHandler' );
 
         $filterQuery = array();
-
-        //FacetFields and FacetQueries not used yet! Need to add it to the module as well
 
         // Add subtree query filter
         if ( count( $subtrees ) > 0 )
@@ -194,15 +202,65 @@ class ezfeZPSolrQueryBuilder
                 'spellcheck.count' => 1);
         }
 
+
+        // process query handler: standard, simplestandard, ezpublish, heuristic
+        // first determine which implemented handler to use when heuristic is specified
+        if ( strtolower( $queryHandler ) === 'heuristic' )
+        {
+            // @todo: this code will evolve of course
+            if ( preg_match('/[\^\*\~]|AND|OR/', $searchText) > 0 )
+            {
+                $queryHandler = 'simplestandard';
+            }
+            else
+            {
+                $queryHandler = 'ezpublish';
+            }
+        }
+        
+        $handlerParameters = array();
+
+        $queryHandler = strtolower( $queryHandler );
+
+        switch ( $queryHandler )
+        {
+            case 'standard':
+                // @todo: this is more complicated
+                // build the query against all "text" like fields
+                // should take into account all the filter fields and class filters to shorten the query
+                // need to build: Solr q
+                $handlerParameters = array ( 'q' => $this->buildMultiFieldQuery( $searchText, $queryFields ),
+                                             'qt' => 'standard');
+                break;
+
+            case 'simplestandard':
+                // not to do much, searching is against the default aggregated field
+                $handlerParameters = array ( 'q' => $searchText,
+                                             'qt' => 'standard');
+                break;
+            case 'ezpublish':
+                // the dismax based handler, just keywordss input, most useful for ordinary queries by users
+                // need to build: Solr q, qf, dismax specific parameters
+
+            default:
+                // ezpublish of course, this to not break BC and is the most "general"
+                // if another value is specified, it is supposed to be a dismax like handler
+                // with possible other tuning variables then the stock provided 'ezpublish' in solrconfi.xml
+                // remark it should be lowercase in solrconfig.xml!
+                $handlerParameters = array ( 'q' => $searchText,
+                                             'qf' => implode( ' ', $queryFields ),
+                                             'qt' => $queryHandler );
+                                                              
+        }
+
         return array_merge(
+            $handlerParameters,
             array(
                 'start' => $offset,
                 'rows' => $limit,
                 'sort' => $sortParameter,
                 'indent' => 'on',
                 'version' => '2.2',
-                'qt' => 'ezpublish',
-                'qf' => implode( ' ', $queryFields ),
                 'bq' => $this->boostQuery(),
                 'fl' =>
                 eZSolr::getMetaFieldName( 'guid' ) . ' ' . eZSolr::getMetaFieldName( 'installation_id' ) . ' ' .
@@ -210,7 +268,6 @@ class ezfeZPSolrQueryBuilder
                 eZSolr::getMetaFieldName( 'id' ) . ' ' . eZSolr::getMetaFieldName( 'main_node_id' ) . ' ' .
                 eZSolr::getMetaFieldName( 'language_code' ) . ' ' . eZSolr::getMetaFieldName( 'name' ) .
                 ' score ' . eZSolr::getMetaFieldName( 'published' ),
-                'q' => $searchText,
                 'fq' => $filterQuery,
                 'hl' => 'true',
                 'hl.fl' => $highLightFields,
@@ -341,7 +398,7 @@ class ezfeZPSolrQueryBuilder
         // @todo decide which of the hard-coded mlt parameters should become input parameters or ini settings
         return array_merge(
             array(
-                $mltVariant => $query,
+                $mltVariant => $mltQuery,
                 'start' => $offset,
                 'rows' => $limit,
                 'sort' => $sortParameter,
@@ -457,12 +514,16 @@ class ezfeZPSolrQueryBuilder
 
     /**
      * Build filter query from search filter parameter.
-     *
+     * @deprecated api is way too limited now
+     * @todo for eZ Find 2.0: rework this for recursive boolean combinations and a few more filter types, the possible combinations are almost infinite for pure Solr syntax
      * @param array Parameter list array.
-     *              The array is of type: array( '<field name>', <value> ).
-     *              The value may an array containing values.
-     *              The value may also be a string, or range, example: [10 to *].
+     *              The normal simple use is an array of type: array( '<field name>', <value> ).
+     *              The value may also be an array containing values.
+     *      
      *              The value may be the <basename>:<value>, example: array( 'Filter' => array( 'car/make:audi' ) )
+     *              
+     *              The value may also be a string, or range, example: [10 to *].
+     *              
      *
      * @return string Filter Query. Null if no filter parameters are in
      * the $parameterList
@@ -477,9 +538,10 @@ class ezfeZPSolrQueryBuilder
         $filterQueryList = array();
         foreach( $parameterList['Filter'] as $baseName => $value )
         {
-            if ( strpos( $value, ':' ) !== false )
+            if ( strpos( $value, ':' ) !== false && is_numeric( $baseName ) )
             {
-                list( $baseName, $value ) = explode( ':', $value );
+                // split at the first colon, leave the rest intact
+                list( $baseName, $value ) = explode( ':', $value, 2 );
             }
 
             // Get internal field name.
@@ -741,6 +803,7 @@ class ezfeZPSolrQueryBuilder
      * Check if search string requires certain field types to be excluded from the search
      *
      * @param string Search string
+     * @todo decide wether or not to drop this, pure numeric and date values are most likely to go into filters, not the main query
      *
      * @return array List of field types to exclude from the search
      */
