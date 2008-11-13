@@ -137,8 +137,11 @@ class ezfModuleFunctionCollection
 
     /**
      * moreLikeThis function
+     * @todo document the solrconfig.xml required setting for remote streaming to be true
+     *       if $queryType 'url' is to be used
      *
-     * @param string Query string ('nid:<nodeid> | oid:<object id> | '<text>' | url:<url> )
+     * @param string $queryType string ('nid' | 'oid' | 'text' | 'url' )
+     * @param string $query value for QueryType
      * @param int Offset
      * @param int Limit
      * @param array Facet definition
