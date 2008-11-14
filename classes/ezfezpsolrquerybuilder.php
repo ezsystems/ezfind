@@ -255,7 +255,7 @@ class ezfeZPSolrQueryBuilder
                                                               
         }
 
-        return array_merge(
+        $queryParams =  array_merge(
             $handlerParameters,
             array(
                 'start' => $offset,
@@ -281,8 +281,8 @@ class ezfeZPSolrQueryBuilder
                 'wt' => 'php' ),
             $facetQueryParamList,
             $spellCheckParamList );
-
-        //return $queryParams;
+        eZDebug::writeDebug( $queryParams, 'Final query parameters sent to Solr backend' );
+        return $queryParams;
     }
 
     /**
