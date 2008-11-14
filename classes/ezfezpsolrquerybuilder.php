@@ -185,8 +185,8 @@ class ezfeZPSolrQueryBuilder
         //maybe we should add meta data to the index to filter them out.
 
         $highLightFields = $queryFields;
-        $queryFields[] = eZSolr::getMetaFieldName( 'name' ) . '^2.0';
-        $queryFields[] = eZSolr::getMetaFieldName( 'owner_name' ) . '^1.5';
+        $queryFields[] = eZSolr::getMetaFieldName( 'name' );
+        $queryFields[] = eZSolr::getMetaFieldName( 'owner_name' );
 
         $spellCheckParamList = array();
         // @param $spellCheck expects array (true|false, dictionary identifier, ...)
@@ -195,6 +195,8 @@ class ezfeZPSolrQueryBuilder
             $dictionary = isset( $spellCheck[1]) ? $spellCheck[1] : self::$FindINI->variable( 'SpellCheck', 'DefaultDictionary' );
             $spellCheckParamList = array(
                 'spellcheck' => 'true',
+                // q is manipulated in case of standard request handler, so make it explicit by using spellcheck.q
+                'spellcheck.q' => $searchText,
                 'spellcheck.dictionary' => $dictionary,
                 'spellcheck.collate' => 'true',
                 'spellcheck.extendedResults' => 'true',
@@ -273,14 +275,14 @@ class ezfeZPSolrQueryBuilder
                 'hl.fl' => $highLightFields,
                 'hl.snippets' => 2,
                 'hl.fragsize' => 100,
-                'hl.requireFieldMatch' => 'true',
+                'hl.requireFieldMatch' => 'false',
                 'hl.simple.pre' => '<b>',
                 'hl.simple.post' => '</b>',
                 'wt' => 'php' ),
             $facetQueryParamList,
             $spellCheckParamList );
 
-        return $queryParams;
+        //return $queryParams;
     }
 
     /**
