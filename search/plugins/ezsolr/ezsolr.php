@@ -403,21 +403,12 @@ class eZSolr
      * @param ezfSolrDocumentFieldBase Instance of ezfSolrDocumentFieldBase
      * @param eZSolrDoc Solr document
      */
-    function addFieldBaseToDoc( ezfSolrDocumentFieldBase $fieldBase, eZSolrDoc $doc )
+    function addFieldBaseToDoc( ezfSolrDocumentFieldBase $fieldBase, eZSolrDoc $doc, $boost = false )
     {
-        if ( $fieldBase->isCollection() )
+
+        foreach( $fieldBase->getData() as $key => $value )
         {
-            foreach( $fieldBase->getCollectionData() as $collectionBase )
-            {
-                $this->addFieldBaseToDoc( $collectionBase, $doc );
-            }
-        }
-        else
-        {
-            foreach( $fieldBase->getData() as $key => $value )
-            {
-                $doc->addField( $key, $value );
-            }
+                $doc->addField( $key, $value, $boost );
         }
     }
 

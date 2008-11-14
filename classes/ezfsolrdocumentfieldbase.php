@@ -70,16 +70,29 @@ class ezfSolrDocumentFieldBase
         $fieldName = self::getFieldName( $contentClassAttribute );
 
         $metaData = $this->ContentObjectAttribute->metaData();
+
         if ( is_array( $metaData ) )
         {
-            $metaData = $this->implode( $metaData );
-        }
-        $metaData = $this->preProcessValue( $metaData,
+            $processedMetaDataArray = array();
+            foreach ($metaData as $value)
+            {
+                $processedMetaDataArray[] = $this->preProcessValue( $value,
                                             self::getClassAttributeType( $contentClassAttribute ) );
-        return array( $fieldName => $metaData );
+                
+            }
+            return array( $fieldName => $processedMetaDataArray);
+        }
+        else
+        {
+            return array( $fieldName => $this->preProcessValue( $metaData,
+                                            self::getClassAttributeType( $contentClassAttribute ) ) );
+            //return array( $fieldName => $metaData );
+        }
+        
     }
 
     /**
+     * @deprecated
      * Join array to string ( recursive )
      * Used to convert metadata array to string.
      *
