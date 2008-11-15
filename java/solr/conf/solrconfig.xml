@@ -539,7 +539,7 @@
       <str name="name">default</str>
       <str name="field">ezf_sp_words</str>
       <str name="spellcheckIndexDir">./ezfspellchecker</str>
-      <str name="buildOnCommit">true</str>
+      <str name="buildOnOptimize">true</str>
 
     </lst>
     
