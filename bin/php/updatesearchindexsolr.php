@@ -161,7 +161,7 @@ class ezfUpdateSearchIndexSolr
         $searchEngine = new eZSolr();
 
         if ( $subTree = $node->subTree( array( 'Offset' => $offset, 'Limit' => $limit,
-                                                  'Limitation' => array(),
+                                                  'Limitation' => false,
                                                   'MainNodeOnly' => true ) ) )
         {
             foreach ( $subTree as $innerNode )
