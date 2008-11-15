@@ -229,7 +229,7 @@ class eZSolrBase
       \param array associative array of documents to add.
       \param boolean $commit means a commit is performed afterwards
      */
-    function addDocs ( $docs = array(), $commit = false  )
+    function addDocs ( $docs = array(), $commit = true, $optimize = false  )
     {
         //
         if (! is_array( $docs ) )
@@ -250,7 +250,12 @@ class eZSolrBase
             $postString .= '</add>';
 
             $this->postQuery ( '/update', $postString, 'text/xml' );
-            if ( $commit )
+
+            if ( $optimize )
+            {
+                $this->optimize( $commit );
+            }
+            elseif ( $commit )
             {
                 $this->commit();
             }
@@ -267,7 +272,7 @@ class eZSolrBase
       \param string Solr Query. This will be ignored if \a$docIDs is set.
       \param boolean $optimize means an optimize is performed afterwards ( optional, default value: false )
      */
-    function deleteDocs ( $docIDs = array(), $query = false, $optimize = false )
+    function deleteDocs ( $docIDs = array(), $query = false, $commit = true,  $optimize = false )
     {
         $postString = '<delete>';
         if ( empty( $query ) )
@@ -285,7 +290,11 @@ class eZSolrBase
         $this->postQuery ( '/update', $postString, 'text/xml' );
         if ( $optimize )
         {
-            $this->optimize( true );
+            $this->optimize( $commit );
+        }
+        elseif ( $commit )
+        {
+            $this->commit();
         }
         return true;
     }

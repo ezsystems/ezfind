@@ -1,0 +1,11 @@
+Changes from 2.0.0alpha1 to 2.0.0beta1
+
+*Features:
+- API: small one, related to enhancement requuests: added more flexibility in the API to
+  allow more control on optimize and commit actions
+
+
+*Bugs:
+
+- fixed enhancement #013932: commit() is slow due to spellchecker configuration (in combination with very large indexes)
+- 

@@ -389,12 +389,13 @@ class eZSolr
             $docList[] = $doc;
         }
 
-        $this->Solr->addDocs( $docList, $commit );
-
-        if ( $commit )
+        $optimize = false;
+        if ( $commit && ( $this->FindINI->variable( 'IndexOptions', 'OptimizeOnCommit' ) === 'enabled' ) )
         {
-            $this->optimize( true );
+            $optimize = true;
         }
+        $this->Solr->addDocs( $docList, $commit, $optimize );
+
     }
 
     /**
@@ -432,12 +433,17 @@ class eZSolr
     /**
      * Removes an object from the Solr search server
      */
-    function removeObject( $contentObject )
+    function removeObject( $contentObject, $commit = true )
     {
+        $optimize = false;
+        if ( $commit && ( $this->FindINI->variable( 'IndexOptions', 'OptimizeOnCommit' ) === 'enabled' ) )
+        {
+            $optimize = true;
+        }
         $this->Solr->deleteDocs( array(),
                                  self::getMetaFieldName( 'id' ) . ':' . $contentObject->attribute( 'id' ) . ' AND '.
                                  self::getMetaFieldName( 'installation_id' ) . ':' . self::installationID(),
-                                 true );
+                                 $commit, $optimize );
     }
 
     /**

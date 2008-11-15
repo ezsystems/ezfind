@@ -70,6 +70,11 @@ DatatypeMap[eztime]=date
 # Default field type
 Default=text
 
+[IndexOptions]
+// OptimizeOnCommit controls the behaviour of the addObject and deleteObject calls
+// with respect to Optimizing the Solr Index on commits
+// If turning this off, a cron job should be set up to schedule optimize actions
+OptimizeOnCommit=enabled
 
 ###Boost factors used when indexing
 #When multiple boost factors match, they are ADDED, not multiplied
