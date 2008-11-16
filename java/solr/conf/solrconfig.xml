@@ -486,8 +486,14 @@
 		  <str name="fl">
 			  meta_
 		  </str>
+          <!-- mm explanation: for the values below:
+             1, 2 keywords: at least one must match
+             from 3-5 keywords, at least 2-4 must match
+             from 6-7 keywords, at least 4-5 must match
+             above 7 keywords, 60% of them must match
+          -->
 		  <str name="mm">
-			  2&lt;-1 5&lt;-2 6&lt;-30%
+			  1&lt;1 2&lt;-1 5&lt;-2 7&lt;60%
 		  </str>
 		  <int name="ps">100</int>
 		  <str name="q.alt">*:*</str>
