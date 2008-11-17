@@ -158,6 +158,11 @@ class ezfUpdateSearchIndexSolr
     {
         $count = 0;
         $node = eZContentObjectTreeNode::fetch( $nodeID );
+        if ( !is_object($node) )
+        {
+            $this->Script->shutdown();
+            exit();
+        }
         $searchEngine = new eZSolr();
 
         if ( $subTree = $node->subTree( array( 'Offset' => $offset, 'Limit' => $limit,
