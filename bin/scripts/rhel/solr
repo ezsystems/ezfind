@@ -40,7 +40,7 @@ start() {
     fi
     CURRENT_DIR=`pwd`
     cd $SOLR_HOME
-    daemon --check $NAME --pidfile /var/run/solr.pid nohup java -jar start.jar > /dev/null 2>&1 &
+    daemon --check $NAME --pidfile /var/run/solr.pid nohup $JAVA -jar start.jar > /dev/null 2>&1 &
     RETVAL=$?
     sleep 1 # Sleep 1 second, to make sure java is registered.
     pid=`pidof java`

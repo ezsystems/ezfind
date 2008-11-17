@@ -11,4 +11,5 @@ Changes from 2.0.0alpha1 to 2.0.0beta1
 - implemented enhancement #013794: Need controll of optimize() (added new config parameter and adapted the API) 
 - fixed bug #013889: /bin/php/updatesearchindexsolr.php doesn't index all objects
 - changed "minimum must match" definition in solrconfig.xml (rev 3315)
+- fixed bug	#013351: rhel service script searches for a JAVA_HOME var, but then uses simply "java"
 
