@@ -318,6 +318,8 @@ class eZSolrBase
     function sendHTTPRequest( $url, $postData = false, $contentType = '', $userAgent = 'eZ Publish' )
     {
         $connectionTimeout = $this->SolrINI->variable( 'SolrBase', 'ConnectionTimeout' );
+        $processTimeout = $this->SolrINI->variable( 'SolrBase', 'ProcessTimeout' );
+
 
         if ( extension_loaded( 'curl' ) )
         {
@@ -325,6 +327,8 @@ class eZSolrBase
             curl_setopt( $ch, CURLOPT_URL, $url );
             curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
             curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, $connectionTimeout );
+            curl_setopt( $ch, CURLOPT_TIMEOUT, $processTimeout );
+            //CURLOPT_TIMEOUT
             if ( $postData !== false )
             {
                 curl_setopt( $ch, CURLOPT_POST, 1 );
@@ -403,6 +407,7 @@ class eZSolrBase
                 "User-Agent: $userAgent\r\n" .
                 "Pragma: no-cache\r\n" .
                 "Connection: close\r\n\r\n";
+            stream_set_timeout( $fp, $processTimeout );
             fputs( $fp, $request );
             if ( $method == 'POST' )
             {
@@ -434,9 +439,20 @@ class eZSolrBase
             {
                 $buf .= fgets( $fp, 128 );
             }
-            fclose($fp);
+            $info = stream_get_meta_data($fp);
 
-            return $buf;
+            fclose($fp);
+            if ( $info['timed_out'] )
+            {
+                eZDebug::writeError( 'connection error: processing timed out', 'eZSolr::sendHTTPRequest()' );
+                return false;
+            }
+            else
+            {
+                return $buf;
+            }
+
+
         }
     }
 }

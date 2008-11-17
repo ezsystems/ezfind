@@ -5,5 +5,7 @@
 SearchServerURI=http://localhost:8983/solr
 # Solr connection timeout in seconds
 ConnectionTimeout=10
+# Solr read/send timeout in seconds, for larger indexes increase this to accomodate long optimize and/or commit processing
+ProcessTimeout=20
 
 */ ?>
