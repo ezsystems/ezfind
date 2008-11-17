@@ -13,4 +13,4 @@ Changes from 2.0.0alpha1 to 2.0.0beta1
 - changed "minimum must match" definition in solrconfig.xml (rev 3315)
 - fixed bug	#013351: rhel service script searches for a JAVA_HOME var, but then uses simply "java"
 - fixed bug #013959: Incorrect date formatting on win32
-- fixed enhancement #013348: improvements to ezsolrbase::sendHTTPRequest
+- fixed enhancement #012766 No timeout is set on socket connections from ezfind to solr
