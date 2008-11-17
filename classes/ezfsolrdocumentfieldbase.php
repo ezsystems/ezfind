@@ -292,7 +292,7 @@ class ezfSolrDocumentFieldBase
      */
     static function convertTimestampToDate( $timestamp )
     {
-        return strftime( '%Y-%m-%dT%TZ', (int)$timestamp );
+        return strftime( '%Y-%m-%dT%H:%M:%S.000Z', (int)$timestamp );
     }
 
 
