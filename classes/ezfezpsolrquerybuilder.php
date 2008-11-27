@@ -973,7 +973,7 @@ class ezfeZPSolrQueryBuilder
                                 $pathString = trim( $limitationValue, '/' );
                                 $pathArray = explode( '/', $pathString );
                                 // we only take the last node ID in the path identification string
-                                $subtreeNodeID = array_pop( $pathArray );
+                                $subtreeNodeID = array_shift( $pathArray );
                                 $filterQueryPolicyLimitationParts[] = eZSolr::getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
                             }
                         } break;
@@ -985,7 +985,7 @@ class ezfeZPSolrQueryBuilder
                                 $pathString = trim( $limitationValue, '/' );
                                 $pathArray = explode( '/', $pathString );
                                 // we only take the last node ID in the path identification string
-                                $nodeID = array_pop( $pathArray );
+                                $nodeID = array_shift( $pathArray );
                                 $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $nodeID;
                             }
                         } break;
