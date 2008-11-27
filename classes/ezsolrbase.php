@@ -221,6 +221,52 @@ class eZSolrBase
         $this->postQuery( '/update', '<optimize/>', 'text/xml' );
     }
 
+    /**
+     * Function to validate the update result returned by solr
+     *
+     * A valid solr update reply contains the following document:
+     * <?xml version="1.0" encoding="UTF-8"?>
+     * <response>
+     *   <lst name="responseHeader">
+     *     <int name="status">0</int>
+     *     <int name="QTime">3</int>
+     *   </lst>
+     *   <strname="WARNING">This response format is experimental.  It is likely to change in the future.</str>
+     * </response>
+     *
+     * Function will check if solrResult document contains "<int name="status">0</int>"
+     **/
+    static function validateUpdateResult ( $updateResult )
+    {
+        $dom = new DOMDocument( '1.0' );
+        // Supresses error messages
+        $status = $dom->loadXML( $updateResult, LIBXML_NOWARNING | LIBXML_NOERROR  );
+
+        if ( !$status )
+        {
+            return false;
+        }
+
+        $intElements = $dom->getElementsByTagName( 'int' );
+
+        if ( $intElements->length < 1 )
+        {
+            return false;
+        }
+
+        foreach ( $intElements as $intNode )
+        {
+            foreach ($intNode->attributes as $attribute)
+            {
+                if ( ( $attribute->name === 'name' ) and ( $attribute->value === 'status' ) )
+                {
+                    //Then we have found the correct node
+                    return ($intNode->nodeValue === "0");
+                }
+            }
+        }
+        return false;
+    }
 
     /*!
       Adds an array of docs (of type eZSolrDoc) to the Solr index
@@ -249,7 +295,7 @@ class eZSolrBase
             }
             $postString .= '</add>';
 
-            $this->postQuery ( '/update', $postString, 'text/xml' );
+            $updateResult = $this->postQuery ( '/update', $postString, 'text/xml' );
 
             if ( $optimize )
             {
@@ -259,7 +305,7 @@ class eZSolrBase
             {
                 $this->commit();
             }
-            return true;
+            return self::validateUpdateResult ( $updateResult );
         }
 
     }
