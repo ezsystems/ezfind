@@ -302,7 +302,7 @@ class eZSolr
         $docBoost = 1.0;
         $contentClassIdentifier = $contentObject->attribute( 'class_identifier' );
         // Just test if the boost factor is defined by checking if it has a numeric value
-        if ( is_numeric( $boostClasses[$contentClassIdentifier] ) )
+        if ( isset( $boostClasses[$contentClassIdentifier] ) && is_numeric( $boostClasses[$contentClassIdentifier] ) )
         {
             $docBoost += $boostClasses[$contentClassIdentifier];
         }
@@ -370,11 +370,11 @@ class eZSolr
                 $attributeIdentifier = $classAttribute->attribute( 'identifier' );
                 $combinedIdentifier = $contentClassIdentifier . '/' . $attributeIdentifier;
                 $boostAttribute = false; 
-                if ( is_numeric( $boostAttributes[$attributeIdentifier]))
+                if ( isset( $boostAttributes[$attributeIdentifier]) && is_numeric( $boostAttributes[$attributeIdentifier]))
                 {
                     $boostAttribute = $boostAttributes[$attributeIdentifier];
                 }
-                if ( is_numeric( $boostAttributes[$combinedIdentifier]))
+                if ( isset( $boostAttributes[$combinedIdentifier]) && is_numeric( $boostAttributes[$combinedIdentifier]))
                 {
                     $boostAttribute += $boostAttributes[$combinedIdentifier];
                 }
