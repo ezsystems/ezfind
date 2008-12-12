@@ -18,3 +18,4 @@ Changes from 2.0.0alpha1 to 2.0.0beta1
 - fixed bug in the comments of issue #012864 (policy limitation does not work): array_pop instead of array_shift
 - implemented bug/enhancement #014042: Undefined indexes in ezsolr.php when publishing objects (via VL)
 - fixed bug #014112: ironic typo in search.tpl
+- fixed bug #014111: Results that contain literal text can create strange output

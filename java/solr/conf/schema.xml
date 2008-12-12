@@ -168,6 +168,7 @@
              enablePositionIncrements=true ensures that a 'gap' is left to
              allow for accurate phrase queries.
         -->
+        <filter class="solr.HTMLStripWhitespaceTokenizerFactory" />
         <filter class="solr.StopFilterFactory"
                 ignoreCase="true"
                 words="stopwords.txt"
