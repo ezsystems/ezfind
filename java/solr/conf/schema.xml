@@ -160,7 +160,7 @@
         -->
     <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="index">
-        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <tokenizer class="solr.HTMLStripWhitespaceTokenizerFactory"/>
         <!-- in this example, we will only use synonyms at query time
         <filter class="solr.SynonymFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
         -->
@@ -168,7 +168,6 @@
              enablePositionIncrements=true ensures that a 'gap' is left to
              allow for accurate phrase queries.
         -->
-        <filter class="solr.HTMLStripWhitespaceTokenizerFactory" />
         <filter class="solr.StopFilterFactory"
                 ignoreCase="true"
                 words="stopwords.txt"
