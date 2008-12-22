@@ -612,7 +612,7 @@ class ezfeZPSolrQueryBuilder
             if ( empty( $facetDefinition['field'] ) &&
                  empty( $facetDefinition['query'] ) )
             {
-                eZDebug::writeError( 'No facet field or query provided.',
+                eZDebug::writeDebug( 'No facet field or query provided.',
                                      'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
                 continue;
             }
