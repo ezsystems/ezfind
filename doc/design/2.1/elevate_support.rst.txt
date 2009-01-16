@@ -1,0 +1,104 @@
+eZ Find - Elevate support, Design
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:Author:   Nicolas Pastorino
+:Revision: 1.0
+:Date: 16/01/2009
+
+.. sectnum::
+.. contents::
+
+Introduction
+============
+
+Description
+-----------
+
+Add elevate support to eZ Find. Read this for low-level info about how it is
+supported in Solr : [1].
+
+Excerpt :
+ "The QueryElevationComponent enables you to configure the top results for a 
+ given query regardless of the normal lucene scoring. This component matches 
+ the user query text to a configured Map of top results."
+
+
+
+Design
+======
+
+Solr side
+---------
+The elevate feature takes the form of a searchComponent in solrconfig.xml. It
+needs to be added as a 'last-components' in the requestHandler dedicated to
+eZFind, called 'ezpublish'. Right after spellcheck in the current state of
+eZFind.
+
+The elevator configuration provided as example in the current solrconfig.xml is
+suited to tue usage we might have of it. For details on the configuration
+directives, refer to [1].
+
+
+eZ Publish side
+---------------
+
+The idea is to be able to associate query words to a given content object, so
+that it is elevated when a query exactly containing these keywords is
+performed. It must also be possible to make sure an object is not returned as
+search result when a specific query is made ( ``<doc id="B" exclude="true" />`` ) A global eZFind dashboard in the administration interface could be
+the place to achieve this. Alternatively/jointly, a new action on every content
+object could satisfy this need, either as a button in the full view of the
+object, either as a new action in the Javascript menu of every Object/node.
+
+The default sort parameter passed from eZFind ( 'score desc' ) does not collide
+with the elevate function. However, when another sort parameter is passed,
+elevate's behaviour is overridden by the sort method ( [2] ). If elevate should
+be applied whatever the sort parameter is, a new parameter must be passed in the
+configuration ( solrconfig.xml ) ::
+
+ <str name="forceElevation">true</str>
+
+This
+parameter is not a runtime one, unfortunately, meaning the behaviour is either
+forced for all queries, whatever the sort parameter is, either not forced at
+all. It also means that changing this value must be done through editing
+solrconfig.xml, and requires a restart of Solr.
+
+
+Syncing the elevate configuration
+---------------------------------
+
+Solr uses an XML configuration file ( elevate.xml ). A few constraints increase
+the difficulty-level of this task : 
+
+1. Solr can be running on a different machine than the one running eZ Publish
+2. Solr needs to be relaunched for the new configuration to be loaded.
+
+Several solutions to sync the elevate configuration between ez Publish and Solr are to be considered. 
+If 1. is false, a "direct edition" of the XML file can be performed. Write acces
+will be required on elevate.xml. The actual path to elevate.xml could be
+provided as a configuration directive if needed.
+
+If 1. is true, an asynchronous edition of elevate.xml must be setup. Ideas : 
+ * Store a local elevate.xml and rsync it through cronjobs onto the machine
+   running Solr. This solution is not concurrency-proof.
+ * Store the configuration in the database and sync it ( creation of the xml
+   file based on the DB-based conf, and rsync ). This presents the advantage of
+   being natively mutualized. 
+
+Concerning 2., ideally, an automatic solution should be found. Would it be
+writing a requestHandler dedicated to this ?
+
+
+Migration notes
+---------------
+Adding support for elevate does not require a full re-indexing. Upgrading
+eZFind, taking over the former index data, and relaunching the Solr service is
+sufficient.
+Should the configuration be stored on another machine, the configuration will
+need to be initialized locally ( DB, local file, depending on the decision made
+above ).
+
+References
+==========
+[1]: http://wiki.apache.org/solr/QueryElevationComponent
+[2]: http://wiki.apache.org/solr/QueryElevationComponent#head-535ffbfce5188a06ddf41be36034c479a328f0d1
