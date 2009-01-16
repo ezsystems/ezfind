@@ -83,10 +83,12 @@ If 1. is true, an asynchronous edition of elevate.xml must be setup. Ideas :
    running Solr. This solution is not concurrency-proof.
  * Store the configuration in the database and sync it ( creation of the xml
    file based on the DB-based conf, and rsync ). This presents the advantage of
-   being natively mutualized. 
+   being natively mutualized. This solution will be preferred. 
 
 Concerning 2., ideally, an automatic solution should be found. Would it be
 writing a requestHandler dedicated to this ?
+If the config file is placed in the DataDir, the configuration for elevate will
+be reloaded after a commit is performed.
 
 
 Migration notes
