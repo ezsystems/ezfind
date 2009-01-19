@@ -6,6 +6,8 @@ eZ Find - Elevate support, Design
 
 .. sectnum::
 .. contents::
+.. NOTE : for a better reading experience, convert me to HTML with rst2html.
+
 
 Introduction
 ============
@@ -14,7 +16,7 @@ Description
 -----------
 
 Add elevate support to eZ Find. Read this for low-level info about how it is
-supported in Solr : [1].
+supported in Solr : [1_].
 
 Excerpt :
  "The QueryElevationComponent enables you to configure the top results for a 
@@ -35,7 +37,7 @@ eZFind.
 
 The elevator configuration provided as example in the current solrconfig.xml is
 suited to tue usage we might have of it. For details on the configuration
-directives, refer to [1].
+directives, refer to [1_].
 
 
 eZ Publish side
@@ -51,17 +53,14 @@ object, either as a new action in the Javascript menu of every Object/node.
 
 The default sort parameter passed from eZFind ( 'score desc' ) does not collide
 with the elevate function. However, when another sort parameter is passed,
-elevate's behaviour is overridden by the sort method ( [2] ). If elevate should
-be applied whatever the sort parameter is, a new parameter must be passed in the
-configuration ( solrconfig.xml ) ::
+elevate's behaviour is overridden by the sort method ( [2_] ). If elevate should
+be applied whatever the sort parameter is, a new parameter must be passed as
+parameter in the query ::
 
- <str name="forceElevation">true</str>
+ forceElevation=true
 
-This
-parameter is not a runtime one, unfortunately, meaning the behaviour is either
-forced for all queries, whatever the sort parameter is, either not forced at
-all. It also means that changing this value must be done through editing
-solrconfig.xml, and requires a restart of Solr.
+This parameter should be added to the search() method of the search plugin, and
+all overlying fetch functions.
 
 
 Syncing the elevate configuration
@@ -83,12 +82,63 @@ If 1. is true, an asynchronous edition of elevate.xml must be setup. Ideas :
    running Solr. This solution is not concurrency-proof.
  * Store the configuration in the database and sync it ( creation of the xml
    file based on the DB-based conf, and rsync ). This presents the advantage of
-   being natively mutualized. This solution will be preferred. 
+   being natively mutualized. **This solution will be preferred**. 
 
-Concerning 2., ideally, an automatic solution should be found. Would it be
-writing a requestHandler dedicated to this ?
-If the config file is placed in the DataDir, the configuration for elevate will
-be reloaded after a commit is performed.
+
+Configuration storage
+'''''''''''''''''''''
+A new table, dedicated to storing the elevate configuration, is required.
+
++----------------+------------+
+| search_query   | object_id  |
++================+============+
+| foo bar        | 73         |
++----------------+------------+
+| foo bar        | 83         |
++----------------+------------+
+| foo            | 69         |
++----------------+------------+
+
+Primary key : 
+
+* search_query + object_id
+
+Indeces : 
+
+* search_query + object_id
+* search_query
+* object_id
+
+// TODO : add UML design ( as image ) of the eZFindElevateSupport class,
+allowing for retrieval / creation of the configuration.
+
+
+How to make sure Solr is taking the updated conf into account ?
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+* If elevate.xml is stored in the data dir, triggering a commit will reload the
+  configuration.
+* If elevate.xml is stored in the configuration directory, a manual relaunch of
+  Solr is required. Notifying the webmaster from the elevate Dashboard, once the
+  configuration was rsynced and a relaunch is required, might be the way to go.
+  An existing core admin request handler seems to be existing ( [3_] ). It would
+  allow for an automatic config reload without interrupting the service at all.
+  
+
+
+Elevate Dashboard
+-----------------
+For the time being, adding en entry in the javascript menu available in the
+content structure menu ( left click on a node ) is not easily doable. Nor is
+adding a button in the full view of a node in the administration interface. In a
+first round, centralizing the configuration of elevate in the soon-to-be eZFind
+dashbard appears to be the only solution.
+
+// TODO : insert here a picture of the GUI design.
+//        ideas : multi-tabbed dashboard, one tab for elevate.
+//        ajax-search for finding which objects are elevated on a given query.
+//        reversed : which queries trigger elevation for one given object.
+// questions : need for accessibility ( meaning no ajax/js )?
 
 
 Migration notes
@@ -100,7 +150,20 @@ Should the configuration be stored on another machine, the configuration will
 need to be initialized locally ( DB, local file, depending on the decision made
 above ).
 
+NB : the sql script creating the configuration storage table will have to be
+run, unless an automatic creation is chosen.
+
+
 References
 ==========
+.. _1: 
+
 [1]: http://wiki.apache.org/solr/QueryElevationComponent
+
+.. _2:
+
 [2]: http://wiki.apache.org/solr/QueryElevationComponent#head-535ffbfce5188a06ddf41be36034c479a328f0d1
+
+.. _3:
+
+[3]: http://wiki.apache.org/solr/CoreAdmin#head-3f125034c6a64611779442539812067b8b430930
