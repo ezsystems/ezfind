@@ -36,7 +36,7 @@ eZFind, called 'ezpublish'. Right after spellcheck in the current state of
 eZFind.
 
 The elevator configuration provided as example in the current solrconfig.xml is
-suited to tue usage we might have of it. For details on the configuration
+suited to the usage we might have of it. For details on the configuration
 directives, refer to [1_].
 
 
@@ -78,11 +78,12 @@ will be required on elevate.xml. The actual path to elevate.xml could be
 provided as a configuration directive if needed.
 
 If 1. is true, an asynchronous edition of elevate.xml must be setup. Ideas : 
- * Store a local elevate.xml and rsync it through cronjobs onto the machine
-   running Solr. This solution is not concurrency-proof.
- * Store the configuration in the database and sync it ( creation of the xml
-   file based on the DB-based conf, and rsync ). This presents the advantage of
-   being natively mutualized. **This solution will be preferred**. 
+
+1. Store a local elevate.xml and rsync it through cronjobs onto the machine running Solr. This solution is not concurrency-proof.
+2. Store the configuration in the database and sync it ( creation of the xml file based on the DB-based conf, and rsync ). This presents the advantage of being natively mutualized.  
+3. Store the configuration in the database and push it in Solr through ReST. This implies developing a custom requestHandler in Solr, taking as input the updated elevate.xml file ( POST ), replacing it, and reloading the configuration. Possible security issue here. Low impact.
+
+Decision should be made between 2 and 3.
 
 
 Configuration storage
@@ -109,7 +110,7 @@ Indeces :
 * search_query
 * object_id
 
-// TODO : add UML design ( as image ) of the eZFindElevateSupport class,
+// TODO : add UML design ( as image ) of the eZFindElevate class,
 allowing for retrieval / creation of the configuration.
 
 
@@ -123,7 +124,38 @@ How to make sure Solr is taking the updated conf into account ?
   configuration was rsynced and a relaunch is required, might be the way to go.
   An existing core admin request handler seems to be existing ( [3_] ). It would
   allow for an automatic config reload without interrupting the service at all.
-  
+  The folowing modifications would be required in order to be able to use the
+  core administration : 
+
+1. Add a multicore configuration file ``ezfind/java/solr/solr.xml``, containing for instance 
+
+::
+
+   <solr persistent="true" sharedLib="lib">
+        <cores adminPath="/admin/cores">
+                <core name="ezfind" instanceDir="." />
+        </cores>
+   </solr>
+
+
+
+2. Append the name of the solr core to ``solr.ini[SolrBase].SearchServerURI``
+   as well as in the default parameter value in ``eZSolrBase::eZSolrBase(..)`` :
+
+:: 
+ 
+ http://localhost:8983/solr/ezfind/
+
+3. Here is a code snippet which actually reloads a Solr core : 
+
+::
+
+   $solr = new eZSolrBase( 'http://localhost:8983/solr/' );
+   $params = array( 'fake' => 'param' );
+   $solr->rawSolrRequest( 'admin/cores?action=RELOAD&core=ezfind', $params ); 
+
+
+Possible security here ( DOS / relatively low impact ).
 
 
 Elevate Dashboard
