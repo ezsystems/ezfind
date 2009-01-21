@@ -503,7 +503,7 @@ class ezfUpdateSearchIndexSolr
         $subTreeCount = 0;
         foreach ( array_keys ( $topNodeArray ) as $key  )
         {
-            $subTreeCount += $topNodeArray[$key]->subTreeCount( array( 'Limitation' => false, 'MainNodeOnly' => true ) );
+            $subTreeCount += $topNodeArray[$key]->subTreeCount( array( 'Limitation' => array(), 'MainNodeOnly' => true ) );
         }
 
         return $subTreeCount;
