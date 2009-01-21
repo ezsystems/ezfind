@@ -66,24 +66,41 @@ all overlying fetch functions.
 Syncing the elevate configuration
 ---------------------------------
 
+Priming elevate.xml
+'''''''''''''''''''
+``elevate.xml`` will be placed, with an empty configuration, in java/solr/conf.
+By default, from ezfind 2.0aplha, the index directory is placed in /srv/solr.
+Before lauching solr the first time, a manual installation step is to move elevate.xml in the dataDir.
+The dataDir can be found in the following configuration directive in
+solrconfig.xml in ``<dataDir>${solr.data.dir:/srv/solr}</dataDir>``
+
+
+Syncing
+'''''''
+
 Solr uses an XML configuration file ( elevate.xml ). A few constraints increase
 the difficulty-level of this task : 
 
 1. Solr can be running on a different machine than the one running eZ Publish
 2. Solr needs to be relaunched for the new configuration to be loaded.
 
-Several solutions to sync the elevate configuration between ez Publish and Solr are to be considered. 
-If 1. is false, a "direct edition" of the XML file can be performed. Write acces
-will be required on elevate.xml. The actual path to elevate.xml could be
-provided as a configuration directive if needed.
+**Phase 1**
 
-If 1. is true, an asynchronous edition of elevate.xml must be setup. Ideas : 
+A direct update of the local configuration file. Constraints :
 
-1. Store a local elevate.xml and rsync it through cronjobs onto the machine running Solr. This solution is not concurrency-proof.
-2. Store the configuration in the database and sync it ( creation of the xml file based on the DB-based conf, and rsync ). This presents the advantage of being natively mutualized.  
-3. Store the configuration in the database and push it in Solr through ReST. This implies developing a custom requestHandler in Solr, taking as input the updated elevate.xml file ( POST ), replacing it, and reloading the configuration. Possible security issue here. Low impact.
+* Solr must be running on the same machine as the eZ Publish instance.
+* Write access on elevate.xml is required.
+* The actual path to elevate.xml needs to be known of eZ Publish. This could be provided as a configuration directive if needed.
 
-Decision should be made between 2 and 3.
+**Phase 2**
+
+A solution satisfying point 1. above shall be implemented : pushing the configuration in Solr through ReST. 
+This implies developing a custom requestHandler in Solr, taking as input the updated elevate.xml file ( POST ), 
+replacing it, and reloading the configuration. Possible security issue here. Low impact.
+
+Another solution based on rsync was envisaged at some point. Due to the utility
+of having an eZFind-dedicated, extensible requestHandler in the Solr version we
+ship, this solution was put aside.
 
 
 Configuration storage
@@ -110,22 +127,38 @@ Indeces :
 * search_query
 * object_id
 
-// TODO : add UML design ( as image ) of the eZFindElevate class,
-allowing for retrieval / creation of the configuration.
+**Open questions :**
+
+* Case-sensitivity ?
+
+**Class diagram**
+
+.. image:: ./Elevate_support_in_eZFind.jpg
+   :scale: 100
+   :alt: Elevate support in eZFind
+
+**Sequence diagrams**
+
+.. image:: ./Generating_the_configuration_and_pushing_it_to_Solr.jpg
+   :scale: 100
+   :alt: Generating the configuration and pushing it to Solr
 
 
 How to make sure Solr is taking the updated conf into account ?
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-* If elevate.xml is stored in the data dir, triggering a commit will reload the
-  configuration.
-* If elevate.xml is stored in the configuration directory, a manual relaunch of
-  Solr is required. Notifying the webmaster from the elevate Dashboard, once the
-  configuration was rsynced and a relaunch is required, might be the way to go.
-  An existing core admin request handler seems to be existing ( [3_] ). It would
-  allow for an automatic config reload without interrupting the service at all.
-  The folowing modifications would be required in order to be able to use the
-  core administration : 
+**Phase 1**
+
+In a first phase, placing elevate.xml in the dataDir and triggering a commit to
+reload the elevate configuration will be implemented.
+
+**Phase 2**
+
+If elevate.xml is stored in the configuration directory, a manual relaunch of Solr is required. 
+An existing core admin request handler seems to be existing ( [3_] ). It would
+allow for an automatic config reload without interrupting the service at all.
+The folowing modifications would be required in order to be able to use the
+core administration : 
 
 1. Add a multicore configuration file ``ezfind/java/solr/solr.xml``, containing for instance 
 
@@ -156,6 +189,11 @@ How to make sure Solr is taking the updated conf into account ?
 
 
 Possible security here ( DOS / relatively low impact ).
+
+**Phase 2, alternative**
+
+Leveraging the requestHandler dedicated to uploading a new conf is an option.
+This requestHandler could take care of reloading the configuration once it was updated.
 
 
 Elevate Dashboard
