@@ -107,30 +107,35 @@ Configuration storage
 '''''''''''''''''''''
 A new table, dedicated to storing the elevate configuration, is required.
 
-+----------------+------------+---------------+
-| search_query   | object_id  | language_code |
-+================+============+===============+
-| foo bar        | 73         | eng-GB        |
-+----------------+------------+---------------+
-| foo bar        | 83         | eng-GB        |
-+----------------+------------+---------------+
-| foo            | 69         |  \*    // all |
-+----------------+------------+---------------+
-| bar            | 100        | fre-FR        |
-+----------------+------------+---------------+
-| bar            | 100        | eng-GB        |
-+----------------+------------+---------------+
++----------------+-------------------+---------------+
+| search_query   | contentobject_id  | language_code |
++================+===================+===============+
+| foo bar        | 73                | eng-GB        |
++----------------+-------------------+---------------+
+| foo bar        | 83                | eng-GB        |
++----------------+-------------------+---------------+
+| foo            | 69                |  \*    // all |
++----------------+-------------------+---------------+
+| bar            | 100               | fre-FR        |
++----------------+-------------------+---------------+
+| bar            | 100               | eng-GB        |
++----------------+-------------------+---------------+
+
+Datatypes :
+
+* search_query : VARCHAR( 255 ). This might be way too large, but prevents us from having issues. Might be shrinked down to a shorter value when the typical use-cases are nailed down, helping us define the maximum size.
+* contentobject_id : INT(11) ( just like in ezcontentobject )
+* language_code : VARCHAR(20) ( like in ezcontentobject_attribute )
 
 
 Primary key : 
 
-* search_query + object_id + language_code
+* search_query + contentobject_id + language_code
 
-Indeces : 
+Indices : 
 
-* search_query + object_id
 * search_query
-* object_id
+* more indeces shall be added if the performances are not satisfactory.
 
 **Open questions :**
 
@@ -203,17 +208,38 @@ This requestHandler could take care of reloading the configuration once it was u
 
 Elevate Dashboard
 -----------------
-For the time being, adding en entry in the javascript menu available in the
-content structure menu ( left click on a node ) is not easily doable. Nor is
-adding a button in the full view of a node in the administration interface. In a
-first round, centralizing the configuration of elevate in the soon-to-be eZFind
-dashbard appears to be the only solution.
 
-// TODO : insert here a picture of the GUI design.
-//        ideas : multi-tabbed dashboard, one tab for elevate.
-//        ajax-search for finding which objects are elevated on a given query.
-//        reversed : which queries trigger elevation for one given object.
-// questions : need for accessibility ( meaning no ajax/js )?
+The elevate configuration will be available from all places where the eZFind
+configuration is to be available :
+* Tree menu ( left column ) : javascript left-click menu
+* Subitems list ( form a node's full view  ) : javascript left-click menu
+* Dedicated tab in the back-office.
+
+
+The following functions should be accessible through the GUI :
+
+1. Associate elevate keywords to a given object, for one, several or all languages.
+2. Search for all objects elevated by given keywords, for one or all languages.
+
+
+**GUI design**
+
+.. image:: ./elevate_dashboard.jpg
+   :scale: 100
+   :alt: Elevate dashboard GUI design
+
+
+**Ideas**
+
+* Smoothen the ergonomy with ajax-based actions : 
+
+  - search field to retrieve an object. Re-use the one used in eZFlow ?
+  - autocomplete on the Search query field
+
+
+**Questions**
+
+* Must we support full accessibility ( ie : no javascript at all ) ?
 
 
 Migration notes
