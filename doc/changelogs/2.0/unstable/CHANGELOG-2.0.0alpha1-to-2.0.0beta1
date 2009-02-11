@@ -22,4 +22,5 @@ Changes from 2.0.0alpha1 to 2.0.0beta1
 - changed error into normal debug message when facet fields are missing
 - implemented correct implementation for bug #013889: /bin/php/updatesearchindexsolr.php doesn't index all objects, using array() as limitation instead of false
 - changed search heuristic that should not be there so only string/text fields are searched
-- corrected integer declaration to int in schema.xml 
+- corrected integer declaration to int in schema.xml
+- corrected bug #014435: Allow for RANGE queries (quotes were added, creating an invalid expression for range queries)

@@ -552,12 +552,14 @@ class ezfeZPSolrQueryBuilder
             {
                 foreach( $value as $subValue )
                 {
-                    $filterQueryList[] = $baseName . ':' . self::quoteIfNeeded( $subValue );
+                    //$filterQueryList[] = $baseName . ':' . self::quoteIfNeeded( $subValue );
+                    $filterQueryList[] = $baseName . ':' . $subValue;
                 }
             }
             else
             {
-                $filterQueryList[] = $baseName . ':' . self::quoteIfNeeded( $value );
+                //$filterQueryList[] = $baseName . ':' . self::quoteIfNeeded( $value );
+                $filterQueryList[] = $baseName . ':' . $value;
             }
         }
 
@@ -574,7 +576,7 @@ class ezfeZPSolrQueryBuilder
     static function quoteIfNeeded( $value )
     {
         $quote = '';
-        if ( strpos( $value, ' ' ) !== false )
+        if ( strpos( $value, ' ' ) !== false || strpos())
         {
             $quote = '"';
             if ( strpos( trim( $value ), '(' ) === 0 )
