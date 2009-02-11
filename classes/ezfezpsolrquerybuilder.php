@@ -169,8 +169,8 @@ class ezfeZPSolrQueryBuilder
         // Build and get facet query prameters.
         $facetQueryParamList = $this->buildFacetQueryParamList( $params );
 
-        // Pre-process search text, and see if some field types must be excluded from the search.
-        $fieldTypeExcludeList = $this->fieldTypeExludeList( $searchText );
+        // search only text type declared fields
+        $fieldTypeExcludeList = $this->fieldTypeExludeList( NULL );
 
         // Create sort parameters based on the parameters.
         $sortParameter = $this->buildSortParameter( $params );
@@ -364,8 +364,8 @@ class ezfeZPSolrQueryBuilder
         // Build and get facet query prameters.
         $facetQueryParamList = $this->buildFacetQueryParamList( $params );
 
-        // Pre-process search text, and see if some field types must be excluded from the search.
-        $fieldTypeExcludeList = $this->fieldTypeExludeList( $searchText );
+        // return only text searcheable fields by passing NULL
+        $fieldTypeExcludeList = $this->fieldTypeExludeList( NULL );
 
         // Create sort parameters based on the parameters.
         $sortParameter = $this->buildSortParameter( $params );
@@ -373,7 +373,7 @@ class ezfeZPSolrQueryBuilder
         //the array_unique below is necessary because attribute identifiers are not unique .. and we get as
         //much highlight snippets as there are duplicate attribute identifiers
         //these are also in the list of query fields (dismax, ezpublish) request handlers
-        $queryFields = array_unique( $this->getClassAttributes( $contentClassID, $contentClassAttributeID, $fieldTypeExcludeList ) );
+        $queryFields = array_unique( $this->getClassAttributes( $contentClassID, false, $fieldTypeExcludeList ) );
 
         //query type can vary for MLT q, or stream
         //if no valid match for the mlt query variant is obtained, it is treated as text
@@ -805,12 +805,21 @@ class ezfeZPSolrQueryBuilder
      * Check if search string requires certain field types to be excluded from the search
      *
      * @param string Search string
+     * if $searchText is null, exclude all non text fields
+     * @todo make sure this function is in sync with schema.xml
      * @todo decide wether or not to drop this, pure numeric and date values are most likely to go into filters, not the main query
      *
      * @return array List of field types to exclude from the search
      */
     protected function fieldTypeExludeList( $searchText )
     {
+        if ( is_null($searchText) )
+        {
+            return array('date', 'boolean', 'int', 'long', 'float', 'double', 'sint', 'slong', 'sfloat', 'sdouble');
+        }
+
+
+
         $excludeFieldList = array();
         // Check if search text is a date.
         if ( strtotime( $searchText ) === false )
@@ -825,9 +834,11 @@ class ezfeZPSolrQueryBuilder
         if ( !is_numeric( $searchText ) )
         {
             $excludeFieldList[] = 'int';
+            $excludeFieldList[] = 'long';
             $excludeFieldList[] = 'float';
             $excludeFieldList[] = 'double';
             $excludeFieldList[] = 'sint';
+            $excludeFieldList[] = 'slong';
             $excludeFieldList[] = 'sfloat';
             $excludeFieldList[] = 'sdouble';
         }
