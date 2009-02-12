@@ -576,7 +576,7 @@ class ezfeZPSolrQueryBuilder
     static function quoteIfNeeded( $value )
     {
         $quote = '';
-        if ( strpos( $value, ' ' ) !== false || strpos())
+        if ( strpos( $value, ' ' ) !== false )
         {
             $quote = '"';
             if ( strpos( trim( $value ), '(' ) === 0 )
