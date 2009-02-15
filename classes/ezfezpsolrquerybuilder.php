@@ -433,6 +433,9 @@ class ezfeZPSolrQueryBuilder
                 'indent' => 'on',
                 'version' => '2.2',
                 'mlt.match.include' => 'false', // exclude the doc itself
+                'mlt.minwl' => 3, //minimum wordlength
+                'mlt.mindf' => 2,
+                'mlt.mintf'=> 2,
                 'mlt.interestingTerms' => 'list', // useful for debug output
                 'mlt.boost' => 'true', // boost the highest ranking terms
                 //'mlt.qf' => implode( ' ', $queryFields ),
