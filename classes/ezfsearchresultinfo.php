@@ -290,6 +290,18 @@ class ezfSearchResultInfo
                 }
             } break;
 
+            //only relevant for MoreLikeThis queries
+            case 'interestingTerms':
+            {
+                if ( isset( $this->ResultArray['interestingTerms'] ) )
+                {
+                    return $this->ResultArray['interestingTerms'];
+                }
+                else
+                {
+                    return false;
+                }
+            } break;
 
             default:
             {
