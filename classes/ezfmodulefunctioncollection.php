@@ -153,8 +153,8 @@ class ezfModuleFunctionCollection
      *
      * @return array result as a PHP array
      */
-    public function moreLikeThis( $queryType, $query, $offset = 0, $limit = 10, $facet = null,
-                                  $filter = null, $sortBy = null, $classID = null, $sectionID = null,
+    public function moreLikeThis( $queryType, $query, $offset = 0, $limit = 10, $facets = null,
+                                  $filters = null, $sortBy = null, $classID = null, $sectionID = null,
                                   $subtreeArray = null, $asObjects = true )
 
     {
