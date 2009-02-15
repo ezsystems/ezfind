@@ -111,6 +111,11 @@ class ezfeZPSolrQueryBuilder
         $spellCheck = isset( $params['SpellCheck'] ) && $params['SpellCheck'] > 0 ? $params['SpellCheck'] : array();
         $queryHandler = isset( $params['QueryHandler'] )  ?  $params['QueryHandler'] : self::$FindINI->variable( 'SearchHandler', 'DefaultSearchHandler' );
 
+        // check if filter parameter is indeed an array, and set it otherwise
+        if ( ! is_array( $params['Filter'] ) )
+        {
+            $params['Filter'] = array( $params['Filter'] );
+        }
         $filterQuery = array();
 
         // Add subtree query filter
