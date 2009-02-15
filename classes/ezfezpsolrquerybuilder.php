@@ -110,12 +110,17 @@ class ezfeZPSolrQueryBuilder
         $asObjects = isset( $params['AsObjects'] ) && $params['AsObjects'] ? $params['AsObjects'] : true;
         $spellCheck = isset( $params['SpellCheck'] ) && $params['SpellCheck'] > 0 ? $params['SpellCheck'] : array();
         $queryHandler = isset( $params['QueryHandler'] )  ?  $params['QueryHandler'] : self::$FindINI->variable( 'SearchHandler', 'DefaultSearchHandler' );
+        $ignoreVisibilty = isset( $params['IgnoreVisibility'] )  ?  $params['IgnoreVisibility'] : false;
+        $limitation = isset( $params['Limitation'] )  ?  $params['Limitation'] : null;
 
         // check if filter parameter is indeed an array, and set it otherwise
         if ( ! is_array( $params['Filter'] ) )
         {
             $params['Filter'] = array( $params['Filter'] );
         }
+
+
+
         $filterQuery = array();
 
         // Add subtree query filter
@@ -131,7 +136,7 @@ class ezfeZPSolrQueryBuilder
         }
 
         // Add policy limitation query filter
-        $policyLimitationFilterQuery = $this->policyLimitationFilterQuery();
+        $policyLimitationFilterQuery = $this->policyLimitationFilterQuery( $limitation, $ignoreVisibility );
         if ( $policyLimitationFilterQuery !== false )
         {
             $filterQuery[] = $policyLimitationFilterQuery;
@@ -944,115 +949,130 @@ class ezfeZPSolrQueryBuilder
     /**
      * Create policy limitation query.
      *
+     * @param $limitation array in the same format as $accessResult['policies']
+     * @param $ignoreVisibility boolean
      * @return string Lucene/Solr query string which can be used as filter query for Solr
      */
-    protected function policyLimitationFilterQuery()
+    protected function policyLimitationFilterQuery( $limitation = null, $ignoreVisibility = false )
     {
-        $currentUser = eZUser::currentUser();
-        $accessResult = $currentUser->hasAccessTo( 'content', 'read' );
-
         $filterQuery = false;
-
-        // Add limitations for filter query based on local permissions.
-        if ( !in_array( $accessResult['accessWord'], array( 'yes', 'no' ) ) )
+        if ( is_array( $limitation ) && ( count( $limitation ) == 0 ) )
         {
-            $policies = $accessResult['policies'];
-
-            $limitationHash = array(
-                'Class'        => eZSolr::getMetaFieldName( 'contentclass_id' ),
-                'Section'      => eZSolr::getMetaFieldName( 'section_id' ),
-                'User_Section' => eZSolr::getMetaFieldName( 'section_id' ),
-                'Subtree'      => eZSolr::getMetaFieldName( 'path_string' ),
-                'User_Subtree' => eZSolr::getMetaFieldName( 'path_string' ),
-                'Node'         => eZSolr::getMetaFieldName( 'main_node_id' ),
-                'Owner'        => eZSolr::getMetaFieldName( 'owner_id' ),
-                'Group'        => eZSolr::getMetaFieldName( 'owner_group_id' ) );
-
-            $filterQueryPolicies = array();
-
-            // policies are concatenated with OR
-            foreach ( $policies as $limitationList )
+            return $filterQuery;
+        }
+        elseif ( is_array( $limitation ) && ( count( $limitation ) > 0 ) )
+        {
+            $policies = $limitation;
+        }
+        else
+        {
+            $currentUser = eZUser::currentUser();
+            $accessResult = $currentUser->hasAccessTo( 'content', 'read' );
+            if ( !in_array( $accessResult['accessWord'], array( 'yes', 'no' ) ) )
             {
-                // policy limitations are concatenated with AND
-                $filterQueryPolicyLimitations = array();
-
-                foreach ( $limitationList as $limitationType => $limitationValues )
-                {
-                    // limitation values of one type in a policy are concatenated with OR
-                    $filterQueryPolicyLimitationParts = array();
-
-                    switch ( $limitationType )
-                    {
-                        case 'User_Subtree':
-                        case 'Subtree':
-                        {
-                            foreach ( $limitationValues as $limitationValue )
-                            {
-                                $pathString = trim( $limitationValue, '/' );
-                                $pathArray = explode( '/', $pathString );
-                                // we only take the last node ID in the path identification string
-                                $subtreeNodeID = array_pop( $pathArray );
-                                $filterQueryPolicyLimitationParts[] = eZSolr::getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
-                            }
-                        } break;
-
-                        case 'Node':
-                        {
-                            foreach ( $limitationValues as $limitationValue )
-                            {
-                                $pathString = trim( $limitationValue, '/' );
-                                $pathArray = explode( '/', $pathString );
-                                // we only take the last node ID in the path identification string
-                                $nodeID = array_pop( $pathArray );
-                                $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $nodeID;
-                            }
-                        } break;
-
-                        case 'Group':
-                        {
-                            foreach( eZUser::currentUser()->attribute( 'contentobject' )->attribute( 'parent_nodes' ) as $groupID )
-                            {
-                                $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $groupID;
-                            }
-                        } break;
-
-                        case 'Owner':
-                        {
-                            $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $currentUser->attribute ( 'contentobject_id' );
-                        } break;
-
-                        case 'Class':
-                        case 'Section':
-                        case 'User_Section':
-                        {
-                            foreach ( $limitationValues as $limitationValue )
-                            {
-                                $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $limitationValue;
-                            }
-                        } break;
-
-                        default :
-                        {
-                            eZDebug::writeDebug( $limitationType,
-                                                 'ezfeZPSolrQueryBuilder::policyLimitationFilterQuery unknown limitation type: ' . $limitationType );
-                            continue;
-                        }
-                    }
-
-                    $filterQueryPolicyLimitations[] = '( ' . implode( ' OR ', $filterQueryPolicyLimitationParts ) . ' )';
-                }
-
-                if ( count( $filterQueryPolicyLimitations ) > 0 )
-                {
-                    $filterQueryPolicies[] = '( ' . implode( ' AND ', $filterQueryPolicyLimitations ) . ')';
-                }
-            }
-
-            if ( count( $filterQueryPolicies ) > 0 )
-            {
-                $filterQuery = implode( ' OR ', $filterQueryPolicies );
+                $policies = $accessResult['policies'];
             }
         }
+
+        
+        // Add limitations for filter query based on local permissions.
+
+
+        $limitationHash = array(
+            'Class'        => eZSolr::getMetaFieldName( 'contentclass_id' ),
+            'Section'      => eZSolr::getMetaFieldName( 'section_id' ),
+            'User_Section' => eZSolr::getMetaFieldName( 'section_id' ),
+            'Subtree'      => eZSolr::getMetaFieldName( 'path_string' ),
+            'User_Subtree' => eZSolr::getMetaFieldName( 'path_string' ),
+            'Node'         => eZSolr::getMetaFieldName( 'main_node_id' ),
+            'Owner'        => eZSolr::getMetaFieldName( 'owner_id' ),
+            'Group'        => eZSolr::getMetaFieldName( 'owner_group_id' ) );
+
+        $filterQueryPolicies = array();
+
+        // policies are concatenated with OR
+        foreach ( $policies as $limitationList )
+        {
+            // policy limitations are concatenated with AND
+            $filterQueryPolicyLimitations = array();
+
+            foreach ( $limitationList as $limitationType => $limitationValues )
+            {
+                // limitation values of one type in a policy are concatenated with OR
+                $filterQueryPolicyLimitationParts = array();
+
+                switch ( $limitationType )
+                {
+                    case 'User_Subtree':
+                    case 'Subtree':
+                    {
+                        foreach ( $limitationValues as $limitationValue )
+                        {
+                            $pathString = trim( $limitationValue, '/' );
+                            $pathArray = explode( '/', $pathString );
+                            // we only take the last node ID in the path identification string
+                            $subtreeNodeID = array_pop( $pathArray );
+                            $filterQueryPolicyLimitationParts[] = eZSolr::getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
+                        }
+                    } break;
+
+                    case 'Node':
+                    {
+                        foreach ( $limitationValues as $limitationValue )
+                        {
+                            $pathString = trim( $limitationValue, '/' );
+                            $pathArray = explode( '/', $pathString );
+                            // we only take the last node ID in the path identification string
+                            $nodeID = array_pop( $pathArray );
+                            $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $nodeID;
+                        }
+                    } break;
+
+                    case 'Group':
+                    {
+                        foreach( eZUser::currentUser()->attribute( 'contentobject' )->attribute( 'parent_nodes' ) as $groupID )
+                        {
+                            $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $groupID;
+                        }
+                    } break;
+
+                    case 'Owner':
+                    {
+                        $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $currentUser->attribute ( 'contentobject_id' );
+                    } break;
+
+                    case 'Class':
+                    case 'Section':
+                    case 'User_Section':
+                    {
+                        foreach ( $limitationValues as $limitationValue )
+                        {
+                            $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $limitationValue;
+                        }
+                    } break;
+
+                    default :
+                    {
+                        eZDebug::writeDebug( $limitationType,
+                                             'ezfeZPSolrQueryBuilder::policyLimitationFilterQuery unknown limitation type: ' . $limitationType );
+                        continue;
+                    }
+                }
+
+                $filterQueryPolicyLimitations[] = '( ' . implode( ' OR ', $filterQueryPolicyLimitationParts ) . ' )';
+            }
+
+            if ( count( $filterQueryPolicyLimitations ) > 0 )
+            {
+                $filterQueryPolicies[] = '( ' . implode( ' AND ', $filterQueryPolicyLimitations ) . ')';
+            }
+        }
+
+        if ( count( $filterQueryPolicies ) > 0 )
+        {
+            $filterQuery = implode( ' OR ', $filterQueryPolicies );
+        }
+        
 
         // Add limitations for allowing search of other installations.
         $anonymousPart = '';
@@ -1079,7 +1099,7 @@ class ezfeZPSolrQueryBuilder
         }
 
         // Add visibility condition
-        if ( !eZContentObjectTreeNode::showInvisibleNodes() )
+        if ( !eZContentObjectTreeNode::showInvisibleNodes() || !$ignoreVisibility )
         {
             $filterQuery .= ' AND ' . eZSolr::getMetaFieldName( 'is_invisible' ) . ':false';
         }

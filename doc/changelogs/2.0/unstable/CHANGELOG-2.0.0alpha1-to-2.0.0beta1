@@ -26,3 +26,4 @@ Changes from 2.0.0alpha1 to 2.0.0beta1
 - corrected bug #014435: Allow for RANGE queries (quotes were added, creating an invalid expression for range queries)
 - corrected bug #014472	Typos, in "more like this" filter and facet parameters
 - corrected bug #014068: Filter definition must be an array in ezfind fetch, although documentation seems to allow string definition
+- fixed bug #014253: problem with limitation (and also added visibility parameter)

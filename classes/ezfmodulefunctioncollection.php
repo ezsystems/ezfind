@@ -103,7 +103,8 @@ class ezfModuleFunctionCollection
      */
     public function search( $query, $offset = 0, $limit = 10, $facets = null,
                             $filters = null, $sortBy = null, $classID = null, $sectionID = null,
-                            $subtreeArray = null, $asObjects = true, $spellCheck = null, $queryHandler = 'ezpublish' )
+                            $subtreeArray = null, $ignoreVisibility = false, $limitation = null,
+                            $asObjects = true, $spellCheck = null, $queryHandler = 'ezpublish' )
     {
         $solrSearch = new eZSolr();
         $params = array( 'SearchOffset' => $offset,
@@ -114,6 +115,8 @@ class ezfModuleFunctionCollection
                          'SearchContentClassID' => $classID,
                          'SearchSectionID' => $sectionID,
                          'SearchSubTreeArray' => $subtreeArray,
+                         'IgnoreVisibility' => $ignoreVisibility,
+                         'Limitation' => $limitation,
                          'AsObjects' => $asObjects,
                          'SpellCheck' => $spellCheck,
                          'QueryHandler' => $queryHandler );
@@ -139,6 +142,7 @@ class ezfModuleFunctionCollection
      * moreLikeThis function
      * @todo document the solrconfig.xml required setting for remote streaming to be true
      *       if $queryType 'url' is to be used
+     * @todo consider adding limitation and visibility parameters
      *
      * @param string $queryType string ('nid' | 'oid' | 'text' | 'url' )
      * @param string $query value for QueryType
