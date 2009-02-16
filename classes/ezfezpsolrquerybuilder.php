@@ -51,9 +51,9 @@ class ezfeZPSolrQueryBuilder
      * build a multi field query, basically doing the same as a Lucene MultiField query
      * not always safe
      * @param string $searchText
-     * @param array $solrFields 
+     * @param array $solrFields
      * @param string $mode
-     * 
+     *
      */
     public function buildMultiFieldQuery( $searchText, $solrFields = array(), $mode = null )
     {
@@ -245,7 +245,7 @@ class ezfeZPSolrQueryBuilder
                 $queryHandler = 'ezpublish';
             }
         }
-        
+
         $handlerParameters = array();
 
         $queryHandler = strtolower( $queryHandler );
@@ -278,7 +278,7 @@ class ezfeZPSolrQueryBuilder
                 $handlerParameters = array ( 'q' => $searchText,
                                              'qf' => implode( ' ', $queryFields ),
                                              'qt' => $queryHandler );
-                                                              
+
         }
 
         $queryParams =  array_merge(
@@ -550,11 +550,11 @@ class ezfeZPSolrQueryBuilder
      * @param array Parameter list array.
      *              The normal simple use is an array of type: array( '<field name>', <value> ).
      *              The value may also be an array containing values.
-     *      
+     *
      *              The value may be the <basename>:<value>, example: array( 'Filter' => array( 'car/make:audi' ) )
-     *              
+     *
      *              The value may also be a string, or range, example: [10 to *].
-     *              
+     *
      *
      * @return string Filter Query. Null if no filter parameters are in
      * the $parameterList
@@ -975,6 +975,7 @@ class ezfeZPSolrQueryBuilder
     protected function policyLimitationFilterQuery( $limitation = null, $ignoreVisibility = false )
     {
         $filterQuery = false;
+        $policies = array();
         if ( is_array( $limitation ) && ( count( $limitation ) == 0 ) )
         {
             return $filterQuery;
@@ -993,7 +994,7 @@ class ezfeZPSolrQueryBuilder
             }
         }
 
-        
+
         // Add limitations for filter query based on local permissions.
 
 
@@ -1091,7 +1092,7 @@ class ezfeZPSolrQueryBuilder
         {
             $filterQuery = implode( ' OR ', $filterQueryPolicies );
         }
-        
+
 
         // Add limitations for allowing search of other installations.
         $anonymousPart = '';
