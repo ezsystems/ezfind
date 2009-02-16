@@ -216,7 +216,7 @@ class ezfeZPSolrQueryBuilder
 
         $spellCheckParamList = array();
         // @param $spellCheck expects array (true|false, dictionary identifier, ...)
-        if ( $spellCheck[0] || self::$FindINI->variable( 'SpellCheck', 'SpellCheck' ) == 'enabled' )
+        if ( ( isset( $spellCheck[0] ) and $spellCheck[0] ) or self::$FindINI->variable( 'SpellCheck', 'SpellCheck' ) == 'enabled' )
         {
             $dictionary = isset( $spellCheck[1]) ? $spellCheck[1] : self::$FindINI->variable( 'SpellCheck', 'DefaultDictionary' );
             $spellCheckParamList = array(
