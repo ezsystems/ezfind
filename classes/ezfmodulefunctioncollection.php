@@ -104,7 +104,7 @@ class ezfModuleFunctionCollection
     public function search( $query, $offset = 0, $limit = 10, $facets = null,
                             $filters = null, $sortBy = null, $classID = null, $sectionID = null,
                             $subtreeArray = null, $ignoreVisibility = false, $limitation = null,
-                            $asObjects = true, $spellCheck = null, $queryHandler = 'ezpublish' )
+                            $asObjects = true, $spellCheck = null, $boostFunctions = null, $queryHandler = 'ezpublish' )
     {
         $solrSearch = new eZSolr();
         $params = array( 'SearchOffset' => $offset,
@@ -119,6 +119,7 @@ class ezfModuleFunctionCollection
                          'Limitation' => $limitation,
                          'AsObjects' => $asObjects,
                          'SpellCheck' => $spellCheck,
+                         'BoostFunctions' => $boostFunctions,
                          'QueryHandler' => $queryHandler );
         return array( 'result' => $solrSearch->search( $query, $params ) );
     }

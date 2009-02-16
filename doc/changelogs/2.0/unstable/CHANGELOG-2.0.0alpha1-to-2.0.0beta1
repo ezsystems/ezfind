@@ -2,7 +2,9 @@ Changes from 2.0.0alpha1 to 2.0.0beta1
 
 *Features:
 - API: small one, related to enhancement requuests: added more flexibility in the API to
-  allow more control on optimize and commit actions
+  allow more control on optimize and commit
+- more like this tuning, returning the list of used keywords (part 1)
+- preparing boost functions at query time
 
 
 *Bugs:
