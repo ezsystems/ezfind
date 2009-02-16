@@ -110,7 +110,7 @@ class ezfeZPSolrQueryBuilder
         $asObjects = isset( $params['AsObjects'] ) && $params['AsObjects'] ? $params['AsObjects'] : true;
         $spellCheck = isset( $params['SpellCheck'] ) && $params['SpellCheck'] > 0 ? $params['SpellCheck'] : array();
         $queryHandler = isset( $params['QueryHandler'] )  ?  $params['QueryHandler'] : self::$FindINI->variable( 'SearchHandler', 'DefaultSearchHandler' );
-        $ignoreVisibilty = isset( $params['IgnoreVisibility'] )  ?  $params['IgnoreVisibility'] : false;
+        $ignoreVisibility = isset( $params['IgnoreVisibility'] )  ?  $params['IgnoreVisibility'] : false;
         $limitation = isset( $params['Limitation'] )  ?  $params['Limitation'] : null;
 
         // check if filter parameter is indeed an array, and set it otherwise
@@ -144,7 +144,7 @@ class ezfeZPSolrQueryBuilder
 
 
 
-        if ( (!eZContentObjectTreeNode::showInvisibleNodes() || !$ignoreVisibility ) &&Ê(self::$FindINI->variable( 'SearchFilters', 'FilterHiddenFromDB' ) == 'enabled') )
+        if ( (!eZContentObjectTreeNode::showInvisibleNodes() || !$ignoreVisibility ) && (self::$FindINI->variable( 'SearchFilters', 'FilterHiddenFromDB' ) == 'enabled') )
         {
             $db =& eZDB::instance();
             $invisibleNodeIDArray = $db->arrayQuery( 'SELECT node_id FROM ezcontentobject_tree WHERE ezcontentobject_tree.is_invisible = 1', array( 'column' => 0) );
