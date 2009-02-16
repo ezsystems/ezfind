@@ -46,7 +46,11 @@ eZ Publish side
 The idea is to be able to associate query words to a given content object, so
 that it is elevated when a query exactly containing these keywords is
 performed. It must also be possible to make sure an object is not returned as
-search result when a specific query is made ( ``<doc id="B" exclude="true" />`` ) A global eZFind dashboard in the administration interface could be
+search result when a specific query is made ( ``<doc id="B" exclude="true" />`` ).
+Note : support for negative Elevation as explained above will be added in a
+second phase.
+
+A global eZFind dashboard in the administration interface could be
 the place to achieve this. Alternatively/jointly, a new action on every content
 object could satisfy this need, either as a button in the full view of the
 object, either as a new action in the Javascript menu of every Object/node.
@@ -58,6 +62,7 @@ be applied whatever the sort parameter is, a new parameter must be passed as
 parameter in the query ::
 
  forceElevation=true
+ ( supported from Solr@rev:735117 at runtime )
 
 This parameter should be added to the search() method of the search plugin, and
 all overlying fetch functions.
