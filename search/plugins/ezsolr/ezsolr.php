@@ -116,10 +116,16 @@ class eZSolr
      * <class identifier>/<attribute identifier>[/<option>]
      *
      * @param string Base field name.
+     * @param boolean $includingClassID conditions the structure of the answer. See return value explanation.
      *
-     * @return string Internal base name. Returns null if no valid base name was provided.
+     * @return mixed Internal base name. Returns null if no valid base name was provided.
+     *               If $includingClassID is true, an associative array will be returned, as shown below :
+     *               <code>
+     *               array( 'fieldName'      => 'attr_title_t',
+     *                      'contentClassId' => 16 );
+     *               </code>
      */
-    static function getFieldName( $baseName )
+    static function getFieldName( $baseName, $includingClassID = false )
     {
         // If the base name is a meta field, get the correct field name.
         if ( eZSolr::hasMetaAttributeType( $baseName ) )
@@ -174,7 +180,15 @@ class eZSolr
                 return null;
             }
             $contectClassAttribute = eZContentClassAttribute::fetch( $contectClassAttributeID );
-            return  ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $options );
+            $fieldName = ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $options );
+
+            if ( $includingClassID )
+            {
+                return array( 'fieldName'      => $fieldName,
+                              'contentClassId' => $contectClassAttribute->attribute( 'contentclass_id' ) );
+            }
+            else
+                return $fieldName;
         }
     }
 
@@ -235,7 +249,7 @@ class eZSolr
     {
         // Add all translations to the document list
         $docList = array();
-        
+
         // Check if we need to index this object after all
         // Exclude if class identifier is in the exclude list for classes
         $excludeClasses = $this->FindINI->variable( 'IndexExclude', 'ClassIdentifierList' );
@@ -290,14 +304,14 @@ class eZSolr
         {
             $anonymousAccess = 'false';
         }
-        
+
         // Load index time boost factors if any
         //$boostMetaFields = $this->FindINI->variable( "IndexBoost", "MetaField" );
         $boostClasses = $this->FindINI->variable( 'IndexBoost', 'Class' );
         $boostAttributes = $this->FindINI->variable( 'IndexBoost', 'Attribute' );
         $boostDatatypes = $this->FindINI->variable( 'IndexBoost', 'Datatype' );
         $reverseRelatedScale = $this->FindINI->variable( 'IndexBoost', 'ReverseRelatedScale' );
-        
+
         // Initialise default doc boost
         $docBoost = 1.0;
         $contentClassIdentifier = $contentObject->attribute( 'class_identifier' );
@@ -369,7 +383,7 @@ class eZSolr
                 $classAttribute = $attribute->contentClassAttribute();
                 $attributeIdentifier = $classAttribute->attribute( 'identifier' );
                 $combinedIdentifier = $contentClassIdentifier . '/' . $attributeIdentifier;
-                $boostAttribute = false; 
+                $boostAttribute = false;
                 if ( isset( $boostAttributes[$attributeIdentifier]) && is_numeric( $boostAttributes[$attributeIdentifier]))
                 {
                     $boostAttribute = $boostAttributes[$attributeIdentifier];
@@ -598,7 +612,7 @@ class eZSolr
             'StopWordArray' => $stopWordArray,
             'SearchExtras' => new ezfSearchResultInfo( $resultArray ) );
     }
-    
+
 
     /**
      * More like this is pretty similar to normal search, but usually only the object or node id are sent to Solr
@@ -760,7 +774,7 @@ class eZSolr
     /**
      * Experimental: search independent spell check
      * use spellcheck option in search for spellchecking search results
-     * 
+     *
      * @package unfinished
      * @return array Solr result set.
      * @todo: configure different spell check handlers

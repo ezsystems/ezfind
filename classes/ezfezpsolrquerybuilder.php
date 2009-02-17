@@ -582,6 +582,7 @@ class ezfeZPSolrQueryBuilder
         $booleanOperator = $this->getBooleanOperatorFromFilter( $parameterList['Filter'] );
 
         $filterQueryList = array();
+        $classFilterHandled = false;
         foreach( $parameterList['Filter'] as $baseName => $value )
         {
             if ( !is_array( $value ) and strpos( $value, ':' ) !== false && is_numeric( $baseName ) )
@@ -596,8 +597,14 @@ class ezfeZPSolrQueryBuilder
             }
             else
             {
-                // Get internal field name.
-                $baseName = eZSolr::getFieldName( $baseName );
+                // Get internal field name. Returns a class ID filter if applicable. Add it as an implicit filter if needed.
+                $baseNameInfo = eZSolr::getFieldName( $baseName, true );
+                if ( is_array( $baseNameInfo ) and isset( $baseNameInfo['contentClassId'] ) and !$classFilterHandled )
+                {
+                    $filterQueryList[] = eZSolr::getMetaFieldName( 'contentclass_id' ) . ':' . $baseNameInfo['contentClassId'];
+                    $classFilterHandled = true;
+                }
+                $baseName = is_array( $baseNameInfo ) ? $baseNameInfo['fieldName'] : $baseNameInfo;
                 $filterQueryList[] = $baseName . ':' . $value;
             }
         }
