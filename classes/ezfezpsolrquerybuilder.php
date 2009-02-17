@@ -551,11 +551,24 @@ class ezfeZPSolrQueryBuilder
      *              The normal simple use is an array of type: array( '<field name>', <value> ).
      *              The value may also be an array containing values.
      *
-     *              The value may be the <basename>:<value>, example: array( 'Filter' => array( 'car/make:audi' ) )
-     *
-     *              The value may also be a string, or range, example: [10 to *].
-     *
-     *
+     *              Examples :
+     * <code>
+     *                   $parameters = array( 'article/title:hello' );
+     *                   $parameters = array( 'article/title' => 'hello' );
+     *                   $parameters = array( 'article/title' => '[1 TO 10]' );
+     *                   $parameters = array( 'article/title' => '[1 TO 10]',
+     *                                        'article/body:hello' );
+     *                   $parameters = array( 'or',
+     *                                        'article/title' => '[1 TO 10]',
+     *                                        'article/body:hello' );
+     *                   $parameters = array( 'or',
+     *                                        array( 'or',
+     *                                               'article/title' => '[1 TO 10]',
+     *                                               'article/body:hello' ),
+     *                                        array( 'and',
+     *                                               'article/title' => '[10 TO 20]',
+     *                                               'article/body:goodbye' ) );
+     * </code>
      * @return string Filter Query. Null if no filter parameters are in
      * the $parameterList
      */
@@ -598,7 +611,7 @@ class ezfeZPSolrQueryBuilder
      *
      * @param array $filter Filter array processed in self::getParamFilterQuery
      * @returns string The boolean operator to use. Default to 'AND'
-     * @see self::getParamFilterQuery
+     * @see ezfeZPSolrQueryBuilder::getParamFilterQuery
      */
     protected function getBooleanOperatorFromFilter( &$filter )
     {
@@ -1232,14 +1245,14 @@ class ezfeZPSolrQueryBuilder
      * Initialized by the end of this file.
      *
      * @var array
-     * @see self::getBooleanOperatorFromFilter
+     * @see ezfeZPSolrQueryBuilder::getBooleanOperatorFromFilter
      */
     public static $allowedBooleanOperators;
 
     /**
      * Storing the default boolean operator used in building the 'fq' parameter
      *
-     * @see self::getBooleanOperatorFromFilter
+     * @see ezfeZPSolrQueryBuilder::getBooleanOperatorFromFilter
      */
     const DEFAULT_BOOLEAN_OPERATOR = 'AND';
     const FACET_LIMIT = 20;
