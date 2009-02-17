@@ -566,34 +566,52 @@ class ezfeZPSolrQueryBuilder
             return null;
         }
 
+        $booleanOperator = $this->getBooleanOperatorFromFilter( $parameterList['Filter'] );
+
         $filterQueryList = array();
         foreach( $parameterList['Filter'] as $baseName => $value )
         {
-            if ( strpos( $value, ':' ) !== false && is_numeric( $baseName ) )
+            if ( !is_array( $value ) and strpos( $value, ':' ) !== false && is_numeric( $baseName ) )
             {
                 // split at the first colon, leave the rest intact
                 list( $baseName, $value ) = explode( ':', $value, 2 );
             }
 
-            // Get internal field name.
-            $baseName = eZSolr::getFieldName( $baseName );
             if ( is_array( $value ) )
             {
-                foreach( $value as $subValue )
-                {
-                    //$filterQueryList[] = $baseName . ':' . self::quoteIfNeeded( $subValue );
-                    $filterQueryList[] = $baseName . ':' . $subValue;
-                }
+                $filterQueryList[] = '( ' . $this->getParamFilterQuery( array( 'Filter' => $value ) ) . ' )';
             }
             else
             {
-                //$filterQueryList[] = $baseName . ':' . self::quoteIfNeeded( $value );
+                // Get internal field name.
+                $baseName = eZSolr::getFieldName( $baseName );
                 $filterQueryList[] = $baseName . ':' . $value;
             }
         }
 
-        return implode( ' AND ', $filterQueryList );
+        return implode( " $booleanOperator ", $filterQueryList );
     }
+
+    /**
+     * Identifies which boolean operator to use when building the filter string ( fq parameter in the final Solr raw request )
+     * Removes the operator from the array, if existing.
+     *
+     * @param array $filter Filter array processed in self::getParamFilterQuery
+     * @returns string The boolean operator to use. Default to 'AND'
+     * @see self::getParamFilterQuery
+     */
+    protected function getBooleanOperatorFromFilter( &$filter )
+    {
+        if ( is_string( $filter[0] ) and in_array( $filter[0], self::$allowedBooleanOperators ) )
+        {
+            $retVal = strtoupper( $filter[0] );
+            unset( $filter[0] );
+            return  $retVal;
+        }
+        else
+            return self::DEFAULT_BOOLEAN_OPERATOR;
+    }
+
 
     /**
      * Analyze the string, and decide if quotes should be added or not.
@@ -1209,11 +1227,29 @@ class ezfeZPSolrQueryBuilder
     /// Vars
     static $FindINI;
 
+    /**
+     * Array containing the allowed boolean operators for the 'fq' parameter
+     * Initialized by the end of this file.
+     *
+     * @var array
+     * @see self::getBooleanOperatorFromFilter
+     */
+    public static $allowedBooleanOperators;
+
+    /**
+     * Storing the default boolean operator used in building the 'fq' parameter
+     *
+     * @see self::getBooleanOperatorFromFilter
+     */
+    const DEFAULT_BOOLEAN_OPERATOR = 'AND';
     const FACET_LIMIT = 20;
     const FACET_OFFSET = 0;
     const FACET_MINCOUNT = 1;
 }
 
 ezfeZPSolrQueryBuilder::$FindINI = eZINI::instance( 'ezfind.ini' );
-
+ezfeZPSolrQueryBuilder::$allowedBooleanOperators = array( 'AND',
+                                                          'and',
+                                                          'OR',
+                                                          'or' );
 ?>

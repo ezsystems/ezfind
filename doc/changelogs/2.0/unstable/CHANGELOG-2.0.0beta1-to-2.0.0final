@@ -6,3 +6,8 @@ Changes from 2.0.0beta1 to 2.0.0final
 *Bugs:
 
 - implemented enhancement #013710: crash while indexing related objects
+
+
+*Enhancements:
+
+- implemented enhancement #014070: "or" logic on filters, that would allow filtering on multiple content types or criterias
