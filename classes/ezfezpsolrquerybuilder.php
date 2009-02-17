@@ -609,7 +609,7 @@ class ezfeZPSolrQueryBuilder
      * Identifies which boolean operator to use when building the filter string ( fq parameter in the final Solr raw request )
      * Removes the operator from the array, if existing.
      *
-     * @param array $filter Filter array processed in self::getParamFilterQuery
+     * @param array &$filter Filter array processed in self::getParamFilterQuery
      * @returns string The boolean operator to use. Default to 'AND'
      * @see ezfeZPSolrQueryBuilder::getParamFilterQuery
      */
