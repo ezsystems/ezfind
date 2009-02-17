@@ -555,18 +555,18 @@ class ezfeZPSolrQueryBuilder
      * <code>
      *                   $parameters = array( 'article/title:hello' );
      *                   $parameters = array( 'article/title' => 'hello' );
-     *                   $parameters = array( 'article/title' => '[1 TO 10]' );
-     *                   $parameters = array( 'article/title' => '[1 TO 10]',
+     *                   $parameters = array( 'article/rating' => '[1 TO 10]' );
+     *                   $parameters = array( 'article/rating' => '[1 TO 10]',
      *                                        'article/body:hello' );
      *                   $parameters = array( 'or',
-     *                                        'article/title' => '[1 TO 10]',
+     *                                        'article/rating' => '[1 TO 10]',
      *                                        'article/body:hello' );
      *                   $parameters = array( 'or',
      *                                        array( 'or',
-     *                                               'article/title' => '[1 TO 10]',
+     *                                               'article/rating' => '[1 TO 10]',
      *                                               'article/body:hello' ),
      *                                        array( 'and',
-     *                                               'article/title' => '[10 TO 20]',
+     *                                               'article/rating' => '[10 TO 20]',
      *                                               'article/body:goodbye' ) );
      * </code>
      * @return string Filter Query. Null if no filter parameters are in
