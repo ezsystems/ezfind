@@ -1,0 +1,8 @@
+Changes from 2.0.0beta1 to 2.0.0final
+
+*Features:
+
+
+*Bugs:
+
+- implemented enhancement #013710: crash while indexing related objects

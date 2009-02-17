@@ -64,8 +64,11 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                     $subObjectID = $relationItem['contentobject_id'];
                     if ( !$subObjectID )
                         continue;
+                    $subObject = eZContentObjectVersion::fetchVersion( $relationItem['contentobject_version'], $subObjectID );
+                    if ( !$subObject )
+                        continue;
 
-                    $returnList = array_merge( $this->getBaseList( eZContentObjectVersion::fetchVersion( $relationItem['contentobject_version'], $subObjectID ) ),
+                    $returnList = array_merge( $this->getBaseList( $subObject ),
                                                $returnList );
                 }
             } break;
