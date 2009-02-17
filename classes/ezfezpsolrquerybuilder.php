@@ -615,7 +615,7 @@ class ezfeZPSolrQueryBuilder
      */
     protected function getBooleanOperatorFromFilter( &$filter )
     {
-        if ( is_string( $filter[0] ) and in_array( $filter[0], self::$allowedBooleanOperators ) )
+        if ( isset( $filter[0] ) and is_string( $filter[0] ) and in_array( $filter[0], self::$allowedBooleanOperators ) )
         {
             $retVal = strtoupper( $filter[0] );
             unset( $filter[0] );
