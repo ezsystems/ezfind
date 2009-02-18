@@ -1,13 +1,15 @@
 {def $search=false()}
 {if $use_template_search}
     {set $page_limit=10}
+    {def $facetParameters  = fetch( ezfind, facetParameters )
+         $filterParameters = fetch( ezfind, filterParameters )}
     {set $search=fetch( ezfind,search,
                         hash( 'query', $search_text,
                               'offset', $view_parameters.offset,
                               'limit', $page_limit,
                               'sort_by', hash( 'score', 'desc' ),
-                              'facet', fetch( ezfind, facetParameters ),
-                              'filter', fetch( ezfind, filterParameters ) ) )}
+                              'facet', $facetParameters,
+                              'filter', $filterParameters ))}
     {set $search_result=$search['SearchResult']}
     {set $search_count=$search['SearchCount']}
     {def $search_extras=$search['SearchExtras']}
@@ -16,6 +18,18 @@
     {set $search_data=$search}
 {/if}
 {def $baseURI=concat( '/content/search?SearchText=', $search_text )}
+
+{* Build the URI suffix, used throughout all URL generations in this page *}
+{def $uriSuffix = ''}
+{foreach $facetParameters as $item}
+	{foreach $item as $name => $value}
+	    {set $uriSuffix = concat( $uriSuffix, '&facet_', $name, '=', $value )}
+	{/foreach}
+{/foreach}
+
+{foreach $filterParameters as $name => $value}
+    {set $uriSuffix = concat( $uriSuffix, '&filter[]=', $name, ':', $value )}
+{/foreach}
 
 <script language="JavaScript" type="text/javascript">
 <!--{literal}
@@ -182,7 +196,7 @@
 {include name=Navigator
          uri='design:navigator/google.tpl'
          page_uri='/content/search'
-         page_uri_suffix=concat('?SearchText=',$search_text|urlencode,$search_timestamp|gt(0)|choose('',concat('&SearchTimestamp=',$search_timestamp)))
+         page_uri_suffix=concat('?SearchText=',$search_text|urlencode,$search_timestamp|gt(0)|choose('',concat('&SearchTimestamp=',$search_timestamp)), $uriSuffix )
          item_count=$search_count
          view_parameters=$view_parameters
          item_limit=$page_limit}
