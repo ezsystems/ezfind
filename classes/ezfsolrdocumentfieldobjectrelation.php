@@ -78,6 +78,42 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
     }
 
     /**
+     * Get data to index, and field name to use. Returns an associative array
+     * with field name and field value.
+     * Example:
+     * <code>
+     * array( 'field_name_i' => 123 );
+     * </code>
+     *
+     * @return array Associative array with fieldname and value.
+     */
+    public function getData()
+    {
+        $contentClassAttribute = $this->ContentObjectAttribute->attribute( 'contentclass_attribute' );
+        $fieldName = self::getFieldName( $contentClassAttribute );
+        $metaData = '';
+
+        switch ( $contentClassAttribute->attribute( 'data_type_string' ) )
+        {
+            case 'ezobjectrelation' :
+            case 'ezobjectrelationlist' :
+            {
+                $metaDataArray = $this->ContentObjectAttribute->metaData();
+                foreach( $metaDataArray as $item )
+                {
+                    $metaData .= $item['text'] . ' ';
+                }
+            } break;
+
+            default:
+            {
+                return array( $fieldName => $metaData );
+            } break;
+        }
+        return array( $fieldName => trim( $metaData ) );
+    }
+
+    /**
      * Get ezfSolrDocumentFieldBase instances for all attributes of specified eZContentObjectVersion
      *
      * @param eZContentObjectVersion Instance of eZContentObjectVersion to fetch attributes from.

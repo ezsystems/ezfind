@@ -4,7 +4,10 @@ Changes from 2.0.0beta1 to 2.0.0final
 
 
 *Bugs:
-
+- fixed issue #014254: eZMatrix datatype is not searched
+- fixed issue #014111: Results that contain literal text can create strange output
+- fixed issue #014069: Fillter doesn't take care of content type when filtering on an attribute identifier
+- fixed issue #013615: eZ find doesn't index related objects
 - implemented enhancement #013710: crash while indexing related objects
 
 
