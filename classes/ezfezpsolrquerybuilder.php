@@ -85,13 +85,20 @@ class ezfeZPSolrQueryBuilder
      *        'Facet' => array( array( 'field' => <class identifier>/<attribute identifier>[/<option>], ... ) ) ),
      *        'Filter' => array( <base_name> => <value>, <base_name2> => <value2> )
      *        'SortBy' => array( <field> => <asc|desc> [, <field2> => <asc|desc> [,...]] ) |
-                          array( array( <field> => <asc|desc> )[, array( <field2> => <asc|desc> )[,...]] )
+                          array( array( <field> => <asc|desc> )[, array( <field2> => <asc|desc> )[,...]] ),
+     *        'BoostFunctions' => array( 'fields' => array(
+     *                                               'article/title' => 2,
+     *                                               'modified:5'
+     *                                                    ),
+     *                                   'functions' => array( 'rord(meta_modified_dt)^10' )
+     *                                  );
      * </code>
      * For full facet description, see facets design document.
      * @param array Search types. Reserved.
      *
      * @return array Solr query results.
      *
+     * @see ezfeZPSolrQueryBuilder::buildBoostFunctions()
      * @todo implement case $asObjects == false
      * @todo add a field list parameter for use if $asObjects == false
 
@@ -112,6 +119,7 @@ class ezfeZPSolrQueryBuilder
         $queryHandler = isset( $params['QueryHandler'] )  ?  $params['QueryHandler'] : self::$FindINI->variable( 'SearchHandler', 'DefaultSearchHandler' );
         $ignoreVisibility = isset( $params['IgnoreVisibility'] )  ?  $params['IgnoreVisibility'] : false;
         $limitation = isset( $params['Limitation'] )  ?  $params['Limitation'] : null;
+        $boostFunctions = isset( $params['BoostFunctions'] )  ?  $params['BoostFunctions'] : null;
 
         // check if filter parameter is indeed an array, and set it otherwise
         if ( isset( $params['Filter']) && ! is_array( $params['Filter'] ) )
@@ -281,6 +289,9 @@ class ezfeZPSolrQueryBuilder
 
         }
 
+        // Handle boost functions :
+        $boostFunctionsParamList = $this->buildBoostFunctions( $boostFunctions, $handlerParameters );
+
         $queryParams =  array_merge(
             $handlerParameters,
             array(
@@ -306,9 +317,103 @@ class ezfeZPSolrQueryBuilder
                 'hl.simple.post' => '</b>',
                 'wt' => 'php' ),
             $facetQueryParamList,
-            $spellCheckParamList );
+            $spellCheckParamList,
+            $boostFunctionsParamList );
         eZDebug::writeDebug( $queryParams, 'Final query parameters sent to Solr backend' );
         return $queryParams;
+    }
+
+    /**
+     * @since eZ Find 2.0
+     *
+     * Boost Functions support.
+     * "Allows one to use the actual value of a numeric field and functions of those fields in a relevancy score."
+     *
+     * @see http://wiki.apache.org/solr/FunctionQuery
+     * @param array $boostFunctions Example :
+     * <code>
+     * $boostFunctions = array( 'fields' => array(
+     *                                             'article/title' => 2,
+     *                                             'modified:5'
+     *                                            ),
+     *                          'functions' => array( 'rord(meta_modified_dt)^10' )
+     *                        );
+     * </code>
+     * @param array &$handlerParameters The inclusion of boost functions in the final search parameter array depends on which queryHandler is used.
+     *                                  This parameter shall be modified in one of the cases.
+     *
+     * @return array In one of the cases, an array shall be returned, containing the boost expression under the 'bf' key.
+     */
+    protected function buildBoostFunctions( $boostFunctions = null, &$handlerParameters )
+    {
+        if ( $boostFunctions == null )
+            return array();
+
+        // Build boost function string here.
+        //   Field boosts and functions seems to be mutually exclusive.
+        $boostString = '';
+        $processedBoostFunctions = array();
+        $processedBoostFunctions['fields'] = $processedBoostFunctions['functions'] = array();
+
+        // Process simple query-time field boosting first :
+        if ( array_key_exists(  'fields', $boostFunctions ) )
+        {
+            foreach( $boostFunctions['fields'] as $baseName => $boostValue )
+            {
+                    if ( strpos( $boostValue, ':' ) !== false && is_numeric( $baseName ) )
+                    {
+                        // split at the first colon, leave the rest intact
+                        list( $baseName, $boostValue ) = explode( ':', $boostValue, 2 );
+                    }
+                    if ( is_numeric( $boostValue ) )
+                    {
+                        // Get internal field name.
+                        $baseName = eZSolr::getFieldName( $baseName );
+                        $processedBoostFunctions['fields'][] = $baseName . '^' . $boostValue;
+                    }
+            }
+        }
+
+        if ( array_key_exists(  'functions', $boostFunctions ) )
+        {
+            // Process simple query-time field boosting first :
+            foreach( $boostFunctions['functions'] as $expression )
+            {
+                // @TODO : parse $expression. use an ezi18n-like system ( formats ), meaning that the $boostFunctions['functions'] will look like this :
+                /* <code>
+                 * array( 'product( pow( %rating, 5 ), %modified )' => array( '%rating'    => 'article/rating',
+                 *                                                            '%modified'  => 'modified' )
+                 *      );
+                 * </code>
+                 *
+                 * Eventually, one single expression is to be accepted here, as is the case in Solr.
+                 */
+                $processedBoostFunctions['functions'][] = $expression;
+            }
+        }
+        switch ( $handlerParameters['qt'] )
+        {
+        	case 'ezpublish' :
+        	{
+        	    // The dismax based handler
+                // Push the boost expression in the 'bf' parameter, if it is not empty.
+                $boostString = implode( ' ', $processedBoostFunctions['functions'] );
+                $boostString .= ' ' . implode( ' ', $processedBoostFunctions['fields'] );
+                return ( $boostString == '' ) ? array() : array( 'bf' => trim( $boostString ) );
+        	} break;
+
+        	default:
+        	{
+        	    // Simplestandard or standard search handlers.
+        	    // Append the boost expression to the 'q' parameter.
+        	    // Alter the $handlerParameters array ( passed as reference )
+        	    // @TODO : Handle query-time field boosting through the buildMultiFieldQuery() method.
+        	    //         Requires a modified 'heuristic' mode.
+        	    $boostString = implode( ' ', $processedBoostFunctions['functions'] );
+                $handlerParameters['q'] .= ' _val_:' . trim( $boostString );
+        	} break;
+        }
+        return array();
     }
 
     /**

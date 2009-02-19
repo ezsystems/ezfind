@@ -465,7 +465,8 @@ class eZSolr
      * @todo: add functionality not to call the DB to recreate objects : $asObjects == false
      *
      * @param string search term
-     * @param array parameters. @see ezfeZPSolrQueryBuilder::buildSearch()
+     * @param array parameters.
+     * @see ezfeZPSolrQueryBuilder::buildSearch()
      * @param array search types. Reserved.
      *
      * @return array List of eZFindResultNode objects.
