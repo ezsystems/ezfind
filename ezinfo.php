@@ -40,7 +40,7 @@ class eZFindInfo
         return array(
             'Name' => "eZ Find",
             'Version' => "2.0.0",
-            'Copyright' => "Copyright Â© 2008 eZ Systems AS.",
+            'Copyright' => "Copyright © 2008-2009 eZ Systems AS.",
             'Info_url' => "http://ez.no",
             'License' => "GNU General Public License v2.0",
             '3rdparty_software' =>
