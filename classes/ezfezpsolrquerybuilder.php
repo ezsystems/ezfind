@@ -710,7 +710,8 @@ class ezfeZPSolrQueryBuilder
                     $classFilterHandled = true;
                 }
                 $baseName = is_array( $baseNameInfo ) ? $baseNameInfo['fieldName'] : $baseNameInfo;
-                $filterQueryList[] = $baseName . ':' . $value;
+                if ( $value !== null )
+                    $filterQueryList[] = $baseName . ':' . $value;
             }
         }
 
