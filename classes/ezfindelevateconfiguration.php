@@ -236,7 +236,7 @@ class eZFindElevateConfiguration extends eZPersistentObject
     public static function fetchObjectsForQueryString( $queryString, $groupByLanguage = true, $languageCode = null, $limit = null, $countOnly = false )
     {
         if ( ( is_string( $queryString ) and $queryString === '' ) or
-             ( array_key_exists( 'searchQuery', $queryString ) and $queryString['searchQuery'] == '' )
+             ( is_array( $queryString ) and array_key_exists( 'searchQuery', $queryString ) and $queryString['searchQuery'] == '' )
            )
         {
             return null;
