@@ -1,4 +1,4 @@
-CREATE TABLE  `trunk_php5`.`ezfind_elevate_configuration` (
+CREATE TABLE  `ezfind_elevate_configuration` (
      `search_query` varchar(255) NOT NULL default '',
      `contentobject_id` int(11) NOT NULL default '0',
      `language_code` varchar(20) NOT NULL default '',
