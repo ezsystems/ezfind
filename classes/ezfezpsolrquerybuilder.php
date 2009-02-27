@@ -83,17 +83,22 @@ class ezfeZPSolrQueryBuilder
      *        'SearchContentClassID' => array( <class ID1>[, <class ID2>]... ),
      *        'SearchContentClassAttributeID' => <class attribute ID>,
      *        'Facet' => array( array( 'field' => <class identifier>/<attribute identifier>[/<option>], ... ) ) ),
-     *        'Filter' => array( <base_name> => <value>, <base_name2> => <value2> )
+     *        'Filter' => array( <base_name> => <value>, <base_name2> => <value2> ),
      *        'SortBy' => array( <field> => <asc|desc> [, <field2> => <asc|desc> [,...]] ) |
-                          array( array( <field> => <asc|desc> )[, array( <field2> => <asc|desc> )[,...]] ),
+     *                    array( array( <field> => <asc|desc> )[, array( <field2> => <asc|desc> )[,...]] ),
      *        'BoostFunctions' => array( 'fields' => array(
      *                                               'article/title' => 2,
      *                                               'modified:5'
      *                                                    ),
      *                                   'functions' => array( 'rord(meta_modified_dt)^10' )
-     *                                  );
+     *                                  ),
+     *        'ForceElevation' => false,
+     *        'EnableElevation' => true
+     *      );
      * </code>
      * For full facet description, see facets design document.
+     * For full description about 'ForceElevation', see elevate support design document ( elevate_support.rst.txt )
+     *
      * @param array Search types. Reserved.
      *
      * @return array Solr query results.
@@ -120,6 +125,8 @@ class ezfeZPSolrQueryBuilder
         $ignoreVisibility = isset( $params['IgnoreVisibility'] )  ?  $params['IgnoreVisibility'] : false;
         $limitation = isset( $params['Limitation'] )  ?  $params['Limitation'] : null;
         $boostFunctions = isset( $params['BoostFunctions'] )  ?  $params['BoostFunctions'] : null;
+        $forceElevation = isset( $params['ForceElevation'] )  ?  $params['ForceElevation'] : false;
+        $enableElevation = isset( $params['EnableElevation'] )  ?  $params['EnableElevation'] : true;
 
         // check if filter parameter is indeed an array, and set it otherwise
         if ( isset( $params['Filter']) && ! is_array( $params['Filter'] ) )
@@ -238,6 +245,8 @@ class ezfeZPSolrQueryBuilder
                 'spellcheck.count' => 1);
         }
 
+        // Create the Elevate-related parameters here :
+        $elevateParamList = eZFindElevateConfiguration::getRuntimeQueryParameters( $forceElevation, $enableElevation );
 
         // process query handler: standard, simplestandard, ezpublish, heuristic
         // first determine which implemented handler to use when heuristic is specified
@@ -318,7 +327,7 @@ class ezfeZPSolrQueryBuilder
                 'wt' => 'php' ),
             $facetQueryParamList,
             $spellCheckParamList,
-            $boostFunctionsParamList );
+            $elevateParamList );
         eZDebug::writeDebug( $queryParams, 'Final query parameters sent to Solr backend' );
         return $queryParams;
     }

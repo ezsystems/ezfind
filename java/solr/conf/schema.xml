@@ -265,6 +265,13 @@
      --> 
     <fieldtype name="ignored" stored="false" indexed="false" class="solr.StrField" /> 
 
+    <!-- This new field type is dedicated to Elevate.  -->
+	<fieldType name="elevate_string" stored="false" indexed="false" class="solr.StrField">
+	      <analyzer>
+	          <tokenizer class="solr.WhitespaceTokenizerFactory"/>	      
+		      <filter class="solr.LowerCaseFilterFactory"/>
+	      </analyzer>
+	</fieldType>
  </types>
 
 

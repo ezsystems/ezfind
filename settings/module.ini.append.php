@@ -2,5 +2,6 @@
 
 [ModuleSettings]
 ExtensionRepositories[]=ezfind
+ModuleList[]=ezfind
 
 */ ?>
