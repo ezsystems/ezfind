@@ -246,7 +246,7 @@ class ezfeZPSolrQueryBuilder
         }
 
         // Create the Elevate-related parameters here :
-        $elevateParamList = eZFindElevateConfiguration::getRuntimeQueryParameters( $forceElevation, $enableElevation );
+        $elevateParamList = eZFindElevateConfiguration::getRuntimeQueryParameters( $forceElevation, $enableElevation, $searchText );
 
         // process query handler: standard, simplestandard, ezpublish, heuristic
         // first determine which implemented handler to use when heuristic is specified

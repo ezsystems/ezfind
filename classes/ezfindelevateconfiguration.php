@@ -504,6 +504,8 @@ class eZFindElevateConfiguration extends eZPersistentObject
      *                if one wants the elevate configuration to be actually taken into account.
      *
      * @param boolean $enableElevation Whether the Elevate functionnality should be used or not. Defaults to 'true'.
+     * @param string $searchText Workaround for an issue in Solr's QueryElevationComponent : when the search string is empty, Solr throws
+     *               an Exception and stops the request.
      *
      * @return array The well-formed query parameter regarding the elevate functionnality. Example :
      *         <code>
@@ -511,12 +513,12 @@ class eZFindElevateConfiguration extends eZPersistentObject
      *                'enableElevation' => 'true' )
      *         </code>
      */
-    public static function getRuntimeQueryParameters( $forceElevation = false, $enableElevation = true )
+    public static function getRuntimeQueryParameters( $forceElevation = false, $enableElevation = true, $searchText = '' )
     {
         $retArray = array( 'forceElevation'  => 'false',
                            'enableElevation' => 'true' );
 
-        if ( $enableElevation === false )
+        if ( $enableElevation === false or $searchText == '' )
         {
             $retArray['enableElevation'] = 'false';
             return $retArray;
