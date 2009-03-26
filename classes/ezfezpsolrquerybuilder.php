@@ -186,14 +186,12 @@ class ezfeZPSolrQueryBuilder
             $filterQuery[] = eZSolr::getMetaFieldName( 'section_id' ) . ':' . $sectionID;
         }
 
-        // Add Filter from function parameters
-        // but add the sitelanguage first (only current language is searched)
-        // maybe we'll make this configurable later on
-        $ini = eZINI::instance();
-        // TODO - check ini settings wether or not to search main language only
-        $languages = $ini->variable( 'RegionalSettings', 'SiteLanguageList' );
-        $mainLanguage = $languages[0];
-        $params['Filter']['language_code'] =  $mainLanguage;
+        $languageFilterQuery = $this->buildLanguageFilterQuery();
+        if ( $languageFilterQuery )
+        {
+            $filterQuery[] = $languageFilterQuery;
+        }
+
         $paramFilterQuery = $this->getParamFilterQuery( $params );
         if ( $paramFilterQuery )
         {
@@ -330,6 +328,70 @@ class ezfeZPSolrQueryBuilder
             $elevateParamList );
         eZDebug::writeDebug( $queryParams, 'Final query parameters sent to Solr backend' );
         return $queryParams;
+    }
+
+    /**
+     * @since eZ Find 2.1
+     *
+     * Language filtering.
+     * This method builds the language filter, depending on the following settings :
+     *
+     * In site.ini :
+     * <code>
+     * # Prioritized list of languages. Only objects existing in these
+     * # languages will be shown (unless ShowUntranslatedObjects is enabled).
+     * # If an object exists in more languages, that one which is first in
+     * # SiteLanguageList will be used to render it.
+     * [RegionalSettings]
+     * SiteLanguageList[]
+     * SiteLanguageList[]=eng-GB
+     * SiteLanguageList[]=fre-FR
+     * </code>
+     *
+     * And in ezfind.ini :
+     * <code>
+     * [LanguageSearch]
+     * SearchMainLanguageOnly=enabled
+     * </code>
+     *
+     * When SearchMainLanguageOnly is set to 'enabled', only results in the first language in SiteLanguageList[] will be returned.
+     * When SearchMainLanguageOnly is set to 'disabled', results will be returned with respecting the fallback defined in SiteLanguageList[] :
+     *  of all matching results, the ones in eng-GB will be returned, and in case no translation in eng-GB exists for a result,
+     *  it will be returned in fre-FR if existing.
+     *
+     * @return string The correct language filtering string, appended to the 'fq' parameter in the Solr request.
+     */
+    protected function buildLanguageFilterQuery()
+    {
+        $languageFilterString = $languageExcludeString = '';
+        $ini = eZINI::instance();
+        $languages = $ini->variable( 'RegionalSettings', 'SiteLanguageList' );
+        $searchMainLanguageOnly = self::$FindINI->variable( 'LanguageSearch', 'SearchMainLanguageOnly' ) == 'enabled';
+
+        $languageCodeMetaName = eZSolr::getMetaFieldName( 'language_code' );
+        $availableLanguageCodesMetaName = eZSolr::getMetaFieldName( 'available_language_codes' );
+
+        if (  $searchMainLanguageOnly )
+        {
+            $languageFilterString = $languageCodeMetaName . ':' . $languages[0];
+        }
+        else
+        {
+            foreach ( $languages as $key => $language )
+            {
+                if ( $key == 0 )
+                {
+                    $languageFilterString = $languageCodeMetaName . ':' . $languages[0];
+                }
+                else
+                {
+                    $languageFilterString .= " OR ( $languageCodeMetaName:$language $languageExcludeString )";
+                }
+
+                $languageExcludeString .= " AND -$availableLanguageCodesMetaName:$language";
+            }
+        }
+        return $languageFilterString;
     }
 
     /**
@@ -480,14 +542,12 @@ class ezfeZPSolrQueryBuilder
             $filterQuery[] = eZSolr::getMetaFieldName( 'section_id' ) . ':' . $sectionID;
         }
 
-        // Add Filter from function parameters
-        // but add the sitelanguage first (only current language is searched)
-        // maybe we'll make this configurable later on
-        $ini = eZINI::instance();
-        // @todo 2.0 - check ini settings wether or not to search main language only
-        $languages = $ini->variable( 'RegionalSettings', 'SiteLanguageList' );
-        $mainLanguage = $languages[0];
-        $params['Filter']['language_code'] =  $mainLanguage;
+        $languageFilterQuery = $this->buildLanguageFilterQuery();
+        if ( $languageFilterQuery )
+        {
+            $filterQuery[] = $languageFilterQuery;
+        }
+
         $paramFilterQuery = $this->getParamFilterQuery( $params );
         if ( $paramFilterQuery )
         {

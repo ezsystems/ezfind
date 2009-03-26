@@ -5,3 +5,4 @@ Changes from 2.0.0final to 2.1.0alpha1
 
 
 *Bugs:
+- Fixed bug #14562: SearchMainLanguageOnly setting ignores disabled setting

@@ -97,6 +97,7 @@ class eZSolr
                                              'name' => 'text',
                                              'anon_access' => 'boolean',
                                              'language_code' => 'string',
+                                             'available_language_codes' => 'string',
                                              'main_url_alias' => 'string',
                                              'owner_name' => 'text',
                                              'owner_group_id' => 'sint',
@@ -288,6 +289,9 @@ class eZSolr
             }
         }
 
+        //  Create the list of available languages for this version :
+        $availableLanguages = $currentVersion->translationList( false, false );
+
         // Check anonymous user access.
         if ( $this->FindINI->variable( 'SiteSettings', 'IndexPubliclyAvailable' ) == 'enabled' )
         {
@@ -339,6 +343,8 @@ class eZSolr
             $doc->addField( self::getMetaFieldName( 'name' ), $contentObject->name( false, $languageCode ) );
             $doc->addField( self::getMetaFieldName( 'anon_access' ), $anonymousAccess );
             $doc->addField( self::getMetaFieldName( 'language_code' ), $languageCode );
+            $doc->addField( self::getMetaFieldName( 'available_language_codes' ), $availableLanguages );
+
             if ( $owner = $contentObject->attribute( 'owner' ) )
             {
                 // Set owner name
