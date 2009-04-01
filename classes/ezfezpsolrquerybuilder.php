@@ -119,6 +119,7 @@ class ezfeZPSolrQueryBuilder
         $contentClassID = ( isset( $params['SearchContentClassID'] ) && $params['SearchContentClassID'] <> -1 ) ? $params['SearchContentClassID'] : false;
         $contentClassAttributeID = ( isset( $params['SearchContentClassAttributeID'] ) && $params['SearchContentClassAttributeID'] <> -1 ) ? $params['SearchContentClassAttributeID'] : false;
         $sectionID = isset( $params['SearchSectionID'] ) && $params['SearchSectionID'] > 0 ? $params['SearchSectionID'] : false;
+        $dateFilter = isset( $params['SearchDate'] ) && $params['SearchDate'] > 0 ? $params['SearchDate'] : false;
         $asObjects = isset( $params['AsObjects'] ) && $params['AsObjects'] ? $params['AsObjects'] : true;
         $spellCheck = isset( $params['SpellCheck'] ) && $params['SpellCheck'] > 0 ? $params['SpellCheck'] : array();
         $queryHandler = isset( $params['QueryHandler'] )  ?  $params['QueryHandler'] : self::$FindINI->variable( 'SearchHandler', 'DefaultSearchHandler' );
@@ -157,7 +158,35 @@ class ezfeZPSolrQueryBuilder
             $filterQuery[] = $policyLimitationFilterQuery;
         }
 
-
+		// Add time/date query filter
+    	if ( $dateFilter > 0 )
+		{
+			$searchDateTime = new DateTime( 'today' );
+    		switch ( $dateFilter )
+			{
+				// last day
+				case 1:
+					$searchDateTime->modify("-1 day");
+				break;
+				// last week
+				case 2:
+					$searchDateTime->modify("-1 week");
+					break;
+				// last month
+				case 3:
+					$searchDateTime->modify("-1 month");
+					break;
+				// last three month
+				case 4:
+					$searchDateTime->modify("-3 month");
+					break;
+				// last year
+				case 5:
+					$searchDateTime->modify("-1 year");
+				break;
+			}
+			$filterQuery[] = eZSolr::getMetaFieldName( 'published' ) . ':[' . $searchDateTime->format("Y-m-d\TH:i:s\Z").' TO *]';
+		}
 
         if ( (!eZContentObjectTreeNode::showInvisibleNodes() || !$ignoreVisibility ) && (self::$FindINI->variable( 'SearchFilters', 'FilterHiddenFromDB' ) == 'enabled') )
         {
