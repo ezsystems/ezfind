@@ -185,7 +185,7 @@ class ezfeZPSolrQueryBuilder
 					$searchDateTime->modify("-1 year");
 				break;
 			}
-			$filterQuery[] = eZSolr::getMetaFieldName( 'published' ) . ':[' . $searchDateTime->format("Y-m-d\TH:i:s\Z").' TO *]';
+			$filterQuery[] = eZSolr::getMetaFieldName( 'published' ) . ':[' . ezfSolrDocumentFieldBase::preProcessValue( $searchDateTime->getTimestamp(), 'date' ) .' TO *]';
 		}
 
         if ( (!eZContentObjectTreeNode::showInvisibleNodes() || !$ignoreVisibility ) && (self::$FindINI->variable( 'SearchFilters', 'FilterHiddenFromDB' ) == 'enabled') )
