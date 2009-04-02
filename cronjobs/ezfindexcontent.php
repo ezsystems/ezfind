@@ -1,11 +1,11 @@
 <?php
 //
-// Created on: <18-Mar-2004 17:12:43 dr>
+// Created on: <27-Nov-2008 15:28:15 pb>
 //
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
-// SOFTWARE NAME: eZ Publish
-// SOFTWARE RELEASE: 4.1.x
-// COPYRIGHT NOTICE: Copyright (C) 1999-2008 eZ Systems AS
+// SOFTWARE NAME: eZ Find
+// SOFTWARE RELEASE: 2.0.x
+// COPYRIGHT NOTICE: Copyright (C) 1999-2009 eZ Systems AS
 // SOFTWARE LICENSE: GNU General Public License v2.0
 // NOTICE: >
 //   This program is free software; you can redistribute it and/or
@@ -26,25 +26,26 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
-/*! \file indexcontent.php
+/*! \file ezfindexcontent.php
 */
-
-require 'autoload.php';
 
 if ( !$isQuiet )
 {
     $cli->output( "Starting processing pending search engine modifications" );
 }
 
+// check that solr is enabled and used
+$eZSolr = eZSearch::getEngine();
+if ( !( $eZSolr instanceof eZSolr ) )
+{
+	$script->shutdown( 1, 'The current search engine plugin is not eZSolr' );
+}
+
 $contentObjects = array();
 $db = eZDB::instance();
-$eZSolr = new eZSolr();
 
-// @todo: make command line parameters of the following
 $offset = 0;
 $limit = 50;
-$solrCommit = true;
-$solrOptimize = true;
 
 while( true )
 {
@@ -75,17 +76,8 @@ while( true )
         $db->query( "DELETE FROM ezpending_actions WHERE action = 'index_object' AND $paramInSQL" );
         $db->commit();
 
-        // finish up with commit and optimize
-        if ( $solrOptimize )
-        {
-            $eZSolr->optimize( $solrCommit );
-        }
-        elseif ( $solrCommit )
-        {
-            $eZSolr->commit();
-        }
-
-
+        // finish up with commit
+        $eZSolr->commit();
     }
     else
     {

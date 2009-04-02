@@ -7,3 +7,4 @@ Changes from 2.0.0final to 2.1.0alpha1
 *Bugs:
 - Fixed bug #14562: SearchMainLanguageOnly setting ignores disabled setting
 - Fixed bug #14357: ezFind 2.0.0pre svn publish_date ignored
+- Fixed bug #14551: fixed cronjob ezfindexcontent.php, and removed index optimization from this cronjob
