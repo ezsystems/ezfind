@@ -161,31 +161,30 @@ class ezfeZPSolrQueryBuilder
 		// Add time/date query filter
     	if ( $dateFilter > 0 )
 		{
-			$searchDateTime = new DateTime( 'today' );
     		switch ( $dateFilter )
 			{
 				// last day
 				case 1:
-					$searchDateTime->modify("-1 day");
+					$searchTimestamp = strtotime( '-1 day' );
 				break;
 				// last week
 				case 2:
-					$searchDateTime->modify("-1 week");
+					$searchTimestamp = strtotime( '-1 week' );
 					break;
 				// last month
 				case 3:
-					$searchDateTime->modify("-1 month");
+					$searchTimestamp = strtotime( '-1 month' );
 					break;
 				// last three month
 				case 4:
-					$searchDateTime->modify("-3 month");
+					$searchTimestamp = strtotime( '-3 month' );
 					break;
 				// last year
 				case 5:
-					$searchDateTime->modify("-1 year");
+					$searchTimestamp = strtotime( '-1 year' );
 				break;
 			}
-			$filterQuery[] = eZSolr::getMetaFieldName( 'published' ) . ':[' . ezfSolrDocumentFieldBase::preProcessValue( $searchDateTime->getTimestamp(), 'date' ) .' TO *]';
+			$filterQuery[] = eZSolr::getMetaFieldName( 'published' ) . ':[' . ezfSolrDocumentFieldBase::preProcessValue( $searchTimestamp, 'date' ) .'/DAY TO *]';
 		}
 
         if ( (!eZContentObjectTreeNode::showInvisibleNodes() || !$ignoreVisibility ) && (self::$FindINI->variable( 'SearchFilters', 'FilterHiddenFromDB' ) == 'enabled') )

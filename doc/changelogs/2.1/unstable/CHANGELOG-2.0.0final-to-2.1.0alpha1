@@ -4,6 +4,8 @@ Changes from 2.0.0final to 2.1.0alpha1
 - Implemented #014036: Elevate support
 - Implemented #013894: inid.d/solr start doesn't output anything
 - Implemented #014725: Add an optimize index cronjob
+- Implemented #014357: ezFind 2.0.0pre svn publish_date ignored
+  Added the publish_date parameter for fetch(ezfind, search)
 
 *Bugs:
 - Fixed bug #14562: SearchMainLanguageOnly setting ignores disabled setting

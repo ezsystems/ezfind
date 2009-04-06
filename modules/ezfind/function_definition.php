@@ -103,7 +103,11 @@ $FunctionList['search'] = array( 'name' => 'search',
                                                         array( 'name' => 'force_elevation',
                                                                'type' => 'boolean',
                                                                'required' => false,
-                                                               'default' => false ) ) );
+                                                               'default' => false ),
+														array( 'name' => 'publish_date',
+														       'type' => 'integer',
+														       'required' => false,
+														       'default' => false ) ) );
 
 $FunctionList['facetParameters'] = array( 'name' => 'facetParameters',
                                           'operation_types' => 'read',
