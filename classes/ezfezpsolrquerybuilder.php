@@ -45,7 +45,6 @@ class ezfeZPSolrQueryBuilder
     {
     }
 
-
     /**
      * @since eZ Find 2.0
      * build a multi field query, basically doing the same as a Lucene MultiField query
@@ -68,7 +67,6 @@ class ezfeZPSolrQueryBuilder
 
 
     }
-
 
     /**
      * Search on the Solr search server
@@ -245,7 +243,7 @@ class ezfeZPSolrQueryBuilder
         //the array_unique below is necessary because attribute identifiers are not unique .. and we get as
         //much highlight snippets as there are duplicate attribute identifiers
         //these are also in the list of query fields (dismax, ezpublish) request handlers
-        $queryFields = array_unique( $this->getClassAttributes( $contentClassID, $contentClassAttributeID, $fieldTypeExcludeList ) );
+		$queryFields = array_unique( $this->getClassAttributes( $contentClassID, $contentClassAttributeID, $fieldTypeExcludeList ) );
 
         //highlighting only in the attributes, otherwise the object name is repeated in the highlight, which is already
         //partly true as it is mostly composed of one or more attributes.
@@ -654,6 +652,7 @@ class ezfeZPSolrQueryBuilder
 
         return $queryParams;
     }
+
     /**
      * Build sort parameter based on params provided.
      * @todo specify dedicated sorting fields
@@ -834,7 +833,6 @@ class ezfeZPSolrQueryBuilder
         else
             return self::DEFAULT_BOOLEAN_OPERATOR;
     }
-
 
     /**
      * Analyze the string, and decide if quotes should be added or not.
@@ -1158,7 +1156,7 @@ class ezfeZPSolrQueryBuilder
      */
     protected function getContentClassFilterQuery( $contentClassIdent )
     {
-        if ( empty( $contentClassIdent ) )
+		if ( empty( $contentClassIdent ) )
         {
             return null;
         }
@@ -1184,6 +1182,10 @@ class ezfeZPSolrQueryBuilder
                         $classQueryParts[] = eZSolr::getMetaFieldName( 'contentclass_id' ) . ':' . $class->attribute( 'id' );
                     }
                 }
+            	else
+				{
+					eZDebug::writeError( "Unknown class_id filtering parameter: $classID", __METHOD__ );
+				}
             }
 
             return implode( ' OR ', $classQueryParts );
@@ -1417,21 +1419,39 @@ class ezfeZPSolrQueryBuilder
         else
         {
             // Fetch class list.
-            if ( is_numeric( $classIDArray ) and $classIDArray > 0 )
+            $condArray = array( "is_searchable" => 1,
+                                "version" => eZContentClass::VERSION_STATUS_DEFINED );
+            if ( !is_array( $classIDArray ) )
             {
                 $classIDArray = array( $classIDArray );
             }
-            else if ( !is_array( $classIDArray ) )
+            // literal class identifiers are converted to numerical ones
+            $tmpClassIDArray = $classIDArray;
+            $classIDArray = array();
+            foreach( $tmpClassIDArray as $key => $classIdentifier )
             {
-                $classIDArray = false;
+                if ( !is_numeric( $classIdentifier ) )
+                {
+                    if ( !$contentClass = eZContentClass::fetchByIdentifier( $classIdentifier, false ) )
+                    {
+                        eZDebug::writeError( "Unknown content class identifier '$classIdentifier'", __METHOD__ );
+                    }
+                    else
+                    {
+                        $classIDArray[] = $contentClass['id'];
+                    }
+                }
+                else
+                {
+                    $classIDArray[] = $classIdentifier;
+                }
             }
 
-            $condArray = array( "is_searchable" => 1,
-                                "version" => eZContentClass::VERSION_STATUS_DEFINED );
-            if ( is_array( $classIDArray ) )
+            if ( count( $classIDArray ) > 0 )
             {
                 $condArray['contentclass_id'] = array( $classIDArray );
-            }
+           	}
+
             foreach( eZContentClassAttribute::fetchFilteredList( $condArray ) as $classAttribute )
             {
                 if ( empty( $fieldTypeExcludeList ) ||
