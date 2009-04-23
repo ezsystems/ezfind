@@ -1321,7 +1321,7 @@ class ezfeZPSolrQueryBuilder
                         //limitation
                         //hence the following match on substring
                         
-                        if (strpos($limitationType, 'StateGroup'))
+                        if (strpos( $limitationType, 'StateGroup') !== false )
                         {
                             foreach ( $limitationValues as $limitationValue )
                             {
