@@ -1249,7 +1249,8 @@ class ezfeZPSolrQueryBuilder
             'User_Subtree' => eZSolr::getMetaFieldName( 'path_string' ),
             'Node'         => eZSolr::getMetaFieldName( 'main_node_id' ),
             'Owner'        => eZSolr::getMetaFieldName( 'owner_id' ),
-            'Group'        => eZSolr::getMetaFieldName( 'owner_group_id' ) );
+            'Group'        => eZSolr::getMetaFieldName( 'owner_group_id'),
+            'ObjectStates' => eZSolr::getMetaFieldName( 'object_states') );
 
         $filterQueryPolicies = array();
 
@@ -1316,9 +1317,23 @@ class ezfeZPSolrQueryBuilder
 
                     default :
                     {
-                        eZDebug::writeDebug( $limitationType,
+                        //hacky, object state limitations reference the state group name in their
+                        //limitation
+                        //hence the following match on substring
+                        
+                        if (strpos($limitationType, 'StateGroup'))
+                        {
+                            foreach ( $limitationValues as $limitationValue )
+                            {
+                                $filterQueryPolicyLimitationParts[] = $limitationHash['ObjectStates'] . ':' . $limitationValue;
+                            }
+                        }
+                        else
+                        {
+                            eZDebug::writeDebug( $limitationType,
                                              'ezfeZPSolrQueryBuilder::policyLimitationFilterQuery unknown limitation type: ' . $limitationType );
-                        continue;
+                            continue;
+                        }
                     }
                 }
 

@@ -101,7 +101,8 @@ class eZSolr
                                              'main_url_alias' => 'string',
                                              'owner_name' => 'text',
                                              'owner_group_id' => 'sint',
-                                             'path' => 'sint' ),
+                                             'path' => 'sint',
+                                             'object_states' => 'string'),
                                       self::metaAttributes(),
                                       self::nodeAttributes() );
         if ( empty( $attributeList[$name] ) )
@@ -356,6 +357,14 @@ class eZSolr
                 {
                     $doc->addField( self::getMetaFieldName( 'owner_group_id' ), $groupID );
                 }
+            }
+
+            // from eZ Publish 4.1 only: object states
+            // so let's check if the content object has it
+            if (method_exists( $contentObject, 'stateIDArray'))
+            {
+                $doc->addField( self::getMetaFieldName( 'object_states' ),
+                                $contentObject->stateIDArray() );
             }
 
             // Set content object meta attribute values.
@@ -904,6 +913,21 @@ class eZSolr
     static function engineText()
     {
         return ezi18n( 'ezfind', 'eZ Find 2.0 search plugin &copy; 2009 eZ Systems AS, powered by Apache Solr 1.4' );
+    }
+
+    /*
+     * update search index upon object state changes:
+     * simply re-index for now
+     * @todo: defer to cron if there are children involved and re-index these too
+     * @todo when Solr supports it: update fields only
+     */
+
+    public static function updateObjectState( $objectID, $objectStateList )
+    {
+        $contentObject = eZContentObject::fetch( $objectID );
+        //need to initialize, since called as static method
+        $solr = new eZSolr();
+        $solr->addObject( $contentObject );
     }
 
     /// Object vars
