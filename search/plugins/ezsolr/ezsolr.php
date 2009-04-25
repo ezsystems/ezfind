@@ -261,12 +261,15 @@ class eZSolr
         }
         // Get global object values
         $mainNode = $contentObject->attribute( 'main_node' );
+        // initialize array of parent node path ids, needed for multivalued path field and subtree filters
+        $nodePathArray = array();
         if ( !$mainNode )
         {
             eZDebug::writeError( 'Unable to fetch main node for object: ' . $contentObject->attribute( 'id' ), 'eZSolr::addObject()' );
             return;
         }
-        $pathArray = $mainNode->attribute( 'path_array' );
+        //included in $nodePathArray
+        //$pathArray = $mainNode->attribute( 'path_array' );
         $currentVersion = $contentObject->currentVersion();
 
         // Get object meta attributes.
@@ -288,6 +291,8 @@ class eZSolr
                                                 'value' => $contentNode->attribute( $attributeName ),
                                                 'fieldType' => $fieldType );
             }
+            $nodePathArray[] = $contentNode->attribute( 'path_array' );
+
         }
 
         //  Create the list of available languages for this version :
@@ -384,9 +389,13 @@ class eZSolr
             // Add main url_alias
             $doc->addField( self::getMetaFieldName( 'main_url_alias' ), $mainNode->attribute( 'url_alias' ) );
 
-            foreach ( $pathArray as $pathNodeID )
+            // add nodeid of all parent nodes path elements
+            foreach ( $nodePathArray as $pathArray )
             {
-                $doc->addField( self::getMetaFieldName( 'path' ), $pathNodeID );
+                foreach ( $pathArray as $pathNodeID)
+                {
+                    $doc->addField( self::getMetaFieldName( 'path' ), $pathNodeID );
+                }
             }
 
             eZContentObject::recursionProtectionStart();
