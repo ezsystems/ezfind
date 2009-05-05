@@ -238,14 +238,14 @@ class eZSolr
         return null;
     }
 
-    /*!
-     \brief Adds a content object to the Solr search server.
-
-     Adds object to eZFind search engine.
-
-     \param eZContentObject object to add to search engine.
-     \param boolean commit flag. Set if commit should be run after adding object.
-            If commit flag is set, run optimize() as well every 1000nd time this function is run.
+    /**
+     * Adds a content object to the Solr search server.
+     *
+     * @param eZContentObject $contentObject object to add to search engine.
+     * @param boolean $commit commit flag. Set if commit should be run after
+     *        adding object. If commit flag is set, run optimize() as well every
+     *        1000nd time this function is run.
+     * @param bool
     */
     function addObject( $contentObject, $commit = true )
     {
@@ -257,7 +257,7 @@ class eZSolr
         $excludeClasses = $this->FindINI->variable( 'IndexExclude', 'ClassIdentifierList' );
         if ( $excludeClasses && in_array( $contentObject->attribute( 'class_identifier' ), $excludeClasses ) )
         {
-            return;
+            return true;
         }
         // Get global object values
         $mainNode = $contentObject->attribute( 'main_node' );
@@ -432,7 +432,7 @@ class eZSolr
         {
             $optimize = true;
         }
-        $this->Solr->addDocs( $docList, $commit, $optimize );
+        return $this->Solr->addDocs( $docList, $commit, $optimize );
 
     }
 
@@ -470,6 +470,9 @@ class eZSolr
 
     /**
      * Removes an object from the Solr search server
+     * @param eZContentObject $contentObject the content object to remove
+     * @param bool $commit wether or not to commit after removing the object
+     * @return bool true if removal was successful
      */
     function removeObject( $contentObject, $commit = true )
     {
@@ -478,7 +481,7 @@ class eZSolr
         {
             $optimize = true;
         }
-        $this->Solr->deleteDocs( array(),
+        return $this->Solr->deleteDocs( array(),
                                  self::getMetaFieldName( 'id' ) . ':' . $contentObject->attribute( 'id' ) . ' AND '.
                                  self::getMetaFieldName( 'installation_id' ) . ':' . self::installationID(),
                                  $commit, $optimize );
@@ -857,12 +860,13 @@ class eZSolr
         return md5( self::installationID() . '-' . $contentObject->attribute( 'id' ) . '-' . $languageCode );
     }
 
-    /*!
-     Clean up search index for current installation.
-    */
+    /**
+     * Clean up search index for current installation.
+     * @return bool true if cleanup was successful
+    **/
     function cleanup()
     {
-        $this->Solr->deleteDocs( array(), self::getMetaFieldName( 'installation_id' ) . ':' . self::installationID(), true );
+        return $this->Solr->deleteDocs( array(), self::getMetaFieldName( 'installation_id' ) . ':' . self::installationID(), true );
     }
 
     /**

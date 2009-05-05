@@ -261,19 +261,18 @@ class eZSolrBase
                 if ( ( $attribute->name === 'name' ) and ( $attribute->value === 'status' ) )
                 {
                     //Then we have found the correct node
-                    return ($intNode->nodeValue === "0");
+                    return ( $intNode->nodeValue === "0"  );
                 }
             }
         }
         return false;
     }
 
-    /*!
-      Adds an array of docs (of type eZSolrDoc) to the Solr index
-      for maximum performance.
-
-      \param array associative array of documents to add.
-      \param boolean $commit means a commit is performed afterwards
+    /**
+     * Adds an array of docs (of type eZSolrDoc) to the Solr index for maximum
+     * performance.
+     * @param array $docs associative array of documents to add
+     * @param boolean $commit wether or not to perform a solr commit at the end
      */
     function addDocs ( $docs = array(), $commit = true, $optimize = false  )
     {
@@ -310,14 +309,15 @@ class eZSolrBase
 
     }
 
-    /*!
-      Adds an array of docID's from the Solr index
-
-      \param array List of document IDs to delete. If set to <empty>,
-                   $query will be used to delete documents instead.
-      \param string Solr Query. This will be ignored if \a$docIDs is set.
-      \param boolean $optimize means an optimize is performed afterwards ( optional, default value: false )
-     */
+    /**
+     * Removes an array of docID's from the Solr index
+     *
+     * @param array $docsID List of document IDs to delete. If set to <empty>,
+     *              $query will be used to delete documents instead.
+     * @param string $query Solr Query. This will be ignored if $docIDs is set.
+     * @param bool $optimize set to true to perform a solr optimize after delete
+     * @return bool
+     **/
     function deleteDocs ( $docIDs = array(), $query = false, $commit = true,  $optimize = false )
     {
         $postString = '<delete>';
@@ -333,7 +333,7 @@ class eZSolrBase
             $postString .= '<query>' . $query . '</query>';
         }
         $postString .= '</delete>';
-        $this->postQuery ( '/update', $postString, 'text/xml' );
+        $updateXML = $this->postQuery ( '/update', $postString, 'text/xml' );
         if ( $optimize )
         {
             $this->optimize( $commit );
@@ -342,7 +342,8 @@ class eZSolrBase
         {
             $this->commit();
         }
-        return true;
+
+        return self::validateUpdateResult( $updateXML );
     }
 
     function rawSearch ( $params = array(), $wt = 'php' )
