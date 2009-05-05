@@ -503,7 +503,8 @@
          <str>elevator</str>
       </arr>
   </requestHandler>
-
+  <requestHandler name="ezfind" class="org.ezsystems.solr.handler.ezfind.eZFindRequestHandler" />
+  
   <!--
    Search components are registered to SolrCore and used by Search Handlers
    
