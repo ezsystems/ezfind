@@ -1,0 +1,26 @@
+CURRENT IMPLEMENTATION
+======================
+When an object with a related object is indexed, the related objects are fetched,
+and their metadata are concatenated to one big string. The indexed object is
+most likely (FIXME: check) the main language of the siteaccess the object is
+published from.
+
+ISSUES
+======
+
+Languages
+---------
+When indexing related objects, current settings won't let us determine what
+language has to be used to index related objects.
+
+3 sites languages, fre-FR, ger-DE, eng-GB.
+fre-FR siteaccess, lang priority: fre-FR, ger-DE, eng-GB.
+backoffice in english by default.
+
+An object A is created in fre-FR, related to B, in ger-DE and eng-GB.
+
+ * Issue 1: How can eZ find know that it has to index the related object data in
+ger-DE and not in eng-GB
+ * issue 2: Admitting that Issue 1 is fixed, what happens if B is edited, and
+fre-FR is added ? Do we have to reindex A, since the indexed content has
+changed (translation of related content added).
