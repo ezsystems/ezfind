@@ -369,6 +369,7 @@
      </lst>
      <arr name="last-components">
        <str>spellcheck</str>
+       <str>elevator</str>
      </arr>
   </requestHandler>
 
