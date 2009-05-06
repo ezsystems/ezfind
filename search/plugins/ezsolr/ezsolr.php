@@ -266,7 +266,7 @@ class eZSolr
         if ( !$mainNode )
         {
             eZDebug::writeError( 'Unable to fetch main node for object: ' . $contentObject->attribute( 'id' ), 'eZSolr::addObject()' );
-            return;
+            return false;
         }
         //included in $nodePathArray
         //$pathArray = $mainNode->attribute( 'path_array' );
@@ -779,9 +779,6 @@ class eZSolr
             'SearchExtras' => new ezfSearchResultInfo( $resultArray ) );
     }
 
-
-
-
     /**
      * Initialise / rebuild the Spell checker
      * not needed in current implementation with an index based spell checker
@@ -796,8 +793,6 @@ class eZSolr
         $return = $this->Solr->rawSearch( array( 'q' => 'solr', 'qt' => 'spellchecker', 'wt' => 'php', 'cmd' => 'rebuild') );
 
     }
-
-
 
     /**
      * Experimental: search independent spell check
@@ -816,8 +811,6 @@ class eZSolr
                              'accuracy' => $accuracy, 'onlyMorePopular' => $onlyMorePopularString ) );
 
     }
-
-
 
     /*!
      Get eZFind installation ID

@@ -78,7 +78,6 @@ class ezfSolrDocumentFieldBase
             {
                 $processedMetaDataArray[] = $this->preProcessValue( $value,
                                             self::getClassAttributeType( $contentClassAttribute ) );
-                
             }
             return array( $fieldName => $processedMetaDataArray);
         }
@@ -88,7 +87,6 @@ class ezfSolrDocumentFieldBase
                                             self::getClassAttributeType( $contentClassAttribute ) ) );
             //return array( $fieldName => $metaData );
         }
-        
     }
 
     /**
@@ -237,7 +235,15 @@ class ezfSolrDocumentFieldBase
         $customMapList = self::$FindINI->variable( 'SolrFieldMapSettings', 'CustomMap' );
         if ( array_key_exists( $datatypeString, $customMapList ) )
         {
-            return new $customMapList[$datatypeString]( $objectAttribute );
+            $fieldBaseClass = $customMapList[$datatypeString];
+            if ( class_exists( $fieldBaseClass ) )
+            {
+                return new $customMapList[$datatypeString]( $objectAttribute );
+            }
+            else
+            {
+                eZDebug::writeError( "Unknown document field base class '$fieldBaseClass' for datatype '$datatypeString', check your ezfind.ini configuration", __METHOD__ );
+            }
         }
 
         // Return standard handler.
