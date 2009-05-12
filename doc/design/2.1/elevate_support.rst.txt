@@ -259,6 +259,14 @@ above ).
 NB : the sql script creating the configuration storage table will have to be
 run, unless an automatic creation is chosen.
 
+Known issues
+============
+
+* If an object has been elevated for 'all' languages, and one adds a translation to it, the configuration must be synchonized.
+  Possible workarounds :  
+  - post publish workflow, doing the job.
+  - have a cronjob synchronize the configuration regularly
+
 
 References
 ==========

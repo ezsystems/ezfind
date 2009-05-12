@@ -625,7 +625,15 @@ class eZSolr
                 $resultTree->setAttribute( 'global_url_alias', $globalURL );
                 $resultTree->setAttribute( 'highlight', isset( $highLights[$doc[self::getMetaFieldName( 'guid' )]] ) ?
                                            $highLights[$doc[self::getMetaFieldName( 'guid' )]] : null );
-                $resultTree->setAttribute( 'score_percent', (int) ( ( $doc['score'] / $maxScore ) * 100 ) );
+                /**
+                 * $maxScore may be equal to 0 when the QueryElevationComponent is used.
+                 * It returns as first results the elevated documents, with a score equal to 0. In case no
+                 * other document than the elevated ones are returned, maxScore is then 0 and the
+                 * division below raises a warning. If maxScore is equal to zero, we can safely assume
+                 * that only elevated documents were returned. The latter have an articifial relevancy of 100%,
+                 * which must be reflected in the 'score_percent' attribute of the result node.
+                 */
+                $maxScore != 0 ? $resultTree->setAttribute( 'score_percent', (int) ( ( $doc['score'] / $maxScore ) * 100 ) ) : $resultTree->setAttribute( 'score_percent', 100 );
                 $resultTree->setAttribute( 'language_code', $doc[self::getMetaFieldName( 'language_code' )] );
                 $objectRes[] = $resultTree;
             }

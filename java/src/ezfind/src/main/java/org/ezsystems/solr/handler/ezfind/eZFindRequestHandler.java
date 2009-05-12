@@ -133,7 +133,7 @@ public class eZFindRequestHandler implements SolrRequestHandler, SolrCoreAware {
 		  String f = this.getElevateConfigurationFileName();
 	
 	      File fC = new File( this.core.getResourceLoader().getConfigDir(), f );
-	      File fD = new File( this.core.getDataDir(), f );
+	      //File fD = new File( this.core.getDataDir(), f );
 	
 	      // updating files below. 
 	      // TODO : Need for concurrency management / thread safety
@@ -155,7 +155,16 @@ public class eZFindRequestHandler implements SolrRequestHandler, SolrCoreAware {
             	  rsp.add( "error", "Error when updating " + fC.getAbsolutePath() + " : " + e.getMessage() );
               }
 	      }
-	      else if( fD.exists() )
+	      
+	      
+	      /** 
+	       * Although the QueryElevationComponent supports having elevate.xml both in the dataDir and in the conf dir,
+	       * this requestHandler will not support having elevate.xml in the dataDir. In fact, the replication feature, being on his way at the moment
+	       * is not able to replicate configuration files placed in the dataDir.
+	       */
+	      
+	      /*
+		  else if( fD.exists() )
 	      {
 	          // Update fD.
               try 
@@ -173,6 +182,7 @@ public class eZFindRequestHandler implements SolrRequestHandler, SolrCoreAware {
             	  rsp.add( "error", "Error when updating " + fD.getAbsolutePath() + " : " + e.getMessage() );
               }    	  
 	      }
+	      */
 	  }
   }  
   

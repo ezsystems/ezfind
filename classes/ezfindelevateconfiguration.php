@@ -51,8 +51,17 @@ class eZFindElevateConfiguration extends eZPersistentObject
      * Name of the file used by Solr to load the Elevate configuration
      *
      * @var string
+     * @deprecated ( no need to directly access the configuration file. Update performed through HTTP/ReST now )
      */
     const ELEVATE_CONF_FILENAME = 'elevate.xml';
+
+    /**
+     * Name of the POST parameter used in the communication with Solr, containing the
+     * new Elevate configuration.
+     *
+     * @var string
+     */
+    const CONF_PARAM_NAME = 'elevate-configuration';
 
     /**
      * Storing solr.ini
@@ -355,7 +364,7 @@ class eZFindElevateConfiguration extends eZPersistentObject
      * Synchronizes the elevate configuration stored in the DB
      * with the one actually used by Solr.
      *
-     * @return boolean true is the whole operation passed, false otherwise.
+     * @return boolean true if the whole operation passed, false otherwise.
      */
     public static function synchronizeWithSolr()
     {
@@ -387,7 +396,7 @@ class eZFindElevateConfiguration extends eZPersistentObject
      * Stores the result string in the local property $configurationXML
      *
      * @see $configurationXML
-     * @return boolean true if the generation run correclty, false otherwise.
+     * @return boolean true if the generation run correctly, false otherwise.
      */
     protected static function generateConfiguration()
     {
@@ -467,33 +476,37 @@ class eZFindElevateConfiguration extends eZPersistentObject
     }
 
     /**
-     * Pushes the configuration XML to Solr. Different push methods might be used
-     *   * phase 1 : direct update of the XML file, locally.
-     *   * phase 2 : push to Solr through a requestHandler
+     * Pushes the configuration XML to Solr through a custom requestHandler ( HTTP/ReST ).
+     * The requestHandler ( Solr extension ) will take care of reloading the configuration.
      *
      * @see $configurationXML
      * @return void
      */
     protected static function pushConfigurationToSolr()
     {
-        $filePath = rtrim( self::$solrINI->variable( 'SolrBase', 'DataDirFullPath' ), '/' ) . '/' . self::ELEVATE_CONF_FILENAME;
-        if ( ( $fh = fopen( $filePath, 'w' ) ) === false )
+        $params = array(
+            'qt' => 'ezfind',
+            self::CONF_PARAM_NAME => self::getConfiguration()
+        );
+
+        $eZSolrBase = new eZSolrBase();
+        $result = $eZSolrBase->rawSearch( $params );
+
+        if ( ! $result )
         {
-            $message = ezi18n( 'extension/ezfind/elevate', 'Unable to open \'%1\'. Write access is required on this file in order to flush Solr\'s elevate configuration.', '', array( $filePath ) );
+            $message = ezi18n( 'extension/ezfind/elevate', 'An unknown error occured in updating Solr\'s elevate configuration.' );
             eZDebug::writeError( $message, 'eZFindElevateConfiguration::pushConfigurationToSolr' );
             throw new Exception( $message );
         }
-
-        if ( fwrite( $fh, self::getConfiguration() ) === false )
+        elseif ( isset( $result['error'] ) )
         {
-            $message = ezi18n( 'extension/ezfind/elevate', 'Unable to write Solr\'s elevate configuration in \'%1\', although the file could be properly opened.', '', array( $filePath ) );
-            eZDebug::writeError( $message, 'eZFindElevateConfiguration::pushConfigurationToSolr' );
-            throw new Exception( $message );
+            eZDebug::writeError( $result['error'], 'eZFindElevateConfiguration::pushConfigurationToSolr' );
+            throw new Exception( $result['error'] );
         }
-
-        // Triggering a commit makes sure the elevate configuration is reloaded.
-        $solr = new eZSolr();
-        $solr->commit();
+        else
+        {
+            eZDebug::writeNotice( "Successful update of Solr's configuration.", 'eZFindElevateConfiguration::pushConfigurationToSolr' );
+        }
     }
 
     /**

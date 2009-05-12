@@ -1320,7 +1320,7 @@ class ezfeZPSolrQueryBuilder
                         //hacky, object state limitations reference the state group name in their
                         //limitation
                         //hence the following match on substring
-                        
+
                         if (strpos( $limitationType, 'StateGroup') !== false )
                         {
                             foreach ( $limitationValues as $limitationValue )
