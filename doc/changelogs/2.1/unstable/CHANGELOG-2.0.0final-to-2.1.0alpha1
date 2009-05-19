@@ -14,3 +14,4 @@ Changes from 2.0.0final to 2.1.0alpha1
 - Fixed bug #14357: ezFind 2.0.0pre svn publish_date ignored
 - Fixed bug #14551: fixed cronjob ezfindexcontent.php, and removed index optimization from this cronjob
 - Fixed bug #14726: Class filtering on a standard content search is broken when parameter is given as a class identifier array
+- Fixed bug #14539: Copyright violation - ezsolr

@@ -4,6 +4,11 @@
 // SOFTWARE NAME: eZ Find
 // SOFTWARE RELEASE: 1.0.x
 // COPYRIGHT NOTICE: Copyright (C) 2007 eZ Systems AS
+// EXTENDED COPYRIGHT NOTICE :
+//      Part of this class was inspired from the following contributors' work :
+//      * Kristof Coomans <kristof[dot]coomans[at]telenet[dot]be>
+//      * Paul Borgermans <pb[at]ez[dot]no> ( when not employed yet by eZ Systems )
+//      * SCK-CEN as a legal entity <http://www.sckcen.be/>
 // SOFTWARE LICENSE: GNU General Public License v2.0
 // NOTICE: >
 //   This program is free software; you can redistribute it and/or
