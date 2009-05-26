@@ -1,0 +1,20 @@
+Upgrade instructions
+====================
+
+1) Adding a table to the database
+---------------------------------
+The new Elevation feature ( sponsored results ) requires a new table in the database.
+Add it in the database used by your eZ Publish instance. 
+You can do so as follows ( from eZ Publish's root directory ), in the case you are using MySQL:
+   
+   $> mysql -u <user> -p <database_name> < extension/ezfind/sql/ezfind_elevate_configuration.mysql.sql
+ 
+The procedure is very similar in case you are using another RDMS. Please refer to the 
+documentation reference for your DBMS if you are experiencing issues. 
+
+
+2) Re-indexing is needed as schema.xml has changed
+--------------------------------------------------
+New fields were declared for a better multilanguage
+behaviour. Because of the schema change, 
+re-indexing your site is required.
