@@ -40,9 +40,12 @@ class ezfeZPSolrQueryBuilder
      * Constructor
      *
      * Sets variables for creating a new instance of ezfeZPSolrQueryBuilder
+     * @param Object $searchPluginInstance Search engine instance. Allows the query builder to
+     *        communicate with the caller ( eZSolr instance ).
      */
-    function ezfeZPSolrQueryBuilder()
+    function ezfeZPSolrQueryBuilder( $searchPluginInstance )
     {
+        $this->searchPluginInstance = $searchPluginInstance;
     }
 
     /**
@@ -140,6 +143,7 @@ class ezfeZPSolrQueryBuilder
         // Add subtree query filter
         if ( count( $subtrees ) > 0 )
         {
+            $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = $subtrees;
             $subtreeQueryParts = array();
             foreach ( $subtrees as $subtreeNodeID )
             {
@@ -339,7 +343,7 @@ class ezfeZPSolrQueryBuilder
                 eZSolr::getMetaFieldName( 'main_url_alias' ) . ' ' . eZSolr::getMetaFieldName( 'installation_url' ) . ' ' .
                 eZSolr::getMetaFieldName( 'id' ) . ' ' . eZSolr::getMetaFieldName( 'main_node_id' ) . ' ' .
                 eZSolr::getMetaFieldName( 'language_code' ) . ' ' . eZSolr::getMetaFieldName( 'name' ) .
-                ' score ' . eZSolr::getMetaFieldName( 'published' ),
+                ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ) ,
                 'fq' => $filterQuery,
                 'hl' => 'true',
                 'hl.fl' => $highLightFields,
@@ -645,7 +649,7 @@ class ezfeZPSolrQueryBuilder
                 eZSolr::getMetaFieldName( 'main_url_alias' ) . ' ' . eZSolr::getMetaFieldName( 'installation_url' ) . ' ' .
                 eZSolr::getMetaFieldName( 'id' ) . ' ' . eZSolr::getMetaFieldName( 'main_node_id' ) . ' ' .
                 eZSolr::getMetaFieldName( 'language_code' ) . ' ' . eZSolr::getMetaFieldName( 'name' ) .
-                ' score ' . eZSolr::getMetaFieldName( 'published' ),
+                ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ),
                 'fq' => $filterQuery,
                 'wt' => 'php' ),
             $facetQueryParamList );
@@ -798,6 +802,16 @@ class ezfeZPSolrQueryBuilder
             }
             else
             {
+                // Exception to the generic processing : when a subtree filter is applied, the search plugin needs to be notified
+                // to be able to pick the right URL for objects, the main URL of which is located outside the subtree filter scope.
+                if ( $baseName ==  'path' )
+                {
+                    if ( isset( $this->searchPluginInstance->postSearchProcessingData['subtree_array'] ) )
+                        $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = array_merge( $this->searchPluginInstance->postSearchProcessingData['subtree_array'], array( $value ) );
+                    else
+                        $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = array( $value );
+                }
+
                 // Get internal field name. Returns a class ID filter if applicable. Add it as an implicit filter if needed.
                 $baseNameInfo = eZSolr::getFieldName( $baseName, true );
                 if ( is_array( $baseNameInfo ) and isset( $baseNameInfo['contentClassId'] ) and !$classFilterHandled )
@@ -1493,6 +1507,17 @@ class ezfeZPSolrQueryBuilder
      * @see ezfeZPSolrQueryBuilder::getBooleanOperatorFromFilter
      */
     public static $allowedBooleanOperators;
+
+    /**
+     * @since eZ Find 2.1
+     *
+     * Stores the search engine instance which called the query builder.
+     * Used to pass back some data to the search engine.
+     *
+     * @var Object
+     * @see ezfeZPSolrQueryBuilder::ezfeZPSolrQueryBuilder
+     */
+    protected $searchPluginInstance;
 
     /**
      * Storing the default boolean operator used in building the 'fq' parameter

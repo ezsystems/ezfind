@@ -244,6 +244,37 @@ class eZSolr
     }
 
     /**
+     * @since eZ Find 2.1
+     *
+     * Returns the relative URL Alias for a given search result,
+     * depending on whether a subtree filter was applied or not.
+     *
+     * @param array $doc The search result, directly received from Solr.
+     * @return string The URL Alias corresponding the the search result
+     */
+    protected function getUrlAlias( $doc )
+    {
+        if ( isset( $this->postSearchProcessingData['subtree_array'] ) and !empty( $this->postSearchProcessingData['subtree_array'] ) )
+        {
+            foreach ( $this->postSearchProcessingData['subtree_array'] as $subtree )
+            {
+                foreach ( $doc[self::getMetaFieldName( 'path_string' )] as $pathString )
+                {
+                    if ( substr_count( $pathString, '/' . $subtree . '/' ) > 0 )
+                    {
+                        $nodeArray = explode( '/', rtrim( $pathString, '/' ));
+                        $nodeID = array_pop( $nodeArray );
+
+                        if ( ( $node = eZContentObjectTreeNode::fetch( $nodeID ) ) !== null )
+                            return $node->attribute( 'url_alias' );
+                    }
+                }
+            }
+        }
+        return $doc[self::getMetaFieldName( 'main_url_alias' )];
+    }
+
+    /**
      * Adds a content object to the Solr search server.
      *
      * @param eZContentObject $contentObject object to add to search engine.
@@ -522,7 +553,7 @@ class eZSolr
         {
             eZDebug::createAccumulator( 'Query build', 'eZ Find' );
             eZDebug::accumulatorStart( 'Query build' );
-            $queryBuilder = new ezfeZPSolrQueryBuilder();
+            $queryBuilder = new ezfeZPSolrQueryBuilder( $this );
             $queryParams = $queryBuilder->buildSearch( $searchText, $params, $searchTypes );
             eZDebug::accumulatorStop( 'Query build' );
 
@@ -611,9 +642,8 @@ class eZSolr
                         continue;
                     }
 
-
-                    $globalURL = $doc[self::getMetaFieldName( 'main_url_alias' )] .
-                        '/(language)/' . $doc[self::getMetaFieldName( 'language_code' )];
+                    $urlAlias = $this->getUrlAlias( $doc );
+                    $globalURL = $urlAlias . '/(language)/' . $doc[self::getMetaFieldName( 'language_code' )];
                     eZURI::transformURI( $globalURL );
                 }
                 else
@@ -684,7 +714,7 @@ class eZSolr
         {
             eZDebug::createAccumulator( 'Query build', 'eZ Find' );
             eZDebug::accumulatorStart( 'Query build' );
-            $queryBuilder = new ezfeZPSolrQueryBuilder();
+            $queryBuilder = new ezfeZPSolrQueryBuilder( $this );
             $queryParams = $queryBuilder->buildMoreLikeThis( $queryType, $queryValue, $params );
             eZDebug::accumulatorStop( 'Query build' );
 
@@ -934,13 +964,12 @@ class eZSolr
         return ezi18n( 'ezfind', 'eZ Find 2.0 search plugin &copy; 2009 eZ Systems AS, powered by Apache Solr 1.4' );
     }
 
-    /*
+    /**
      * update search index upon object state changes:
      * simply re-index for now
      * @todo: defer to cron if there are children involved and re-index these too
      * @todo when Solr supports it: update fields only
      */
-
     public static function updateObjectState( $objectID, $objectStateList )
     {
         $contentObject = eZContentObject::fetch( $objectID );
@@ -955,6 +984,27 @@ class eZSolr
     var $FindINI;
     var $SiteINI;
     var $SolrDocumentFieldBase;
+
+    /**
+     * @since eZ Find 2.1
+     *
+     * Used to store useful data/metadata for post search processing.
+     * Will mostly be updated by the query builder. Keys should be named after the fetch function parameters,
+     * when applicable.
+     *
+     * Example : Knowing which subtress were used as filters allows
+     *           for picking the right URL for a potentially multi-located
+     *           search result.
+     *
+     * Example :
+     * <code>
+     *     array( 'subtree_array' => array( 2, 43 ) );
+     * </code>
+     *
+     * @see ezfeZPSolrQueryBuilder::searchPluginInstance
+     * @var array
+     */
+    public $postSearchProcessingData = array();
 
     static $InstallationID;
     static $SolrDocumentFieldName;

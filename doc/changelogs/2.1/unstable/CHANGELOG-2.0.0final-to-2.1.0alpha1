@@ -15,3 +15,4 @@ Changes from 2.0.0final to 2.1.0alpha1
 - Fixed bug #14551: fixed cronjob ezfindexcontent.php, and removed index optimization from this cronjob
 - Fixed bug #14726: Class filtering on a standard content search is broken when parameter is given as a class identifier array
 - Fixed bug #14539: Copyright violation - ezsolr
+- Fixed bug #14960: Main URL alias always presented in search results, even when a subtree filter is applied
