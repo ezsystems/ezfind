@@ -397,7 +397,6 @@ class ezfeZPSolrQueryBuilder
         $ini = eZINI::instance();
         $languages = $ini->variable( 'RegionalSettings', 'SiteLanguageList' );
         $searchMainLanguageOnly = self::$FindINI->variable( 'LanguageSearch', 'SearchMainLanguageOnly' ) == 'enabled';
-
         $languageCodeMetaName = eZSolr::getMetaFieldName( 'language_code' );
         $availableLanguageCodesMetaName = eZSolr::getMetaFieldName( 'available_language_codes' );
 
@@ -713,7 +712,7 @@ class ezfeZPSolrQueryBuilder
                         {
                             eZDebug::writeNotice( 'Sort field does not exist in local installation, but may still be valid: ' .
                                                   $facetDefinition['field'],
-                                                  'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
+                                                  __METHOD__ );
                             continue;
                         }
                     } break;
@@ -730,9 +729,9 @@ class ezfeZPSolrQueryBuilder
 
                     default:
                     {
-                        eZDebug::writeDebug( 'Unrecognized sort order. Settign for order for default: "desc"',
-                                             'ezfeZPSolrQueryBuilder::buildSortParameter()' );
-                        $order = $order;
+                        eZDebug::writeDebug( 'Unrecognized sort order. Setting for order for default: "desc"',
+                                             __METHOD__ );
+                        $order = 'desc';
                     } break;
                 }
 
@@ -1089,9 +1088,10 @@ class ezfeZPSolrQueryBuilder
      * Check if search string requires certain field types to be excluded from the search
      *
      * @param string Search string
-     * if $searchText is null, exclude all non text fields
+     *        If null, exclude all non text fields
      * @todo make sure this function is in sync with schema.xml
-     * @todo decide wether or not to drop this, pure numeric and date values are most likely to go into filters, not the main query
+     * @todo decide wether or not to drop this, pure numeric and date values are
+     *       most likely to go into filters, not the main query
      *
      * @return array List of field types to exclude from the search
      */
@@ -1403,17 +1403,24 @@ class ezfeZPSolrQueryBuilder
     }
 
     /**
-     * Get an array of class attribute identifiers based on a list of class ids, prepended with attr_
+     * Get an array of class attribute identifiers based on either a class attribute
+     * list, or a content classes list
      *
-     * @param array $classIDArray ( if set to false, fetch for all existing classes )
-     * @param array $classAttributeID ( if set to false, fetch for all )
-     * @param array $fieldTypeExcludeList filter list. List of field types to exclude. ( set to empty array by default ).
+     * @param array $classIDArray
+     *        Classes to search in. Either an array of class ID, class identifiers,
+     *        a class ID or a class identifier.
+     *        Using numerical attribute/class identifiers for $classIDArray is more efficient.
+     * @param array $classAttributeID
+     *        Class attributes to search in. Either an array of class attribute id,
+     *        or a single class attribute. Literal identifiers are not allowed.
+     * @param array $fieldTypeExcludeList
+     *        filter list. List of field types to exclude. ( set to empty array by default ).
      *
-     * @return array List of field names.
+     * @return array List of solr field names.
      */
     protected function getClassAttributes( $classIDArray = false,
-                                           $classAttributeIDArray = false,
-                                           $fieldTypeExcludeList = null )
+        $classAttributeIDArray = false,
+        $fieldTypeExcludeList = null )
     {
         eZDebug::createAccumulator( 'Class attribute list', 'eZ Find' );
         eZDebug::accumulatorStart( 'Class attribute list' );
@@ -1421,10 +1428,12 @@ class ezfeZPSolrQueryBuilder
 
         $classAttributeArray = array();
 
+        // classAttributeIDArray = simple integer (content class attribute ID)
         if ( is_numeric( $classAttributeIDArray ) and $classAttributeIDArray > 0 )
         {
             $classAttributeArray[] = eZContentClassAttribute::fetch( $classAttributeIDArray );
         }
+        // classAttributeIDArray = array of integers (content class attribute IDs)
         else if ( is_array( $classAttributeIDArray ) )
         {
             foreach( $classAttributeIDArray as $classAttributeID )
@@ -1433,19 +1442,9 @@ class ezfeZPSolrQueryBuilder
             }
         }
 
-        if ( !empty( $classAttributeArray ) )
-        {
-            foreach( $classAttributeArray as $classAttribute )
-            {
-                if ( empty( $fieldTypeExcludeList ) ||
-                     !in_array( ezfSolrDocumentFieldBase::getClassAttributeType( $classAttribute ),
-                                $fieldTypeExcludeList ) )
-                {
-                    $fieldArray[] = ezfSolrDocumentFieldBase::getFieldName( $classAttribute );
-                }
-            }
-        }
-        else
+        // no class attribute list given, we need a class list
+        // this block will create the class attribute array based on $classIDArray
+        if ( empty( $classAttributeArray ) )
         {
             // Fetch class list.
             $condArray = array( "is_searchable" => 1,
@@ -1479,18 +1478,26 @@ class ezfeZPSolrQueryBuilder
             if ( count( $classIDArray ) > 0 )
             {
                 $condArray['contentclass_id'] = array( $classIDArray );
-           	}
+            }
 
-            foreach( eZContentClassAttribute::fetchFilteredList( $condArray ) as $classAttribute )
+            $classAttributeArray = eZContentClassAttribute::fetchFilteredList( $condArray );
+        }
+
+        // $classAttributeArray now contains a list of eZContentClassAttribute
+        // we can use to construct the list of fields solr should search in
+        foreach( $classAttributeArray as $classAttribute )
+        {
+            if ( empty( $fieldTypeExcludeList ) ||
+                !in_array( ezfSolrDocumentFieldBase::getClassAttributeType( $classAttribute ),
+                $fieldTypeExcludeList ) )
             {
-                if ( empty( $fieldTypeExcludeList ) ||
-                     !in_array( ezfSolrDocumentFieldBase::getClassAttributeType( $classAttribute ),
-                                $fieldTypeExcludeList ) )
-                {
-                    $fieldArray[] = ezfSolrDocumentFieldBase::getFieldName( $classAttribute );
-                }
+                $fieldArray[] = ezfSolrDocumentFieldBase::getFieldName( $classAttribute );
             }
         }
+
+        // the array is unified + sorted in order to make it consistent
+        $fieldArray = array_unique( $fieldArray );
+        sort( $fieldArray );
 
         eZDebug::accumulatorStop( 'Class attribute list' );
         return $fieldArray;
