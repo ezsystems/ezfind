@@ -30,7 +30,7 @@ Solr's configuration is centralized in the two main files :
 
 containing, among other, the <fieldType> definitions, with, for each of them,
 the list of <analyzer>s and <filter>s. These 2 elements may contain semantic
-processing, which are currently not picked on a per-language basis, by design.
+processing, which are currently not applied per-language, by design.
 Having the possibility to have per-language processing would let us : 
 
 * increase the built-in Spellcheck's relevancy
