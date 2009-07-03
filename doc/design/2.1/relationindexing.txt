@@ -5,6 +5,29 @@ and their metadata are concatenated to one big string. The indexed object is
 most likely (FIXME: check) the main language of the siteaccess the object is
 published from.
 
+USE CASES
+=========
+
+Fulltext search
+---------------
+When searching for "foo", eZ find should return objects who have a relation to
+another object which has the text "foo".
+
+Specific attribute search
+-------------------------
+It is currently possible to filter results on a <content_class>/<attribute> base.
+It should be possible to go one level deeper in attribute filtering :
+<content_class>/<attribute>/<sub_attribute>.
+
+This lack is limiting in some cases where the search-user wants to span filtering
+out of the object's scope. It is particularly relevant in eZ Find since eZ Publish
+deployers make an extensive usage of object relations.
+
+Take the following structure :
+Article/Image ---- ( is related to ) ---> Image --- ( has attribute ) ---> Caption
+Problem : I can not retrieve articles based on the metadata ( caption ) embedded
+in their media assets.
+
 ISSUES
 ======
 
@@ -20,7 +43,13 @@ backoffice in english by default.
 An object A is created in fre-FR, related to B, in ger-DE and eng-GB.
 
  * Issue 1: How can eZ find know that it has to index the related object data in
-ger-DE and not in eng-GB
+ger-DE and not in eng-GB ? This information belongs to each siteaccess...
  * issue 2: Admitting that Issue 1 is fixed, what happens if B is edited, and
 fre-FR is added ? Do we have to reindex A, since the indexed content has
 changed (translation of related content added).
+
+Permissions
+-----------
+Each related object may have its own set of permissions. When looking into
+relations, should we also index related objects permission informations ? If yes,
+how do we end up testing these permissions on related objects ?
