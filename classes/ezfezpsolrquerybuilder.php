@@ -67,8 +67,6 @@ class ezfeZPSolrQueryBuilder
             $multiFieldQuery .= $field . ':(' . $searchText . ') ';
         }
         return $multiFieldQuery;
-
-
     }
 
     /**
@@ -786,7 +784,6 @@ class ezfeZPSolrQueryBuilder
         $booleanOperator = $this->getBooleanOperatorFromFilter( $parameterList['Filter'] );
 
         $filterQueryList = array();
-        $classFilterHandled = false;
         foreach( $parameterList['Filter'] as $baseName => $value )
         {
             if ( !is_array( $value ) and strpos( $value, ':' ) !== false && is_numeric( $baseName ) )
@@ -801,26 +798,29 @@ class ezfeZPSolrQueryBuilder
             }
             else
             {
-                // Exception to the generic processing : when a subtree filter is applied, the search plugin needs to be notified
-                // to be able to pick the right URL for objects, the main URL of which is located outside the subtree filter scope.
-                if ( $baseName ==  'path' )
-                {
-                    if ( isset( $this->searchPluginInstance->postSearchProcessingData['subtree_array'] ) )
-                        $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = array_merge( $this->searchPluginInstance->postSearchProcessingData['subtree_array'], array( $value ) );
-                    else
-                        $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = array( $value );
-                }
-
-                // Get internal field name. Returns a class ID filter if applicable. Add it as an implicit filter if needed.
-                $baseNameInfo = eZSolr::getFieldName( $baseName, true );
-                if ( is_array( $baseNameInfo ) and isset( $baseNameInfo['contentClassId'] ) and !$classFilterHandled )
-                {
-                    $filterQueryList[] = eZSolr::getMetaFieldName( 'contentclass_id' ) . ':' . $baseNameInfo['contentClassId'];
-                    $classFilterHandled = true;
-                }
-                $baseName = is_array( $baseNameInfo ) ? $baseNameInfo['fieldName'] : $baseNameInfo;
                 if ( $value !== null )
-                    $filterQueryList[] = $baseName . ':' . $value;
+                {
+                    // Exception to the generic processing : when a subtree filter is applied, the search plugin needs to be notified
+                    // to be able to pick the right URL for objects, the main URL of which is located outside the subtree filter scope.
+                    if ( $baseName ==  'path' )
+                    {
+                        if ( isset( $this->searchPluginInstance->postSearchProcessingData['subtree_array'] ) )
+                            $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = array_merge( $this->searchPluginInstance->postSearchProcessingData['subtree_array'], array( $value ) );
+                        else
+                            $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = array( $value );
+                    }
+
+                    // Get internal field name. Returns a class ID filter if applicable. Add it as an implicit filter if needed.
+                    $baseNameInfo = eZSolr::getFieldName( $baseName, true );
+                    if ( is_array( $baseNameInfo ) and isset( $baseNameInfo['contentClassId'] ) )
+                    {
+                        $filterQueryList[] = '( ' . eZSolr::getMetaFieldName( 'contentclass_id' ) . ':' . $baseNameInfo['contentClassId'] . ' AND ' . $baseNameInfo['fieldName'] . ':' . $value . ' )' ;
+                    }
+                    else
+                    {
+                        $filterQueryList[] = $baseNameInfo . ':' . $value;
+                    }
+                }
             }
         }
 
@@ -853,6 +853,7 @@ class ezfeZPSolrQueryBuilder
      * @param string String
      *
      * @return string String with quotes added if needed.
+     * @deprecated
      */
     static function quoteIfNeeded( $value )
     {
@@ -1102,8 +1103,6 @@ class ezfeZPSolrQueryBuilder
             return array('date', 'boolean', 'int', 'long', 'float', 'double', 'sint', 'slong', 'sfloat', 'sdouble');
         }
 
-
-
         $excludeFieldList = array();
         // Check if search text is a date.
         if ( strtotime( $searchText ) === false )
@@ -1154,9 +1153,7 @@ class ezfeZPSolrQueryBuilder
             $boostQuery .= ' ' . eZSolr::getMetaFieldName( 'language_code' ) . ':' . $languageCode . '^' . $languageBoostList[$idx];
         }
 
-        // User defined boosts through ini settings
-
-
+        // @TODO : User defined boosts through ini settings
         return $boostQuery;
     }
 
@@ -1485,11 +1482,11 @@ class ezfeZPSolrQueryBuilder
 
         // $classAttributeArray now contains a list of eZContentClassAttribute
         // we can use to construct the list of fields solr should search in
+        // @TODO : retrieve sub attributes here. Mind the types !
         foreach( $classAttributeArray as $classAttribute )
         {
-            if ( empty( $fieldTypeExcludeList ) ||
-                !in_array( ezfSolrDocumentFieldBase::getClassAttributeType( $classAttribute ),
-                $fieldTypeExcludeList ) )
+            if ( empty( $fieldTypeExcludeList ) or
+                !in_array( ezfSolrDocumentFieldBase::getClassAttributeType( $classAttribute ), $fieldTypeExcludeList ) )
             {
                 $fieldArray[] = ezfSolrDocumentFieldBase::getFieldName( $classAttribute );
             }
