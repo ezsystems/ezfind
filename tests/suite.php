@@ -12,9 +12,12 @@ class eZFindTestSuite extends ezpDatabaseTestSuite
     public function __construct()
     {
         parent::__construct();
+        ini_set( 'xdebug.show_exception_trace', 'Off' );
         $this->setName( "eZ Find Test Suite" );
 
         $this->addTestSuite( 'ezfeZPSolrQueryBuilderTest' );
+        $this->addTestSuite( 'ezfSolrDocumentFieldBaseTest' );
+        $this->addTestSuite( 'ezfSolrDocumentFieldNameTest' );
     }
 
     public static function suite()

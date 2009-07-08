@@ -3,8 +3,8 @@
 //
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 // SOFTWARE NAME: eZ Find
-// SOFTWARE RELEASE: 1.0.x
-// COPYRIGHT NOTICE: Copyright (C) 2007 eZ Systems AS
+// SOFTWARE RELEASE: 2.1.x
+// COPYRIGHT NOTICE: Copyright (C) 2009 eZ Systems AS
 // SOFTWARE LICENSE: GNU General Public License v2.0
 // NOTICE: >
 //   This program is free software; you can redistribute it and/or

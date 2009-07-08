@@ -38,12 +38,8 @@ class ezfSolrDocumentFieldName
     /**
      *Constructor
      */
-    function ezfSolrDocumentFieldName()
+    function __construct()
     {
-        if ( self::$LookupTable === null )
-        {
-            $this->loadLookupTable();
-        }
     }
 
     /**
@@ -57,22 +53,18 @@ class ezfSolrDocumentFieldName
      */
     public function lookupSchemaName( $baseName, $fieldType )
     {
-        $key = md5( $baseName . '_' . $fieldType );
-        if ( !empty( self::$LookupTable[$key] ) )
-        {
-            return self::$LookupTable[$key];
-        }
-
         $solrFieldName = $baseName . $this->getPostFix( $fieldType );
-        $this->saveEntry( $baseName, $fieldType, $solrFieldName );
         return $solrFieldName;
     }
 
     /**
+     * @deprecated
      * Get instance of PHPCreator to use for storing and loading
      * look up table.
      *
      * @return eZPHPCreator return instance of eZPHPCreator
+     * @todo Refactor with ezcPhpGenerator
+     *       http://ezcomponents.org/docs/api/trunk/classtrees_PhpGenerator.html
      */
     protected function getPHPCreatorInstance()
     {
@@ -87,6 +79,7 @@ class ezfSolrDocumentFieldName
     }
 
     /**
+     * @deprecated
      * Load name lookup table from PHP cache.
      *
      * Stores the looup table to member variable self::$LookupTable
@@ -107,6 +100,7 @@ class ezfSolrDocumentFieldName
     }
 
     /**
+     * @deprecated
      * Save new entry to lookup table
      *
      * @param string Base name
