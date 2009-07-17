@@ -21,7 +21,7 @@ class ezfSolrDocumentFieldNameTest extends ezpDatabaseTestCase
         $providerData = array();
         foreach ( $fieldMap as $fullyQualifiedTypeName => $shortName )
         {
-            $providerData[] = array( 'attr_' . 'title', $fullyQualifiedTypeName, 'attr_title_' . $shortName );
+            $providerData[] = array( ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'title', $fullyQualifiedTypeName, ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'title_' . $shortName );
         }
         return $providerData;
     }

@@ -122,7 +122,7 @@ class eZSolr
      * meta data name, or an eZ Publish content class attribute, specified by
      * <class identifier>/<attribute identifier>[/<option>]
      *
-     * @param string Base field name.
+     * @param string $baseName Base field name.
      * @param boolean $includingClassID conditions the structure of the answer. See return value explanation.
      *
      * @return mixed Internal base name. Returns null if no valid base name was provided.
@@ -142,7 +142,7 @@ class eZSolr
         else
         {
             // Get class and attribute identifiers + optional option.
-            $options = null;
+            $subattribute = null;
             $fieldDef = explode( '/', $baseName );
             // Check if content class attribute ID is provided.
             if ( is_numeric( $fieldDef[0] ) )
@@ -153,7 +153,7 @@ class eZSolr
                 }
                 else if ( count( $fieldDef ) == 2 )
                 {
-                    list( $contectClassAttributeID, $options ) = $fieldDef;
+                    list( $contectClassAttributeID, $subattribute ) = $fieldDef;
                 }
             }
             else
@@ -175,7 +175,7 @@ class eZSolr
                     case 3:
                     {
                         // Field def contains class indentifier, class attribute identifier and optional specification.
-                        list( $classIdentifier, $attributeIdentifier, $options ) = $fieldDef;
+                        list( $classIdentifier, $attributeIdentifier, $subattribute ) = $fieldDef;
                     } break;
                 }
                 $contectClassAttributeID = eZContentObjectTreeNode::classAttributeIDByIdentifier( $classIdentifier . '/' . $attributeIdentifier );
@@ -187,7 +187,7 @@ class eZSolr
                 return null;
             }
             $contectClassAttribute = eZContentClassAttribute::fetch( $contectClassAttributeID );
-            $fieldName = ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $options );
+            $fieldName = ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $subattribute );
 
             if ( $includingClassID )
             {

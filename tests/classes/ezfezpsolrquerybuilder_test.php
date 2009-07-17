@@ -153,9 +153,9 @@ class ezfeZPSolrQueryBuilderTest extends ezpDatabaseTestCase
             array( array( 'author' => 'asc' ),                'meta_owner_name_t asc' ),
 
             // a few attributes
-            array( array( 'article/title' => 'asc' ),         'attr_title_t asc' ),
-            array( array( 'folder/name' => 'asc' ),           'attr_name_t asc' ),
-            array( array( 'article/body' => 'asc' ),          'attr_body_t asc' ),
+            array( array( 'article/title' => 'asc' ),         ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'title_t asc' ),
+            array( array( 'folder/name' => 'asc' ),           ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'name_t asc' ),
+            array( array( 'article/body' => 'asc' ),          ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'body_t asc' ),
         );
     }
 
@@ -199,86 +199,86 @@ class ezfeZPSolrQueryBuilderTest extends ezpDatabaseTestCase
             // folder
             'folder' => array(
                 'text' => array(
-                    'attr_description_t',
-                    'attr_name_t',
-                    'attr_short_description_t',
-                    'attr_short_name_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'description_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'name_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'short_description_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'short_name_t',
                 ),
             ),
 
             // article
             'article' => array(
                 'text' => array(
-                    'attr_body_t',
-                    'attr_image_t',
-                    'attr_intro_t',
-                    'attr_short_title_t',
-                    'attr_title_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'body_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'image_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'intro_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'short_title_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'title_t',
                 ),
             ),
 
             // user group
             'user_group' => array(
                 'text' => array(
-                    'attr_description_t',
-                    'attr_name_t'
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'description_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'name_t'
                 )
             ),
 
             // user
             'user' => array(
                 'text' => array(
-                    'attr_first_name_t',
-                    'attr_last_name_t',
-                    'attr_signature_t',
-                    'attr_user_account_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'first_name_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'last_name_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'signature_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'user_account_t',
                 ),
             ),
 
             // image
             'image' => array(
                 'text' => array(
-                    'attr_caption_t',
-                    'attr_name_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'caption_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'name_t',
                 )
             ),
 
             // link
             'link' => array(
                 'text' => array(
-                    'attr_description_t',
-                    'attr_name_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'description_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'name_t',
                 ),
             ),
 
             // file
             'file' => array(
                 'text' => array(
-                    'attr_description_t',
-                    'attr_name_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'description_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'name_t',
                 ),
             ),
 
             // comment
             'comment' => array(
                 'text' => array(
-                    'attr_author_t',
-                    'attr_message_t',
-                    'attr_subject_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'author_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'message_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'subject_t',
                 ),
             ),
 
             // common_ini_settings
             'common_ini_settings' => array(
                 'text' => array(
-                    'attr_name_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'name_t',
                 )
             ),
 
             // template_look
             'template_look' => array(
                 'text' => array(
-                    'attr_id_t',
+                    ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'id_t',
                 ),
             ),
         );

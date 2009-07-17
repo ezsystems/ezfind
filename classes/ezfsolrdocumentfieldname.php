@@ -58,7 +58,7 @@ class ezfSolrDocumentFieldName
     }
 
     /**
-     * @deprecated
+     * @deprecated since 2.1
      * Get instance of PHPCreator to use for storing and loading
      * look up table.
      *
@@ -79,7 +79,7 @@ class ezfSolrDocumentFieldName
     }
 
     /**
-     * @deprecated
+     * @deprecated since 2.1
      * Load name lookup table from PHP cache.
      *
      * Stores the looup table to member variable self::$LookupTable
@@ -100,7 +100,7 @@ class ezfSolrDocumentFieldName
     }
 
     /**
-     * @deprecated
+     * @deprecated since 2.1
      * Save new entry to lookup table
      *
      * @param string Base name

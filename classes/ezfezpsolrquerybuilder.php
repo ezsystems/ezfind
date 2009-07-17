@@ -1485,11 +1485,7 @@ class ezfeZPSolrQueryBuilder
         // @TODO : retrieve sub attributes here. Mind the types !
         foreach( $classAttributeArray as $classAttribute )
         {
-            if ( empty( $fieldTypeExcludeList ) or
-                !in_array( ezfSolrDocumentFieldBase::getClassAttributeType( $classAttribute ), $fieldTypeExcludeList ) )
-            {
-                $fieldArray[] = ezfSolrDocumentFieldBase::getFieldName( $classAttribute );
-            }
+            $fieldArray = array_merge( ezfSolrDocumentFieldBase::getFieldNameList( $classAttribute, $fieldTypeExcludeList ), $fieldArray );
         }
 
         // the array is unified + sorted in order to make it consistent
