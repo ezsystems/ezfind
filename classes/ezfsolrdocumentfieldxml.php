@@ -36,11 +36,6 @@
 
 class ezfSolrDocumentFieldXML extends ezfSolrDocumentFieldBase
 {
-    public function isCollection()
-    {
-        return false;
-    }
-
     /**
      *
      * @param text $text
@@ -86,25 +81,9 @@ class ezfSolrDocumentFieldXML extends ezfSolrDocumentFieldBase
         return strip_tags( $text );
     }
 
-    /**
-     * Get collection data. Returns list of ezfSolrDocumentFieldBase documents.
-     *
-     * @return array List of ezfSolrDocumentFieldBase objects.
-     */
-    public function getCollectionData()
-    {
-
-    }
 
     /**
-     * Get data to index, and field name to use. Returns an associative array
-     * with field name and field value.
-     * Example:
-     * <code>
-     * array( 'field_name_i' => 123 );
-     * </code>
-     *
-     * @return array Associative array with fieldname and value.
+     * @see ezfSolrDocumentFieldBase::getData()
      */
     public function getData()
     {
@@ -131,18 +110,6 @@ class ezfSolrDocumentFieldXML extends ezfSolrDocumentFieldBase
         }
         $cleanedXML = $this->strip_html_tags( $xmlData );
         return array( $fieldName => $cleanedXML );
-    }
-
-    /**
-     * Get ezfSolrDocumentFieldBase instances for all attributes of specified eZContentObjectVersion
-     *
-     * @param eZContentObjectVersion Instance of eZContentObjectVersion to fetch attributes from.
-     *
-     * @return array List of ezfSolrDocumentFieldBase instances.
-     */
-    function getBaseList( eZContentObjectVersion $objectVersion )
-    {
-
     }
 }
 
