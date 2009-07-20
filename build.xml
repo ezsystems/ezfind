@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="ezfind" default="build" basedir="build">
+<project name="eZfind" default="build" basedir="build">
 
     <description>eZFind extension build file</description>
 
