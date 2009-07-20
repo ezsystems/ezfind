@@ -33,15 +33,33 @@
     </target>
 
     <target name="build" depends="init">
+        <antcall target="update-ezinfo-php"/>
+        <antcall target="update-license-headers"/>
+
+        <delete file="ezfind/build"/>
+    </target>
+
+    <target name="update-ezinfo-php">
         <echo message="Updating ezinfo.php"/>
 
         <replaceregexp byline="true">
             <regexp pattern='^(            \047Version\047 => ")(.*)(",)$'/>
-            <substitution expression='\1${ezfind.version.alias}.${ezfind.version.release}\3'/>
-            <fileset file="ezfind/ezinfo.php"/>
+            <substitution expression='\1${ezfind.version.alias}-${ezfind.version.release}\3'/>
+            <fileset dir="${basedir}" includes="**/*ezinfo.php"/>
         </replaceregexp>
+    </target>
 
-        <delete file="ezfind/build.xml"/>
+    <target name="update-license-headers">
+        <echo message="Updating license headers"/>
+
+        <!-- SOFTWARE RELEASE -->
+        <replaceregexp byline="true">
+            <regexp pattern="// SOFTWARE RELEASE: (.*)"/>
+            <substitution expression="// SOFTWARE RELEASE: ${ezfind.version.alias}-${ezfind.version.release}"/>
+            <fileset dir="${basedir}">
+                <include name="**/*.php"/>
+            </fileset>
+        </replaceregexp>
     </target>
 
     <target name="dist">
