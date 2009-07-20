@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+<project name="ezfind" default="build" basedir="build">
+
+    <description>eZFind extension build file</description>
+
+    <property file="../properties/ezfind.properties"/>
+
+    <target name="infos">
+        <echo message="EZFIND BUILD INFORMATIONS"/>
+        <echo message="-------------------------"/>
+        <echo message="ezfind.version.major   : ${ezfind.version.major}"/>
+        <echo message="ezfind.version.minor   : ${ezfind.version.minor}"/>
+        <echo message="ezfind.version.release : ${ezfind.version.release}"/>
+        <echo message="ezfind.version.alias   : ${ezfind.version.alias}"/>
+        <echo message="ezfind.svn.trunk.url   : ${ezfind.svn.trunk.url}"/>
+    </target>
+
+    <target name="warning" depends="infos">
+        <echo message="Please check informations defined above are correct"/>
+        <echo message="If not feel free to update the properties/ezfind.properties file"/>
+        <echo message="This script will wait for 5 seconds before it starts"/>
+
+        <sleep seconds="5"/>
+    </target>
+
+    <target name="init" depends="warning">
+        <exec executable="svn" failonerror="true">
+            <arg value="export"/>
+            <arg value="${ezfind.svn.trunk.url}"/>
+            <arg value="ezfind"/>
+        </exec>
+    </target>
+
+    <target name="build" depends="init">
+        <echo message="Updating ezinfo.php"/>
+
+        <replaceregexp byline="true">
+            <regexp pattern='^(            \047Version\047 => ")(.*)(",)$'/>
+            <substitution expression='\1${ezfind.version.alias}.${ezfind.version.release}\3'/>
+            <fileset file="ezfind/ezinfo.php"/>
+        </replaceregexp>
+
+        <delete file="ezfind/build.xml"/>
+    </target>
+
+    <target name="dist">
+        <tar destfile="ezfind-${ezfind.version.alias}.${ezfind.version.release}.tar.gz"
+             compression="gzip"
+             longfile="gnu"
+             basedir="${basedir}"/>
+    </target>
+
+    <target name="distclean">
+        <delete file="ezfind-${ezfind.version.alias}.${ezfind.version.release}.tar.gz"/>
+    </target>
+
+    <target name="cleanall" depends="distclean">
+        <delete dir="ezfind"/>
+    </target>
+
+</project>
