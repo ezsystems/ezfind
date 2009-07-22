@@ -33,9 +33,9 @@
     <!-- high level ( public ) targets -->
     <!-- ============================= -->
 
-    <!-- Shows the list of properties used for building this extension -->
-    <!-- Anytime the ezfind.properties file is update, this target must  -->
-    <!-- me update as well                                             -->
+    <!-- Shows the list of properties used for building this extension  -->
+    <!-- Anytime the ezfind.properties file is update, this target must -->
+    <!-- be updated as well                                             -->
     <target name="infos">
         <echo message="EZFIND BUILD INFORMATIONS"/>
         <echo message="-------------------------"/>
