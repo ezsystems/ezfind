@@ -84,7 +84,7 @@
         {def $mlt=fetch(ezfind,moreLikeThis,hash( 'query_type', 'nid',
                                                   'query', $node.node_id,
                                                   'limit', 5 ))}
-		{if $mlt.SearchCount > 0}
+		{if $mlt.SearchCount|gt(0)}
 		<h3>Related content</h3>
 		{foreach $mlt.SearchResult as $result
 			sequence array(bglight,bgdark) as $bgColor}

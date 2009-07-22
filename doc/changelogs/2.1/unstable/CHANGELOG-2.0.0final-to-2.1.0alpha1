@@ -17,3 +17,4 @@ Changes from 2.0.0final to 2.1.0alpha1
 - Fixed bug #14539: Copyright violation - ezsolr
 - Fixed bug #14960: Main URL alias always presented in search results, even when a subtree filter is applied
 - fixed wrong charset declaration in cronjob.ini.append.php
+- fixed bug #014958: Wrong operator usage in example_morelikethis_article.tpl
