@@ -6,7 +6,7 @@ Changes from 2.0.0final to 2.1.0alpha1
 - Implemented #014725: Add an optimize index cronjob
 - Implemented #014357: ezFind 2.0.0pre svn publish_date ignored
   Added the publish_date parameter for fetch(ezfind, search)
-- Implemented bug #014807: add support for object states
+- Implemented #014807: add support for object states
 
 
 *Bugs:
@@ -16,3 +16,4 @@ Changes from 2.0.0final to 2.1.0alpha1
 - Fixed bug #14726: Class filtering on a standard content search is broken when parameter is given as a class identifier array
 - Fixed bug #14539: Copyright violation - ezsolr
 - Fixed bug #14960: Main URL alias always presented in search results, even when a subtree filter is applied
+- fixed wrong charset declaration in cronjob.ini.append.php
