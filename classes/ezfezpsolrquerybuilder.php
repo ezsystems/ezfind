@@ -189,7 +189,7 @@ class ezfeZPSolrQueryBuilder
 
         if ( (!eZContentObjectTreeNode::showInvisibleNodes() || !$ignoreVisibility ) && (self::$FindINI->variable( 'SearchFilters', 'FilterHiddenFromDB' ) == 'enabled') )
         {
-            $db =& eZDB::instance();
+            $db = eZDB::instance();
             $invisibleNodeIDArray = $db->arrayQuery( 'SELECT node_id FROM ezcontentobject_tree WHERE ezcontentobject_tree.is_invisible = 1', array( 'column' => 0) );
             $hiddenNodesQueryText = 'meta_main_node_id_si:[* TO *] -meta_main_node_id_si:(';
             foreach ( $invisibleNodeIDArray as $element )
