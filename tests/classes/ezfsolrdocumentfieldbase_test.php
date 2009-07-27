@@ -8,6 +8,10 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
 
     public function setUp()
     {
+        // Enabled delayed indexing in order not to index support objects
+        // ( the ones used for testing ezfSolrDocumentFieldObjectRelation::getData() for instance )
+        $siteINI = eZINI::instance( 'site.ini' );
+        $siteINI->setVariable( 'SearchSettings', 'DelayedIndexing', 'enabled' );
         parent::setUp();
     }
 
@@ -73,41 +77,60 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
         );
     }
 
+
     /**
-     * Data provider testGetFieldName()
+     * test for getFieldName()
      */
-    public function providerTestGetFieldName()
+    public function testGetFieldName()
     {
+        $providerArray = array();
+
         $ezcca1 = new eZContentClassAttribute( array( 'identifier'        => 'title' ,
                                                       'data_type_string'  => 'ezstring' ) );
         $expected1 = ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'title_t';
+        $providerArray[] = array( $expected1, $ezcca1, null );
+
 
         // Testing the default subattribute
         $ezcca2 = new eZContentClassAttribute( array( 'identifier'        => 'dummy' ,
                                                       'data_type_string'  => 'dummy_example' ) );
         $expected2 = ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'dummy_t';
+        $providerArray[] = array( $expected2, $ezcca2, null );
+
 
         //Testing the class/attribute/subattribute syntax
         $ezcca3 = $ezcca2;
         $expected3 = ezfSolrDocumentFieldBase::SUBATTR_FIELD_PREFIX . 'dummy-subattribute2_t';
         $options3 = 'subattribute2';
+        $providerArray[] = array( $expected3, $ezcca3, $options3 );
 
-        return array(
-            array( $expected1, $ezcca1 ),
-            array( $expected2, $ezcca2 ),
-            array( $expected3, $ezcca3, $options3 )
-        );
-    }
 
-    /**
-     * @dataProvider providerTestGetFieldName()
-     */
-    public function testGetFieldName( $expected, $contentClassAttribute, $options = null )
-    {
-        self::assertEquals(
-            $expected,
-            ezfSolrDocumentFieldBase::getFieldName( $contentClassAttribute, $options )
-        );
+        //Testing the class/attribute/subattribute syntax for ezobjectrelation attributes
+        $time4 = time();
+        $image4 = new ezpObject( "image", 2 );
+        $image4->name = __METHOD__ . $time4;
+        $image4->caption = __METHOD__ . $time4;
+        $imageId4 = $image4->publish();
+        $ezcca4 = new eZContentClassAttribute( array( 'identifier'        => 'image' ,
+                                                      'data_type_string'  => 'ezobjectrelation',
+                                                      'data_int'          => $imageId4 ) );
+        $expected4 = ezfSolrDocumentFieldBase::SUBATTR_FIELD_PREFIX . 'image-name_t';
+        $options4 = 'name';
+        $providerArray[] = array( $expected4, $ezcca4, $options4 );
+
+
+        // perform actual testing
+        foreach ( $providerArray as $input )
+        {
+            $expected = $input[0];
+            $contentClassAttribute = $input[1];
+            $options = $input[2];
+
+            self::assertEquals(
+                $expected,
+                ezfSolrDocumentFieldBase::getFieldName( $contentClassAttribute, $options )
+            );
+        }
     }
 
     /**
@@ -212,15 +235,14 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
         );
     }
 
-
     /**
-     * provider for testGetData()
+     * test for getData()
      */
-    public function providerTestGetData()
+    public function testGetData()
     {
         $providerArray = array();
 
-        #start 1
+        #start 1 : the simplest attribute
         $content1 = "Hello world";
         $ezcca1 = new eZContentClassAttribute( array( 'identifier'        => 'title' ,
                                                       'data_type_string'  => 'ezstring' ) );
@@ -235,7 +257,7 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
         #end 1
 
 
-        #start 2
+        #start 2 : attribute with subattributes
         $ezcca2 = new eZContentClassAttribute( array( 'identifier'        => 'dummy' ,
                                                       'data_type_string'  => 'dummy_example' ) );
         $ezcoa2 = new eZContentObjectAttributeTester( array( "data_type_string" => 'dummy_example',
@@ -252,22 +274,69 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
         $providerArray[] = array( $expectedData2, $ezcoa2 );
         #end 2
 
-        return $providerArray;
+        #start 3 : object relations
+        $expectedData3 = array();
+        $tester3 = new ezfSolrDocumentFieldObjectRelationTester( new eZContentObjectAttribute( array() ) );
+        $time3 = time();
+        $image3 = new ezpObject( "image", 2 );
+        $image3->name = __METHOD__ . $time3;
+        $image3->caption = __METHOD__ . $time3;
+        $imageId3 = $image3->publish();
+        // $image3->object->clearCache();
+        $dataMapImage3 = $image3->dataMap;
+
+        // eZContentObjectAttribute objects, attributes of the related Image
+        $imageName3 = $dataMapImage3['name'];
+        $imageCaption3 = $dataMapImage3['caption'];
+
+        $article3 = new ezpObject( "article", 2 );
+        $articleId3 = $article3->publish();
+
+        $article3->object->addContentObjectRelation( $imageId3, $article3->current_version, 154, eZContentObject::RELATION_ATTRIBUTE );
+
+        $dataMapArticle3 = $article3->attribute( 'data_map' );
+        $ezcoa3 = $dataMapArticle3['image'];
+        $ezcoa3->setAttribute( 'data_int', $imageId3 );
+        $ezcoa3->store();
+
+        $ezcca3 = $ezcoa3->attribute( 'contentclass_attribute' );
+        $defaultFieldName3 = ezfSolrDocumentFieldBase::generateAttributeFieldName( $ezcca3,
+                                                                ezfSolrDocumentFieldObjectRelation::$subattributesDefinition[ezfSolrDocumentFieldObjectRelation::DEFAULT_SUBATTRIBUTE] );
+
+        $expectedData3[$defaultFieldName3] = $tester3->getPlainTextRepresentation( $ezcoa3 );
+        // required to allow another call to metaData()
+        // on $ezcoa3 in getPlainTextRepresentation, called from the getData() method :
+        eZContentObject::recursionProtectionEnd();
+
+        $fieldNameImageName3 = ezfSolrDocumentFieldBase::generateSubattributeFieldName( $ezcca3,
+                                                            $imageName3->attribute( 'contentclass_attribute_identifier' ),
+                                                            ezfSolrDocumentFieldObjectRelation::getClassAttributeType( $imageName3->attribute( 'contentclass_attribute' ) ) );
+        $expectedData3[$fieldNameImageName3] = trim( implode( ' ', array_values( ezfSolrDocumentFieldBase::getInstance( $imageName3 )->getData() ) ), "\t\r\n " );
+
+        $fieldNameImageCaption3 = ezfSolrDocumentFieldBase::generateSubattributeFieldName( $ezcca3,
+                                                            $imageCaption3->attribute( 'contentclass_attribute_identifier' ),
+                                                            ezfSolrDocumentFieldObjectRelation::getClassAttributeType( $imageCaption3->attribute( 'contentclass_attribute' ) ) );
+        $expectedData3[$fieldNameImageCaption3] = trim( implode( ' ', array_values( ezfSolrDocumentFieldBase::getInstance( $imageCaption3 )->getData() ) ), "\t\r\n " );
+
+        $providerArray[] = array( $expectedData3, $ezcoa3 );
+        #end 3
+
+
+        // Let's perform the actual testing :
+        foreach( $providerArray as $input )
+        {
+            $expected = $input[0];
+            $contentObjectAttribute = $input[1];
+            $instance = ezfSolrDocumentFieldBase::getInstance( $contentObjectAttribute );
+
+            self::assertEquals( $expected, $instance->getData() );
+        }
     }
 
-    /**
-     * test for getData()
-     * @dataProvider providerTestGetData()
-     */
-    public function testGetData( $expected, $contentObjectAttribute )
+    /*protected function tearDown()
     {
-        $instance = ezfSolrDocumentFieldBase::getInstance( $contentObjectAttribute );
-
-        self::assertEquals(
-            $expected,
-            $instance->getData()
-        );
-    }
-
+        $object = eZContentObject::fetch( $GLOBALS['articleId'] );
+        var_dump( $GLOBALS['articleId'], $object );
+    }*/
 }
 ?>

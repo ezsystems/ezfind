@@ -74,15 +74,16 @@ class ezfSolrDocumentFieldDummyExample extends ezfSolrDocumentFieldBase
      * @var array
      */
     public static $subattributesDefinition = array( 'subattribute1' => 'int',
-                                                    self::defaultSubattribute => 'text' );
+                                                    self::DEFAULT_SUBATTRIBUTE => 'text' );
 
     /**
      * The name of the default subattribute. It will be used when
+     * this field is requested with no subfield refinement.
      *
      * @see ezfSolrDocumentFieldDummyExample::$subattributesDefinition
      * @var string
      */
-    const defaultSubattribute = 'subattribute2';
+    const DEFAULT_SUBATTRIBUTE = 'subattribute2';
 
     /**
      * @see ezfSolrDocumentFieldBase::__construct()
@@ -126,7 +127,7 @@ class ezfSolrDocumentFieldDummyExample extends ezfSolrDocumentFieldBase
         {
             // return the default field name here.
             return parent::generateAttributeFieldName( $classAttribute,
-                                                       self::$subattributesDefinition[self::defaultSubattribute] );
+                                                       self::$subattributesDefinition[self::DEFAULT_SUBATTRIBUTE] );
         }
     }
 
@@ -140,11 +141,11 @@ class ezfSolrDocumentFieldDummyExample extends ezfSolrDocumentFieldBase
 
         //   Handle first the default subattribute
         $subattributesDefinition = self::$subattributesDefinition;
-        if ( !in_array( $subattributesDefinition[self::defaultSubattribute], $exclusiveTypeFilter ) )
+        if ( !in_array( $subattributesDefinition[self::DEFAULT_SUBATTRIBUTE], $exclusiveTypeFilter ) )
         {
-            $subfields[] = parent::generateAttributeFieldName( $classAttribute, $subattributesDefinition[self::defaultSubattribute] );
+            $subfields[] = parent::generateAttributeFieldName( $classAttribute, $subattributesDefinition[self::DEFAULT_SUBATTRIBUTE] );
         }
-        unset( $subattributesDefinition[self::defaultSubattribute] );
+        unset( $subattributesDefinition[self::DEFAULT_SUBATTRIBUTE] );
 
         //   Then hanlde all other subattributes
         foreach ( $subattributesDefinition as $name => $type )
@@ -172,7 +173,7 @@ class ezfSolrDocumentFieldDummyExample extends ezfSolrDocumentFieldBase
         else
         {
             // If no subattribute is passed, return the default subattribute's type :
-            return self::$subattributesDefinition[self::defaultSubattribute];
+            return self::$subattributesDefinition[self::DEFAULT_SUBATTRIBUTE];
         }
     }
 }

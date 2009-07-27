@@ -480,7 +480,6 @@ class eZSolr
      */
     function addFieldBaseToDoc( ezfSolrDocumentFieldBase $fieldBase, eZSolrDoc $doc, $boost = false )
     {
-
         foreach( $fieldBase->getData() as $key => $value )
         {
                 $doc->addField( $key, $value, $boost );

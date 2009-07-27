@@ -440,7 +440,7 @@ class ezfSolrDocumentFieldBase
     }
 
     /// Vars
-    protected $ContentObjectAttribute;
+    public $ContentObjectAttribute;
     static $FindINI;
     static $DocumentFieldName;
 

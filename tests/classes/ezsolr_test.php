@@ -32,6 +32,7 @@ class eZSolrTest extends ezpDatabaseTestCase
             );
         }
 
+        /*
         if ( $contentClass = eZContentClass::fetchByIdentifier( 'article' ) )
         {
             $providerArray[] = array(
@@ -39,7 +40,7 @@ class eZSolrTest extends ezpDatabaseTestCase
                 'article/image/alternative_text'
             );
         }
-
+        */
         return $providerArray;
     }
 
