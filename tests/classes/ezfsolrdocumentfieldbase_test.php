@@ -98,12 +98,19 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
         $providerArray[] = array( $expected2, $ezcca2, null );
 
 
-        //Testing the class/attribute/subattribute syntax
+        //Testing the class/attribute/subattribute syntax, with the secondary subattribute of
+        //  the 'dummy' datatype
         $ezcca3 = $ezcca2;
         $expected3 = ezfSolrDocumentFieldBase::SUBATTR_FIELD_PREFIX . 'dummy-subattribute2_t';
         $options3 = 'subattribute2';
         $providerArray[] = array( $expected3, $ezcca3, $options3 );
 
+        //Testing the class/attribute/subattribute syntax, with the default subattribute of
+        //  the 'dummy' datatype
+        $ezcca5 = $ezcca2;
+        $expected5 = ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'dummy_t';
+        $options5 = 'subattribute1';
+        $providerArray[] = array( $expected5, $ezcca5, $options5 );
 
         //Testing the class/attribute/subattribute syntax for ezobjectrelation attributes
         $time4 = time();
@@ -236,6 +243,36 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
     }
 
     /**
+     * test for generateMetaFieldName()
+     */
+    public function testGenerateMetaFieldName()
+    {
+        $baseName = "main_url_alias"; // type : 'string'
+        $expected = ezfSolrDocumentFieldBase::META_FIELD_PREFIX . $baseName . '_s';
+
+        self::assertEquals(
+            $expected,
+            ezfSolrDocumentFieldBase::generateMetaFieldName( $baseName )
+        );
+    }
+
+    /**
+     * test for generateSubmetaFieldName()
+     */
+    public function testGenerateSubmetaFieldName()
+    {
+        $identifier = 'dummy';
+        $baseName = "main_url_alias"; // type : 'string'
+        $expected = ezfSolrDocumentFieldBase::SUBMETA_FIELD_PREFIX . $identifier . '-' . $baseName . '_s';
+        $classAttribute = new eZContentClassAttribute( array( 'identifier' => $identifier ) );
+
+        self::assertEquals(
+            $expected,
+            ezfSolrDocumentFieldBase::generateSubmetaFieldName( $baseName, $classAttribute )
+        );
+    }
+
+    /**
      * test for getData()
      */
     public function testGetData()
@@ -292,6 +329,7 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
         $article3 = new ezpObject( "article", 2 );
         $articleId3 = $article3->publish();
 
+        // Create object relation
         $article3->object->addContentObjectRelation( $imageId3, $article3->current_version, 154, eZContentObject::RELATION_ATTRIBUTE );
 
         $dataMapArticle3 = $article3->attribute( 'data_map' );
@@ -318,6 +356,13 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
                                                             ezfSolrDocumentFieldObjectRelation::getClassAttributeType( $imageCaption3->attribute( 'contentclass_attribute' ) ) );
         $expectedData3[$fieldNameImageCaption3] = trim( implode( ' ', array_values( ezfSolrDocumentFieldBase::getInstance( $imageCaption3 )->getData() ) ), "\t\r\n " );
 
+        $image3 = eZContentObject::fetch( $imageId3 );
+        $metaAttributeValues = eZSolr::getMetaAttributesForObject( $image3 );
+        foreach ( $metaAttributeValues as $metaInfo )
+        {
+            $expectedData3[ezfSolrDocumentFieldBase::generateSubmetaFieldName( $metaInfo['name'], $ezcca3 )] = ezfSolrDocumentFieldBase::preProcessValue( $metaInfo['value'], $metaInfo['fieldType'] );
+        }
+
         $providerArray[] = array( $expectedData3, $ezcoa3 );
         #end 3
 
@@ -332,11 +377,5 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
             self::assertEquals( $expected, $instance->getData() );
         }
     }
-
-    /*protected function tearDown()
-    {
-        $object = eZContentObject::fetch( $GLOBALS['articleId'] );
-        var_dump( $GLOBALS['articleId'], $object );
-    }*/
 }
 ?>

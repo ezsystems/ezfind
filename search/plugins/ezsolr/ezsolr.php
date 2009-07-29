@@ -72,6 +72,35 @@ class eZSolr
     }
 
     /**
+     * Fetches the meta attributes for a given content object
+     * and fill the structure described below.
+     *
+     * @param eZContentObject $object
+     * @return array
+     * <code>
+     *    array(
+     *          array( 'name'     => 'id'
+     *                 'value'     => 82
+     *                 'fieldType' => 'sint' ),
+     *                 ...
+     *         )
+     * </code>
+     *
+     * @see eZSolr::metaAttributes()
+     */
+    public static function getMetaAttributesForObject( eZContentObject $object )
+    {
+        $metaAttributeValues = array();
+        foreach( self::metaAttributes() as $attributeName => $fieldType )
+        {
+            $metaAttributeValues[] = array( 'name' => $attributeName,
+                                            'value' => $object->attribute( $attributeName ),
+                                            'fieldType' => $fieldType );
+        }
+        return $metaAttributeValues;
+    }
+
+    /**
      * Get list of Node attributes and their field types
      *
      * @return array List of node attributes and field types.
@@ -212,6 +241,8 @@ class eZSolr
     }
 
     /**
+     * @deprecated since eZ Find 2.1
+     *
      * Get meta attribute field name
      *
      * @param string Meta attribute field name ( base )
@@ -220,8 +251,11 @@ class eZSolr
      */
     static function getMetaFieldName( $baseName )
     {
+        /*
         return self::$SolrDocumentFieldName->lookupSchemaName( 'meta_' . $baseName,
                                                                eZSolr::getMetaAttributeType( $baseName ) );
+        */
+        return ezfSolrDocumentFieldBase::generateMetaFieldName( $baseName );
     }
 
     /**
@@ -258,7 +292,7 @@ class eZSolr
         {
             foreach ( $this->postSearchProcessingData['subtree_array'] as $subtree )
             {
-                foreach ( $doc[self::getMetaFieldName( 'path_string' )] as $pathString )
+                foreach ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )] as $pathString )
                 {
                     if ( substr_count( $pathString, '/' . $subtree . '/' ) > 0 )
                     {
@@ -271,7 +305,7 @@ class eZSolr
                 }
             }
         }
-        return $doc[self::getMetaFieldName( 'main_url_alias' )];
+        return $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' )];
     }
 
     /**
@@ -309,13 +343,7 @@ class eZSolr
         $currentVersion = $contentObject->currentVersion();
 
         // Get object meta attributes.
-        $metaAttributeValues = array();
-        foreach( eZSolr::metaAttributes() as $attributeName => $fieldType )
-        {
-            $metaAttributeValues[] = array( 'name' => $attributeName,
-                                            'value' => $contentObject->attribute( $attributeName ),
-                                            'fieldType' => $fieldType );
-        }
+        $metaAttributeValues = self::getMetaAttributesForObject( $contentObject );
 
         // Get node attributes.
         $nodeAttributeValues = array();
@@ -374,29 +402,29 @@ class eZSolr
         {
             $doc = new eZSolrDoc( $docBoost );
             // Set global unique object ID
-            $doc->addField( self::getMetaFieldName( 'guid' ), $this->guid( $contentObject, $languageCode ) );
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' ), $this->guid( $contentObject, $languageCode ) );
 
             // Set installation identifier
-            $doc->addField( self::getMetaFieldName( 'installation_id' ), self::installationID() );
-            $doc->addField( self::getMetaFieldName( 'installation_url' ),
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' ), self::installationID() );
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_url' ),
                             $this->FindINI->variable( 'SiteSettings', 'URLProtocol' ) . $this->SiteINI->variable( 'SiteSettings', 'SiteURL' ) . '/' );
 
             // Set Object attributes
-            $doc->addField( self::getMetaFieldName( 'name' ), $contentObject->name( false, $languageCode ) );
-            $doc->addField( self::getMetaFieldName( 'anon_access' ), $anonymousAccess );
-            $doc->addField( self::getMetaFieldName( 'language_code' ), $languageCode );
-            $doc->addField( self::getMetaFieldName( 'available_language_codes' ), $availableLanguages );
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'name' ), $contentObject->name( false, $languageCode ) );
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'anon_access' ), $anonymousAccess );
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'language_code' ), $languageCode );
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'available_language_codes' ), $availableLanguages );
 
             if ( $owner = $contentObject->attribute( 'owner' ) )
             {
                 // Set owner name
-                $doc->addField( self::getMetaFieldName( 'owner_name' ),
+                $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'owner_name' ),
                                 $owner->name( false, $languageCode ) );
 
                 // Set owner group ID
                 foreach( $owner->attribute( 'parent_nodes' ) as $groupID )
                 {
-                    $doc->addField( self::getMetaFieldName( 'owner_group_id' ), $groupID );
+                    $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'owner_group_id' ), $groupID );
                 }
             }
 
@@ -404,33 +432,33 @@ class eZSolr
             // so let's check if the content object has it
             if (method_exists( $contentObject, 'stateIDArray'))
             {
-                $doc->addField( self::getMetaFieldName( 'object_states' ),
+                $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'object_states' ),
                                 $contentObject->stateIDArray() );
             }
 
             // Set content object meta attribute values.
             foreach ( $metaAttributeValues as $metaInfo )
             {
-                $doc->addField( self::getMetaFieldName( $metaInfo['name'] ),
+                $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( $metaInfo['name'] ),
                                 ezfSolrDocumentFieldBase::preProcessValue( $metaInfo['value'], $metaInfo['fieldType'] ) );
             }
 
             // Set content node meta attribute values.
             foreach ( $nodeAttributeValues as $metaInfo )
             {
-                $doc->addField( self::getMetaFieldName( $metaInfo['name'] ),
+                $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( $metaInfo['name'] ),
                                 ezfSolrDocumentFieldBase::preProcessValue( $metaInfo['value'], $metaInfo['fieldType'] ) );
             }
 
             // Add main url_alias
-            $doc->addField( self::getMetaFieldName( 'main_url_alias' ), $mainNode->attribute( 'url_alias' ) );
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' ), $mainNode->attribute( 'url_alias' ) );
 
             // add nodeid of all parent nodes path elements
             foreach ( $nodePathArray as $pathArray )
             {
                 foreach ( $pathArray as $pathNodeID)
                 {
-                    $doc->addField( self::getMetaFieldName( 'path' ), $pathNodeID );
+                    $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'path' ), $pathNodeID );
                 }
             }
 
@@ -517,8 +545,8 @@ class eZSolr
             $optimize = true;
         }
         return $this->Solr->deleteDocs( array(),
-                                 self::getMetaFieldName( 'id' ) . ':' . $contentObject->attribute( 'id' ) . ' AND '.
-                                 self::getMetaFieldName( 'installation_id' ) . ':' . self::installationID(),
+                                 ezfSolrDocumentFieldBase::generateMetaFieldName( 'id' ) . ':' . $contentObject->attribute( 'id' ) . ' AND '.
+                                 ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' ) . ':' . self::installationID(),
                                  $commit, $optimize );
     }
 
@@ -601,9 +629,9 @@ class eZSolr
             // Loop through result, and get eZContentObjectTreeNode ID
             foreach ( $docs as $idx => $doc )
             {
-                if ( $doc[self::getMetaFieldName( 'installation_id' )] == self::installationID() )
+                if ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' )] == self::installationID() )
                 {
-                    $localNodeIDList[] = $doc[self::getMetaFieldName( 'main_node_id' )][0];
+                    $localNodeIDList[] = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0];
                 }
             }
 
@@ -627,38 +655,38 @@ class eZSolr
 
             foreach ( $docs as $idx => $doc )
             {
-                if ( $doc[self::getMetaFieldName( 'installation_id' )] == self::installationID() )
+                if ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' )] == self::installationID() )
                 {
                     // Search result document is from current installation
-//                    var_dump( self::getMetaFieldName( 'main_node_id' ), $doc, $nodeRowList );die();
-                    $resultTree = new eZFindResultNode( $nodeRowList[$doc[self::getMetaFieldName( 'main_node_id' )][0]] );
-                    $resultTree->setContentObject( new eZContentObject( $nodeRowList[$doc[self::getMetaFieldName( 'main_node_id' )][0]] ) );
+//                    var_dump( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' ), $doc, $nodeRowList );die();
+                    $resultTree = new eZFindResultNode( $nodeRowList[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0]] );
+                    $resultTree->setContentObject( new eZContentObject( $nodeRowList[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0]] ) );
                     $resultTree->setAttribute( 'is_local_installation', true );
                     if ( !$resultTree->attribute( 'can_read' ) )
                     {
-                        eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $doc[self::getMetaFieldName( 'main_node_id' )][0],
+                        eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0],
                                               'eZSolr::search()' );
                         continue;
                     }
 
                     $urlAlias = $this->getUrlAlias( $doc );
-                    $globalURL = $urlAlias . '/(language)/' . $doc[self::getMetaFieldName( 'language_code' )];
+                    $globalURL = $urlAlias . '/(language)/' . $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'language_code' )];
                     eZURI::transformURI( $globalURL );
                 }
                 else
                 {
                     $resultTree = new eZFindResultNode();
                     $resultTree->setAttribute( 'is_local_installation', false );
-                    $globalURL = $doc[self::getMetaFieldName( 'installation_url' )] .
-                        $doc[self::getMetaFieldName( 'main_url_alias' )] .
-                        '/(language)/' . $doc[self::getMetaFieldName( 'language_code' )];
+                    $globalURL = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_url' )] .
+                        $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' )] .
+                        '/(language)/' . $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'language_code' )];
                 }
 
-                $resultTree->setAttribute( 'name', $doc[self::getMetaFieldName( 'name' )] );
-                $resultTree->setAttribute( 'published', $doc[self::getMetaFieldName( 'published' )] );
+                $resultTree->setAttribute( 'name', $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'name' )] );
+                $resultTree->setAttribute( 'published', $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'published' )] );
                 $resultTree->setAttribute( 'global_url_alias', $globalURL );
-                $resultTree->setAttribute( 'highlight', isset( $highLights[$doc[self::getMetaFieldName( 'guid' )]] ) ?
-                                           $highLights[$doc[self::getMetaFieldName( 'guid' )]] : null );
+                $resultTree->setAttribute( 'highlight', isset( $highLights[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' )]] ) ?
+                                           $highLights[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' )]] : null );
                 /**
                  * $maxScore may be equal to 0 when the QueryElevationComponent is used.
                  * It returns as first results the elevated documents, with a score equal to 0. In case no
@@ -668,7 +696,7 @@ class eZSolr
                  * which must be reflected in the 'score_percent' attribute of the result node.
                  */
                 $maxScore != 0 ? $resultTree->setAttribute( 'score_percent', (int) ( ( $doc['score'] / $maxScore ) * 100 ) ) : $resultTree->setAttribute( 'score_percent', 100 );
-                $resultTree->setAttribute( 'language_code', $doc[self::getMetaFieldName( 'language_code' )] );
+                $resultTree->setAttribute( 'language_code', $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'language_code' )] );
                 $objectRes[] = $resultTree;
             }
         }
@@ -746,9 +774,9 @@ class eZSolr
             // Loop through result, and get eZContentObjectTreeNode ID
             foreach ( $docs as $idx => $doc )
             {
-                if ( $doc[self::getMetaFieldName( 'installation_id' )] == self::installationID() )
+                if ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' )] == self::installationID() )
                 {
-                    $localNodeIDList[] = $doc[self::getMetaFieldName( 'main_node_id' )][0];
+                    $localNodeIDList[] = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0];
                 }
             }
 
@@ -772,41 +800,41 @@ class eZSolr
 
             foreach ( $docs as $idx => $doc )
             {
-                if ( $doc[self::getMetaFieldName( 'installation_id' )] == self::installationID() )
+                if ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' )] == self::installationID() )
                 {
                     // Search result document is from current installation
-//                    var_dump( self::getMetaFieldName( 'main_node_id' ), $doc, $nodeRowList );die();
-                    $resultTree = new eZFindResultNode( $nodeRowList[$doc[self::getMetaFieldName( 'main_node_id' )][0]] );
-                    $resultTree->setContentObject( new eZContentObject( $nodeRowList[$doc[self::getMetaFieldName( 'main_node_id' )][0]] ) );
+//                    var_dump( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' ), $doc, $nodeRowList );die();
+                    $resultTree = new eZFindResultNode( $nodeRowList[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0]] );
+                    $resultTree->setContentObject( new eZContentObject( $nodeRowList[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0]] ) );
                     $resultTree->setAttribute( 'is_local_installation', true );
                     if ( !$resultTree->attribute( 'can_read' ) )
                     {
-                        eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $doc[self::getMetaFieldName( 'main_node_id' )][0],
+                        eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0],
                                               'eZSolr::search()' );
                         continue;
                     }
 
 
-                    $globalURL = $doc[self::getMetaFieldName( 'main_url_alias' )] .
-                        '/(language)/' . $doc[self::getMetaFieldName( 'language_code' )];
+                    $globalURL = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' )] .
+                        '/(language)/' . $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'language_code' )];
                     eZURI::transformURI( $globalURL );
                 }
                 else
                 {
                     $resultTree = new eZFindResultNode();
                     $resultTree->setAttribute( 'is_local_installation', false );
-                    $globalURL = $doc[self::getMetaFieldName( 'installation_url' )] .
-                        $doc[self::getMetaFieldName( 'main_url_alias' )] .
-                        '/(language)/' . $doc[self::getMetaFieldName( 'language_code' )];
+                    $globalURL = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_url' )] .
+                        $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' )] .
+                        '/(language)/' . $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'language_code' )];
                 }
 
-                $resultTree->setAttribute( 'name', $doc[self::getMetaFieldName( 'name' )] );
-                $resultTree->setAttribute( 'published', $doc[self::getMetaFieldName( 'published' )] );
+                $resultTree->setAttribute( 'name', $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'name' )] );
+                $resultTree->setAttribute( 'published', $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'published' )] );
                 $resultTree->setAttribute( 'global_url_alias', $globalURL );
-                $resultTree->setAttribute( 'highlight', isset( $highLights[$doc[self::getMetaFieldName( 'guid' )]] ) ?
-                                           $highLights[$doc[self::getMetaFieldName( 'guid' )]] : null );
+                $resultTree->setAttribute( 'highlight', isset( $highLights[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' )]] ) ?
+                                           $highLights[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' )]] : null );
                 $resultTree->setAttribute( 'score_percent', (int) ( ( $doc['score'] / $maxScore ) * 100 ) );
-                $resultTree->setAttribute( 'language_code', $doc[self::getMetaFieldName( 'language_code' )] );
+                $resultTree->setAttribute( 'language_code', $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'language_code' )] );
                 $objectRes[] = $resultTree;
             }
         }
@@ -901,7 +929,7 @@ class eZSolr
     **/
     function cleanup()
     {
-        return $this->Solr->deleteDocs( array(), self::getMetaFieldName( 'installation_id' ) . ':' . self::installationID(), true );
+        return $this->Solr->deleteDocs( array(), ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' ) . ':' . self::installationID(), true );
     }
 
     /**

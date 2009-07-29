@@ -418,6 +418,46 @@ class ezfSolrDocumentFieldBase
     }
 
     /**
+     * Generates the full Solr field name for a metadata attribute.
+     * Helper method to be used, if needed, by datatype-specific handlers.
+     * It is used in the search plugin eZSolr.
+     *
+     * @param string $baseName
+     * @return string
+     *
+     * @example
+     *      If $baseName equals 'main_url_alias',
+     *      the return value will be : 'meta_main_url_alias_s'
+     */
+    public static function generateMetaFieldName( $baseName )
+    {
+        return self::$DocumentFieldName->lookupSchemaName( self::META_FIELD_PREFIX . $baseName,
+                                                           eZSolr::getMetaAttributeType( $baseName ) );
+    }
+
+    /**
+     * Generates the full Solr field name for a metadata subattribute.
+     * Helper method to be used, if needed, by datatype-specific handlers.
+     * Used particularly when indexing metadata of a related object.
+     *
+     * @param string $baseName
+     * @param eZContentClassAttribute $classAttribute
+     * @return string
+     *
+     * @example
+     *      If $baseName equals 'main_url_alias', and $classAttribute
+     *      has as identifier 'dummy', the return value will be :
+     *      'submeta_dummy-main_url_alias_s'
+     *
+     * @see ezfSolrDocumentFieldObjectRelation
+     */
+    public static function generateSubmetaFieldName( $baseName, eZContentClassAttribute $classAttribute )
+    {
+        return self::$DocumentFieldName->lookupSchemaName( self::SUBMETA_FIELD_PREFIX . $classAttribute->attribute( 'identifier' ) . '-' . $baseName,
+                                                           eZSolr::getMetaAttributeType( $baseName ) );
+    }
+
+    /**
      * Checks whether a given method is actually declared in a given class.
      * This is primarily made to avoid infinite recursion. This walks around
      * a suboptimal object design, mixing static and dynamic methods in the same
@@ -453,12 +493,32 @@ class ezfSolrDocumentFieldBase
     public static $singletons = array();
 
     /**
+     * Prefix for metadata field names in Solr.
+     */
+    const META_FIELD_PREFIX = 'meta_';
+
+    /**
+     * Prefix for metadata subfield names in Solr.
+     *
+     * @example
+     *      Metadata attributes of a related object will be indexed
+     *      as submetas in a Solr document, their names starting
+     *      with 'submeta_' instead of '_meta'
+     */
+    const SUBMETA_FIELD_PREFIX = 'submeta_';
+
+    /**
      * Prefix for attribute field names in Solr.
      */
     const ATTR_FIELD_PREFIX = 'attr_';
 
     /**
      * Prefix for subattribute field names in Solr.
+     *
+     * @example
+     *      Content attributes of a related object will be indexed
+     *      as subattributes in a Solr document, their names starting
+     *      with 'subattr_' instead of '_attr'
      */
     const SUBATTR_FIELD_PREFIX = 'subattr_';
 }

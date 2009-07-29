@@ -117,16 +117,19 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
         }
 
         $metaData = '';
-        $metaDataArray = $contentObjectAttribute->metaData();
 
-        if( !is_array( $metaDataArray ) )
-            $metaDataArray = array( $metaDataArray );
-
-        foreach( $metaDataArray as $item )
+        if ( $contentObjectAttribute )
         {
-            $metaData .= $item['text'] . ' ';
-        }
+            $metaDataArray = $contentObjectAttribute->metaData();
 
+            if( !is_array( $metaDataArray ) )
+                $metaDataArray = array( $metaDataArray );
+
+            foreach( $metaDataArray as $item )
+            {
+                $metaData .= $item['text'] . ' ';
+            }
+        }
         return trim( $metaData, "\t\r\n " );
     }
 
@@ -168,10 +171,9 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
 
                 if ( $relatedObject )
                 {
+                    // 1st, add content fields of the related object.
                     $baseList = $this->getBaseList( $relatedObject->attribute( 'current' ) );
 
-                    // Add content fields of the related object.
-                    // @TODO : handle meta fields. Requires a refactoring of the eZSolr::addObject method.
                     foreach( $baseList as $field )
                     {
                         $tmpClassAttribute = $field->ContentObjectAttribute->attribute( 'contentclass_attribute' );
@@ -205,13 +207,21 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
 
                         $returnArray[$fieldName] = trim( $finalValue, "\t\r\n " );
                     }
+
+                    // 2ndly, add meta fields of the related object.
+                    $metaAttributeValues = eZSolr::getMetaAttributesForObject( $relatedObject );
+                    foreach ( $metaAttributeValues as $metaInfo )
+                    {
+                        $returnArray[ezfSolrDocumentFieldBase::generateSubmetaFieldName( $metaInfo['name'], $contentClassAttribute )] = ezfSolrDocumentFieldBase::preProcessValue( $metaInfo['value'], $metaInfo['fieldType'] );
+                    }
                     return $returnArray;
                 }
-
+                break;
             case 'ezobjectrelationlist' :
             {
-                /*
+                $returnArray = array();
                 $content = $this->ContentObjectAttribute->content();
+
                 foreach( $content['relation_list'] as $relationItem )
                 {
                     $subObjectID = $relationItem['contentobject_id'];
@@ -221,10 +231,22 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                     if ( !$subObject )
                         continue;
 
-                    $returnList = array_merge( $this->getBaseList( $subObject ),
-                                               $returnList );
+                    // 1st create aggregated metadata fields
+                    $metaAttributeValues = eZSolr::getMetaAttributesForObject( $subObject->attribute( 'contentobject' ) );
+                    foreach ( $metaAttributeValues as $metaInfo )
+                    {
+                        $submetaFieldName = ezfSolrDocumentFieldBase::generateSubmetaFieldName( $metaInfo['name'], $contentClassAttribute );
+                        if ( isset( $returnArray[$submetaFieldName] ) )
+                        {
+                            $returnArray[$submetaFieldName] = array_merge( $returnArray[$submetaFieldName], array( ezfSolrDocumentFieldBase::preProcessValue( $metaInfo['value'], $metaInfo['fieldType'] ) ) );
+                        }
+                        else
+                        {
+                            $returnArray[$submetaFieldName] = array( ezfSolrDocumentFieldBase::preProcessValue( $metaInfo['value'], $metaInfo['fieldType'] ) );
+                        }
+                    }
                 }
-                */
+
                 $defaultFieldName = parent::generateAttributeFieldName( $contentClassAttribute,
                                                                         self::$subattributesDefinition[self::DEFAULT_SUBATTRIBUTE] );
                 $returnArray[$defaultFieldName] = $this->getPlainTextRepresentation();
