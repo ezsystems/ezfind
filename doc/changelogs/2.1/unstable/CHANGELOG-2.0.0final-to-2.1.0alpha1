@@ -7,6 +7,7 @@ Changes from 2.0.0final to 2.1.0alpha1
 - Implemented #014357: ezFind 2.0.0pre svn publish_date ignored
   Added the publish_date parameter for fetch(ezfind, search)
 - Implemented #014807: add support for object states
+- Implemented #014733: eZ Find elevate admin templates needs tidying up
 
 
 *Bugs:

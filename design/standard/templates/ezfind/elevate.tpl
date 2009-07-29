@@ -1,3 +1,10 @@
+{if is_set( $back_from_browse )|not}
+    {def $back_from_browse=false()}
+{/if}
+{if is_set( $elevateSearchQuery )|not}
+    {def $elevateSearchQuery=''}
+{/if}
+
 <div class="menu-block">
 {def $li_width="_25"}
 <ul>
@@ -33,7 +40,7 @@
     Feedbacks. 
    *}
    
-   {if or( $feedback.missing_searchquery, is_set( $feedback.missing_object ) )}
+   {if or( is_set( $feedback.missing_searchquery ), is_set( $feedback.missing_object ) )}
        <div class="message-warning">
        <h2><span class="time">[{currentdate()|l10n( shortdatetime )}]</span>
        {if is_set( $feedback.missing_searchquery )}
@@ -165,7 +172,7 @@
 <tr class="bgdark">
     <th>
     <label for="ezfind-searchelevateconfigurations-searchquery" style="display: inline; font-weight:normal;">{'By search query'|i18n( 'extension/ezfind/elevate' )}:</label>
-    <input type="text" id="ezfind-searchelevateconfigurations-searchquery" name="ezfind-searchelevateconfigurations-searchquery" size="15" value="{$view_parameters.search_query}" title="{'Search query to elevate the object for.'|i18n( 'extension/ezfind/elevate' )}" />&nbsp;
+    <input type="text" id="ezfind-searchelevateconfigurations-searchquery" name="ezfind-searchelevateconfigurations-searchquery" size="15" value="{if is_set( $view_parameters.search_query )}{$view_parameters.search_query}{/if}" title="{'Search query to elevate the object for.'|i18n( 'extension/ezfind/elevate' )}" />&nbsp;
             
     {'Language'|i18n( 'extension/ezfind/elevate' )}:        
     <select name="ezfind-searchelevateconfigurations-language" title="{'Select a translation to narrow down the search.'|i18n( 'extension/ezfind/elevate' )}">
@@ -229,7 +236,7 @@
 <div class="context-block">
 {* DESIGN: Header START *}<div class="box-header"><div class="box-tc"><div class="box-ml"><div class="box-mr"><div class="box-tl"><div class="box-tr">
 <h2 class="context-title">
-    {if is_set( $view_parameters.search_query )}
+    {if and( is_set( $view_parameters.search_query ), ne( $view_parameters.search_query, '' ) )}
         <span style="color: orange;">
         {'Objects elevated by "%search_query"'|i18n( 'extension/ezfind/elevate', '', hash( '%search_query', $view_parameters.search_query ) )}
         {if is_set( $view_parameters.fuzzy_filter )}
