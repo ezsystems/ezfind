@@ -539,6 +539,11 @@ class eZSolr
      */
     function removeObject( $contentObject, $commit = true )
     {
+        // 1: remove the assciated "elevate" configuration
+        eZFindElevateConfiguration::purge( '', $contentObject->attribute( 'id' ) );
+        eZFindElevateConfiguration::synchronizeWithSolr();
+
+        // 2: delete the object in Solr
         $optimize = false;
         if ( $commit && ( $this->FindINI->variable( 'IndexOptions', 'OptimizeOnCommit' ) === 'enabled' ) )
         {

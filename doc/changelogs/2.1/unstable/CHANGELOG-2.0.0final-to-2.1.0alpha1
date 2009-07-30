@@ -20,3 +20,4 @@ Changes from 2.0.0final to 2.1.0alpha1
 - fixed wrong charset declaration in cronjob.ini.append.php
 - fixed bug #014958: Wrong operator usage in example_morelikethis_article.tpl
 - fixed bug #014845: strict warning in ezfezpsolrquerybuilder.php
+- fixed bug #015044: When an object is removed, or a translation of the latter, the elevation configuration is not udpated.
