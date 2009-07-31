@@ -996,18 +996,126 @@ class eZSolr
         return ezi18n( 'ezfind', 'eZ Find 2.0 search plugin &copy; 2009 eZ Systems AS, powered by Apache Solr 1.4' );
     }
 
+
+    /**
+     * @see eZSearch::needCommit()
+     * @return boolean
+     */
+    public function needCommit()
+    {
+        return true;
+    }
+
+    /**
+     * @see eZSearch::needRemoveWithUpdate()
+     * @return boolean
+     */
+    public function needRemoveWithUpdate()
+    {
+        return false;
+    }
+
+    /**
+     * Called when a new section is assigned to an object, trough a node.
+     * Simply re-index for now
+     *
+     * @todo: defer to cron if there are children involved and re-index these too
+     * @todo when Solr supports it: update fields only
+     *
+     * @return void
+     * @see eZSearch::updateNodeSection()
+     */
+    public function updateNodeSection( $nodeID, $sectionID )
+    {
+        $contentObject = eZContentObject::fetchByNodeID( $nodeID );
+        $this->addObject( $contentObject );
+    }
+
+    /**
+     * Called when a node's visibility is modified.
+     * Simply re-index for now.
+     *
+     * @todo: defer to cron if there are children involved and re-index these too
+     * @todo when Solr supports it: update fields only
+     *
+     * @param $nodeID
+     * @param $action
+     * @return void
+     * @see eZSearch::updateNodeVisibility()
+     */
+    public function updateNodeVisibility( $nodeID, $action )
+    {
+        $contentObject = eZContentObject::fetchByNodeID( $nodeID );
+        $this->addObject( $contentObject );
+    }
+
+    /**
+     * Called when a node assignement is added to an object.
+     * Simply re-index for now.
+     *
+     * @todo: defer to cron if there are children involved and re-index these too
+     * @todo when Solr supports it: update fields only
+     *
+     * @param $mainNodeID
+     * @param $objectID
+     * @param $nodeAssignmentIDList
+     * @return unknown_type
+     * @see eZSearch::addNodeAssignment()
+     */
+    public function addNodeAssignment( $mainNodeID, $objectID, $nodeAssignmentIDList )
+    {
+        $contentObject = eZContentObject::fetch( $objectID );
+        $this->addObject( $contentObject );
+    }
+
+    /**
+     * Called when a node assignement is removed of an object's.
+     * Simply re-index for now.
+     *
+     * @todo: defer to cron if there are children involved and re-index these too
+     * @todo when Solr supports it: update fields only
+     *
+     * @param $mainNodeID
+     * @param $objectID
+     * @param $nodeAssignmentIDList
+     * @return unknown_type
+     * @see eZSearch::removeNodeAssignment()
+     */
+    public function removeNodeAssignment( $mainNodeID, $newMainNodeID, $objectID, $nodeAssigmentIDList )
+    {
+        $contentObject = eZContentObject::fetch( $objectID );
+        $this->addObject( $contentObject );
+    }
+
+    /**
+     * Called when two nodes are swapped.
+     * Simply re-index for now.
+     *
+     * @todo when Solr supports it: update fields only
+     *
+     * @param $nodeID
+     * @param $selectedNodeID
+     * @param $nodeIdList
+     * @return void
+     */
+    public function swapNode( $nodeID, $selectedNodeID, $nodeIdList = array() )
+    {
+        $contentObject1 = eZContentObject::fetchByNodeID( $nodeID );
+        $contentObject2 = eZContentObject::fetchByNodeID( $selectedNodeID );
+        $this->addObject( $contentObject1 );
+        $this->addObject( $contentObject2 );
+    }
+
     /**
      * update search index upon object state changes:
      * simply re-index for now
      * @todo: defer to cron if there are children involved and re-index these too
      * @todo when Solr supports it: update fields only
      */
-    public static function updateObjectState( $objectID, $objectStateList )
+    public function updateObjectState( $objectID, $objectStateList )
     {
         $contentObject = eZContentObject::fetch( $objectID );
-        //need to initialize, since called as static method
-        $solr = new eZSolr();
-        $solr->addObject( $contentObject );
+        $this->addObject( $contentObject );
     }
 
     /// Object vars
