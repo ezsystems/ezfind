@@ -119,16 +119,6 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
     }
 
     /**
-     * @see ezfSolrDocumentFieldBase::getClassAttributeType()
-     *
-     * @todo Implement this
-     */
-    public static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null )
-    {
-        return false;
-    }
-
-    /**
      * Extracts textual representation of a related content object. Used to populate a
      * default, full-text search field for an ezobjectrelation/ezobjectrelationlist
      * content object attribute.
@@ -164,6 +154,8 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
 
     /**
      * @see ezfSolrDocumentFieldBase::getClassAttributeType
+     *
+     * @todo Implement specific behaviour
      */
     static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null )
     {
