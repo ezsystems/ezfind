@@ -125,7 +125,7 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
      */
     public static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null )
     {
-
+        return false;
     }
 
     /**
