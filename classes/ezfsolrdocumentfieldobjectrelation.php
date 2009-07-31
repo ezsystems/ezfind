@@ -98,6 +98,35 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
     }
 
 
+    /**
+     * @see ezfSolrDocumentFieldBase::getFieldName()
+     *
+     * @todo Implement this
+     */
+    public static function getFieldName( eZContentClassAttribute $classAttribute, $subAttribute = null )
+    {
+        return false;
+    }
+
+    /**
+     * @see ezfSolrDocumentFieldBase::getFieldNameList()
+     *
+     * @todo Implement this
+     */
+    public static function getFieldNameList( eZContentClassAttribute $classAttribute, $exclusiveTypeFilter = array() )
+    {
+        return false;
+    }
+
+    /**
+     * @see ezfSolrDocumentFieldBase::getClassAttributeType()
+     *
+     * @todo Implement this
+     */
+    public static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null )
+    {
+
+    }
 
     /**
      * Extracts textual representation of a related content object. Used to populate a
