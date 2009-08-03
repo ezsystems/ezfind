@@ -1,0 +1,32 @@
+@CHARSET "UTF-8";
+
+div#search_controls
+{
+	float:left;
+    margin-right:1%;
+    width:25%;
+}
+
+div#search_results
+{
+    float:left;
+    width:73%;	
+    padding-left: 5px;
+}
+
+ul#facet-list
+{
+	margin-left: 0;  
+}
+
+ul#active-facets-list
+{
+    margin-left: -15px;
+}
+
+ul#active-facets-list li
+{
+	list-style-type: none;
+	list-style: none;
+	background-image: none;
+}

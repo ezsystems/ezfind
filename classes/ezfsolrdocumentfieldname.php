@@ -143,7 +143,8 @@ class ezfSolrDocumentFieldName
                                   'text' => 't',
                                   'boolean' => 'b',
                                   'date' => 'dt',
-                                  'random' => 'random' );
+                                  'random' => 'random',
+                                  'keyword' => 'k' );
 
     static $DefaultType = 'string';
     static $PHPCreator = null;

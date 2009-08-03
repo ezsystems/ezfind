@@ -1,36 +1,71 @@
 {def $search=false()}
 {if $use_template_search}
     {set $page_limit=10}
-    {def $facetParameters  = fetch( ezfind, facetParameters )
-         $filterParameters = fetch( ezfind, filterParameters )}
+    
+    {def $activeFacetParameters = array()}
+    {if ezhttp_hasvariable( 'activeFacets', 'get' )}
+        {set $activeFacetParameters = ezhttp( 'activeFacets', 'get' )}
+    {/if}
+    
+    {def $dateFilter=0}
+    {if ezhttp_hasvariable( 'dateFilter', 'get' )}
+        {set $dateFilter = ezhttp( 'dateFilter', 'get' )}
+		{switch match=$dateFilter}
+		   {case match=1}
+		      {def $dateFilterLabel="Last day"|i18n("design/standard/content/search")}
+		   {/case}
+           {case match=2}
+              {def $dateFilterLabel="Last week"|i18n("design/standard/content/search")}
+           {/case}
+           {case match=3}
+              {def $dateFilterLabel="Last month"|i18n("design/standard/content/search")}
+           {/case}      
+           {case match=4}
+              {def $dateFilterLabel="Last three months"|i18n("design/standard/content/search")}
+           {/case}      
+           {case match=5}
+              {def $dateFilterLabel="Last year"|i18n("design/standard/content/search")}
+           {/case}                 
+		{/switch}        
+    {/if}    
+    
+    {def $filterParameters = fetch( 'ezfind', 'filterParameters' )
+         $defaultSearchFacets = fetch( 'ezfind', 'getDefaultSearchFacets' )}
+    {* def $facetParameters=$defaultSearchFacets|array_merge_recursive( $activeFacetParameters ) *}
+    
     {set $search=fetch( ezfind,search,
                         hash( 'query', $search_text,
                               'offset', $view_parameters.offset,
                               'limit', $page_limit,
                               'sort_by', hash( 'score', 'desc' ),
-                              'facet', $facetParameters,
-                              'filter', $filterParameters ))}
+                              'facet', $defaultSearchFacets,
+                              'filter', $filterParameters,
+                              'publish_date', $dateFilter ))}
     {set $search_result=$search['SearchResult']}
     {set $search_count=$search['SearchCount']}
     {def $search_extras=$search['SearchExtras']}
-    {def $facetField=$search_extras.facet_fields.0.field}
     {set $stop_word_array=$search['StopWordArray']}
     {set $search_data=$search}
+    {debug-log var=$search_extras.facet_fields msg='$search_extras.facet_fields'}
 {/if}
 {def $baseURI=concat( '/content/search?SearchText=', $search_text )}
 
 {* Build the URI suffix, used throughout all URL generations in this page *}
 {def $uriSuffix = ''}
-{foreach $facetParameters as $item}
-	{foreach $item as $name => $value}
-	    {set $uriSuffix = concat( $uriSuffix, '&facet_', $name, '=', $value )}
-	{/foreach}
+{foreach $activeFacetParameters as $facetField => $facetValue}
+    {set $uriSuffix = concat( $uriSuffix, '&activeFacets[', $facetField, ']=', $facetValue )}
 {/foreach}
 
 {foreach $filterParameters as $name => $value}
     {set $uriSuffix = concat( $uriSuffix, '&filter[]=', $name, ':', $value )}
 {/foreach}
 
+{if gt( $dateFilter, 0 )}
+    {set $uriSuffix = concat( $uriSuffix, '&dateFilter=', $dateFilter )}
+{/if}
+    
+{debug-log var=$uriSuffix msg='$uriSuffix'}
+    
 <script language="JavaScript" type="text/javascript">
 <!--{literal}
     // toggle block
@@ -151,61 +186,123 @@
               </ul>
           </div>
       </fieldset>
-
+  </div>
+    
+  <div {*class="feedback"*} id="search_controls">
       <fieldset>
-          <legend onclick="ezfToggleBlock( 'ezfFacets' );">{'Facets'|i18n( 'design/ezwebin/content/search' )} [+/-]</legend>
-          <div id="ezfFacets" style="display: none;">
-          <div class="block"><strong>{'Facets'|i18n( 'design/ezwebin/content/search' )}:</strong>&nbsp;
-              {if $facetField|eq( 'class' )}
-                  <span style="background-color: #F2F1ED">{'Class'|i18n( 'design/ezwebin/content/search' )}</span>
-              {else}
-                  <a href={concat( $baseURI, '&facet_field=class' )|ezurl}>{'Class'|i18n( 'design/ezwebin/content/search' )}</a>
-              {/if}&nbsp;
-              {if $facetField|eq( 'author' )}
-                  <span style="background-color: #F2F1ED">{'Author'|i18n( 'design/ezwebin/content/search' )}</span>
-              {else}
-                  <a href={concat( $baseURI, '&facet_field=author' )|ezurl}>{'Author'|i18n( 'design/ezwebin/content/search' )}</a>
-              {/if}&nbsp;
-              {if $facetField|eq( 'translation' )}
-                  <span style="background-color: #F2F1ED">{'Translation'|i18n( 'design/ezwebin/content/search' )}</span>
-              {else}
-                  <a href={concat( $baseURI, '&facet_field=translation' )|ezurl}>{'Translation'|i18n( 'design/ezwebin/content/search' )}</a>
-              {/if}&nbsp;
-          </div>
-          <div class="block"><strong>{'Groups'|i18n( 'design/ezwebin/content/search' )}:</strong>&nbsp;
-              <a href={concat( $baseURI, '&facet_field=', $facetField|wash )|ezurl}>{'All'|i18n( 'design/ezwebin/content/search' )}</a> -
-              {foreach $search_extras.facet_fields.0.nameList as $facetID => $name}
-                  <a href={concat( $baseURI, '&facet_field=', $facetField|wash, '&filter[]=', $search_extras.facet_fields.0.queryLimit[$facetID]|wash )|ezurl}>{$name|wash}</a>({$search_extras.facet_fields.0.countList[$facetID]})
-              {delimiter}-{/delimiter}
-              {/foreach}
-          </div>
-          </div>
+          <legend>{'Refine with facets'|i18n( 'design/ezwebin/content/search' )}</legend>
+         
+          {def $activeFacetsCount=0}
+          <ul id="active-facets-list">
+          {foreach $defaultSearchFacets as $key => $defaultFacet}
+              {if array_keys( $activeFacetParameters )|contains( concat( $defaultFacet['field'], ':', $defaultFacet['name']  ) )}
+                  {def $facetData=$search_extras.facet_fields.$key}
+                  
+                  {foreach $facetData.nameList as $key2 => $facetName}                  
+                      {if eq( $activeFacetParameters[concat( $defaultFacet['field'], ':', $defaultFacet['name'] )], $facetName )}
+                          {def $activeFacetsCount=sum( $key, 1 )}
+                          {def $suffix=$uriSuffix|explode( concat( '&filter[]=', $facetData.queryLimit[$key2]|wash ) )|implode( '' )|explode( concat( '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName ) )|implode( '' )}
+			              <li>
+			                  <a href={concat( $baseURI, $suffix )|ezurl}>[x]</a> <strong>{$defaultFacet['name']}</strong>: {$facetName}
+			              </li>                        
+                      {/if}
+                  {/foreach}
+              {/if}          
+          {/foreach}
+          
+          {* handle date filter here, manually for now. Should be a facet later on *}
+          {if gt( $dateFilter, 0 )}
+              <li>
+                 {set $activeFacetsCount=$activeFacetsCount|inc}
+                 {def $suffix=$uriSuffix|explode( concat( '&dateFilter=', $dateFilter ) )|implode( '' )}
+                  <a href={concat( $baseURI, $suffix )|ezurl}>[x]</a> <strong>{'Creation time'|i18n( 'extension/ezfind/facets' )}</strong>: {$dateFilterLabel}
+              </li>          
+          {/if}
+          
+          {if ge( $activeFacetsCount, 2 )}
+              <li>
+                  <a href={$baseURI|ezurl}>[x]</a> <em>{'Clear all'|i18n( 'extension/ezfind/facets' )}</em>
+              </li>              
+          {/if}
+          </ul>
+          
+          <ul id="facet-list">
+          {foreach $defaultSearchFacets as $key => $defaultFacet}
+	          {if array_keys( $activeFacetParameters )|contains( concat( $defaultFacet['field'], ':', $defaultFacet['name']  ) )|not}
+	          <li>
+	            {def $facetData=$search_extras.facet_fields.$key}
+	              <span {*style="background-color: #F2F1ED"*}><strong>{$defaultFacet['name']}</strong></span>
+	              <ul>
+	                {foreach $facetData.nameList as $key2 => $facetName}
+		                {if ne( $key2, '' )}
+		                <li>
+		                    <a href={concat( $baseURI, '&filter[]=', $facetData.queryLimit[$key2]|wash, '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName, $uriSuffix )|ezurl}>                
+		                    {$facetName}</a> ({$facetData.countList[$key2]})
+		                </li>
+		                {/if}
+	                {/foreach}
+	              </ul>
+	          </li>
+	          {/if}
+          {/foreach}
+          
+          {* date filtering here. Using a simple filter for now. Should use the date facets later on *}
+          {if eq( $dateFilter, 0 )}
+              <li>
+                  <span {*style="background-color: #F2F1ED"*}><strong>{'Creation time'|i18n( 'extension/ezfind/facets' )}</strong></span>
+                  <ul>
+                    <li>
+                        <a href={concat( $baseURI, '&dateFilter=1', $uriSuffix )|ezurl}>{"Last day"|i18n("design/standard/content/search")}</a>                    
+                    </li>
+                    <li>
+                        <a href={concat( $baseURI, '&dateFilter=2', $uriSuffix )|ezurl}>{"Last week"|i18n("design/standard/content/search")}</a>                    
+                    </li>
+                    <li>
+                        <a href={concat( $baseURI, '&dateFilter=3', $uriSuffix )|ezurl}>{"Last month"|i18n("design/standard/content/search")}</a>                    
+                    </li>                    
+                    <li>
+                        <a href={concat( $baseURI, '&dateFilter=4', $uriSuffix )|ezurl}>{"Last three months"|i18n("design/standard/content/search")}</a>                    
+                    </li>                    
+                    <li>
+                        <a href={concat( $baseURI, '&dateFilter=5', $uriSuffix )|ezurl}>{"Last year"|i18n("design/standard/content/search")}</a>                    
+                    </li>                    
+                  </ul>
+              </li>          
+           {/if}
+          </ul>
+          
       </fieldset>
-
-  <p>{'Search time: %1 msecs'|i18n('ezfind',,array($search_extras.responseHeader.QTime|wash))}</p>
-
   </div>
   {/case}
 {/switch}
 
-{foreach $search_result as $result
-         sequence array(bglight,bgdark) as $bgColor}
-   {node_view_gui view=ezfind_line sequence=$bgColor use_url_translation=$use_url_translation content_node=$result}
-{/foreach}
-
-{include name=Navigator
-         uri='design:navigator/google.tpl'
-         page_uri='/content/search'
-         page_uri_suffix=concat('?SearchText=',$search_text|urlencode,$search_timestamp|gt(0)|choose('',concat('&SearchTimestamp=',$search_timestamp)), $uriSuffix )
-         item_count=$search_count
-         view_parameters=$view_parameters
-         item_limit=$page_limit}
-
+  <div id="search_results">
+    {include name=Navigator
+             uri='design:navigator/google.tpl'
+             page_uri='/content/search'
+             page_uri_suffix=concat('?SearchText=',$search_text|urlencode,$search_timestamp|gt(0)|choose('',concat('&SearchTimestamp=',$search_timestamp)), $uriSuffix )
+             item_count=$search_count
+             view_parameters=$view_parameters
+             item_limit=$page_limit}
+             
+	{foreach $search_result as $result
+	         sequence array(bglight,bgdark) as $bgColor}
+	   {node_view_gui view=ezfind_line sequence=$bgColor use_url_translation=$use_url_translation content_node=$result}
+	{/foreach}
+	
+	{include name=Navigator
+	         uri='design:navigator/google.tpl'
+	         page_uri='/content/search'
+	         page_uri_suffix=concat('?SearchText=',$search_text|urlencode,$search_timestamp|gt(0)|choose('',concat('&SearchTimestamp=',$search_timestamp)), $uriSuffix )
+	         item_count=$search_count
+	         view_parameters=$view_parameters
+	         item_limit=$page_limit}
+  </div>
 </form>
 
 </div>
 
-<p class="small"><i>{$search_extras.engine}</i></p>
+<p class="small"><em>{'Search took: %1 msecs, using '|i18n('ezfind',,array($search_extras.responseHeader.QTime|wash))}{$search_extras.engine}</em></p>
 {*$search|attribute(show,2)*}
 </div></div></div>
 <div class="border-bl"><div class="border-br"><div class="border-bc"></div></div></div>

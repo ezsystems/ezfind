@@ -893,8 +893,9 @@ class ezfeZPSolrQueryBuilder
         // Loop through facet definitions, and build facet query.
         foreach( $parameterList['facet'] as $facetDefinition )
         {
-            if ( empty( $facetDefinition['field'] ) &&
-                 empty( $facetDefinition['query'] ) )
+            if ( empty( $facetDefinition['field'] ) and
+                 empty( $facetDefinition['query'] ) and
+                 empty( $facetDefinition['date'] ) )
             {
                 eZDebug::writeDebug( 'No facet field or query provided.',
                                      'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
@@ -929,7 +930,7 @@ class ezfeZPSolrQueryBuilder
                     default:
                     {
                         $fieldName = eZSolr::getFieldName( $facetDefinition['field'] );
-                        if ( !$fieldName )
+                        if ( !$fieldName and empty( $facetDefinition['date'] ) )
                         {
                             eZDebug::writeNotice( 'Facet field does not exist in local installation, but may still be valid: ' .
                                                   $facetDefinition['field'],
@@ -1023,6 +1024,24 @@ class ezfeZPSolrQueryBuilder
             }
 
             // Get date start option - may add validation later.
+            if ( !empty( $facetDefinition['date'] ) )
+            {
+                $fieldName = eZSolr::getFieldName( $facetDefinition['date'] );
+                if ( !$fieldName )
+                {
+                    eZDebug::writeNotice( 'Facet field does not exist in local installation, but may still be valid: ' .
+                                          $facetDefinition['date'],
+                                          'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
+                    continue;
+                }
+                else
+                {
+                    $queryPart['date'] = $fieldName;
+                }
+            }
+
+
+            // Get date start option - may add validation later.
             if ( !empty( $facetDefinition['date.start'] ) )
             {
                 $queryPart['date.start'] = $facetDefinition['date.start'];
@@ -1072,7 +1091,17 @@ class ezfeZPSolrQueryBuilder
             {
                 foreach( $queryPart as $key => $value )
                 {
-                    $queryParamList['facet.' . $key][] = $value;
+                    /*if ( !empty( $queryParamList['facet.' . $key] ) and
+                         isset( $queryPart['field'] ) )
+                    {
+                        // local override for one given facet
+                        $queryParamList['f.' . $queryPart['field'] . '.facet.' . $key][] = $value;
+                    }
+                    else
+                    {*/
+                        // global value
+                        $queryParamList['facet.' . $key][] = $value;
+                    /*}*/
                 }
             }
         }
@@ -1081,7 +1110,6 @@ class ezfeZPSolrQueryBuilder
         {
             $queryParamList['facet'] = 'true';
         }
-
         return $queryParamList;
     }
 

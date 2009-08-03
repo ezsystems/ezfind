@@ -109,6 +109,15 @@ $FunctionList['search'] = array( 'name' => 'search',
 														       'required' => false,
 														       'default' => false ) ) );
 
+
+$FunctionList['getDefaultSearchFacets'] = array( 'name' => 'getDefaultSearchFacets',
+                                          'operation_types' => 'read',
+                                          'call_method' => array( 'class' => 'ezfModuleFunctionCollection',
+                                                                  'include_file' => 'extension/ezfind/classes/ezfmodulefunctioncollection.php',
+                                                                  'method' => 'getDefaultSearchFacets' ),
+                                          'parameter_type' => 'standard',
+                                          'parameters' => array( ) );
+
 $FunctionList['facetParameters'] = array( 'name' => 'facetParameters',
                                           'operation_types' => 'read',
                                           'call_method' => array( 'class' => 'ezfModuleFunctionCollection',
