@@ -321,7 +321,7 @@ class eZFindElevateConfiguration extends eZPersistentObject
         }
         else
         {
-            // tring to insert an elevate configuration row for a specific language, while one already exists for all languages.
+            // trying to insert an elevate configuration row for a specific language, while one already exists for all languages.
             if ( parent::fetchObject( self::definition(), null, array( 'contentobject_id' => $objectID, 'search_query' => $queryString, 'language_code' => self::WILDCARD ) ) )
                 return null;
         }
@@ -377,7 +377,7 @@ class eZFindElevateConfiguration extends eZPersistentObject
             catch ( Exception $e )
             {
                 self::$lastSynchronizationError = $e->getMessage();
-                eZDebug::writeError( self::$lastSynchronizationError, 'eZFindElevateConfiguration::synchronizeWithSolr' );
+                eZDebug::writeError( self::$lastSynchronizationError, __METHOD__ );
                 return false;
             }
         }
@@ -385,7 +385,7 @@ class eZFindElevateConfiguration extends eZPersistentObject
         {
             $message = ezi18n( 'extension/ezfind/elevate', "Error while generating the configuration XML" );
             self::$lastSynchronizationError = $message;
-            eZDebug::writeError( $message, 'eZFindElevateConfiguration::synchronizeWithSolr' );
+            eZDebug::writeError( $message, __METHOD__ );
             return false;
         }
         return true;
@@ -495,17 +495,17 @@ class eZFindElevateConfiguration extends eZPersistentObject
         if ( ! $result )
         {
             $message = ezi18n( 'extension/ezfind/elevate', 'An unknown error occured in updating Solr\'s elevate configuration.' );
-            eZDebug::writeError( $message, 'eZFindElevateConfiguration::pushConfigurationToSolr' );
+            eZDebug::writeError( $message, __METHOD__ );
             throw new Exception( $message );
         }
         elseif ( isset( $result['error'] ) )
         {
-            eZDebug::writeError( $result['error'], 'eZFindElevateConfiguration::pushConfigurationToSolr' );
+            eZDebug::writeError( $result['error'], __METHOD__ );
             throw new Exception( $result['error'] );
         }
         else
         {
-            eZDebug::writeNotice( "Successful update of Solr's configuration.", 'eZFindElevateConfiguration::pushConfigurationToSolr' );
+            eZDebug::writeNotice( "Successful update of Solr's configuration.", __METHOD__ );
         }
     }
 
