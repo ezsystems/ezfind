@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh -e
 #
 # eZ Find init script for debian.
 #
@@ -15,13 +15,17 @@
 # cd /etc/rc3.d && ln -s ../init.d/solr K70solr
 # cd /etc/rc5.d && ln -s ../init.d/solr K70solr
 
-set -e
+
+. /lib/lsb/init-functions
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DESC="Solr indexing server"
 NAME=solr
-SOLR_HOME=# Replace with the java directory of your eZFind extension (example: /var/www/ezpublish/extension/ezfind/java)
-DAEMON=$SOLR_HOME/$NAME.sh
+SOLR_HOME=/usr/local/solr/java
+#Replace with the java directory of your eZFind extension (example: /var/www/ezpublish/extension/ezfind/java)
+
+PARAMETERS="-jar start.jar"
+DAEMON=/usr/bin/java
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
@@ -32,17 +36,13 @@ test -x $DAEMON || exit 0
 #	Function that starts the daemon/service.
 #
 d_start() {
-	start-stop-daemon --start --pidfile $PIDFILE \
-                --chdir $SOLR_HOME --background --make-pidfile \
-		--exec $DAEMON
-}
-
+	start-stop-daemon --start --pidfile $PIDFILE --chdir $SOLR_HOME --background --make-pidfile --exec $DAEMON -- $PARAMETERS
+} 
 #
 #	Function that stops the daemon/service.
 #
 d_stop() {
-	start-stop-daemon --stop --quiet --pidfile $PIDFILE \
-		--name java
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE --name java
         rm -f $PIDFILE
 }
 
