@@ -1,7 +1,7 @@
 Changes from 2.1.0alpha1 to 2.1.0beta1
 
 *Features:
-
+- implemented enhancement #015272: log solr responses in ez logs
 
 *Bugs:
 - Fixed bug #015281: Missing ";" in schema file

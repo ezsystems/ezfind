@@ -169,7 +169,7 @@ class eZSolrBase
             }
             else
             {
-                eZDebug::writeError( 'Got invalid result from search engine.' );
+                eZDebug::writeError( 'Got invalid result from search engine.' .$data );
                 return false;
             }
         }
