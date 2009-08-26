@@ -197,7 +197,11 @@ class ezfeZPSolrQueryBuilder
                 $hiddenNodesQueryText =  $hiddenNodesQueryText . $element['node_id'] . ' ';
             }
             $hiddenNodesQueryText = $hiddenNodesQueryText . ')';
-            $filterQuery[] = $hiddenNodesQueryText;
+            // only add filter if there are hidden nodes after all
+            if ( $invisibleNodeIDArray )
+            {
+                $filterQuery[] = $hiddenNodesQueryText;
+            }
 
         }
 
