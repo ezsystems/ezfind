@@ -6,3 +6,4 @@ Changes from 2.1.0alpha1 to 2.1.0beta1
 *Bugs:
 - Fixed bug #015281: Missing ";" in schema file
 - Fixed bug #015072: no search results (invalid result) when FilterHiddenFromDB=enabled and all nodes visible
+- Fixed bug #015357: Wrong Runlevel in Debian-init-script
