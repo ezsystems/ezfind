@@ -8,4 +8,5 @@ Changes from 2.1.0alpha1 to 2.1.0beta1
 - Fixed bug #015072: no search results (invalid result) when FilterHiddenFromDB=enabled and all nodes visible
 - Fixed bug #015357: Wrong Runlevel in Debian-init-script
 - Fixed bug #015311: Solr index is by default stored in the wrong directory
+- Fixed bug #014957: Mismatch between documentation and code for search function.
 
