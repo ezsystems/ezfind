@@ -60,10 +60,10 @@ Configuration:
   For shared servers, it's recommended to only run one instance Solr.
 
   Index options:
-  Solr will store the search index in extension/ezfind/java/solr/data/index
-  This may be changed, by altering the configuration file 
+  Solr will store the search index according to the directive in the configuration file
   extension/ezfind/java/solr/conf/solrconfig.xml . Change the config->dataDir
-  setting to alter the index path.
+  setting to alter the index path for your intallation. Make sure the permissions are
+  correctly set
 
   Java options:
   The -Dezfind option is to make it easier to identify the eZ Find java process. The -Dezfind option
