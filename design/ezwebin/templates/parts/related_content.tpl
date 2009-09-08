@@ -3,4 +3,4 @@
                                                              'limit', 7  
                            ))}
 {set $related_content=$related_content['SearchResult']}
-{include uri="design:parts/article/display_related_content.tpl"}
+{include uri="design:parts/display_related_content.tpl"}
