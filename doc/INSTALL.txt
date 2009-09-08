@@ -48,8 +48,9 @@ Installing:
    
    $> mysql -u <user> -p <database_name> < extension/ezfind/sql/mysql/mysql.sql
    
-   The procedure is very similar in case you are using another RDMS. Please refer to the 
-   documentation reference for your DBMS if you are experiencing issues.
+   The procedure is very similar in case you are using another RDMS. You may want to have a look at the 
+   sql/oracle and sql/postgresql for Oracle and PostgreSQL databases respectively.
+   Please refer to the documentation reference for your DBMS if you are experiencing issues.
 
 6. Clear template override cache with the command: php bin/php/ezcache.php --clear-id=template-override
 
