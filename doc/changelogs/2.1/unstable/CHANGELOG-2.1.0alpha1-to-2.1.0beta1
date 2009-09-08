@@ -2,6 +2,8 @@ Changes from 2.1.0alpha1 to 2.1.0beta1
 
 *Features:
 - implemented enhancement #015272: log solr responses in ez logs
+- Updated Solr build to rev 807925 (1.4-dev)
+- implemented #014742:	Add support for character mapping in Solr (through update of backend, rev 4143)
 
 *Bugs:
 - Fixed bug #015281: Missing ";" in schema file
@@ -11,3 +13,5 @@ Changes from 2.1.0alpha1 to 2.1.0beta1
 - Fixed bug #014957: Mismatch between documentation and code for search function.
 - Fixed bug #015349: DB schema files for postgresql and oracle is missing
 - Fixed bug #015316: After installing ezfind, articles in ezwebin/ezflow still doesn't have a automated "Morel like this" section
+- Fixed bug #014561: Spellcheck index isn't build with buildOnOptimize configuration (see rev 4143)
+
