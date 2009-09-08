@@ -36,7 +36,7 @@ class eZFindServerCallFunctions
                       );
 
         $enableSpellcheck = false;
-        if ( $http->hasPostVariable( 'enable-spellcheck' ) and $http->postVariable( 'enable-spellcheck' ) )
+        if ( $http->hasPostVariable( 'enable-spellcheck' ) and $http->postVariable( 'enable-spellcheck' ) == 1 )
         {
             $param['SpellCheck'] = array( true );
         }
@@ -51,7 +51,7 @@ class eZFindServerCallFunctions
         $result['SearchOffset'] = $searchOffset;
         $result['SearchLimit'] = $searchLimit;
         $result['SearchExtras'] = array();
-        if ( $param['SpellCheck'][0] )
+        if ( isset( $param['SpellCheck'] ) )
             $result['SearchExtras']['spellcheck'] = $searchList['SearchExtras']->attribute( 'spellcheck' );
 
         // @ TODO : add optional facets and spellcheck here.

@@ -10,3 +10,4 @@ Changes from 2.1.0alpha1 to 2.1.0beta1
 - Fixed bug #015311: Solr index is by default stored in the wrong directory
 - Fixed bug #014957: Mismatch between documentation and code for search function.
 - Fixed bug #015349: DB schema files for postgresql and oracle is missing
+- Fixed bug #015316: After installing ezfind, articles in ezwebin/ezflow still doesn't have a automated "Morel like this" section

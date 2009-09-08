@@ -3,12 +3,9 @@
 <form id="search-form-{$block.id}" action="{'ezajax/search'|ezurl('no')}" method="post">
     <input id="search-string-{$block.id}" type="text" name="SearchStr" value="" />
     <input id="search-button-{$block.id}" class="button" type="submit" name="SearchButton" value="Search" />
-    {* FIXME : awaiting a fix on http://issues.ez.no/14488 in order to have checkbox
-               custom attributes to work correctly. For now their value is always ''.
-    *}
     {def $customAttributesString='['}
     {foreach $block.custom_attributes as $name => $value}
-        <input id="search-custom-attribute-{$name}-{$block.id}" type="hidden" name="{$name}" value="{* $value *}1" />
+        <input id="search-custom-attribute-{$name}-{$block.id}" type="hidden" name="{$name}" value="{$value}" />
         {set $customAttributesString = concat( $customAttributesString, '"#search-custom-attribute-', $name, '-', $block.id, '", ' )}    
     {/foreach}
     {set $customAttributesString=concat( $customAttributesString, ']' )}
