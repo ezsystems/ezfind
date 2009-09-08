@@ -30,3 +30,13 @@ ul#active-facets-list li
 	list-style: none;
 	background-image: none;
 }
+
+div.ajax-search-spellcheck
+{
+    margin-top: 3px;
+    margin-bottom: 7px;
+    font-style: italic;
+    //color: #F06020;
+    padding-bottom: 3px;
+    padding-left: 2px;
+}

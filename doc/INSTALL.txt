@@ -33,7 +33,13 @@ Installing:
 3. Enable the extension in eZ Publish. Do this by opening settings/override/site.ini.append.php ,
    and add in the [ExtensionSettings] block:
    ActiveExtensions[]=ezfind
-   To get the correct templates for ezwebin, ezfind must be enabled before the ezwebin extension.
+   To get the correct templates for ezwebin, and for all ezfind features to be available, 
+   ezfind must be enabled before the ezwebin and ezflow extensions. The final result must follow the following principle : 
+   
+     [ExtensionSettings]
+     ActiveExtensions[]=ezfind
+     ActiveExtensions[]=ezwebin
+     ActiveExtensions[]=ezflow
 
 4. Update the class autoloads by running the script: php bin/php/ezpgenerateautoloads.php
 

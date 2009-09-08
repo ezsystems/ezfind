@@ -40,7 +40,9 @@
                               'sort_by', hash( 'score', 'desc' ),
                               'facet', $defaultSearchFacets,
                               'filter', $filterParameters,
-                              'publish_date', $dateFilter ))}
+                              'publish_date', $dateFilter,
+                              'spell_check', array( true() ) 
+                             ))}
     {set $search_result=$search['SearchResult']}
     {set $search_count=$search['SearchCount']}
     {def $search_extras=$search['SearchExtras']}
