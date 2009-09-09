@@ -103,7 +103,9 @@ class eZSolrDoc
      */
     function docToXML()
     {
-        return $this->Doc->saveXML( $this->RootElement );
+        $rawXML = $this->Doc->saveXML( $this->RootElement );
+        //make sure there are no control characters left
+        return preg_replace('@[\x00-\x08\x0B\x0C\x0E-\x1F]@', ' ', $rawXML);
     }
 
 
