@@ -66,8 +66,6 @@
     {set $uriSuffix = concat( $uriSuffix, '&dateFilter=', $dateFilter )}
 {/if}
     
-{debug-log var=$uriSuffix msg='$uriSuffix'}
-    
 <script language="JavaScript" type="text/javascript">
 <!--{literal}
     // toggle block
@@ -80,7 +78,11 @@
 
     function ezfSetBlock( id, value )
     {
-		document.getElementById(id).style.display = value;
+        var el = document.getElementById(id);
+        if ( el != null )
+        {
+		    el.style.display = value;
+		}
     }
 
     function ezfTrim( str )

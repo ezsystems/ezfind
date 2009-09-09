@@ -35,13 +35,17 @@ class eZFindServerCallFunctions
                         'SortArray' => array( 'score', 0 )
                       );
 
-        $enableSpellcheck = false;
         if ( $http->hasPostVariable( 'enable-spellcheck' ) and $http->postVariable( 'enable-spellcheck' ) == 1 )
         {
             $param['SpellCheck'] = array( true );
         }
 
-        // @FIXME : replace by ezfind.
+        if ( $http->hasPostVariable( 'show-facets' ) and $http->postVariable( 'show-facets' ) == 1 )
+        {
+            $defaultFacetFields = eZFunctionHandler::execute( 'ezfind', 'getDefaultSearchFacets', array() );
+            $param['facet'] = $defaultFacetFields;
+        }
+
         $solr= new eZSolr();
         $searchList = $solr->search( $searchStr, $param );
 
@@ -51,10 +55,40 @@ class eZFindServerCallFunctions
         $result['SearchOffset'] = $searchOffset;
         $result['SearchLimit'] = $searchLimit;
         $result['SearchExtras'] = array();
+
         if ( isset( $param['SpellCheck'] ) )
             $result['SearchExtras']['spellcheck'] = $searchList['SearchExtras']->attribute( 'spellcheck' );
 
-        // @ TODO : add optional facets and spellcheck here.
+        if ( isset( $param['facet'] ) )
+        {
+            $facetInfo = array();
+            $retrievedFacets = $searchList['SearchExtras']->attribute( 'facet_fields' );
+            $baseSearchUrl = "/content/search/";
+            eZURI::transformURI( $baseSearchUrl, false, 'full' );
+
+            foreach ( $defaultFacetFields as $key => $defaultFacet )
+            {
+                $facetData=$retrievedFacets[$key];
+                $facetInfo[$key] = array();
+                $facetInfo[$key][] = $defaultFacet['name'];
+
+                if ( $facetData != null )
+                {
+                    foreach ( $facetData['nameList'] as $key2 => $facetName )
+                    {
+                        $tmp = array();
+                        if ( $key2 != '' )
+                        {
+                            $tmp[] = $baseSearchUrl . '?SearchText=' . $searchStr . '&filter[]=' . $facetData['queryLimit'][$key2] . '&activeFacets[' . $defaultFacet['field'] . ':' . $defaultFacet['name'] . ']=' . $facetName;
+                            $tmp[] = $facetName;
+                            $tmp[] = "(" . $facetData['countList'][$key2] . ")";
+                            $facetInfo[$key][] = $tmp;
+                        }
+                    }
+                }
+            }
+            $result['SearchExtras']['facets'] = $facetInfo;
+        }
 
         return $result;
     }

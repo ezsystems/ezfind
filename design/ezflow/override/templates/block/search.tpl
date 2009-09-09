@@ -23,6 +23,9 @@ eZAJAXSearch.cfg = {ldelim}
                         searchresults: '#search-results-{$block.id}',
                         spellcheck: '#spellcheck-{$block.id} a',
                         spellchecktemplate: '<div id="spellcheck-{$block.id}" class="ajax-search-spellcheck">{'Did you mean'|i18n( 'extension/ezfind/ajax-search' )}"<a>{ldelim}spellcheck{rdelim}</a>"?</div>',
+                        facetsmainlisttemplate: '<div class="ajax-search-facets" id="facets-{$block.id}">{'Refine with facets'|i18n( 'extension/ezfind/ajax-search' )}<ul>{ldelim}inner_facet_list{rdelim}</ul></div>',
+                        facetsinnerlisttemplate: '<li>{ldelim}facet_name{rdelim}</li><ul>{ldelim}facet_element{rdelim}</ul>',
+                        facetselementtemplate: '<li><a href="{ldelim}link{rdelim}">{ldelim}value{rdelim}</a> {ldelim}count{rdelim}</li>',
                         resulttemplate: '<div class="result-item float-break"><div class="item-title"><a href="{ldelim}url_alias{rdelim}">{ldelim}title{rdelim}</a></div><div class="item-published-date">[{ldelim}class_name{rdelim}] {ldelim}date{rdelim}</div></div>'
                    {rdelim};
 eZAJAXSearch.init();

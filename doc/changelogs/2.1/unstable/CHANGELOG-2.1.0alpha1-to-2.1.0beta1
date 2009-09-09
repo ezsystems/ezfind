@@ -14,4 +14,4 @@ Changes from 2.1.0alpha1 to 2.1.0beta1
 - Fixed bug #015349: DB schema files for postgresql and oracle is missing
 - Fixed bug #015316: After installing ezfind, articles in ezwebin/ezflow still doesn't have a automated "Morel like this" section
 - Fixed bug #014561: Spellcheck index isn't build with buildOnOptimize configuration (see rev 4143)
-
+- Fixed bug #015314: after installing ezfind, the search block in ezflow still doesn't have options for facets and spellchecker

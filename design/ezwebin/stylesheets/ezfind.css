@@ -40,3 +40,22 @@ div.ajax-search-spellcheck
     padding-bottom: 3px;
     padding-left: 2px;
 }
+
+div.ajax-search-facets
+{
+    margin-top: 5px;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    border: 1px solid #F0F0F0;
+    font-size: 90%;
+    
+    /* for IE */
+    filter:alpha(opacity=0); /* Will be faded in by the YUI animation */
+    /* CSS3 standard */
+    opacity: 0; /* Will be faded in by the YUI animation */	
+
+    /*height: 0;
+    width: 0;*/
+}

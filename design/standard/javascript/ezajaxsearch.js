@@ -23,8 +23,81 @@ var eZAJAXSearch = function() {
                         scDiv.on( 'click', handleClickFromSpellcheck );
                         resultsTarget.appendChild( scDiv );
                     }
+
                     
-                    for(var i = 0; i < itemCount; i++) {
+                    var facets = response.content.SearchExtras.facets;
+                    // Facets were returned, display them : 
+                    if ( facets && facets.length != 0 )
+                    {
+                        var facetMainList = ret.cfg.facetsmainlisttemplate;                        
+                        for( var i = 0; i < facets.length; i++ )
+                        {
+                            var facet = facets[i];
+                            // Name of the facet :
+                            var facetName = facet[0];
+                            var facetInnerList = ret.cfg.facetsinnerlisttemplate;                            
+                            facetInnerList = facetInnerList.replace( /\{+facet_name+\}/, facetName );                                                        
+                            
+                            if ( facet.length > 1 )
+                            {
+                                for( var j = 1; j < facet.length; j++ )
+                                {
+                                    var link = facet[j][0];
+                                    var value = facet[j][1];
+                                    var count = facet[j][2];
+                                    var facetElement = ret.cfg.facetselementtemplate;
+                                    facetElement = facetElement.replace( /\{+link+\}/, link );
+                                    facetElement = facetElement.replace( /\{+value+\}/, value );
+                                    facetElement = facetElement.replace( /\{+count+\}/, count );
+                                    facetInnerList = facetInnerList.replace( /\{+facet_element+\}/, facetElement + "{facet_element}" );                                
+                                }
+                                facetInnerList = facetInnerList.replace( /\{+facet_element+\}/, '' );
+                                facetMainList = facetMainList.replace( /\{+inner_facet_list+\}/, facetInnerList + "{inner_facet_list}" );
+                            }
+                        }
+
+                        // Only display the "Refine with facets" block if actual facets were returned.
+                        if ( facetMainList != ret.cfg.facetsmainlisttemplate )
+                        {
+                            facetMainList = facetMainList.replace( /\{+inner_facet_list+\}/, "" );                            
+                            var facetsDiv = Y.Node.create( facetMainList );
+                            
+                            resultsTarget.appendChild( facetsDiv );                            
+                            var id = facetsDiv.get( 'id' );
+                            //var width = facetsDiv.get( 'clientWidth' ) - 10; // removing horizontal padding in order to have the actual element's width
+                            //var height = facetsDiv.get( 'clientHeight' ) - 10; // idem.
+                            
+                            var myAnim = function ( Y )
+                            {
+                                var anim = new Y.Anim({
+                                    node: '#' + id,
+                                    easing: Y.Easing.backIn,
+                                    duration: 1.0,
+                                    
+                                    from: 
+                                    {
+                                        /*height: 0,
+                                        width: 0*/
+                                        opacity: 0
+                                    },
+    
+                                    to: 
+                                    {
+                                        /*width: width,
+                                        height: height*/
+                                        opacity: 1
+                                    }
+                                });
+                                anim.run();
+                            }
+                            YUI().use( 'animation', 'anim', myAnim );
+                            
+                        }
+                    }
+                    
+                    
+                    for(var i = 0; i < itemCount; i++) 
+                    {
                         var item = response.content.SearchResult[i];
                         
                         var template = ret.cfg.resulttemplate;
