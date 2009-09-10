@@ -1,4 +1,3 @@
-{debug-log var=$block.custom_attributes}
 <h2>{$block.name|wash()}</h2>
 <form id="search-form-{$block.id}" action="{'ezajax/search'|ezurl('no')}" method="post">
     <input id="search-string-{$block.id}" type="text" name="SearchStr" value="" />
@@ -8,7 +7,7 @@
         <input id="search-custom-attribute-{$name}-{$block.id}" type="hidden" name="{$name}" value="{$value}" />
         {set $customAttributesString = concat( $customAttributesString, '"#search-custom-attribute-', $name, '-', $block.id, '", ' )}    
     {/foreach}
-    {set $customAttributesString=concat( $customAttributesString, ']' )}
+    {set $customAttributesString=concat( $customAttributesString|trim( ' ,' ), ']' )}
 </form>
 
 <div id="search-results-{$block.id}"></div>

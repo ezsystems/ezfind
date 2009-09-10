@@ -120,7 +120,8 @@ var eZAJAXSearch = function() {
         }
 
         var performSearch = function() {
-            var searchString = Y.get(ret.cfg.searchstring).get('value');
+            var searchInput = Y.get(ret.cfg.searchstring);
+            var searchString = searchInput.get('value');
 
             var data = 'SearchStr=' + searchString;
             data += '&SearchLimit=10';
