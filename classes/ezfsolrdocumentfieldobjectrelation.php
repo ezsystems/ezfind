@@ -25,15 +25,17 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
-/*! \file ezfsolrdocumentfieldobjectrelation.php
-*/
-
-/*!
-  \class ezfSolrDocumentFieldObjectRelation ezfsolrdocumentfieldobjectrelation.php
-  \brief The class ezfSolrDocumentFieldObjectRelation does
-
-*/
-
+/**
+ * File containing the ezfSolrDocumentFieldObjectRelation class.
+ *
+ * @package eZFind
+ */
+/**
+ * The ezfSolrDocumentFieldObjectRelation class handles indexing and
+ * querying for the ezobjectrelation and ezobjectrelationlist in eZFind.
+ *
+ * @package eZFind
+ */
 class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
 {
     /**
@@ -105,6 +107,77 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
      */
     public static function getFieldName( eZContentClassAttribute $classAttribute, $subAttribute = null )
     {
+        switch ( $classAttribute->attribute( 'data_type_string' ) )
+        {
+        	case 'ezobjectrelation' :
+        	{
+        	    // Optimistic name generation here : assume the $subAttribute value actually matches
+                // one of the related object's attributes name. Hence the commented out line in the first "if" below.
+                if ( $subAttribute and
+                     $subAttribute !== '' and
+                     //array_key_exists( $subAttribute, self::$subattributesDefinition ) and
+                     $subAttribute != self::DEFAULT_SUBATTRIBUTE and
+                     ( $type = self::getTypeForSubattribute( $classAttribute, $subAttribute ) ) )
+                {
+                    // A subattribute was passed
+                    return parent::generateSubattributeFieldName( $classAttribute,
+                                                                  $subAttribute,
+                                                                  $type );
+                }
+                else
+                {
+                    // return the default field name here.
+                    return parent::generateAttributeFieldName( $classAttribute,
+                                                               self::$subattributesDefinition[self::DEFAULT_SUBATTRIBUTE] );
+                }
+        	} break;
+
+        	case 'ezobjectrelationlist' :
+    	    {
+
+    	    } break;
+
+        	default:
+        	{} break;
+        }
+    }
+
+    /**
+     * Identifies, based on the existing object relations, the type of the subattribute.
+     *
+     * @param eZContentClassAttribute $classAttribute The ezobjectrelation/ezobjectrelationlist attribute
+     * @param $subAttribute The subattribute's name
+     * @return string The type of the subattribute, false otherwise.
+     */
+    protected static function getTypeForSubattribute( eZContentClassAttribute $classAttribute, $subAttribute  )
+    {
+        $q = "SELECT DISTINCT( ezcoa.data_type_string )
+                FROM   ezcontentobject_link AS ezcol,
+                       ezcontentobject_attribute AS ezcoa,
+                       ezcontentclass_attribute AS ezcca,
+                       ezcontentclass_attribute AS ezcca_target
+                WHERE  ezcol.contentclassattribute_id={$classAttribute->attribute( 'id' )}
+                  AND  ezcca_target.identifier='{$subAttribute}'
+                  AND  ezcca.data_type_string='{$classAttribute->attribute( 'data_type_string' )}'
+                  AND  ezcca.id=ezcol.contentclassattribute_id
+                  AND  ezcol.to_contentobject_id = ezcoa.contentobject_id
+                  AND  ezcoa.contentclassattribute_id = ezcca_target.id;
+        ";
+        $rows = eZDB::instance()->arrayQuery( $q );
+        if ( $rows and count( $rows ) > 0 )
+        {
+            if ( count( $rows ) > 1 )
+            {
+                $msg = "Multiple types were found for subattribute '{$subAttribute}' of
+                class attribute #{$classAttribute->attribute( 'id' )} [{$classAttribute->attribute( 'data_type_string' )}].
+                This means that objects of different content classes were related through class attribute #{$classAttribute->attribute( 'id' )}
+                and had attributes named '{$subAttribute}' of different datatypes : \n"
+                . print_r( $rows , true ) .
+                " Picking the first one here : {$rows[0]['data_type_string']}";
+                eZDebug::writeWarning( $msg,  __METHOD__ );
+            }
+            return ezfSolrDocumentFieldBase::getClassAttributeType( new eZContentClassAttribute( $rows[0] ) );
+        }
         return false;
     }
 
@@ -235,6 +308,7 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                     {
                         $returnArray[ezfSolrDocumentFieldBase::generateSubmetaFieldName( $metaInfo['name'], $contentClassAttribute )] = ezfSolrDocumentFieldBase::preProcessValue( $metaInfo['value'], $metaInfo['fieldType'] );
                     }
+
                     return $returnArray;
                 }
                 break;

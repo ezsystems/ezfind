@@ -4,3 +4,4 @@ Changes from 2.1.0beta1 to 2.1.0rc1
 
 *Bugs:
 - Fixed bug #014737: Solr XML not parsable
+- Fixed bug #015293: Using subattribute filtering in the 'ezfind'-'search' template fetch function doesn't work

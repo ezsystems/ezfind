@@ -6,7 +6,7 @@ class eZFindElevateConfigurationTest extends ezpDatabaseTestCase
 {
     protected $backupGlobals = false;
 
-    protected $sqlFiles = array( 'extension/ezfind/sql/ezfind_elevate_configuration.mysql.sql' );
+    protected $sqlFiles = array( 'extension/ezfind/sql/mysql/mysql.sql' );
 
     public function setUp()
     {

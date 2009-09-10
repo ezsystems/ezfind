@@ -101,15 +101,15 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
         //Testing the class/attribute/subattribute syntax, with the secondary subattribute of
         //  the 'dummy' datatype
         $ezcca3 = $ezcca2;
-        $expected3 = ezfSolrDocumentFieldBase::SUBATTR_FIELD_PREFIX . 'dummy-subattribute2_t';
-        $options3 = 'subattribute2';
+        $expected3 = ezfSolrDocumentFieldBase::SUBATTR_FIELD_PREFIX . 'dummy-subattribute1_i';
+        $options3 = 'subattribute1';
         $providerArray[] = array( $expected3, $ezcca3, $options3 );
 
         //Testing the class/attribute/subattribute syntax, with the default subattribute of
         //  the 'dummy' datatype
         $ezcca5 = $ezcca2;
         $expected5 = ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'dummy_t';
-        $options5 = 'subattribute1';
+        $options5 = 'subattribute2';
         $providerArray[] = array( $expected5, $ezcca5, $options5 );
 
         //Testing the class/attribute/subattribute syntax for ezobjectrelation attributes
@@ -118,12 +118,27 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
         $image4->name = __METHOD__ . $time4;
         $image4->caption = __METHOD__ . $time4;
         $imageId4 = $image4->publish();
-        $ezcca4 = new eZContentClassAttribute( array( 'identifier'        => 'image' ,
+        $srcObjId4 = 123456;
+        $ezcca4 = new eZContentClassAttribute( array( 'id'                => $time4,
+                                                      'identifier'        => 'image' ,
                                                       'data_type_string'  => 'ezobjectrelation',
                                                       'data_int'          => $imageId4 ) );
+        $ezcca4->store();
+        //Create entry in ezcontentobject_link
+        $q4 = "INSERT INTO ezcontentobject_link VALUES( {$ezcca4->attribute( 'id' )}, $srcObjId4, 1, 123456, 0, 8, $imageId4 );";
+        eZDB::instance()->query( $q4 );
+
         $expected4 = ezfSolrDocumentFieldBase::SUBATTR_FIELD_PREFIX . 'image-name_t';
         $options4 = 'name';
         $providerArray[] = array( $expected4, $ezcca4, $options4 );
+
+
+        // Testing the class/attribute/subattribute syntax for ezobjectrelation attributes, with a subattribute of
+        // a different type than the default Solr type :
+        $ezcca5 = $ezcca4;
+        $expected5 = ezfSolrDocumentFieldBase::SUBATTR_FIELD_PREFIX . 'image-caption_t';
+        $options5 = 'caption';
+        $providerArray[] = array( $expected5, $ezcca5, $options5 );
 
 
         // perform actual testing
@@ -340,7 +355,6 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
         $ezcca3 = $ezcoa3->attribute( 'contentclass_attribute' );
         $defaultFieldName3 = ezfSolrDocumentFieldBase::generateAttributeFieldName( $ezcca3,
                                                                 ezfSolrDocumentFieldObjectRelation::$subattributesDefinition[ezfSolrDocumentFieldObjectRelation::DEFAULT_SUBATTRIBUTE] );
-
         $expectedData3[$defaultFieldName3] = $tester3->getPlainTextRepresentation( $ezcoa3 );
         // required to allow another call to metaData()
         // on $ezcoa3 in getPlainTextRepresentation, called from the getData() method :

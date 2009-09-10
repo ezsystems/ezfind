@@ -116,7 +116,8 @@ class ezfSolrDocumentFieldDummyExample extends ezfSolrDocumentFieldBase
     {
         if ( $subAttribute and
              $subAttribute !== '' and
-             array_key_exists( $subAttribute, self::$subattributesDefinition ) )
+             array_key_exists( $subAttribute, self::$subattributesDefinition ) and
+             $subAttribute != self::DEFAULT_SUBATTRIBUTE )
         {
             // A subattribute was passed
             return parent::generateSubattributeFieldName( $classAttribute,

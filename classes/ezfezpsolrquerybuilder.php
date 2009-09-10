@@ -224,6 +224,7 @@ class ezfeZPSolrQueryBuilder
             $filterQuery[] = $languageFilterQuery;
         }
 
+
         $paramFilterQuery = $this->getParamFilterQuery( $params );
         if ( $paramFilterQuery )
         {
