@@ -993,7 +993,7 @@ class eZSolr
     */
     static function engineText()
     {
-        return ezi18n( 'ezfind', 'eZ Find 2.0 search plugin &copy; 2009 eZ Systems AS, powered by Apache Solr 1.4' );
+        return ezi18n( 'ezfind', 'eZ Find 2.1 search plugin &copy; 2009 eZ Systems AS, powered by Apache Solr 1.4dev' );
     }
 
 
