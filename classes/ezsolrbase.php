@@ -161,7 +161,7 @@ class eZSolrBase
      */
     function rawSolrRequest ( $request = '', $params = array(), $wt = 'php' )
     {
-        if ( count( $params ) == 0 || $request == '' )
+        if ( count( $params ) == 0 && $request == '' )
         {
             return false;
         }
