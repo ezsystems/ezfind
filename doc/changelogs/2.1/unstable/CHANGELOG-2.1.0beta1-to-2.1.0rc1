@@ -13,3 +13,4 @@ Changes from 2.1.0beta1 to 2.1.0rc1
 - Fixed bug #015463: Elevation is not multi-core ready
 - Fixed bug #015475: solr creates runtime error when publishing new content (when trying to index new content)
 - Fixed bug #014737: Solr XML not parsable
+- Fixed bug #015483: Search page CSS issue in Safari breaks page flow
