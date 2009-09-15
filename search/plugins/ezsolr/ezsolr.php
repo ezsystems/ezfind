@@ -508,10 +508,31 @@ class eZSolr
      */
     function addFieldBaseToDoc( ezfSolrDocumentFieldBase $fieldBase, eZSolrDoc $doc, $boost = false )
     {
-        foreach( $fieldBase->getData() as $key => $value )
+        $fieldBaseData = $fieldBase->getData();
+        if ( empty( $fieldBaseData ) )
         {
-                $doc->addField( $key, $value, $boost );
+            if (is_object($fieldBase) )
+            {
+                $contentClassAttribute = $fieldBase->ContentObjectAttribute->attribute( 'contentclass_attribute' );
+                $fieldName = $fieldBase->getFieldName( $contentClassAttribute );
+                $errorMessage = 'empty array for ' . $fieldName;
+            }
+            else
+            {
+                $errorMessage = '$fieldBase not an object';
+            }
+            eZDebug::writeNotice( $errorMessage , 'eZSolr::addFieldBaseToDoc' );
+            return false;
         }
+        else
+        {
+           foreach( $fieldBaseData as $key => $value )
+           {
+                $doc->addField( $key, $value, $boost );
+           } 
+           return true;
+        }
+
     }
 
     /*!
