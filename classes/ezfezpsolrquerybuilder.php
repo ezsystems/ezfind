@@ -1489,7 +1489,7 @@ class ezfeZPSolrQueryBuilder
             $classIDArray = array();
             foreach( $tmpClassIDArray as $key => $classIdentifier )
             {
-                if ( !is_numeric( $classIdentifier ) )
+                if ( !is_numeric( $classIdentifier ) && !empty( $classIdentifier ) )
                 {
                     if ( !$contentClass = eZContentClass::fetchByIdentifier( $classIdentifier, false ) )
                     {
