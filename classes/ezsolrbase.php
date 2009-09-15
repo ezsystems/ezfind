@@ -43,10 +43,24 @@ class eZSolrBase
 
      \param string Solr server URL
     */
-    function eZSolrBase( $baseURI = 'http://localhost:8983/solr' )
+    function eZSolrBase( $baseURI = false )
     {
-        $this->SearchServerURI = $baseURI;
+        //$this->SearchServerURI = $baseURI;
         $this->SolrINI = eZINI::instance( 'solr.ini' );
+        if (! $baseURI === false )
+        {
+            $this->SearchServerURI = $baseURI;
+        }
+        elseif ( isset( $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' ) ) )
+        {
+            $this->SearchServerURI = $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' );
+        }
+        // fall back to hardcoded Solr default
+        else
+        {
+            $this->SearchServerURI = 'http://localhost:8983/solr';
+        }
+
     }
 
 
@@ -169,7 +183,7 @@ class eZSolrBase
             }
             else
             {
-                eZDebug::writeError( 'Got invalid result from search engine.' .$data );
+                eZDebug::writeError( 'Got invalid result from search engine.' . $data );
                 return false;
             }
         }
@@ -218,7 +232,8 @@ class eZSolrBase
         {
             $this->commit();
         }
-        $this->postQuery( '/update', '<optimize/>', 'text/xml' );
+        //return the response for inspection if optimize was successful
+        return $this->postQuery( '/update', '<optimize/>', 'text/xml' );
     }
 
     /**
