@@ -868,6 +868,7 @@ class eZSolr
         $stopWordArray = array();
 
         eZDebug::accumulatorStop( 'Search' );
+        eZDebug::writeDebug( $resultArray['interestingTerms'], 'MoreLikeThis terms' );
         return array(
             'SearchResult' => $objectRes,
             'SearchCount' => $searchCount,
