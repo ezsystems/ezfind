@@ -603,10 +603,17 @@ class ezfeZPSolrQueryBuilder
         // Create sort parameters based on the parameters.
         $sortParameter = $this->buildSortParameter( $params );
 
-        //the array_unique below is necessary because attribute identifiers are not unique .. and we get as
-        //much highlight snippets as there are duplicate attribute identifiers
-        //these are also in the list of query fields (dismax, ezpublish) request handlers
-        $queryFields = array_unique( $this->getClassAttributes( $contentClassID, false, $fieldTypeExcludeList ) );
+        if ( isset( self::$FindINI->variable( 'MoreLikeThis', 'ExtractionFields' ) ) && self::$FindINI->variable( 'MoreLikeThis', 'ExtractionFields' ) == 'general')
+        {
+            $queryFields = array ('ezf_df_text');
+        }
+        else
+        {
+            //the array_unique below is necessary because attribute identifiers are not unique .. and we get as
+            //much highlight snippets as there are duplicate attribute identifiers
+            //these are also in the list of query fields (dismax, ezpublish) request handlers
+            $queryFields = array_unique( $this->getClassAttributes( $contentClassID, false, $fieldTypeExcludeList ) );
+        }
 
         //query type can vary for MLT q, or stream
         //if no valid match for the mlt query variant is obtained, it is treated as text
