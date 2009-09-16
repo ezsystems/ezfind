@@ -630,6 +630,14 @@ class ezfeZPSolrQueryBuilder
                 break;
         }
 
+        // fetch the mlt tuning parameters from ini settings
+        $mintf = (isset( self::$FindINI->variable( 'MoreLikeThis', 'MinTermFreq' ) ) ) ? self::$FindINI->variable( 'MoreLikeThis', 'MinTermFreq' ) : 1;
+        $mindf = (isset( self::$FindINI->variable( 'MoreLikeThis', 'MinDocFreq' ) ) ) ? self::$FindINI->variable( 'MoreLikeThis', 'MinDocFreq' ) : 1;
+        $minwl = (isset( self::$FindINI->variable( 'MoreLikeThis', 'MinWordLength' ) ) ) ? self::$FindINI->variable( 'MoreLikeThis', 'MinWordLength' ) : 3;
+        $maxwl = (isset( self::$FindINI->variable( 'MoreLikeThis', 'MaxWordLength' ) ) ) ? self::$FindINI->variable( 'MoreLikeThis', 'MaxWordLength' ) : 20;
+        $maxqt = (isset( self::$FindINI->variable( 'MoreLikeThis', 'MaxQueryTerms' ) ) ) ? self::$FindINI->variable( 'MoreLikeThis', 'MaxQueryTerms' ) : 5;
+        $boostmlt = (isset( self::$FindINI->variable( 'MoreLikeThis', 'BoostTerms' ) ) ) ? self::$FindINI->variable( 'MoreLikeThis', 'BoostTerms' ) : 'true';
+
         // @todo decide which of the hard-coded mlt parameters should become input parameters or ini settings
         return array_merge(
             array(
@@ -640,11 +648,13 @@ class ezfeZPSolrQueryBuilder
                 'indent' => 'on',
                 'version' => '2.2',
                 'mlt.match.include' => 'false', // exclude the doc itself
-                'mlt.minwl' => 3, //minimum wordlength
-                'mlt.mindf' => 2,
-                'mlt.mintf'=> 2,
-                'mlt.interestingTerms' => 'list', // useful for debug output
-                'mlt.boost' => 'true', // boost the highest ranking terms
+                'mlt.mindf' => $mindf,
+                'mlt.mintf' => $mintf,
+                'mlt.maxwl' => $maxwl,
+                'mlt.minwl' => $minwl, //minimum wordlength
+                'mlt.maxqt' => $mawqt,
+                'mlt.interestingTerms' => 'details', // useful for debug output & tuning
+                'mlt.boost' => $boostmlt, // boost the highest ranking terms
                 //'mlt.qf' => implode( ' ', $queryFields ),
                 'mlt.fl' => implode( ' ', $queryFields ),
                 'fl' =>
