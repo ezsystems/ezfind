@@ -602,8 +602,9 @@ class ezfeZPSolrQueryBuilder
 
         // Create sort parameters based on the parameters.
         $sortParameter = $this->buildSortParameter( $params );
+        $iniExtractionFields = self::$FindINI->variable( 'MoreLikeThis', 'ExtractionFields' );
 
-        if ( isset( self::$FindINI->variable( 'MoreLikeThis', 'ExtractionFields' ) ) && self::$FindINI->variable( 'MoreLikeThis', 'ExtractionFields' ) == 'general')
+        if ( $iniExtractionFields == 'general')
         {
             // the collector field for all strings in an object
             $queryFields = array ('ezf_df_text');
@@ -639,12 +640,13 @@ class ezfeZPSolrQueryBuilder
         }
 
         // fetch the mlt tuning parameters from ini settings
-        $mintf = (isset( self::$FindINI->variable( 'MoreLikeThis', 'MinTermFreq' ) ) ) ? self::$FindINI->variable( 'MoreLikeThis', 'MinTermFreq' ) : 1;
-        $mindf = (isset( self::$FindINI->variable( 'MoreLikeThis', 'MinDocFreq' ) ) ) ? self::$FindINI->variable( 'MoreLikeThis', 'MinDocFreq' ) : 1;
-        $minwl = (isset( self::$FindINI->variable( 'MoreLikeThis', 'MinWordLength' ) ) ) ? self::$FindINI->variable( 'MoreLikeThis', 'MinWordLength' ) : 3;
-        $maxwl = (isset( self::$FindINI->variable( 'MoreLikeThis', 'MaxWordLength' ) ) ) ? self::$FindINI->variable( 'MoreLikeThis', 'MaxWordLength' ) : 20;
-        $maxqt = (isset( self::$FindINI->variable( 'MoreLikeThis', 'MaxQueryTerms' ) ) ) ? self::$FindINI->variable( 'MoreLikeThis', 'MaxQueryTerms' ) : 5;
-        $boostmlt = (isset( self::$FindINI->variable( 'MoreLikeThis', 'BoostTerms' ) ) ) ? self::$FindINI->variable( 'MoreLikeThis', 'BoostTerms' ) : 'true';
+
+        $mintf = self::$FindINI->variable( 'MoreLikeThis', 'MinTermFreq' )  ? self::$FindINI->variable( 'MoreLikeThis', 'MinTermFreq' ) : 1;
+        $mindf = self::$FindINI->variable( 'MoreLikeThis', 'MinDocFreq' ) ? self::$FindINI->variable( 'MoreLikeThis', 'MinDocFreq' ) : 1;
+        $minwl = self::$FindINI->variable( 'MoreLikeThis', 'MinWordLength' ) ? self::$FindINI->variable( 'MoreLikeThis', 'MinWordLength' ) : 3;
+        $maxwl = self::$FindINI->variable( 'MoreLikeThis', 'MaxWordLength' ) ? self::$FindINI->variable( 'MoreLikeThis', 'MaxWordLength' ) : 20;
+        $maxqt = self::$FindINI->variable( 'MoreLikeThis', 'MaxQueryTerms' ) ? self::$FindINI->variable( 'MoreLikeThis', 'MaxQueryTerms' ) : 5;
+        $boostmlt = self::$FindINI->variable( 'MoreLikeThis', 'BoostTerms' ) ? self::$FindINI->variable( 'MoreLikeThis', 'BoostTerms' ) : 'true';
 
         // @todo decide which of the hard-coded mlt parameters should become input parameters or ini settings
         return array_merge(

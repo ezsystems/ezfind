@@ -47,11 +47,12 @@ class eZSolrBase
     {
         //$this->SearchServerURI = $baseURI;
         $this->SolrINI = eZINI::instance( 'solr.ini' );
+        $iniSearchServerURI = $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' );
         if (! $baseURI === false )
         {
             $this->SearchServerURI = $baseURI;
         }
-        elseif ( isset( $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' ) ) )
+        elseif ( isset( $iniSearchServerURI ) )
         {
             $this->SearchServerURI = $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' );
         }
