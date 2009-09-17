@@ -662,7 +662,7 @@ class ezfeZPSolrQueryBuilder
                 'mlt.mintf' => $mintf,
                 'mlt.maxwl' => $maxwl,
                 'mlt.minwl' => $minwl, //minimum wordlength
-                'mlt.maxqt' => $mawqt,
+                'mlt.maxqt' => $maxqt,
                 'mlt.interestingTerms' => 'details', // useful for debug output & tuning
                 'mlt.boost' => $boostmlt, // boost the highest ranking terms
                 //'mlt.qf' => implode( ' ', $queryFields ),
