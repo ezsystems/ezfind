@@ -605,6 +605,7 @@ class ezfeZPSolrQueryBuilder
 
         if ( isset( self::$FindINI->variable( 'MoreLikeThis', 'ExtractionFields' ) ) && self::$FindINI->variable( 'MoreLikeThis', 'ExtractionFields' ) == 'general')
         {
+            // the collector field for all strings in an object
             $queryFields = array ('ezf_df_text');
         }
         else
