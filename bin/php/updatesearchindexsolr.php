@@ -95,7 +95,8 @@ class ezfUpdateSearchIndexSolr
                                                            'db-driver' => "Database driver",
                                                            'db-type' => "Database driver, alias for --db-driver",
                                                            'sql' => "Display sql queries",
-                                                           'clean' =>  "Remove all search data before beginning indexing",
+                                                           'clean' =>  "Remove all search data of the current installation id before beginning indexing",
+                                                           'clean-all' => "Remove all search data for all installations",
                                                            'conc' => 'Parallelization, number of concurent processes to use',
                                                            'php-exec' => 'Full path to PHP executable',
                                                            'offset' => '*For internal use only*',
@@ -113,7 +114,11 @@ class ezfUpdateSearchIndexSolr
 
         $this->initializeDB();
 
+        /*
+         * call clean up routines which will deal with the CLI arguments themselves
+         */
         $this->cleanUp();
+        $this->cleanUpAll();
 
         // Check if current instance is main or sub process.
         // Main process can not have offset or limit set.
@@ -517,8 +522,28 @@ class ezfUpdateSearchIndexSolr
     {
         if ( $this->Options['clean'] )
         {
-            $this->CLI->output( "eZSearchEngine: Cleaning up search data" );
-            eZSearch::cleanup();
+            $this->CLI->output( "eZSearchEngine: Cleaning up search data for current installation id" );
+            $searchEngine = new eZSolr();
+            $allInstallations = false;
+            $optimize = false;
+            $searchEngine->cleanup($allInstallations, $optimize);
+        }
+    }
+    /**
+     * Clean all indices in current Solr core, regardless of installation id's
+     * Only clean-up if --clean-all is set
+     */
+    protected function cleanUpAll()
+    {
+        if ( $this->Options['clean-all'] )
+        {
+            $this->CLI->output( "eZSearchEngine: Cleaning up search data for all installations" );
+            $searchEngine = new eZSolr();
+            // The essence of teh All suffix
+            $allInstallations = true;
+            // Optimize: sets all indexes to minimal file size too
+            $optimize = true;
+            $searchEngine->cleanup($allInstallations, $optimize);
         }
     }
 
