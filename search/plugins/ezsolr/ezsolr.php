@@ -954,9 +954,17 @@ class eZSolr
      * Clean up search index for current installation.
      * @return bool true if cleanup was successful
     **/
-    function cleanup()
+    function cleanup( $allInstallations = false, $optimize = false )
     {
-        return $this->Solr->deleteDocs( array(), ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' ) . ':' . self::installationID(), true );
+        if ( $allInstallations === true )
+        {
+            return $this->Solr->deleteDocs( array(), '*:*', true, $optimize );
+        }
+        else
+        {
+            return $this->Solr->deleteDocs( array(), ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' ) . ':' . self::installationID(), true );
+        }
+
     }
 
     /**
