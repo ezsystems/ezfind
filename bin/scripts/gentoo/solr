@@ -1,0 +1,25 @@
+#!/sbin/runscript
+
+description="Java Solr search engine."
+
+JAVA="/usr/bin/java"
+
+# Folder in which resides start.jar
+SOLR_HOME="/opt/solr/java/"
+# Folder containing the cores (and solr.xml)
+SOLR_CORES="/opt/solr/cores/"
+SOLR_OPTIONS="-Dsolr.solr.home=$SOLR_CORES"
+SOLR_PID="/var/run/solr.pid"
+
+start() {
+	ebegin "Starting solr"
+	start-stop-daemon --start --background --quiet --user solr --chdir $SOLR_HOME \
+		--make-pidfile --pidfile $SOLR_PID --exec $JAVA -- $SOLR_OPTIONS -jar start.jar
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping solr"
+	start-stop-daemon --stop --quiet --pidfile $SOLR_PID
+	eend $?
+}
