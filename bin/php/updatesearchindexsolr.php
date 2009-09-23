@@ -86,7 +86,7 @@ class ezfUpdateSearchIndexSolr
     {
         $this->Script->startup();
 
-        $this->Options = $this->Script->getOptions( "[db-host:][db-user:][db-password:][db-database:][db-type:|db-driver:][sql][clean][conc:][offset:][limit:][topNodeID:][php-exec:]",
+        $this->Options = $this->Script->getOptions( "[db-host:][db-user:][db-password:][db-database:][db-type:|db-driver:][sql][clean][clean-all][conc:][offset:][limit:][topNodeID:][php-exec:]",
                                                     "",
                                                     array( 'db-host' => "Database host",
                                                            'db-user' => "Database user",
