@@ -8,6 +8,7 @@
 
 <ul>
     <li><div><a href={'/ezfind/elevate/'|ezurl}>{'Elevation'|i18n( 'extension/ezfind/backoffice_left_menu' )}</a></div></li>
+    <li><div><a href="{ezini('SolrBase', 'SearchServerURI', 'solr.ini')|wash|concat('/admin')}" target="">{'Solr admin interface'|i18n( 'extension/ezfind/backoffice_left_menu' )}</a></div></li>
     {*
     TODO
     <li><div><a href={'/ezfind/boost/'|ezurl}>{'Boost'|i18n( 'extension/ezfind/backoffice_left_menu' )}</a></div></li>

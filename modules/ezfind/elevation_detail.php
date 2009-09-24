@@ -137,5 +137,5 @@ $Result['path'] = array( array( 'url' => false,
                          array( 'url' => false,
                                 'text' => ezi18n( 'extension/ezfind', 'Elevation detail' ) ) );
 
-$Result['left_menu'] = "design:ezfind/backoffice_left_menu.tpl";
+$Result['left_menu'] = "design:parts/ezfind/menu.tpl";
 ?>

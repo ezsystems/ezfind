@@ -310,6 +310,10 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Solr admin interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Elevation</source>
         <translation type="unfinished"></translation>
     </message>
