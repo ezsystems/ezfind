@@ -38,7 +38,7 @@ if ( !$isQuiet )
 $eZSolr = eZSearch::getEngine();
 if ( !( $eZSolr instanceof eZSolr ) )
 {
-	$script->shutdown( 1, 'The current search engine plugin is not eZSolr' );
+    $script->shutdown( 1, 'The current search engine plugin is not eZSolr' );
 }
 
 $eZSolr->optimize( false );

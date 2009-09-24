@@ -1,38 +1,38 @@
 {def $search=false()}
 {if $use_template_search}
     {set $page_limit=10}
-    
+
     {def $activeFacetParameters = array()}
     {if ezhttp_hasvariable( 'activeFacets', 'get' )}
         {set $activeFacetParameters = ezhttp( 'activeFacets', 'get' )}
     {/if}
-    
+
     {def $dateFilter=0}
     {if ezhttp_hasvariable( 'dateFilter', 'get' )}
         {set $dateFilter = ezhttp( 'dateFilter', 'get' )}
-		{switch match=$dateFilter}
-		   {case match=1}
-		      {def $dateFilterLabel="Last day"|i18n("design/standard/content/search")}
-		   {/case}
+        {switch match=$dateFilter}
+           {case match=1}
+              {def $dateFilterLabel="Last day"|i18n("design/standard/content/search")}
+           {/case}
            {case match=2}
               {def $dateFilterLabel="Last week"|i18n("design/standard/content/search")}
            {/case}
            {case match=3}
               {def $dateFilterLabel="Last month"|i18n("design/standard/content/search")}
-           {/case}      
+           {/case}
            {case match=4}
               {def $dateFilterLabel="Last three months"|i18n("design/standard/content/search")}
-           {/case}      
+           {/case}
            {case match=5}
               {def $dateFilterLabel="Last year"|i18n("design/standard/content/search")}
-           {/case}                 
-		{/switch}        
-    {/if}    
-    
+           {/case}
+        {/switch}
+    {/if}
+
     {def $filterParameters = fetch( 'ezfind', 'filterParameters' )
          $defaultSearchFacets = fetch( 'ezfind', 'getDefaultSearchFacets' )}
     {* def $facetParameters=$defaultSearchFacets|array_merge_recursive( $activeFacetParameters ) *}
-    
+
     {set $search=fetch( ezfind,search,
                         hash( 'query', $search_text,
                               'offset', $view_parameters.offset,
@@ -41,7 +41,7 @@
                               'facet', $defaultSearchFacets,
                               'filter', $filterParameters,
                               'publish_date', $dateFilter,
-                              'spell_check', array( true() ) 
+                              'spell_check', array( true() )
                              ))}
     {set $search_result=$search['SearchResult']}
     {set $search_count=$search['SearchCount']}
@@ -65,14 +65,14 @@
 {if gt( $dateFilter, 0 )}
     {set $uriSuffix = concat( $uriSuffix, '&dateFilter=', $dateFilter )}
 {/if}
-    
+
 <script language="JavaScript" type="text/javascript">
 <!--{literal}
     // toggle block
     function ezfToggleBlock( id )
     {
         var value = (document.getElementById(id).style.display == 'none') ? 'block' : 'none';
-		ezfSetBlock( id, value );
+        ezfSetBlock( id, value );
         ezfSetCookie( id, value );
     }
 
@@ -81,8 +81,8 @@
         var el = document.getElementById(id);
         if ( el != null )
         {
-		    el.style.display = value;
-		}
+            el.style.display = value;
+        }
     }
 
     function ezfTrim( str )
@@ -92,32 +92,32 @@
 
     function ezfGetCookie( name )
     {
-	var cookieName = 'eZFind_' + name;
-	var cookie = document.cookie;
+    var cookieName = 'eZFind_' + name;
+    var cookie = document.cookie;
 
-	var cookieList = cookie.split( ";" );
+    var cookieList = cookie.split( ";" );
 
     for( var idx in cookieList )
     {
-		cookie = cookieList[idx].split( "=" );
+        cookie = cookieList[idx].split( "=" );
 
-		if ( ezfTrim( cookie[0] ) == cookieName )
+        if ( ezfTrim( cookie[0] ) == cookieName )
         {
-			return( cookie[1] );
-		}
-	}
+            return( cookie[1] );
+        }
+    }
 
-	return 'none';
+    return 'none';
     }
 
     function ezfSetCookie( name, value )
     {
-	var cookieName = 'eZFind_' + name;
-	var expires = new Date();
+    var cookieName = 'eZFind_' + name;
+    var expires = new Date();
 
-	expires.setTime( expires.getTime() + (365 * 24 * 60 * 60 * 1000));
+    expires.setTime( expires.getTime() + (365 * 24 * 60 * 60 * 1000));
 
-	document.cookie = cookieName + "=" + value + "; expires=" + expires + ";";
+    document.cookie = cookieName + "=" + value + "; expires=" + expires + ";";
     }
 {/literal}--></script>
 
@@ -136,7 +136,7 @@
 <p>
     <input class="halfbox" type="text" size="20" name="SearchText" id="Search" value="{$search_text|wash}" />
     <input class="button" name="SearchButton" type="submit" value="{'Search'|i18n('design/ezwebin/content/search')}" />
-    
+
 </p>
 {if $search_extras.spellcheck_collation}
      {def $spell_url=concat('/content/search/',$search_text|count_chars()|gt(0)|choose('',concat('?SearchText=',$search_extras.spellcheck_collation|urlencode)))|ezurl}
@@ -191,90 +191,90 @@
           </div>
       </fieldset>
   </div>
-    
+
   <div {*class="feedback"*} id="search_controls">
       <fieldset>
           <legend>{'Refine with facets'|i18n( 'design/ezwebin/content/search' )}</legend>
-         
+
           {def $activeFacetsCount=0}
           <ul id="active-facets-list">
           {foreach $defaultSearchFacets as $key => $defaultFacet}
               {if array_keys( $activeFacetParameters )|contains( concat( $defaultFacet['field'], ':', $defaultFacet['name']  ) )}
                   {def $facetData=$search_extras.facet_fields.$key}
-                  
-                  {foreach $facetData.nameList as $key2 => $facetName}                  
+
+                  {foreach $facetData.nameList as $key2 => $facetName}
                       {if eq( $activeFacetParameters[concat( $defaultFacet['field'], ':', $defaultFacet['name'] )], $facetName )}
                           {def $activeFacetsCount=sum( $key, 1 )}
                           {def $suffix=$uriSuffix|explode( concat( '&filter[]=', $facetData.queryLimit[$key2]|wash ) )|implode( '' )|explode( concat( '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName ) )|implode( '' )}
-			              <li>
-			                  <a href={concat( $baseURI, $suffix )|ezurl}>[x]</a> <strong>{$defaultFacet['name']}</strong>: {$facetName}
-			              </li>                        
+                          <li>
+                              <a href={concat( $baseURI, $suffix )|ezurl}>[x]</a> <strong>{$defaultFacet['name']}</strong>: {$facetName}
+                          </li>
                       {/if}
                   {/foreach}
-              {/if}          
+              {/if}
           {/foreach}
-          
+
           {* handle date filter here, manually for now. Should be a facet later on *}
           {if gt( $dateFilter, 0 )}
               <li>
                  {set $activeFacetsCount=$activeFacetsCount|inc}
                  {def $suffix=$uriSuffix|explode( concat( '&dateFilter=', $dateFilter ) )|implode( '' )}
                   <a href={concat( $baseURI, $suffix )|ezurl}>[x]</a> <strong>{'Creation time'|i18n( 'extension/ezfind/facets' )}</strong>: {$dateFilterLabel}
-              </li>          
+              </li>
           {/if}
-          
+
           {if ge( $activeFacetsCount, 2 )}
               <li>
                   <a href={$baseURI|ezurl}>[x]</a> <em>{'Clear all'|i18n( 'extension/ezfind/facets' )}</em>
-              </li>              
+              </li>
           {/if}
           </ul>
-          
+
           <ul id="facet-list">
           {foreach $defaultSearchFacets as $key => $defaultFacet}
-	          {if array_keys( $activeFacetParameters )|contains( concat( $defaultFacet['field'], ':', $defaultFacet['name']  ) )|not}
-	          <li>
-	            {def $facetData=$search_extras.facet_fields.$key}
-	              <span {*style="background-color: #F2F1ED"*}><strong>{$defaultFacet['name']}</strong></span>
-	              <ul>
-	                {foreach $facetData.nameList as $key2 => $facetName}
-		                {if ne( $key2, '' )}
-		                <li>
-		                    <a href={concat( $baseURI, '&filter[]=', $facetData.queryLimit[$key2]|wash, '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName, $uriSuffix )|ezurl}>                
-		                    {$facetName}</a> ({$facetData.countList[$key2]})
-		                </li>
-		                {/if}
-	                {/foreach}
-	              </ul>
-	          </li>
-	          {/if}
+              {if array_keys( $activeFacetParameters )|contains( concat( $defaultFacet['field'], ':', $defaultFacet['name']  ) )|not}
+              <li>
+                {def $facetData=$search_extras.facet_fields.$key}
+                  <span {*style="background-color: #F2F1ED"*}><strong>{$defaultFacet['name']}</strong></span>
+                  <ul>
+                    {foreach $facetData.nameList as $key2 => $facetName}
+                        {if ne( $key2, '' )}
+                        <li>
+                            <a href={concat( $baseURI, '&filter[]=', $facetData.queryLimit[$key2]|wash, '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName, $uriSuffix )|ezurl}>
+                            {$facetName}</a> ({$facetData.countList[$key2]})
+                        </li>
+                        {/if}
+                    {/foreach}
+                  </ul>
+              </li>
+              {/if}
           {/foreach}
-          
+
           {* date filtering here. Using a simple filter for now. Should use the date facets later on *}
           {if eq( $dateFilter, 0 )}
               <li>
                   <span {*style="background-color: #F2F1ED"*}><strong>{'Creation time'|i18n( 'extension/ezfind/facets' )}</strong></span>
                   <ul>
                     <li>
-                        <a href={concat( $baseURI, '&dateFilter=1', $uriSuffix )|ezurl}>{"Last day"|i18n("design/standard/content/search")}</a>                    
+                        <a href={concat( $baseURI, '&dateFilter=1', $uriSuffix )|ezurl}>{"Last day"|i18n("design/standard/content/search")}</a>
                     </li>
                     <li>
-                        <a href={concat( $baseURI, '&dateFilter=2', $uriSuffix )|ezurl}>{"Last week"|i18n("design/standard/content/search")}</a>                    
+                        <a href={concat( $baseURI, '&dateFilter=2', $uriSuffix )|ezurl}>{"Last week"|i18n("design/standard/content/search")}</a>
                     </li>
                     <li>
-                        <a href={concat( $baseURI, '&dateFilter=3', $uriSuffix )|ezurl}>{"Last month"|i18n("design/standard/content/search")}</a>                    
-                    </li>                    
+                        <a href={concat( $baseURI, '&dateFilter=3', $uriSuffix )|ezurl}>{"Last month"|i18n("design/standard/content/search")}</a>
+                    </li>
                     <li>
-                        <a href={concat( $baseURI, '&dateFilter=4', $uriSuffix )|ezurl}>{"Last three months"|i18n("design/standard/content/search")}</a>                    
-                    </li>                    
+                        <a href={concat( $baseURI, '&dateFilter=4', $uriSuffix )|ezurl}>{"Last three months"|i18n("design/standard/content/search")}</a>
+                    </li>
                     <li>
-                        <a href={concat( $baseURI, '&dateFilter=5', $uriSuffix )|ezurl}>{"Last year"|i18n("design/standard/content/search")}</a>                    
-                    </li>                    
+                        <a href={concat( $baseURI, '&dateFilter=5', $uriSuffix )|ezurl}>{"Last year"|i18n("design/standard/content/search")}</a>
+                    </li>
                   </ul>
-              </li>          
+              </li>
            {/if}
           </ul>
-          
+
       </fieldset>
   </div>
   {/case}
@@ -288,19 +288,19 @@
              item_count=$search_count
              view_parameters=$view_parameters
              item_limit=$page_limit}
-             
-	{foreach $search_result as $result
-	         sequence array(bglight,bgdark) as $bgColor}
-	   {node_view_gui view=ezfind_line sequence=$bgColor use_url_translation=$use_url_translation content_node=$result}
-	{/foreach}
-	
-	{include name=Navigator
-	         uri='design:navigator/google.tpl'
-	         page_uri='/content/search'
-	         page_uri_suffix=concat('?SearchText=',$search_text|urlencode,$search_timestamp|gt(0)|choose('',concat('&SearchTimestamp=',$search_timestamp)), $uriSuffix )
-	         item_count=$search_count
-	         view_parameters=$view_parameters
-	         item_limit=$page_limit}
+
+    {foreach $search_result as $result
+             sequence array(bglight,bgdark) as $bgColor}
+       {node_view_gui view=ezfind_line sequence=$bgColor use_url_translation=$use_url_translation content_node=$result}
+    {/foreach}
+
+    {include name=Navigator
+             uri='design:navigator/google.tpl'
+             page_uri='/content/search'
+             page_uri_suffix=concat('?SearchText=',$search_text|urlencode,$search_timestamp|gt(0)|choose('',concat('&SearchTimestamp=',$search_timestamp)), $uriSuffix )
+             item_count=$search_count
+             view_parameters=$view_parameters
+             item_limit=$page_limit}
   </div>
 </form>
 

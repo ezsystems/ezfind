@@ -92,21 +92,21 @@ class ezfSolrDocumentFieldXML extends ezfSolrDocumentFieldBase
 
         switch ( $contentClassAttribute->attribute( 'data_type_string' ) )
         {
-        	case 'ezxmltext' :
-        	{
+            case 'ezxmltext' :
+            {
                 // $xmlData = $this->ContentObjectAttribute->attribute( 'content' )->attribute( 'xml_data' );
                 $xmlData = $this->ContentObjectAttribute->attribute( 'content' )->attribute( 'output' )->attribute( 'output_text' );
-        	} break;
+            } break;
 
-        	case 'ezmatrix' :
+            case 'ezmatrix' :
             {
                 $xmlData = $this->ContentObjectAttribute->attribute( 'content' )->xmlString();
             } break;
 
             default:
-        	{
-        		return array( $fieldName => '' );
-        	} break;
+            {
+                return array( $fieldName => '' );
+            } break;
         }
         $cleanedXML = $this->strip_html_tags( $xmlData );
         return array( $fieldName => $cleanedXML );

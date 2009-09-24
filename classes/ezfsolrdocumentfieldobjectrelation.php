@@ -109,9 +109,9 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
     {
         switch ( $classAttribute->attribute( 'data_type_string' ) )
         {
-        	case 'ezobjectrelation' :
-        	{
-        	    // Optimistic name generation here : assume the $subAttribute value actually matches
+            case 'ezobjectrelation' :
+            {
+                // Optimistic name generation here : assume the $subAttribute value actually matches
                 // one of the related object's attributes name. Hence the commented out line in the first "if" below.
                 if ( $subAttribute and
                      $subAttribute !== '' and
@@ -130,15 +130,15 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                     return parent::generateAttributeFieldName( $classAttribute,
                                                                self::$subattributesDefinition[self::DEFAULT_SUBATTRIBUTE] );
                 }
-        	} break;
+            } break;
 
-        	case 'ezobjectrelationlist' :
-    	    {
+            case 'ezobjectrelationlist' :
+            {
 
-    	    } break;
+            } break;
 
-        	default:
-        	{} break;
+            default:
+            {} break;
         }
     }
 

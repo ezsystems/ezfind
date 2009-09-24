@@ -5,7 +5,7 @@
     {def $customAttributesString='['}
     {foreach $block.custom_attributes as $name => $value}
         <input id="search-custom-attribute-{$name}-{$block.id}" type="hidden" name="{$name}" value="{$value}" />
-        {set $customAttributesString = concat( $customAttributesString, '"#search-custom-attribute-', $name, '-', $block.id, '", ' )}    
+        {set $customAttributesString = concat( $customAttributesString, '"#search-custom-attribute-', $name, '-', $block.id, '", ' )}
     {/foreach}
     {set $customAttributesString=concat( $customAttributesString|trim( ' ,' ), ']' )}
 </form>
