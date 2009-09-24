@@ -104,10 +104,10 @@ $FunctionList['search'] = array( 'name' => 'search',
                                                                'type' => 'boolean',
                                                                'required' => false,
                                                                'default' => false ),
-                                                        array( 'name' => 'publish_date',
-                                                               'type' => 'integer',
-                                                               'required' => false,
-                                                               'default' => false ) ) );
+														array( 'name' => 'publish_date',
+														       'type' => 'integer',
+														       'required' => false,
+														       'default' => false ) ) );
 
 
 $FunctionList['getDefaultSearchFacets'] = array( 'name' => 'getDefaultSearchFacets',

@@ -19,8 +19,8 @@ Add elevate support to eZ Find. Read this for low-level info about how it is
 supported in Solr : [1_].
 
 Excerpt :
- "The QueryElevationComponent enables you to configure the top results for a
- given query regardless of the normal lucene scoring. This component matches
+ "The QueryElevationComponent enables you to configure the top results for a 
+ given query regardless of the normal lucene scoring. This component matches 
  the user query text to a configured Map of top results."
 
 
@@ -84,7 +84,7 @@ Syncing
 '''''''
 
 Solr uses an XML configuration file ( elevate.xml ). A few constraints increase
-the difficulty-level of this task :
+the difficulty-level of this task : 
 
 1. Solr can be running on a different machine than the one running eZ Publish
 2. Solr needs to be relaunched for the new configuration to be loaded.
@@ -99,8 +99,8 @@ A direct update of the local configuration file. Constraints :
 
 **Phase 2**
 
-A solution satisfying point 1. above shall be implemented : pushing the configuration in Solr through ReST.
-This implies developing a custom requestHandler in Solr, taking as input the updated elevate.xml file ( POST ),
+A solution satisfying point 1. above shall be implemented : pushing the configuration in Solr through ReST. 
+This implies developing a custom requestHandler in Solr, taking as input the updated elevate.xml file ( POST ), 
 replacing it, and reloading the configuration. Possible security issue here. Low impact.
 
 Another solution based on rsync was envisaged at some point. Due to the utility
@@ -133,11 +133,11 @@ Datatypes :
 * language_code : VARCHAR(20) ( like in ezcontentobject_attribute )
 
 
-Primary key :
+Primary key : 
 
 * search_query + contentobject_id + language_code
 
-Indices :
+Indices : 
 
 * search_query
 * more indeces shall be added if the performances are not satisfactory.
@@ -169,13 +169,13 @@ reload the elevate configuration will be implemented.
 
 **Phase 2**
 
-If elevate.xml is stored in the configuration directory, a manual relaunch of Solr is required.
+If elevate.xml is stored in the configuration directory, a manual relaunch of Solr is required. 
 An existing core admin request handler seems to be existing ( [3_] ). It would
 allow for an automatic config reload without interrupting the service at all.
 The folowing modifications would be required in order to be able to use the
-core administration :
+core administration : 
 
-1. Add a multicore configuration file ``ezfind/java/solr/solr.xml``, containing for instance
+1. Add a multicore configuration file ``ezfind/java/solr/solr.xml``, containing for instance 
 
 ::
 
@@ -190,17 +190,17 @@ core administration :
 2. Append the name of the solr core to ``solr.ini[SolrBase].SearchServerURI``
    as well as in the default parameter value in ``eZSolrBase::eZSolrBase(..)`` :
 
-::
-
+:: 
+ 
  http://localhost:8983/solr/ezfind/
 
-3. Here is a code snippet which actually reloads a Solr core :
+3. Here is a code snippet which actually reloads a Solr core : 
 
 ::
 
    $solr = new eZSolrBase( 'http://localhost:8983/solr/' );
    $params = array( 'fake' => 'param' );
-   $solr->rawSolrRequest( 'admin/cores?action=RELOAD&core=ezfind', $params );
+   $solr->rawSolrRequest( 'admin/cores?action=RELOAD&core=ezfind', $params ); 
 
 
 Possible security here ( DOS / relatively low impact ).
@@ -236,7 +236,7 @@ The following functions should be accessible through the GUI :
 
 **Ideas**
 
-* Smoothen the ergonomy with ajax-based actions :
+* Smoothen the ergonomy with ajax-based actions : 
 
   - search field to retrieve an object. Re-use the one used in eZFlow ?
   - autocomplete on the Search query field
@@ -263,14 +263,14 @@ Known issues
 ============
 
 * If an object has been elevated for 'all' languages, and one adds a translation to it, the configuration must be synchonized.
-  Possible workarounds :
+  Possible workarounds :  
   - post publish workflow, doing the job.
   - have a cronjob synchronize the configuration regularly
 
 
 References
 ==========
-.. _1:
+.. _1: 
 
 [1]: http://wiki.apache.org/solr/QueryElevationComponent
 

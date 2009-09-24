@@ -84,14 +84,14 @@
         {def $mlt=fetch(ezfind,moreLikeThis,hash( 'query_type', 'nid',
                                                   'query', $node.node_id,
                                                   'limit', 5 ))}
-        {if $mlt.SearchCount|gt(0)}
-        <h3>Related content</h3>
-        {foreach $mlt.SearchResult as $result
-            sequence array(bglight,bgdark) as $bgColor}
-            {node_view_gui view=line sequence=$bgColor use_url_translation=$use_url_translation content_node=$result}
-            {/foreach}
-
-        {/if}
+		{if $mlt.SearchCount|gt(0)}
+		<h3>Related content</h3>
+		{foreach $mlt.SearchResult as $result
+			sequence array(bglight,bgdark) as $bgColor}
+			{node_view_gui view=line sequence=$bgColor use_url_translation=$use_url_translation content_node=$result}
+			{/foreach}
+			
+	    {/if}
         {*$mlt|attribute(show,2)*}
 
         </div>

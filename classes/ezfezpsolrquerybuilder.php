@@ -158,34 +158,34 @@ class ezfeZPSolrQueryBuilder
             $filterQuery[] = $policyLimitationFilterQuery;
         }
 
-        // Add time/date query filter
-        if ( $dateFilter > 0 )
-        {
-            switch ( $dateFilter )
-            {
-                // last day
-                case 1:
-                    $searchTimestamp = strtotime( '-1 day' );
-                break;
-                // last week
-                case 2:
-                    $searchTimestamp = strtotime( '-1 week' );
-                    break;
-                // last month
-                case 3:
-                    $searchTimestamp = strtotime( '-1 month' );
-                    break;
-                // last three month
-                case 4:
-                    $searchTimestamp = strtotime( '-3 month' );
-                    break;
-                // last year
-                case 5:
-                    $searchTimestamp = strtotime( '-1 year' );
-                break;
-            }
-            $filterQuery[] = eZSolr::getMetaFieldName( 'published' ) . ':[' . ezfSolrDocumentFieldBase::preProcessValue( $searchTimestamp, 'date' ) .'/DAY TO *]';
-        }
+		// Add time/date query filter
+    	if ( $dateFilter > 0 )
+		{
+    		switch ( $dateFilter )
+			{
+				// last day
+				case 1:
+					$searchTimestamp = strtotime( '-1 day' );
+				break;
+				// last week
+				case 2:
+					$searchTimestamp = strtotime( '-1 week' );
+					break;
+				// last month
+				case 3:
+					$searchTimestamp = strtotime( '-1 month' );
+					break;
+				// last three month
+				case 4:
+					$searchTimestamp = strtotime( '-3 month' );
+					break;
+				// last year
+				case 5:
+					$searchTimestamp = strtotime( '-1 year' );
+				break;
+			}
+			$filterQuery[] = eZSolr::getMetaFieldName( 'published' ) . ':[' . ezfSolrDocumentFieldBase::preProcessValue( $searchTimestamp, 'date' ) .'/DAY TO *]';
+		}
 
         if ( (!eZContentObjectTreeNode::showInvisibleNodes() || !$ignoreVisibility ) && (self::$FindINI->variable( 'SearchFilters', 'FilterHiddenFromDB' ) == 'enabled') )
         {
@@ -250,7 +250,7 @@ class ezfeZPSolrQueryBuilder
         //the array_unique below is necessary because attribute identifiers are not unique .. and we get as
         //much highlight snippets as there are duplicate attribute identifiers
         //these are also in the list of query fields (dismax, ezpublish) request handlers
-        $queryFields = array_unique( $this->getClassAttributes( $contentClassID, $contentClassAttributeID, $fieldTypeExcludeList ) );
+		$queryFields = array_unique( $this->getClassAttributes( $contentClassID, $contentClassAttributeID, $fieldTypeExcludeList ) );
 
         //highlighting only in the attributes, otherwise the object name is repeated in the highlight, which is already
         //partly true as it is mostly composed of one or more attributes.
@@ -497,25 +497,25 @@ class ezfeZPSolrQueryBuilder
         }
         switch ( $handlerParameters['qt'] )
         {
-            case 'ezpublish' :
-            {
-                // The dismax based handler
+        	case 'ezpublish' :
+        	{
+        	    // The dismax based handler
                 // Push the boost expression in the 'bf' parameter, if it is not empty.
                 $boostString = implode( ' ', $processedBoostFunctions['functions'] );
                 $boostString .= ' ' . implode( ' ', $processedBoostFunctions['fields'] );
                 return ( $boostString == '' ) ? array() : array( 'bf' => trim( $boostString ) );
-            } break;
+        	} break;
 
-            default:
-            {
-                // Simplestandard or standard search handlers.
-                // Append the boost expression to the 'q' parameter.
-                // Alter the $handlerParameters array ( passed as reference )
-                // @TODO : Handle query-time field boosting through the buildMultiFieldQuery() method.
-                //         Requires a modified 'heuristic' mode.
-                $boostString = implode( ' ', $processedBoostFunctions['functions'] );
+        	default:
+        	{
+        	    // Simplestandard or standard search handlers.
+        	    // Append the boost expression to the 'q' parameter.
+        	    // Alter the $handlerParameters array ( passed as reference )
+        	    // @TODO : Handle query-time field boosting through the buildMultiFieldQuery() method.
+        	    //         Requires a modified 'heuristic' mode.
+        	    $boostString = implode( ' ', $processedBoostFunctions['functions'] );
                 $handlerParameters['q'] .= ' _val_:' . trim( $boostString );
-            } break;
+        	} break;
         }
         return array();
     }
@@ -1221,7 +1221,7 @@ class ezfeZPSolrQueryBuilder
      */
     protected function getContentClassFilterQuery( $contentClassIdent )
     {
-        if ( empty( $contentClassIdent ) )
+		if ( empty( $contentClassIdent ) )
         {
             return null;
         }
@@ -1247,10 +1247,10 @@ class ezfeZPSolrQueryBuilder
                         $classQueryParts[] = eZSolr::getMetaFieldName( 'contentclass_id' ) . ':' . $class->attribute( 'id' );
                     }
                 }
-                else
-                {
-                    eZDebug::writeError( "Unknown class_id filtering parameter: $classID", __METHOD__ );
-                }
+            	else
+				{
+					eZDebug::writeError( "Unknown class_id filtering parameter: $classID", __METHOD__ );
+				}
             }
 
             return implode( ' OR ', $classQueryParts );

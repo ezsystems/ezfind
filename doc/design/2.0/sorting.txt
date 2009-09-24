@@ -1,8 +1,8 @@
 eZ Find - Search, Design
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 :Author:   Kåre Køhler Høvik
-:Revision:
-:Date:
+:Revision: 
+:Date:     
 
 
 Introduction
@@ -34,7 +34,7 @@ Sort order are:
 - asc
 - desc
 
-Examples:
+Examples: 
 - fetch( ezfind, search, hash( 'query', 'eZ Publish',
                                'sort_by', array( 'modified', 'asc' ) ) )
 - fetch( ezfind, search, hash( 'query', 'eZ Publish',
@@ -46,7 +46,7 @@ Examples:
                                'sort_by', array( 'class_name', 'asc',
                                                  'created', 'desc' ) ) )
 
-The implementation will be done by extending the functionality in
+The implementation will be done by extending the functionality in 
 ezfeZPSolrQueryBuilder.
 
 

@@ -45,16 +45,16 @@ ISSUES
 Depth level
 -----------
 This issue typically arises for object relation attributes. An attribute may have subattributes, which in turn have subattributes.
-Should the depth level be configurable ?
+Should the depth level be configurable ? 
 Should it be set to 1, period ?
-Having it higher than 1 may decrease search relevancy at all, except if boosting is correctly handled.
+Having it higher than 1 may decrease search relevancy at all, except if boosting is correctly handled. 
 Example :
-A -- ( is related to ) --> B -- ( is related to ) --> C -- ( is related to ) --> D
+A -- ( is related to ) --> B -- ( is related to ) --> C -- ( is related to ) --> D 
 Only D out of the 4 objects contains the text 'eZ Systems'. Searching for 'eZ Systems' in full text mode will return A too
 while A is semantically far away from D. It could be possible to not copy the
 subattributes in the default search field, making them *not* available in full
 text search, but making them available in filtered searches (
-objectA/attributeB/attributeC:blah )
+objectA/attributeB/attributeC:blah ) 
 
 
 Languages
@@ -93,7 +93,7 @@ issue in this specific case. In other cases ( 'ezobjectrelation' or
 subattribute field names must be created. Its volume is the sum of all field
 sets, a field set being all attributes of a content class.
 
-An optimization of this calculation could be to infer from the 'ezcontentobject_link' table
+An optimization of this calculation could be to infer from the 'ezcontentobject_link' table 
 which content classes are actually "related" to another one.
 
 
@@ -101,7 +101,7 @@ DESIGN NOTES
 ============
 Ideas
 -----
-* Fields are currently prefixed by :
+* Fields are currently prefixed by : 
   - attr_
   - meta_
   Adding a new prefix for subattributes ( 'subattr_' ) could allow

@@ -111,7 +111,7 @@ $tpl->setVariable( 'baseurl', $thisUrl );
 
 $Result = array();
 $Result['content'] = $tpl->fetch( "design:ezfind/remove_elevation.tpl" );
-$Result['left_menu'] = "design:parts/ezfind/menu.tpl";
+$Result['left_menu'] = "design:ezfind/backoffice_left_menu.tpl";
 $Result['path'] = array( array( 'url' => false,
                                 'text' => ezi18n( 'extension/ezfind', 'eZFind' ) ),
                          array( 'url' => false,

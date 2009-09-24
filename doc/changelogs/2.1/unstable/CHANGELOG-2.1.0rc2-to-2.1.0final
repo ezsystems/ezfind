@@ -1,9 +1,0 @@
-Changes from 2.1.0rc2 to 2.1.0final
-
-*Features:
-
-- Implemented enhancement #015556	Add a link to solr control panel in ezfind admin interface
-  also renamed template used for left menu in admin interface
-- added master translation file
-
-*Bugs:
