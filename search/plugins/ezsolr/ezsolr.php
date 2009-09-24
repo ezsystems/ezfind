@@ -529,7 +529,7 @@ class eZSolr
            foreach( $fieldBaseData as $key => $value )
            {
                 $doc->addField( $key, $value, $boost );
-           } 
+           }
            return true;
         }
 
