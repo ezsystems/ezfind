@@ -312,6 +312,8 @@ class ezfeZPSolrQueryBuilder
 
             case 'simplestandard':
                 // not to do much, searching is against the default aggregated field
+                // only highlightfields
+                $highLightFields = array ( 'ezf_df_text' );
                 $handlerParameters = array ( 'q' => $searchText,
                                              'qt' => 'standard');
                 break;
@@ -350,7 +352,7 @@ class ezfeZPSolrQueryBuilder
                 ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ) ,
                 'fq' => $filterQuery,
                 'hl' => 'true',
-                'hl.fl' => $highLightFields,
+                'hl.fl' => implode( ' ', $highLightFields),
                 'hl.snippets' => 2,
                 'hl.fragsize' => 100,
                 'hl.requireFieldMatch' => 'false',
