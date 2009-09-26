@@ -1511,11 +1511,11 @@ class ezfeZPSolrQueryBuilder
             $classIDArray = array();
             foreach( $tmpClassIDArray as $key => $classIdentifier )
             {
-                if ( !is_numeric( $classIdentifier ) && !empty( $classIdentifier ) )
+                if ( !is_numeric( $classIdentifier ) )
                 {
                     if ( !$contentClass = eZContentClass::fetchByIdentifier( $classIdentifier, false ) )
                     {
-                        eZDebug::writeError( "Unknown content class identifier '$classIdentifier'", __METHOD__ );
+                        eZDebug::writeWarning( "Unknown content class identifier '$classIdentifier'", __METHOD__ );
                     }
                     else
                     {
