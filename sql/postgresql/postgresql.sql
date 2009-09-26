@@ -8,3 +8,4 @@ CREATE TABLE ezfind_elevate_configuration (
 ALTER TABLE ONLY ezfind_elevate_configuration ADD CONSTRAINT ezfind_elevate_configuration_pkey PRIMARY KEY (id);
 
 CREATE INDEX ezfind_elevate_configuration__search_query ON ezfind_elevate_configuration USING btree (search_query);
+

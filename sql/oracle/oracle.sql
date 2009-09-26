@@ -8,3 +8,4 @@ CREATE TABLE ezfind_elevate_configuration (
 );
 
 CREATE INDEX ezfind_elevate_config_sq ON ezfind_elevate_configuration (search_query);
+

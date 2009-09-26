@@ -5,3 +5,4 @@ CREATE TABLE `ezfind_elevate_configuration` (
     PRIMARY KEY (`search_query`,`contentobject_id`,`language_code`),
     KEY `ezfind_elevate_configuration__search_query` (`search_query`(100))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
