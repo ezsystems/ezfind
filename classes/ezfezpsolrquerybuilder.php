@@ -315,7 +315,9 @@ class ezfeZPSolrQueryBuilder
                 // only highlightfields
                 $highLightFields = array ( 'ezf_df_text' );
                 $handlerParameters = array ( 'q' => $searchText,
-                                             'qt' => 'standard');
+                                             'qt' => 'standard',
+                                             'hl.usePhraseHighlighter' => 'true',
+                                             'hl.highlightMultiTerm' => 'true');
                 break;
             case 'ezpublish':
                 // the dismax based handler, just keywordss input, most useful for ordinary queries by users
