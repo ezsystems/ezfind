@@ -405,7 +405,6 @@ class eZFindElevateConfiguration extends eZPersistentObject
         $query = "SELECT DISTINCT search_query FROM ". $def['name'];
         $limit = 50;
         $offset = 0;
-        $querySuffix = " LIMIT $limit OFFSET $offset";
         $solr = new eZSolr();
 
         $xml = new SimpleXMLElement( self::XML_SKELETON );
@@ -414,7 +413,7 @@ class eZFindElevateConfiguration extends eZPersistentObject
         while( true )
         {
             // fetch distinct search queries
-            $rows = $db->arrayQuery( $query . $querySuffix );
+            $rows = $db->arrayQuery( $query, array( 'limit' => $limit, 'offset' => $offset ) );
             if ( empty( $rows ) )
                 break;
 
@@ -458,7 +457,6 @@ class eZFindElevateConfiguration extends eZPersistentObject
             }
 
             $offset += $limit;
-            $querySuffix = " LIMIT $limit OFFSET $offset";
             self::$configurationXML = $xml->asXML();
         }
         return true;
