@@ -1,0 +1,70 @@
+<?php
+// This array contains the database schema
+$schema = array (
+  'ezfind_elevate_configuration' => 
+  array (
+    'name' => 'ezfind_elevate_configuration',
+    'fields' => 
+    array (
+      'contentobject_id' => 
+      array (
+        'length' => 11,
+        'type' => 'int',
+        'not_null' => '1',
+        'default' => 0,
+      ),
+      'language_code' => 
+      array (
+        'length' => 20,
+        'type' => 'varchar',
+        'not_null' => '1',
+        'default' => '',
+      ),
+      'search_query' => 
+      array (
+        'length' => 255,
+        'type' => 'varchar',
+        'not_null' => '1',
+        'default' => '',
+      ),
+    ),
+    'indexes' => 
+    array (
+      'PRIMARY' => 
+      array (
+        'type' => 'primary',
+        'fields' => 
+        array (
+          0 => 'search_query',
+          1 => 'contentobject_id',
+          2 => 'language_code',
+        ),
+      ),
+      'ezfind_elevate_configuration__search_query' => 
+      array (
+        'type' => 'non-unique',
+        'fields' => 
+        array (
+          0 => 
+          array (
+            'name' => 'search_query',
+            'mysql:length' => 100,
+          ),
+        ),
+      ),
+    ),
+  ),
+  '_info' => 
+  array (
+    'format' => 'generic',
+  ),
+);
+// This array contains the database data
+$data = array (
+  '_info' => 
+  array (
+    'format' => 'generic',
+  ),
+);
+
+?>
