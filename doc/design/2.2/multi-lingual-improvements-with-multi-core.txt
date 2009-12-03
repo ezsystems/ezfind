@@ -25,11 +25,13 @@ has its own schema.xml file, optimized per language
 Related issues
 ==============
 
-http://issues.ez.no/IssueView.php?Id=15423&activeItem=22
-http://issues.ez.no/IssueView.php?Id=15164&activeItem=21
-http://issues.ez.no/IssueView.php?Id=14215&activeItem=1
+* OsloBors project (urgent)
+* ... (TBS)
 
-http://project.issues.ez.no/IssueView.php?Id=6413
+On the fly refactoring: aggregator fields
+=========================================
 
-Possible on the fly refactoring: removing the short form suffixes
-=================================================================
+Define more aggregator fields and make them configurable in ezfind.ini
+
+This speeds up searching in general and allows for multi-core searching with
+possible different information sources
