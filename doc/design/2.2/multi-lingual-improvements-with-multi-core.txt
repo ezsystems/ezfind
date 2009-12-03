@@ -35,3 +35,40 @@ Define more aggregator fields and make them configurable in ezfind.ini
 
 This speeds up searching in general and allows for multi-core searching with
 possible different information sources
+
+
+Details
+=======
+
+solr.ini multi-core definitions
+-------------------------------
+
+MultiCore=yes|no
+
+Thsi means the base url becomes the multi-core base url, this is not yet the
+instance itself
+
+Cores[]
+Cores[identifier]=<url suffix>
+....
+ezfind.ini language mappings
+----------------------------
+
+in section [LanguageSearch]
+
+Adding
+
+UseMultiCore=yes|no
+
+LanguageMapCores[]
+LanguageMapCores[identifier]=eng-GB
+....
+
+API changes
+-----------
+
+* eZSolr
+* Querybuilder
+* fetch functions
+* ...
+
