@@ -34,7 +34,7 @@ div.ajax-search-spellcheck
     margin-top: 3px;
     margin-bottom: 7px;
     font-style: italic;
-    //color: #F06020;
+    /* color: #F06020; */
     padding-bottom: 3px;
     padding-left: 2px;
 }
@@ -50,7 +50,7 @@ div.ajax-search-facets
     font-size: 90%;
     
     /* for IE */
-    filter:alpha(opacity=0); /* Will be faded in by the YUI animation */
+    filter:'alpha(opacity=0)'; /* Will be faded in by the YUI animation */
     /* CSS3 standard */
     opacity: 0; /* Will be faded in by the YUI animation */	
 
