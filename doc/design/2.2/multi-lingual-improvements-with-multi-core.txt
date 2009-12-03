@@ -1,0 +1,35 @@
+=========================================================
+Multi-lingual improvements with multiple cores
+=========================================================
+
+:Author:   Paul Borgermans
+:Version: 1.0 draft
+:Revision: $Rev$
+:Date: $Date$
+
+.. sectnum::
+.. contents::
+.. NOTE : for a better reading experience, convert me to HTML with rst2html.
+
+Introduction
+============
+
+Until eZ Find 2.1, a signle schema is used which is non optimal for
+multi-lingual sites as every language needs to have its dedicated language dependent
+analyzer filters
+
+With support for multiple cores, this problem can easily tackled as each core (index)
+has its own schema.xml file, optimized per language
+
+
+Related issues
+==============
+
+http://issues.ez.no/IssueView.php?Id=15423&activeItem=22
+http://issues.ez.no/IssueView.php?Id=15164&activeItem=21
+http://issues.ez.no/IssueView.php?Id=14215&activeItem=1
+
+http://project.issues.ez.no/IssueView.php?Id=6413
+
+Possible on the fly refactoring: removing the short form suffixes
+=================================================================
