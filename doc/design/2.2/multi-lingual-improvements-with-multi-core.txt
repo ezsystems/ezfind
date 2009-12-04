@@ -2,7 +2,7 @@
 Multi-lingual improvements with multiple cores
 =========================================================
 
-:Author:   Paul Borgermans
+:Author:   Paul Borgermans, Bertrand Dunogier
 :Version: 1.0 draft
 :Revision: $Rev$
 :Date: $Date$
@@ -51,6 +51,7 @@ instance itself
 Cores[]
 Cores[identifier]=<url suffix>
 ....
+
 ezfind.ini language mappings
 ----------------------------
 
@@ -72,3 +73,13 @@ API changes
 * fetch functions
 * ...
 
+Searching over multiple cores
+-----------------------------
+Since each core will store its own data per language, we need select operations
+to use all the cores at the same time, while maintaining language priority search
+
+Searching has to be made using sharding; the request is sent to one core, but
+instructs it to shard it to other cores::
+
+    http://host:8983/solr/core0/select?shards=host:8983/solr/core0,host:8983/solr/core1&q=...
+    
