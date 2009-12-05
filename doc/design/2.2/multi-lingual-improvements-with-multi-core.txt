@@ -76,8 +76,7 @@ API changes
 Indexing over multiple cores
 ----------------------------
 
-* In the case of one language per core, the addObject function call needs to
-be adapted
+* In the case of one language per core, the addObject function call needs to be adapted
 
 Searching over multiple cores
 -----------------------------
@@ -100,4 +99,12 @@ Searching has to be made using sharding; the request is sent to one core, but
 instructs it to shard it to other cores::
 
     http://host:8983/solr/core0/select?shards=host:8983/solr/core0,host:8983/solr/core1&q=...
+
+Limitations of distributed search (not only cores, also independent servlets)
+-----------------------------------------------------------------------------
+
+See .. _Solr Wiki: http://wiki.apache.org/solr/DistributedSearch
+
+* no elevation support (might be supported after all, to test)
+* no date
 
