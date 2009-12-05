@@ -1,5 +1,5 @@
 =========================================================
-Multi-lingual improvements with multiple cores
+Multiple cores stage 1: multilingual improvements
 =========================================================
 
 :Author:   Paul Borgermans, Bertrand Dunogier
@@ -73,13 +73,31 @@ API changes
 * fetch functions
 * ...
 
+Indexing over multiple cores
+----------------------------
+
+* In the case of one language per core, the addObject function call needs to
+be adapted
+
 Searching over multiple cores
 -----------------------------
+
+* Search across languages (usually a single language will be searched for only)
+
 Since each core will store its own data per language, we need select operations
 to use all the cores at the same time, while maintaining language priority search
+
+Because every language version shares essentially the same schema file, all
+filtering, sorting and faceting remains available
+
+* search across other indexes
+
+For foreign indexes, the aggregated fields are to be used
+
+* common
 
 Searching has to be made using sharding; the request is sent to one core, but
 instructs it to shard it to other cores::
 
     http://host:8983/solr/core0/select?shards=host:8983/solr/core0,host:8983/solr/core1&q=...
-    
+
