@@ -106,5 +106,6 @@ Limitations of distributed search (not only cores, also independent servlets)
 See .. _Solr Wiki: http://wiki.apache.org/solr/DistributedSearch
 
 * no elevation support (might be supported after all, to test)
-* no date
+* no date faceting (to test, may be solved in Solr 1.4)
+* no spellcheck (to follow: https://issues.apache.org/jira/browse/SOLR-785 )
 
