@@ -28,14 +28,6 @@ Related issues
 * OsloBors project (urgent)
 * ... (TBS)
 
-On the fly refactoring: aggregator fields
-=========================================
-
-Define more aggregator fields and make them configurable in ezfind.ini
-
-This speeds up searching in general and allows for multi-core searching with
-possible different information sources
-
 
 Details
 =======
@@ -103,7 +95,7 @@ instructs it to shard it to other cores::
 Limitations of distributed search (not only cores, also independent servlets)
 -----------------------------------------------------------------------------
 
-See .. _Solr Wiki: http://wiki.apache.org/solr/DistributedSearch
+See Solr Wiki: http://wiki.apache.org/solr/DistributedSearch
 
 * no elevation support (might be supported after all, to test)
 * no date faceting (to test, may be solved in Solr 1.4)

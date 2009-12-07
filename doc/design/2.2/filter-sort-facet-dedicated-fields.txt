@@ -52,6 +52,25 @@ Disadvantages:
 * when raw filters are used (templates), these need to be adapted to the
   new suffixes
 
+On the fly refactoring: aggregator fields
+=========================================
+
+Define more aggregator fields and make them configurable in ezfind.ini
+
+This speeds up searching in general and allows for multi-core searching with
+possible different information sources
+
+* id
+* date_modified
+* date_created
+* author
+* uri
+* tags
+* name/title
+* body
+
+
+
 
 Solution overview
 =================
