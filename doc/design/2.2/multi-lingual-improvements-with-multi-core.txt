@@ -21,13 +21,22 @@ analyzer filters
 With support for multiple cores, this problem can easily tackled as each core (index)
 has its own schema.xml file, optimized per language
 
-
 Related issues
 ==============
 
 * OsloBors project (urgent)
 * ... (TBS)
 
+
+Define more aggregator fields and make them configurable in ezfind.ini
+
+This speeds up searching in general and allows for multi-core searching with
+possible different information sources
+
+Core / Language configuration
+=============================
+Since the goal here is to provide better language specific analysis, each solr
+core needs to be configured for the language it will handle.
 
 Details
 =======
@@ -47,15 +56,19 @@ Cores[identifier]=<url suffix>
 ezfind.ini language mappings
 ----------------------------
 
-in section [LanguageSearch]
+Wether or not to enabled multi-core::
 
-Adding
+    MultiCore=enabled|disabled
 
-UseMultiCore=yes|no
+Default core for unmapped languages::
 
-LanguageMapCores[]
-LanguageMapCores[identifier]=eng-GB
-....
+    DefaultCore=<identifier>
+
+Per language core <=> language code mapping::
+
+    LanguageMapCores[]
+    LanguageMapCores[<identifier>]=eng-GB
+    ....
 
 API changes
 -----------
@@ -65,10 +78,24 @@ API changes
 * fetch functions
 * ...
 
-Indexing over multiple cores
-----------------------------
+eZSolrMultiCoreBase
++++++++++++++++++++
 
-* In the case of one language per core, the addObject function call needs to be adapted
+SolrURI()
+'''''''''
+Since multiple cores will be used, the SearchServerURI is no longer a fixed
+string, and will vary depending on the request type & languages.
+This new method will return the URI depending on the request.
+
+addDocs()
+'''''''''
+addDocs() needs to be modified since each document needs to be sent to the
+core matching the document's language. This will also make indexing a bit
+slower, since it will no longer be possible to use one and only one HTTP request
+to index an array of documents. Despite that, if multiple documents with the
+same language are sent, only one request per core should be performed.
+
+
 
 Searching over multiple cores
 -----------------------------

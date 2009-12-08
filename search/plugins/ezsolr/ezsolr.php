@@ -31,22 +31,21 @@
 
 
 
-/*!
-  eZSolr is a search plugin to eZ Publish.
-*/
+/**
+ * Solr search plugin for eZ publish
+ */
 class eZSolr
 {
-    /*!
-     \brief Constructor
-    */
-    function eZSolr()
+    /**
+     * Constructor
+     */
+    function __construct()
     {
         eZDebug::createAccumulatorGroup( 'solr', 'Solr search plugin' );
         $this->SolrINI = eZINI::instance( 'solr.ini' );
         $this->FindINI = eZINI::instance( 'ezfind.ini' );
         $this->SiteINI = eZINI::instance( 'site.ini' );
-        $this->SearchServerURI = $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' );
-        $this->Solr = new eZSolrBase( $this->SearchServerURI );
+        $this->Solr = self::solrBaseFactory();
     }
 
     /**
@@ -398,9 +397,10 @@ class eZSolr
         $reverseRelatedObjectCount = $contentObject->reverseRelatedObjectCount();
         $docBoost += $reverseRelatedScale * $reverseRelatedObjectCount;
 
+        $currentVersion = $contentObject->currentVersion();
         foreach( $currentVersion->translationList( false, false ) as $languageCode )
         {
-            $doc = new eZSolrDoc( $docBoost );
+            $doc = new eZSolrDoc( $docBoost, $languageCode );
             // Set global unique object ID
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' ), $this->guid( $contentObject, $languageCode ) );
 
@@ -535,17 +535,17 @@ class eZSolr
 
     }
 
-    /*!
-     Send commit message to eZ Find engine
-    */
+    /**
+     * Performs a solr COMMIT
+     */
     function commit()
     {
         //$updateURI = $this->SearchServerURI . '/update';
         $this->Solr->commit();
     }
 
-    /*!
-     Send optimize message to eZ Find engine
+    /**
+     * Performs a solr OPTIMIZE call
      */
     function optimize( $withCommit = false )
     {
@@ -554,26 +554,35 @@ class eZSolr
 
     /**
      * Removes an object from the Solr search server
+     * 
      * @param eZContentObject $contentObject the content object to remove
      * @param bool $commit wether or not to commit after removing the object
+     * 
      * @return bool true if removal was successful
      */
     function removeObject( $contentObject, $commit = true )
     {
+        eZDebug::writeDebug($contentObject, __METHOD__ );
+        
         // 1: remove the assciated "elevate" configuration
         eZFindElevateConfiguration::purge( '', $contentObject->attribute( 'id' ) );
         eZFindElevateConfiguration::synchronizeWithSolr();
 
-        // 2: delete the object in Solr
+        // @todo Remove if accepted. Optimize is bad on runtime.
         $optimize = false;
         if ( $commit && ( $this->FindINI->variable( 'IndexOptions', 'OptimizeOnCommit' ) === 'enabled' ) )
         {
             $optimize = true;
         }
-        return $this->Solr->deleteDocs( array(),
-                                 ezfSolrDocumentFieldBase::generateMetaFieldName( 'id' ) . ':' . $contentObject->attribute( 'id' ) . ' AND '.
-                                 ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' ) . ':' . self::installationID(),
-                                 $commit, $optimize );
+
+        // 2: create a delete array with all the required infos, groupable by language
+        $languages = eZContentLanguage::fetchList();
+        foreach( $languages as $language )
+        {
+            $languageCode = $language->attribute( 'locale' );
+            $docs[$languageCode] = $this->guid( $contentObject, $languageCode );
+        }
+        return $this->Solr->deleteDocs( $docs, false, $commit, $optimize );
     }
 
     /**
@@ -736,7 +745,6 @@ class eZSolr
             'StopWordArray' => $stopWordArray,
             'SearchExtras' => new ezfSearchResultInfo( $resultArray ) );
     }
-
 
     /**
      * More like this is pretty similar to normal search, but usually only the object or node id are sent to Solr
@@ -909,10 +917,9 @@ class eZSolr
 
     }
 
-    /*!
-     Get eZFind installation ID
-
-     \return installaiton ID.
+    /**
+     * Returns the eZ publish installation ID, used by eZ find to identify sites
+     * @return string installaiton ID.
      */
     static function installationID()
     {
@@ -937,14 +944,13 @@ class eZSolr
         return self::$InstallationID;
     }
 
-    /*!
-     Get GlobalID of contentobject
-
-     \param \a $contentObject
-     \param \a $languageCode ( optional )
-
-     \return guid
-    */
+    /**
+     * Computes the unique ID of a content object language version
+     *
+     * @param eZContentObject $contentObject The content object
+     * @param string $languageCode
+     * @return string guid
+     */
     function guid( $contentObject, $languageCode = '' )
     {
         return md5( self::installationID() . '-' . $contentObject->attribute( 'id' ) . '-' . $languageCode );
@@ -1016,11 +1022,11 @@ class eZSolr
                       'general_filter' => $generalSearchFilter );
     }
 
-    /*!
-     Get engine text
-
-     \return engine text
-    */
+    /**
+     * Gets engine text
+     *
+     * @return string engine text
+     */
     static function engineText()
     {
         return ezi18n( 'ezfind', 'eZ Find 2.1 search plugin &copy; 2009 eZ Systems AS, powered by Apache Solr 1.4dev' );
@@ -1146,6 +1152,20 @@ class eZSolr
     {
         $contentObject = eZContentObject::fetch( $objectID );
         $this->addObject( $contentObject );
+    }
+    
+    /**
+     * Returns the relevant eZSolrBase, depending if MultiCore is enabled or not
+     * 
+     * @return eZSolrBase
+     */
+    public static function solrBaseFactory()
+    {
+        $ini = eZINI::instance( 'ezfind.ini' );
+        if ( $ini->variable( 'LanguageSearch', 'MultiCore' ) == 'enabled' )
+            return new eZSolrMultiCoreBase();
+        else
+            return new eZSolrBase();
     }
 
     /// Object vars

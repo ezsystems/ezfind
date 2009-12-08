@@ -140,7 +140,11 @@ class ezfModuleFunctionCollection
      */
     public function rawSolrRequest( $base, $request, $parameters = array() )
     {
-        $solr = new eZSolrBase( $base );
+        // @todo This could be an issue... $base can contain /admin/ping, and this definitely won't work
+        // What's the point of being able to manually provide an URL ? It however completely goes against
+        // the basic multicore principle
+        
+        $solr = eZSolr::solrBaseFactory( $base );
         return array( 'result' => $solr->rawSolrRequest( $request, $parameters ) );
     }
 
