@@ -155,7 +155,7 @@ class eZSolrMultiCoreBase extends eZSolrBase
      *
      * @return string POST part of HTML request
      */
-	protected function buildPostString( $queryParams )
+	function buildPostString( $queryParams )
     {
         foreach ( $queryParams as $name => $value )
         {
@@ -359,7 +359,7 @@ class eZSolrMultiCoreBase extends eZSolrBase
      * 
      * @return bool
      **/
-    protected function validateUpdateResult ( $updateResult )
+    static function validateUpdateResult ( $updateResult )
     {
         $dom = new DOMDocument( '1.0' );
         // Supresses error messages
