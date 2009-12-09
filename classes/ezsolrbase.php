@@ -34,16 +34,21 @@
  */
 class eZSolrBase
 {
+    /**
+     * The solr search server URI
+     * @var string
+     */
     var $SearchServerURI;
+    
     var $SolrINI;
 
-    /*!
-     \constructor
-     \brief Constructor
-
-     \param string Solr server URL
-    */
-    function eZSolrBase( $baseURI = false )
+    /**
+     * Constructor.
+     * Initializes the solr URI and various INI files
+     * 
+     * @param string $baseURI An optional solr URI that overrides the INI one.
+     */
+    function __construct( $baseURI = false )
     {
         // @todo Modify this code to adapt to the new URI parameters
         // Also keep BC with the previous settings
@@ -66,7 +71,6 @@ class eZSolrBase
         }
 
     }
-
 
     /*!
      Build a HTTP GET query
@@ -172,8 +176,6 @@ class eZSolrBase
 		$params['wt'] = $wt;
         $paramsAsString = $this->buildPostString( $params );
         $data=$this->postQuery( $request, $paramsAsString );
-        //print_r ($data);
-        //echo ('data is ' . strlen($data) . " chars long\n");
         $resultArray = array();
         if ( $data === false )
         {
@@ -372,6 +374,17 @@ class eZSolrBase
         return self::validateUpdateResult( $updateXML );
     }
 
+    /**
+     * Sends the solr server a search request
+     * 
+     * @param array|ezfSolrQueryBuilder $params
+     *        Query parameters, either:
+     *        - an array, as returned by ezfeZPSolrQueryBuilder::buildSearch
+     *        or
+     *        - an ezfeZPSolrQueryBuilder instance
+     * @param string $wt Query response writer
+     * @return array The search results
+     */
     function rawSearch ( $params = array(), $wt = 'php' )
     {
         return $this->rawSolrRequest ( '/select' , $params, $wt );
@@ -559,5 +572,4 @@ class eZSolrBase
         $url = "{$this->solrURI['protocol']}://{$this->solrURI['uri']}{$request}";
         return $url;
    }
-    
 }

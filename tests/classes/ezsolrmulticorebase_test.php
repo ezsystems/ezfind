@@ -38,7 +38,7 @@ class eZSolrMultiCoreBaseTest extends ezpDatabaseTestCase
         );
         
         return array(
-            array( '/select', 'eng-GB', 'http://localhost:8983/solr/eng-GB/select', $iniSettings),
+            array( '/select', 'eng-GB', 'http://localhost:8983/solr/eng-GB/select', $iniSettings ),
             array( '/update', 'eng-GB', 'http://localhost:8983/solr/eng-GB/update', $iniSettings ),
             array( '/select', array( 'eng-GB', 'fre-FR' ), 'http://localhost:8983/solr/eng-GB/select?shards=localhost:8983/solr/eng-GB,localhost:8983/solr/fre-FR', $iniSettings ),
         );
@@ -61,12 +61,6 @@ class eZSolrMultiCoreBaseTest extends ezpDatabaseTestCase
     public static function providerForTestGetLanguageCore()
     {
         return array(
-            // no multicore
-            array(
-                false,
-                'eng-GB',
-                array( self::$INIOverride['MultiCoreDisabled'] ),
-            ),
             // multi-core with a mapped language
             array(
                 'eng-GB', 'eng-GB',
@@ -83,7 +77,6 @@ class eZSolrMultiCoreBaseTest extends ezpDatabaseTestCase
     // predefined INI settings for tests
     protected static $INIOverride = array(
         'MultiCoreEnabled' => array( 'ezfind.ini', 'LanguageSearch', 'MultiCore', 'enabled' ),
-        'MultiCoreDisabled' => array( 'ezfind.ini', 'LanguageSearch', 'MultiCore', 'disabled' ),
         'DefaultMapping' => array( 'ezfind.ini', 'LanguageSearch', 'LanguagesCoresMap', array( 'eng-GB' => 'eng-GB', 'fre-FR' => 'fre-FR' ) ),
         'DefaultCore' => array( 'ezfind.ini', 'LanguageSearch', 'DefaultCore', 'eng-GB' )
     );

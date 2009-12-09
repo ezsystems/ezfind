@@ -34,8 +34,9 @@ class eZSolrDoc
      *
      * @param int Document boost, optional
      */
-    function eZSolrDoc( $boost = false )
+    function eZSolrDoc( $boost = false, $languageCode = false )
     {
+        $this->LanguageCode = $languageCode;
         $this->Doc = new DOMDocument( '1.0', 'utf-8' );
         $this->RootElement = $this->Doc->createElement( 'doc' );
         $this->Doc->appendChild( $this->RootElement );
@@ -113,6 +114,13 @@ class eZSolrDoc
 
     var $Doc;
     var $RootElement;
+    
+    /**
+     * The document's language code
+     * @var string
+     * @since eZ Find 2.2
+     */
+    var $LanguageCode;
 }
 
 

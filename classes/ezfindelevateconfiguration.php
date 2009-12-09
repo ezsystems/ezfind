@@ -397,6 +397,8 @@ class eZFindElevateConfiguration extends eZPersistentObject
      *
      * @see $configurationXML
      * @return boolean true if the generation run correctly, false otherwise.
+     * 
+     * @todo Skip multicore here in order to maxout performances
      */
     protected static function generateConfiguration()
     {
@@ -488,7 +490,7 @@ class eZFindElevateConfiguration extends eZPersistentObject
         );
 
         $eZSolrBase = eZSolr::solrBaseFactory();
-        $result = $eZSolrBase->rawSearch( $params );
+        $result = $eZSolrBase->pushElevateConfiguration( $params );
 
         if ( ! $result )
         {

@@ -34,12 +34,10 @@
 class eZSolrMultiCoreBase extends eZSolrBase
 {
     /**
-     * URL information of the solr server
-     * Associative array with 2 indexes: uri & protocol
-     * @var array
-     * @since eZ Find 2.2
+     * The solr search server URI
+     * @var string
      */
-    var $searchServer;
+    var $SearchServerURI;
     
     /**
      * Languages / cores mapping
@@ -57,12 +55,6 @@ class eZSolrMultiCoreBase extends eZSolrBase
     protected $defaultCore = false;
     
     /**
-     * @var bool
-     * @since eZ Find 2.2
-     */
-    protected $enableMultiCore = null;
-     
-    /**
      * solr.ini eZINI instance
      * @var eZINI
      */
@@ -76,7 +68,9 @@ class eZSolrMultiCoreBase extends eZSolrBase
     var $eZFindINI;
 
     /**
-     * Constructor. Initializes $SearchServerURI
+     * Constructor.
+     * Initializes the solr URI and various INI files
+     * 
      * @param string $baseURI An optional solr URI that overrides the INI one.
      */
     function __construct( $baseURI = false )
@@ -84,36 +78,33 @@ class eZSolrMultiCoreBase extends eZSolrBase
         $this->SolrINI = eZINI::instance( 'solr.ini' );
         $this->eZFindINI = eZINI::instance( 'ezfind.ini' );
 
-        $this->enableMultiCore = ( $this->eZFindINI->variable( 'LanguageSearch', 'MultiCore' ) == 'enabled' );
-        
-        if ( $this->enableMultiCore )
-        {
-            $this->defaultCore = $this->eZFindINI->variable( 'LanguageSearch', 'DefaultCore' );
-            $this->languagesCoresMapping = $this->eZFindINI->variable( 'LanguageSearch', 'LanguagesCoresMap' );
-        }
+        $this->defaultCore = $this->eZFindINI->variable( 'LanguageSearch', 'DefaultCore' );
+        $this->languagesCoresMapping = $this->eZFindINI->variable( 'LanguageSearch', 'LanguagesCoresMap' );
         
         if ( $baseURI !== false )
         {
             $parts = explode( '://', $baseURI );
-            $this->solrURI = array(
+            $this->SearchServerURI = array(
                 'protocol' => $parts[0],
                 'uri' => $parts[1]
             );
         }
         else
         {
-            $this->solrURI = array(
-                'uri' => $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' ),
-                'protocol' => $this->SolrINI->variable( 'SolrBase', 'SearchServerProtocol' )
+            $uri = $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' );
+            $uriParts = explode( '://', $uri );
+            $this->SearchServerURI = array(
+            'protocol' => $uriParts[0],
+            'uri' => $uriParts[1],
             );
         }
         
         // fall back to hardcoded Solr default
-        if ( !$this->solrURI )
+        if ( !$this->SearchServerURI )
         {
-            $this->solrURI = array(
+            $this->SearchServerURI = array(
+                'protocol'  => 'http',
                 'uri' => 'localhost:8983/solr',
-                'protocol'  => 'http'
             );
         }
 
@@ -258,7 +249,7 @@ class eZSolrMultiCoreBase extends eZSolrBase
      * @param boolean $commit wether or not to perform a solr commit at the end
      * 
      * @return bool True if the operation was successful, false otherwise
-     *              The result is parsed using eZSolrBase::validateUpdateResult
+     *              The result is parsed using validateUpdateResult()
      */
     function addDocs ( $docs = array(), $commit = true, $optimize = false  )
     {
@@ -361,7 +352,8 @@ class eZSolrMultiCoreBase extends eZSolrBase
     }
 
     /**
-     * Returns the appropriate URI depending on the request type and parameters
+     * Returns the  Solr URI.
+     * It depends on the request type & parameters
      * 
      * @param string $request Solr request (/select, /update...)
      * @param string|array $languageCode
@@ -378,83 +370,74 @@ class eZSolrMultiCoreBase extends eZSolrBase
      */
     public function solrURL( $request, $languageCodes = false )
     {
-        // no multicore, simple situation
-        if ( !$this->enableMultiCore )
+        switch( $request )
         {
-            $url = "{$this->solrURI['protocol']}://{$this->solrURI['uri']}{$request}";
-            eZDebugSetting::writeDebug(
-                'ezfind-multicore',
-                "Single-core request to: $url",
-                __METHOD__ );
-            return $url;
-        }
-        // multicore is enabled. Things actually get fun.
-        else
-        {
-            switch( $request )
+            // single-core request
+            case '/update':
             {
-                // single-core request
-                case '/update':
+                if ( is_array( $languageCodes ) )
                 {
-                    if ( is_array( $languageCodes ) )
+                    if ( count( $languageCodes ) > 1 )
                     {
-                        if ( count( $languageCodes ) > 1 )
-                        {
-                            throw new ezcBaseValueException( 'languageCodes', $languageCodes, 'a single language code' );
-                        }
-                        else
-                        {
-                            $languageCodes = $languageCodes[1];
-                        }
+                        throw new ezcBaseValueException( 'languageCodes', $languageCodes, 'a single language code' );
                     }
-
-                    $core = $this->getLanguageCore( $languageCodes );
-                    $url = "{$this->solrURI['protocol']}://{$this->solrURI['uri']}/{$core}/update";
-                } break;
-            
-                // multi-core (sharded) request
-                case '/select': 
-                {
-                    if ( is_array( $languageCodes ) )
+                    else
                     {
-                        if ( count( $languageCodes ) == 1 )
-                        {
-                            $languageCodes = $languageCodes[1];
-                        }
-                        // real multi-core request
-                        else
-                        {
-                            // the base request goes to the default core
-                            $baseURL = "{$this->solrURI['protocol']}://{$this->solrURI['uri']}/{$this->defaultCore}/select";
-                            
-                            // the shards parameter depends on the given languages list
-                            foreach( $languageCodes as $languageCode )
-                            {
-                                $core = $this->getLanguageCore( $languageCode );
-                                $shardParts[] = "{$this->solrURI['uri']}/$core";
-                            }
-                            $shards = implode( ',', $shardParts );
-                            
-                            $url = "{$baseURL}?shards=$shards";
-                            break;
-                        }
+                        $languageCodes = $languageCodes[1];
                     }
-                    // simple core request, no sharding required
-                    $core = $this->getLanguageCore( $languageCodes );
-                    $url = "{$this->solrURI['protocol']}://{$this->solrURI['uri']}/{$core}{$request}";
-                } break;
-            
-                default:
-                {
-                    throw new ezcBaseValueException( 'request', $request, '/update or /delete', 'argument' );
                 }
+
+                $core = $this->getLanguageCore( $languageCodes );
+                $url = "{$this->SearchServerURI['protocol']}://{$this->SearchServerURI['uri']}/{$core}/update";
+            } break;
+        
+            // multi-core (sharded) request
+            case '/select': 
+            {
+                if ( is_array( $languageCodes ) )
+                {
+                    // if no languages are provided, we do use the site configuration
+                    if ( count( $languageCodes ) == 0 )
+                    {
+                        $languageCodes = $this->siteLanguages();
+                    }
+                    if ( count( $languageCodes ) == 1 )
+                    {
+                        $languageCodes = $languageCodes[1];
+                    }
+                    // real multi-core request
+                    else
+                    {
+                        // the base request goes to the default core
+                        $baseURL = "{$this->SearchServerURI['protocol']}://{$this->SearchServerURI['uri']}/{$this->defaultCore}/select";
+                        
+                        // the shards parameter depends on the given languages list
+                        foreach( $languageCodes as $languageCode )
+                        {
+                            $core = $this->getLanguageCore( $languageCode );
+                            $shardParts[] = "{$this->SearchServerURI['uri']}/$core";
+                        }
+                        $shards = implode( ',', $shardParts );
+                        
+                        $url = "{$baseURL}?shards=$shards";
+                        break;
+                    }
+                }
+                // simple core request, no sharding required
+                $core = $this->getLanguageCore( $languageCodes );
+                $url = "{$this->SearchServerURI['protocol']}://{$this->SearchServerURI['uri']}/{$core}{$request}";
+            } break;
+        
+            default:
+            {
+                throw new ezcBaseValueException( 'request', $request, '/update or /delete', 'argument' );
             }
-            eZDebugSetting::writeDebug(
-                'ezfind-multicore',
-                "Multi-core update request to: $url",
-                __METHOD__ );
-            return $url;
         }
+        eZDebugSetting::writeDebug(
+            'ezfind-multicore',
+            "Multi-core update request to: $url",
+            __METHOD__ );
+        return $url;
     }
     
     /**
@@ -463,15 +446,10 @@ class eZSolrMultiCoreBase extends eZSolrBase
      * @param string $languageCode
      * 
      * @return string The core name configured for this language
-     * @since eZ Find 2.2
+s     * @since eZ Find 2.2
      */
     public function getLanguageCore( $languageCode )
     {
-        if ( !$this->enableMultiCore )
-        {
-            return false;
-        }
-        
         if ( isset( $this->languagesCoresMapping[$languageCode] ) )
         {
             return $this->languagesCoresMapping[$languageCode];
@@ -492,6 +470,34 @@ class eZSolrMultiCoreBase extends eZSolrBase
     function pushElevateConfiguration( $params )
     {
         return true;
+    }
+    
+    /**
+     * Returns the configured site languages.
+     * 
+     * This is used to compensate for the API that doesn't easily allow
+     * transmission of search languages parameters
+     * 
+     * @todo Refactor this to use the share the same languages list source as
+     *       ezfezpSolrQueryBuilder
+     * 
+     * @return array A languages list
+     * 
+     * @since eZ find 2.2
+     */
+    protected function siteLanguages()
+    {
+        $languages = eZINI::instance()->variable( 'RegionalSettings', 'SiteLanguageList' );
+        $searchMainLanguageOnly = eZINI::instance( 'ezfind.ini' )->variable( 'LanguageSearch', 'SearchMainLanguageOnly' ) == 'enabled';
+
+        if ( $searchMainLanguageOnly )
+        {
+            return $languages[0];
+        }
+        else
+        {
+            return $languages;
+        }
     }
 
 }
