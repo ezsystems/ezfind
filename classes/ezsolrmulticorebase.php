@@ -481,4 +481,17 @@ class eZSolrMultiCoreBase extends eZSolrBase
             return $this->defaultCore;
         }
     }
+    
+    /**
+     * Sends the updated elevate configuration to Solr
+     * 
+     * @note This method has no effect in a multicore configuration, as elevate
+     *       isn't yet supported in that case
+     * @return true
+     */
+    function pushElevateConfiguration( $params )
+    {
+        return true;
+    }
+
 }

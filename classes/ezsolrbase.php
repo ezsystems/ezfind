@@ -45,6 +45,9 @@ class eZSolrBase
     */
     function eZSolrBase( $baseURI = false )
     {
+        // @todo Modify this code to adapt to the new URI parameters
+        // Also keep BC with the previous settings
+        
         //$this->SearchServerURI = $baseURI;
         $this->SolrINI = eZINI::instance( 'solr.ini' );
         $iniSearchServerURI = $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' );
@@ -121,34 +124,34 @@ class eZSolrBase
         return implode( '&', $encodedQueryParams );
     }
 
-    /*!
-     Send HTTP Post query to Solr engine
-
-     \param string request name
-     \param string post data
-     \param string contentType
-
-     \return Result of HTTP Request ( without HTTP headers ).
-    */
-    function postQuery( $request, $postData, $contentType = 'application/x-www-form-urlencoded' )
+    /**
+     * Send HTTP Post query to the Solr engine
+     *
+     * @param string $request request name (examples: /select, /update, ...)
+     * @param string $postData post data
+     * @param string $languageCodes A language code string
+     * @param string $contentType POST content type
+     *
+     * @return string Result of HTTP Request ( without HTTP headers )
+     */
+    protected function postQuery( $request, $postData, $contentType = 'application/x-www-form-urlencoded' )
     {
         $url = $this->SearchServerURI . $request;
         return $this->sendHTTPRequest( $url, $postData, $contentType );
     }
 
-    /*!
-     Send HTTP Get query to Solr engine
-
-     \param string request name
-     \param string HTTP GET parameters
-
-     \return Result of HTTP Request ( without HTTP headers ).
-    */
+    /**
+     * Send an HTTP Get query to Solr engine
+     *
+     * @param string $request request name
+     * @param string $getParams HTTP GET parameters, as an associative array
+     * 
+     * @return Result of HTTP Request ( without HTTP headers )
+     */
     function getQuery( $request, $getParams )
     {
         return $this->sendHTTPRequest( eZSolrBase::buildHTTPGetQuery( $request, $getParams ) );
     }
-
 
     /*!
       OBS ! Experimental.
@@ -204,14 +207,21 @@ class eZSolrBase
         return $resultArray;
     }
 
-    /*!
-      OBS ! Experimental.
-    */
+    /**
+     * Sends a ping request to solr
+     * 
+     * @note OBS ! Experimental.
+     * 
+     * @param string $wt
+     *        Query response writer. Only PHP is supported for now.
+     *        Note that this parameter isn't used at all for now.
+     * 
+     * @return array The ping operation result
+     */
     function ping ( $wt = 'php' )
     {
         return $this->rawSolrRequest ( '/admin/ping' );
     }
-
 
     /*!
       Performs a commit in Solr, which means the index is made live after performing
@@ -366,6 +376,21 @@ class eZSolrBase
     {
         return $this->rawSolrRequest ( '/select' , $params, $wt );
     }
+    
+    /**
+     * Sends the updated elevate configuration to Solr
+     * 
+     * @params array $params Raw query parameters
+     * 
+     * @note This method is a simple wrapper around rawSearch in order to easily
+     *       ignore elevate when using multicore
+     * @return bool
+     * @see rawSearch()
+     */
+    function pushElevateConfiguration( $params )
+    {
+        return $this->rawSearch( $params );
+    }
 
     /*!
      Send HTTP request. This code is based on eZHTTPTool::sendHTTPRequest, but contains
@@ -518,4 +543,21 @@ class eZSolrBase
 
         }
     }
+
+    /**
+     * Returns the appropriate URI depending on the request type and parameters
+     * 
+     * @param string $request Solr request (/update, /select...)
+     * @param string|array $languageCodes
+     * 
+     * @return string
+     * 
+     * @todo Check if it is worth adding other request parameters
+     */
+    public function solrURL( $request, $languageCodes = false )
+    {
+        $url = "{$this->solrURI['protocol']}://{$this->solrURI['uri']}{$request}";
+        return $url;
+   }
+    
 }

@@ -487,7 +487,7 @@ class eZFindElevateConfiguration extends eZPersistentObject
             self::CONF_PARAM_NAME => self::getConfiguration()
         );
 
-        $eZSolrBase = new eZSolrBase();
+        $eZSolrBase = eZSolr::solrBaseFactory();
         $result = $eZSolrBase->rawSearch( $params );
 
         if ( ! $result )
