@@ -149,32 +149,6 @@ class eZSolrMultiCoreBase extends eZSolrBase
     }
 
     /**
-     * Builds an HTTP Post string.
-     *
-     * @param array $queryParams Query parameters, as an associative array
-     *
-     * @return string POST part of HTML request
-     */
-	function buildPostString( $queryParams )
-    {
-        foreach ( $queryParams as $name => $value )
-        {
-            if ( is_array( $value ) )
-            {
-                foreach ( $value as $valueKey => $valuePart )
-                {
-                    $encodedQueryParams[] = urlencode( $name ) . '=' . urlencode( $valuePart );
-                }
-            }
-            else
-            {
-                $encodedQueryParams[] = urlencode( $name ) . '=' . urlencode( $value );
-            }
-        }
-        return implode( '&', $encodedQueryParams );
-    }
-
-    /**
      * Send HTTP Post query to the Solr engine
      *
      * @param string $request request name (examples: /select, /update, ...)
@@ -182,9 +156,9 @@ class eZSolrMultiCoreBase extends eZSolrBase
      * @param string $languageCodes A language code string
      * @param string $contentType POST content type
      *
-     * return string Result of HTTP Request ( without HTTP headers )
+     * @return string Result of HTTP Request ( without HTTP headers )
      */
-    function postQuery( $request, $postData, $languageCodes = array(), $contentType = 'application/x-www-form-urlencoded' )
+    protected function postQuery( $request, $postData, $languageCodes = array(), $contentType = 'application/x-www-form-urlencoded' )
     {
         try
         {
@@ -202,76 +176,6 @@ class eZSolrMultiCoreBase extends eZSolrBase
     }
 
     /**
-     * Send an HTTP Get query to Solr engine
-     *
-     * @param string $request request name
-     * @param string $getParams HTTP GET parameters, as an associative array
-     * 
-     * @return Result of HTTP Request ( without HTTP headers )
-     */
-    function getQuery( $request, $getParams )
-    {
-        return $this->sendHTTPRequest( eZSolrBase::buildHTTPGetQuery( $request, $getParams ) );
-    }
-
-
-    /**
-     * Sends a raw HTTP request to solr
-     * 
-     * Can be used for anything, uses the post method
-     * 
-     * @param string $request refers to the request handler called
-     * @param array $params array of post variables to send
-     * @param string $wt Query response writer. Values: php, json or phps
-     * 
-     * @return array The result array
-     */
-    function rawSolrRequest ( $request = '', $params = array(), $wt = 'php' )
-    {
-        if ( count( $params ) == 0 && $request == '' )
-        {
-            return false;
-        }
-		$params['wt'] = $wt;
-        $paramsAsString = $this->buildPostString( $params );
-        $data = $this->postQuery( $request, $paramsAsString, false );
-
-        $resultArray = array();
-        if ( $data === false )
-        {
-            return false;
-        }
-        if ( $wt == 'php' )
-        {
-            if ( strpos( $data, 'array' ) === 0 )
-            {
-                eval( "\$resultArray = $data;");
-            }
-            else
-            {
-                eZDebug::writeError( 'Got invalid result from search engine.' . $data );
-                return false;
-            }
-        }
-        elseif ( $wt == 'json' )
-        {
-            $resultArray = json_decode ( $data, true );
-        }
-        //phps unserialize
-        elseif ( $wt == 'phps' )
-        {
-            $resultArray = unserialize ( $data );
-        }
-        else
-        {
-            $resultArray[] = $data;
-        }
-        return $resultArray;
-    }
-
-    /**
-     * @note OBS ! Experimental.
-     * 
      * Sends a ping request to solr
      * 
      * @param string $wt
@@ -279,6 +183,8 @@ class eZSolrMultiCoreBase extends eZSolrBase
      *        Note that this parameter isn't used at all for now.
      * 
      * @return array The ping operation result
+     * 
+     * @note OBS ! Experimental.
      */
     function ping ( $wt = 'php' )
     {
@@ -338,57 +244,6 @@ class eZSolrMultiCoreBase extends eZSolrBase
         }
         //return the response for inspection if optimize was successful
         return $this->postQuery( '/update', '<optimize/>', 'text/xml' );
-    }
-
-    /**
-     * Validate the update result returned by solr
-     *
-     * A valid solr update reply contains the following document:
-     * <?xml version="1.0" encoding="UTF-8"?>
-     * <response>
-     *   <lst name="responseHeader">
-     *     <int name="status">0</int>
-     *     <int name="QTime">3</int>
-     *   </lst>
-     *   <strname="WARNING">This response format is experimental.  It is likely to change in the future.</str>
-     * </response>
-     *
-     * Function will check if solrResult document contains "<int name="status">0</int>"
-     * 
-     * @param string $updateResult The XML result of an UPDATE solr operation
-     * 
-     * @return bool
-     **/
-    static function validateUpdateResult ( $updateResult )
-    {
-        $dom = new DOMDocument( '1.0' );
-        // Supresses error messages
-        $status = $dom->loadXML( $updateResult, LIBXML_NOWARNING | LIBXML_NOERROR  );
-
-        if ( !$status )
-        {
-            return false;
-        }
-
-        $intElements = $dom->getElementsByTagName( 'int' );
-
-        if ( $intElements->length < 1 )
-        {
-            return false;
-        }
-
-        foreach ( $intElements as $intNode )
-        {
-            foreach ($intNode->attributes as $attribute)
-            {
-                if ( ( $attribute->name === 'name' ) and ( $attribute->value === 'status' ) )
-                {
-                    //Then we have found the correct node
-                    return ( $intNode->nodeValue === "0"  );
-                }
-            }
-        }
-        return false;
     }
 
     /**
