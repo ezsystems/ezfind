@@ -1,0 +1,49 @@
+=========================================================
+Commit tuning
+=========================================================
+
+:Author:   Paul Borgermans
+:Version: 1.0 draft
+:Revision: $Rev: 4329 $
+:Date: $Date: 2009-12-10 12:03:39 +0100 (Thu, 10 Dec 2009) $
+
+.. sectnum::
+.. contents::
+.. NOTE : for a better reading experience, convert me to HTML with rst2html.
+
+Introduction
+============
+
+Since Solr 1.4, some enhancements on how commits are performed were added on top of
+the existing "commit after N docs" and "commit after X secs since previous commit"
+configuration parameters in solrconf.xml
+
+Some customers with high write rates and considerable search volumes currently
+experience a kind of race conditions when several commits are issued while Solr
+is refreshing its IndexReader structures.
+
+The idea is to add the commitWithin parameters with <add> commands and also to
+provide better support for the existing "delaying" commit features in Solr
+
+
+Related issues
+==============
+
+Premium customer issue via public tracker
+http://issues.ez.no/IssueView.php?Id=15931&activeItem=1
+
+Implementation
+==============
+
+Provide more ini configuration parameters and extend API's to support all
+Solr commit parameters
+
+ezfind.ini
+
+[IndexOptions]
+## If true, another mechanism must be enabled to do commits: cronjob,
+# solrconf.xml or by giving CommitWithin a positive value (expressed in milliseconds)
+DisableDirectCommits=false (default)
+## If set to a positive value will add those delays with every addObject call
+# if set to 0 (default), it will be ignored
+CommitWithin=0 (default)
