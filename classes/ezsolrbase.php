@@ -426,7 +426,7 @@ class eZSolrBase
 
      \return HTTP result ( without headers ), false if the request fails.
     */
-    function sendHTTPRequest( $url, $postData = false, $contentType = '', $userAgent = 'eZ Publish' )
+    function sendHTTPRequest( $url, $postData = false, $contentType = 'application/x-www-form-urlencoded;charset=UTF-8', $userAgent = 'eZ Publish' )
     {
         $connectionTimeout = $this->SolrINI->variable( 'SolrBase', 'ConnectionTimeout' );
         $processTimeout = $this->SolrINI->variable( 'SolrBase', 'ProcessTimeout' );
