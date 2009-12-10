@@ -104,7 +104,7 @@ case "$1" in
   restart)
     echo " * Restarting $DESC ($NAME)"
     d_status
-    if [ $? -neq 0 ]
+    if [ $? -ne 0 ]
     then
       echo "   ...not running."
       RETVAL=1
