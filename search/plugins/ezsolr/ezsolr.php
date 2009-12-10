@@ -492,11 +492,20 @@ class eZSolr
         }
 
         $optimize = false;
+        if ( $this->FindINI->variable( 'IndexOptions', 'DisableDirectCommits' ) === 'true' )
+        {
+            $commit = false;
+        }
+        $commitWithin = 0;
+        if ( $this->FindINI->variable( 'IndexOptions', 'CommitWithin' ) > 0 )
+        {
+            $commitWithin = $this->FindINI->variable( 'IndexOptions', 'CommitWithin' );
+        }
         if ( $commit && ( $this->FindINI->variable( 'IndexOptions', 'OptimizeOnCommit' ) === 'enabled' ) )
         {
             $optimize = true;
         }
-        return $this->Solr->addDocs( $docList, $commit, $optimize );
+        return $this->Solr->addDocs( $docList, $commit, $optimize, $commitWithin );
 
     }
 

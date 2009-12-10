@@ -301,8 +301,10 @@ class eZSolrBase
      * performance.
      * @param array $docs associative array of documents to add
      * @param boolean $commit wether or not to perform a solr commit at the end
+     * @param integer $commitWithin specifies within how many milliseconds a commit should occur if no other commit
+     *       is triggered in the meantime (Solr 1.4, eZ Find 2.2)
      */
-    function addDocs ( $docs = array(), $commit = true, $optimize = false  )
+    function addDocs ( $docs = array(), $commit = true, $optimize = false, $commitWithin = 0  )
     {
         //
         if (! is_array( $docs ) )
@@ -315,7 +317,15 @@ class eZSolrBase
         }
         else
         {
-            $postString = '<add>';
+            if ( is_integer( $commitWithin ) && $commitWithin > 0 )
+            {
+                $postString = '<add commitWithin="' . $commitWithin . '">';
+            }
+            else
+            {
+                $postString = '<add>';
+            }
+
             foreach ( $docs as $doc )
             {
                 $postString .= $doc->docToXML();

@@ -71,7 +71,7 @@
       <Arg>
           <New class="org.mortbay.jetty.bio.SocketConnector">
             <Set name="port"><SystemProperty name="jetty.port" default="8983"/></Set>
-            <Set name="maxIdleTime">50000</Set>
+            <Set name="maxIdleTime">500000</Set>
             <Set name="lowResourceMaxIdleTime">1500</Set>
           </New>
       </Arg>
