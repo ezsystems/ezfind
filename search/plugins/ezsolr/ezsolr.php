@@ -358,9 +358,6 @@ class eZSolr
 
         }
 
-        //  Create the list of available languages for this version :
-        $availableLanguages = $currentVersion->translationList( false, false );
-
         // Check anonymous user access.
         if ( $this->FindINI->variable( 'SiteSettings', 'IndexPubliclyAvailable' ) == 'enabled' )
         {
@@ -397,8 +394,11 @@ class eZSolr
         $reverseRelatedObjectCount = $contentObject->reverseRelatedObjectCount();
         $docBoost += $reverseRelatedScale * $reverseRelatedObjectCount;
 
-        $currentVersion = $contentObject->currentVersion();
-        foreach( $currentVersion->translationList( false, false ) as $languageCode )
+        //  Create the list of available languages for this version :
+        $availableLanguages = $currentVersion->translationList( false, false );
+
+        // Loop over each language version and create an eZSolrDoc for it
+        foreach( $availableLanguages as $languageCode )
         {
             $doc = new eZSolrDoc( $docBoost, $languageCode );
             // Set global unique object ID
@@ -571,8 +571,6 @@ class eZSolr
      */
     function removeObject( $contentObject, $commit = true )
     {
-        eZDebug::writeDebug($contentObject, __METHOD__ );
-        
         // 1: remove the assciated "elevate" configuration
         eZFindElevateConfiguration::purge( '', $contentObject->attribute( 'id' ) );
         eZFindElevateConfiguration::synchronizeWithSolr();
@@ -759,12 +757,14 @@ class eZSolr
      * More like this is pretty similar to normal search, but usually only the object or node id are sent to Solr
      * However, streams or a search text body can also be passed .. Solr will extract the important terms and build a
      * query for us
-     * @todo: add functionality not to call the DB to recreate objects : $asObjects == false
+     * 
      * @param string $queryType is one of 'noid', 'oid', 'url', 'text'
      * @param $queryValue the node id, object id, url or text body to use
      * @param array parameters. @see ezfeZPSolrQueryBuilder::buildMoreLikeThis()
      *
      * @return array List of eZFindResultNode objects.
+     * 
+     * @todo: add functionality not to call the DB to recreate objects : $asObjects == false
      */
     function moreLikeThis( $queryType, $queryValue, $params = array() )
     {
@@ -775,9 +775,8 @@ class eZSolr
 
         if ( trim( $queryType ) == '' || trim( $queryValue ) == '' )
         {
-            $error = 'Missing query arguments for More Like This' . 'querytype = ' . $queryType . ', Query Value = ' . $queryValue;
-            eZDebug::writeNotice( $error,
-                                  'eZSolr::moreLikeThis()' );
+            $error = 'Missing query arguments for More Like This: ' . 'querytype = ' . $queryType . ', Query Value = ' . $queryValue;
+            eZDebug::writeNotice( $error, __METHOD__ );
             $resultArray = null;
         }
         else
@@ -1041,7 +1040,6 @@ class eZSolr
         return ezi18n( 'ezfind', 'eZ Find 2.1 search plugin &copy; 2009 eZ Systems AS, powered by Apache Solr 1.4dev' );
     }
 
-
     /**
      * @see eZSearch::needCommit()
      * @return boolean
@@ -1177,9 +1175,14 @@ class eZSolr
             return new eZSolrBase();
     }
 
+    /**
+     * eZSolrBase instance used for interaction with the solr server
+     * @var eZSolrBase
+     */
+    var $Solr;
+    
     /// Object vars
     var $SolrINI;
-    var $SearchSeverURI;
     var $FindINI;
     var $SiteINI;
     var $SolrDocumentFieldBase;

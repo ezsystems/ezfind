@@ -25,6 +25,7 @@
 //
 
 
+
 /*!
  eZSolrBase is a PHP library for connecting and performing operations
  on the Solr server.
@@ -455,7 +456,7 @@ class eZSolrBase
             curl_close( $ch );
             if  ( $errNo )
             {
-                eZDebug::writeError( 'curl error: ' . $errNo, 'eZSolr::sendHTTPRequest()' );
+                eZDebug::writeError( 'curl error: ' . $errNo, __METHOD__ );
                 return false;
             }
             else
@@ -490,7 +491,7 @@ class eZSolrBase
             $checkIP = ip2long( $ip );
             if ( $checkIP == -1 or $checkIP === false )
             {
-                eZDebug::writeDebug( 'Could not find hostname: ' . $parsedUrl['host'], 'eZSolr::sendHTTPRequest()' );
+                eZDebug::writeDebug( 'Could not find hostname: ' . $parsedUrl['host'], __METHOD__ );
                 return false;
             }
 
@@ -500,7 +501,7 @@ class eZSolrBase
             if ( !$fp )
             {
                 eZDebug::writeDebug( 'Could not open connection to: ' . $filename . ':' . $port . '. Error: ' . $errorStr,
-                                     'eZSolr::sendHTTPRequest()' );
+                                     __METHOD__ );
                 return false;
             }
 
@@ -518,6 +519,7 @@ class eZSolrBase
                 "User-Agent: $userAgent\r\n" .
                 "Pragma: no-cache\r\n" .
                 "Connection: close\r\n\r\n";
+            
             stream_set_timeout( $fp, $processTimeout );
             fputs( $fp, $request );
             if ( $method == 'POST' )
@@ -555,7 +557,7 @@ class eZSolrBase
             fclose($fp);
             if ( $info['timed_out'] )
             {
-                eZDebug::writeError( 'connection error: processing timed out', 'eZSolr::sendHTTPRequest()' );
+                eZDebug::writeError( 'connection error: processing timed out', __METHOD__ );
                 return false;
             }
             else

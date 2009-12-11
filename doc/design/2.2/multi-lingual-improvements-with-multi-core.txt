@@ -78,24 +78,86 @@ API changes
 * fetch functions
 * ...
 
+eZSolrDoc
++++++++++
+
+In order to make it possible to direct indexings to the appropriate language
+core, a new property is added to eZSolrDoc::
+
+    eZSolrDoc::languageCode
+    
+This property is filled when a new eZSolrDoc is created, so that when indexing,
+we can easily determine what language the doc is in.
+
+eZSolr
+++++++
+
+New method: solrBaseFactory
+'''''''''''''''''''''''''''
+As explained in the eZSolrBase paragraph, this method returns the appropriate
+eZSolrBase:
+    * If LanguageSearch.Multicore is disabled: eZSolrBase
+    * If LanguageSearch.MultiCore is enabled: eZSolrMultiCoreBase
+
+eZSolrBase
+++++++++++
+
+a new class called eZSolrMultiCoreBased is added, inheriting eZSolrBase.
+
+With the current approach, most methods in eZSolrBase would have been impacted,
+and would have added an unwanted overhead to most search & indexing requests.
+Minimal changes in eZSolrBase are still required in order to maintain a
+consistent API, but this are minimal.
+
+The eZSolrBase constructor is no longer supposed to be called directly, and
+is replaced by::
+
+    eZSolr::solrBaseFactory()
+    
+This method will return either the standard, mono-core eZSolrBase, or if
+multicore is enabled, an eZSolrMultiCoreBase.
+
+Added: SolrURI()
+''''''''''''''''
+This method is added so that eZSolrBase and eZSolrMultiCore base maintain a
+common API. It is very simple for eZSolrBase, as it only returns the solr URI.
+
+It gets more useful in eZSolrMultiCoreBase
+
+Added: pushElevateConfiguration
+'''''''''''''''''''''''''''''''
+Since elevate isn't supported in a multi-core environnement, this method has
+been added so that it can be overriden in eZSolrBaseMultiCore. It is just an 
+abstract version of the previous raw code from elevate.
+
 eZSolrMultiCoreBase
 +++++++++++++++++++
 
-SolrURI()
-'''''''''
-Since multiple cores will be used, the SearchServerURI is no longer a fixed
-string, and will vary depending on the request type & languages.
-This new method will return the URI depending on the request.
+This new class handles a number of solr cores in all operations.
 
-addDocs()
-'''''''''
-addDocs() needs to be modified since each document needs to be sent to the
-core matching the document's language. This will also make indexing a bit
-slower, since it will no longer be possible to use one and only one HTTP request
-to index an array of documents. Despite that, if multiple documents with the
-same language are sent, only one request per core should be performed.
+The core of this class is the solrURL() method. Depending on a list of languages,
+it will return a different solr URL, so that multi-core requests can be achieved.
 
+Most other changes simply reflect what is required for multi-core:
+  * write requests need to be sent to each affected core. For example, an object
+    with eng-GB and fre-FR content must be sent to the fre-FR and eng-GB cores.
+  * read requests use the shards parameter through one core, and get aggregate
+    search results.
 
+The consequence is that a languageCodes parameter has been added to most methods
+who communicate with solr. Depending if the query is a write or a read one, 
+multiple or single calls will be performed.
+
+Since one method can now perform multiple solr backend calls, the
+validateUpdateResult method might be called several times in a row. The booleans
+returned by these calls are aggregated, meaning that one failing result will
+make the method return false. This will have to be improved in order to provide
+more visibility.
+
+pushElevateConfiguration
+''''''''''''''''''''''''
+Since elevate doesn't work with multicore yet, this method just doesn't do
+anything in eZSolrMultiCoreBase.
 
 Searching over multiple cores
 -----------------------------

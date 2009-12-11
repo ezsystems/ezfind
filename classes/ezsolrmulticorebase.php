@@ -25,6 +25,8 @@
 //
 
 
+
+
 /**
  * eZSolrBase handles communication with the solr server.
  * 
@@ -160,8 +162,6 @@ class eZSolrMultiCoreBase extends eZSolrBase
             eZDebug::writeError( $e->getMessage(), __METHOD__ . ': An error occured getting the solr request URL' );
             return false;
         }
-        
-        eZDebug::writeDebug( compact( 'url', 'postData', 'contentType' ), __METHOD__ );
         
         return $this->sendHTTPRequest( $url, $postData, $contentType );
     }
@@ -327,10 +327,6 @@ class eZSolrMultiCoreBase extends eZSolrBase
         }
         else
         {
-            // @todo We don't know what core these get sent to. We can send this
-            // query to all of them. This is what the $languageCodes = false
-            // parameter means
-
             // send to all cores
             $languageCodes = false;
             
@@ -388,7 +384,7 @@ class eZSolrMultiCoreBase extends eZSolrBase
                 }
 
                 $core = $this->getLanguageCore( $languageCodes );
-                $url = "{$this->SearchServerURI['protocol']}://{$this->SearchServerURI['uri']}/{$core}/update";
+                $url = "{$this->SearchServerURI['protocol']}://{$this->SearchServerURI['uri']}/{$core}{$request}";
             } break;
         
             // multi-core (sharded) request
@@ -409,13 +405,13 @@ class eZSolrMultiCoreBase extends eZSolrBase
                     else
                     {
                         // the base request goes to the default core
-                        $baseURL = "{$this->SearchServerURI['protocol']}://{$this->SearchServerURI['uri']}/{$this->defaultCore}/select";
+                        $baseURL = "{$this->SearchServerURI['protocol']}://{$this->SearchServerURI['uri']}/{$this->defaultCore}{$request}";
                         
                         // the shards parameter depends on the given languages list
                         foreach( $languageCodes as $languageCode )
                         {
                             $core = $this->getLanguageCore( $languageCode );
-                            $shardParts[] = "{$this->SearchServerURI['uri']}/$core";
+                            $shardParts[] = "{$this->SearchServerURI['uri']}/{$core}";
                         }
                         $shards = implode( ',', $shardParts );
                         
