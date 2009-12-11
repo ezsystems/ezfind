@@ -251,7 +251,7 @@ class eZSolrMultiCoreBase extends eZSolrBase
      * @return bool True if the operation was successful, false otherwise
      *              The result is parsed using validateUpdateResult()
      */
-    function addDocs ( $docs = array(), $commit = true, $optimize = false  )
+    function addDocs ( $docs = array(), $commit = true, $optimize = false, $commitWithin = 0 )
     {
         if (! is_array( $docs ) )
         {
