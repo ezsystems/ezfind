@@ -78,6 +78,8 @@ while( true )
 
         // finish up with commit
         $eZSolr->commit();
+        // clear object cache to conserver memory
+        eZContentObject::clearCache();
     }
     else
     {
