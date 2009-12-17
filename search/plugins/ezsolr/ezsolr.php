@@ -45,7 +45,13 @@ class eZSolr
         $this->SolrINI = eZINI::instance( 'solr.ini' );
         $this->FindINI = eZINI::instance( 'ezfind.ini' );
         $this->SiteINI = eZINI::instance( 'site.ini' );
-        $this->Solr = self::solrBaseFactory();
+        //$this->Solr = self::solrBaseFactory();
+        $this->UseMultiLanguageCores = false;
+        if ( $this->FindINI->variable( 'LanguageSearch', 'MultiCore' ) == 'enabled' )
+        {
+            $this->UseMultiLanguageCores = true;
+        }
+        $this->initLanguageShards();
     }
 
     /**
@@ -400,7 +406,7 @@ class eZSolr
         // Loop over each language version and create an eZSolrDoc for it
         foreach( $availableLanguages as $languageCode )
         {
-            $doc = new eZSolrDoc( $docBoost, $languageCode );
+            $doc = new eZSolrDoc( $docBoost );
             // Set global unique object ID
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' ), $this->guid( $contentObject, $languageCode ) );
 
@@ -488,7 +494,7 @@ class eZSolr
             }
             eZContentObject::recursionProtectionEnd();
 
-            $docList[] = $doc;
+            $docList[$languageCode] = $doc;
         }
 
         $optimize = false;
@@ -505,7 +511,18 @@ class eZSolr
         {
             $optimize = true;
         }
-        return $this->Solr->addDocs( $docList, $commit, $optimize, $commitWithin );
+        if ( $this->UseMultiLanguageCores === true)
+        {
+            foreach( $availableLanguages as $languageCode )
+            {
+                $this->SolrLanguageShards[$languageCode]->addDocs( array( $docList[$languageCode] ), $commit, $optimize, $commitWithin );
+            }
+        }
+        else
+        {
+            return $this->Solr->addDocs( $docList, $commit, $optimize, $commitWithin );
+        }
+        
 
     }
 
@@ -549,8 +566,19 @@ class eZSolr
      */
     function commit()
     {
-        //$updateURI = $this->SearchServerURI . '/update';
-        $this->Solr->commit();
+
+        if ( $this->UseMultiLanguageCores === true)
+        {
+            foreach ($this->SolrLanguageShards as $shard)
+            {
+                $shard->Solr->commit();
+            }
+        }
+        else
+        {
+            $this->Solr->commit();
+        }
+        
     }
 
     /**
@@ -558,7 +586,18 @@ class eZSolr
      */
     function optimize( $withCommit = false )
     {
-        $this->Solr->optimize( $withCommit );
+
+        if ( $this->UseMultiLanguageCores === true)
+        {
+            foreach ($this->SolrLanguageShards as $shard)
+            {
+                $shard->Solr->optimize( $withCommit );
+            }
+        }
+        else
+        {
+            $this->Solr->optimize( $withCommit );
+        }
     }
 
     /**
@@ -589,7 +628,17 @@ class eZSolr
             $languageCode = $language->attribute( 'locale' );
             $docs[$languageCode] = $this->guid( $contentObject, $languageCode );
         }
-        return $this->Solr->deleteDocs( $docs, false, $commit, $optimize );
+        if ( $this->UseMultiLanguageCores === true)
+        {
+            foreach($docs as $languageCode => $doc)
+            {
+                $this->SolrLanguageShards[$languageCode]->deleteDocs( array( $doc ), false, $commit, $optimize );
+            }
+        }
+        else
+        {
+            return $this->Solr->deleteDocs( $docs, false, $commit, $optimize );
+        }
     }
 
     /**
@@ -610,6 +659,26 @@ class eZSolr
         $error = 'Server not running';
         $searchCount = 0;
 
+        $coreToUse = null;
+        $shardQueryPart = null;
+        if ( $this->UseMultiLanguageCores === true )
+        {
+            $languages = $this->SiteINI->variable( 'RegionalSettings', 'SiteLanguageList' );
+            if ( array_key_exists ($languages[0], $this->SolrLanguageShards ) )
+            {
+                $coreToUse = $this->SolrLanguageShards[$languages[0]];
+                if (! $this->FindINI->variable( 'LanguageSearch', 'SearchMainLanguageOnly' ) == 'enabled' )
+                {
+                    $shardQueryPart = array( 'shards' => implode(',', $this->SolrLanguageShardURIs ));
+                }
+            }
+        }
+        else
+        {
+            $coreToUse = $this->Solr;
+        }
+
+
         if ( $this->SiteINI->variable( 'SearchSettings', 'AllowEmptySearch' ) == 'disabled' &&
              trim( $searchText ) == '' )
         {
@@ -618,17 +687,22 @@ class eZSolr
                                   'eZSolr::search()' );
             $resultArray = null;
         }
+        
         else
         {
             eZDebug::createAccumulator( 'Query build', 'eZ Find' );
             eZDebug::accumulatorStart( 'Query build' );
             $queryBuilder = new ezfeZPSolrQueryBuilder( $this );
             $queryParams = $queryBuilder->buildSearch( $searchText, $params, $searchTypes );
+            if (! $shardQueryPart === null )
+            {
+                $queryParams = array_merge($shardQueryPart, $queryParams);
+            }
             eZDebug::accumulatorStop( 'Query build' );
 
             eZDebug::createAccumulator( 'Engine time', 'eZ Find' );
             eZDebug::accumulatorStart( 'Engine time' );
-            $resultArray = $this->Solr->rawSearch( $queryParams );
+            $resultArray = $coreToUse->rawSearch( $queryParams );
             eZDebug::accumulatorStop( 'Engine time' );
         }
 
@@ -772,6 +846,22 @@ class eZSolr
         eZDebug::accumulatorStart( 'MoreLikeThis' );
         $error = 'Server not running';
         $searchCount = 0;
+        //mlt does not support distributed search yet, so find out which is 
+        //the language core to use and qyery only this one
+        //search across languages does not make sense here
+        $coreToUse = null;
+        if ( $this->UseMultiLanguageCores === true )
+        {
+            $languages = $this->SiteINI->variable( 'RegionalSettings', 'SiteLanguageList' );
+            if ( array_key_exists ($languages[0], $this->SolrLanguageShards ) )
+            {
+                $coreToUse = $this->SolrLanguageShards[$languages[0]];
+            }
+        }
+        else
+        {
+            $coreToUse = $this->Solr;
+        }
 
         if ( trim( $queryType ) == '' || trim( $queryValue ) == '' )
         {
@@ -789,7 +879,7 @@ class eZSolr
 
             eZDebug::createAccumulator( 'Engine time', 'eZ Find' );
             eZDebug::accumulatorStart( 'Engine time' );
-            $resultArray = $this->Solr->rawSolrRequest( '/mlt', $queryParams );
+            $resultArray = $coreToUse->rawSolrRequest( '/mlt', $queryParams );
             eZDebug::accumulatorStop( 'Engine time' );
         }
 
@@ -903,7 +993,20 @@ class eZSolr
     function initSpellChecker()
     {
 
-        $return = $this->Solr->rawSearch( array( 'q' => 'solr', 'qt' => 'spellchecker', 'wt' => 'php', 'cmd' => 'rebuild') );
+        if ( $this->UseMultiLanguageCores === true)
+        {
+            foreach($SolrLanguageShards as $shard )
+            {
+                $shard->rawSearch( array( 'q' => 'solr', 'qt' => 'spellchecker', 'wt' => 'php', 'cmd' => 'rebuild') );
+                //@TODO: process individual results, implement an ezfind error class or reuse ezp ones
+                return true;
+            }
+        }
+        else
+        {
+            $return = $this->Solr->rawSearch( array( 'q' => 'solr', 'qt' => 'spellchecker', 'wt' => 'php', 'cmd' => 'rebuild') );
+        }
+
 
     }
 
@@ -913,15 +1016,18 @@ class eZSolr
      *
      * @package unfinished
      * @return array Solr result set.
-     * @todo: configure different spell check handlers
+     * @todo: configure different spell check handlers and handle multicore configs (need a parameter for it)
      *
      */
     function spellCheck ( $string, $onlyMorePopular = false, $suggestionCount = 1, $accuracy=0.5 )
     {
-        $onlyMorePopularString = $onlyMorePopular ? 'true' : 'false';
-        return $this->Solr->rawSearch( array( 'q' => $string, 'qt' => 'spellchecker',
-                             'suggestionCount' => $suggestionCount, 'wt' => 'php',
-                             'accuracy' => $accuracy, 'onlyMorePopular' => $onlyMorePopularString ) );
+        if (! $this->UseMultiLanguageCores)
+        {
+            $onlyMorePopularString = $onlyMorePopular ? 'true' : 'false';
+            return $this->Solr->rawSearch( array( 'q' => $string, 'qt' => 'spellchecker',
+                                 'suggestionCount' => $suggestionCount, 'wt' => 'php',
+                                 'accuracy' => $accuracy, 'onlyMorePopular' => $onlyMorePopularString ) );
+        }
 
     }
 
@@ -967,16 +1073,30 @@ class eZSolr
     /**
      * Clean up search index for current installation.
      * @return bool true if cleanup was successful
+     * @todo:  handle multicore configs (need a parameter for it) for return values
     **/
     function cleanup( $allInstallations = false, $optimize = false )
     {
         if ( $allInstallations === true )
         {
-            return $this->Solr->deleteDocs( array(), '*:*', true, $optimize );
+            $optimize = true;
+            $deleteQuery = '*:*';
         }
         else
         {
-            return $this->Solr->deleteDocs( array(), ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' ) . ':' . self::installationID(), true );
+            $deleteQuery = ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' ) . ':' . self::installationID();
+        }
+        if ($this->UseMultiLanguageCores === true)
+        {
+            foreach($SolrLanguageShards as $shard )
+            {
+                $shard->deleteDocs( array(), $deleteQuery, true, $optimize );
+            }
+            return true;
+        }
+        else
+        {
+            return $this->Solr->deleteDocs( array(), $deleteQuery, true );
         }
 
     }
@@ -1160,6 +1280,36 @@ class eZSolr
         $contentObject = eZContentObject::fetch( $objectID );
         $this->addObject( $contentObject );
     }
+
+    private function initLanguageShards()
+    {
+        $this->SolrLanguageShards = array();
+        if ( $this->UseMultiLangueCores === true )
+        {
+            
+            $languages = $this->SiteINI->variable( 'RegionalSettings', 'SiteLanguageList' );
+            $languageMapping = $this->FindINI->variable( 'LanguageSearch','LanguagesCoresMap');
+            $shardMapping = $this->SolrINI->variable ('SolrBase', 'Shards');
+            foreach ($languages as $language)
+            {
+                $fullURI=$shardMapping[$languageMapping[$language]];
+                $this->SolrLanguageShards[$language]=new eZSolrBase($shardMapping[$languageMapping[$language]]);
+                $parts = explode( '://', $fullURI );
+                $this->SolrLanguageShardURIs[$language]= $parts[1];
+            }
+
+
+
+        }
+        else
+        //pre-2.2 behaviour
+        {
+            $this->Solr = new eZSolrBase();
+            //$this->SolrLanguageShards[] = new eZSolrBase();
+        }
+
+
+    }
     
     /**
      * Returns the relevant eZSolrBase, depending if MultiCore is enabled or not
@@ -1180,7 +1330,15 @@ class eZSolr
      * @var eZSolrBase
      */
     var $Solr;
-    
+    var $UseMultiLanguageCores;
+
+    /**
+    * @since eZ Find2.2, this holds an array of eZSolrBase objects
+    * for multilingual indexes served from different shards
+    * if this is enabled
+    */
+    var $SolrLanguageShards;
+    var $SolrLanguageShardURIs;
     /// Object vars
     var $SolrINI;
     var $FindINI;

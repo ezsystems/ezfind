@@ -216,8 +216,7 @@ class eZSolrBase
      * @note OBS ! Experimental.
      * 
      * @param string $wt
-     *        Query response writer. Only PHP is supported for now.
-     *        Note that this parameter isn't used at all for now.
+     *        Query response writer. Defaults to PHP array response format
      * 
      * @return array The ping operation result
      */
@@ -405,7 +404,8 @@ class eZSolrBase
      * Sends the updated elevate configuration to Solr
      * 
      * @params array $params Raw query parameters
-     * 
+     *
+     *
      * @note This method is a simple wrapper around rawSearch in order to easily
      *       ignore elevate when using multicore
      * @return bool
@@ -569,19 +569,4 @@ class eZSolrBase
         }
     }
 
-    /**
-     * Returns the appropriate URI depending on the request type and parameters
-     * 
-     * @param string $request Solr request (/update, /select...)
-     * @param string|array $languageCodes
-     * 
-     * @return string
-     * 
-     * @todo Check if it is worth adding other request parameters
-     */
-    public function solrURL( $request, $languageCodes = false )
-    {
-        $url = "{$this->solrURI['protocol']}://{$this->solrURI['uri']}{$request}";
-        return $url;
-   }
 }
