@@ -127,6 +127,7 @@ class ezfeZPSolrQueryBuilder
         $boostFunctions = isset( $params['BoostFunctions'] )  ?  $params['BoostFunctions'] : null;
         $forceElevation = isset( $params['ForceElevation'] )  ?  $params['ForceElevation'] : false;
         $enableElevation = isset( $params['EnableElevation'] )  ?  $params['EnableElevation'] : true;
+        //$distributedSearch = isset( $params['DistributedSearch'] ) ? $params['DistributedSearch'] : false;
 
         // check if filter parameter is indeed an array, and set it otherwise
         if ( isset( $params['Filter']) && ! is_array( $params['Filter'] ) )
@@ -337,6 +338,15 @@ class ezfeZPSolrQueryBuilder
         // Handle boost functions :
         $boostFunctionsParamList = $this->buildBoostFunctions( $boostFunctions, $handlerParameters );
 
+        /**
+        * @since eZ Find 2.2
+        * @TODO: move highlighting part to its own function and enable customisation of
+        * all Solr side parameters
+        */
+        
+        $highLightSnippets = self::$FindINI->variable( 'HighLighting', 'SnippetsPerField' );
+        $highLightFragmentSize = self::$FindINI->variable( 'HighLighting', 'FragmentSize' );
+
         $queryParams =  array_merge(
             $handlerParameters,
             array(
@@ -355,8 +365,8 @@ class ezfeZPSolrQueryBuilder
                 'fq' => $filterQuery,
                 'hl' => 'true',
                 'hl.fl' => implode( ' ', $highLightFields),
-                'hl.snippets' => 2,
-                'hl.fragsize' => 100,
+                'hl.snippets' => $highLightSnippets,
+                'hl.fragsize' => $highLightFragmentSize,
                 'hl.requireFieldMatch' => 'false',
                 'hl.simple.pre' => '<b>',
                 'hl.simple.post' => '</b>',
