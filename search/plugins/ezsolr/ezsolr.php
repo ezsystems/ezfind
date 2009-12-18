@@ -1311,19 +1311,7 @@ class eZSolr
 
     }
     
-    /**
-     * Returns the relevant eZSolrBase, depending if MultiCore is enabled or not
-     * 
-     * @return eZSolrBase
-     */
-    public static function solrBaseFactory()
-    {
-        $ini = eZINI::instance( 'ezfind.ini' );
-        if ( $ini->variable( 'LanguageSearch', 'MultiCore' ) == 'enabled' )
-            return new eZSolrMultiCoreBase();
-        else
-            return new eZSolrBase();
-    }
+  
 
     /**
      * eZSolrBase instance used for interaction with the solr server
