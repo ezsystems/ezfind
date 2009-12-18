@@ -28,6 +28,9 @@
 /**
  * File containing the eZFindElevateConfiguration class.
  *
+ *
+ * @TODO: make it possible to have a configuration per language
+ *
  * @package eZFind
  */
 class eZFindElevateConfiguration extends eZPersistentObject
@@ -366,13 +369,13 @@ class eZFindElevateConfiguration extends eZPersistentObject
      *
      * @return boolean true if the whole operation passed, false otherwise.
      */
-    public static function synchronizeWithSolr()
+    public static function synchronizeWithSolr( $shard = null )
     {
         if ( self::generateConfiguration() )
         {
             try
             {
-                self::pushConfigurationToSolr();
+                self::pushConfigurationToSolr( $shard );
             }
             catch ( Exception $e )
             {
@@ -481,15 +484,20 @@ class eZFindElevateConfiguration extends eZPersistentObject
      * @see $configurationXML
      * @return void
      */
-    protected static function pushConfigurationToSolr()
+    protected static function pushConfigurationToSolr( $shard = null )
     {
         $params = array(
             'qt' => 'ezfind',
             self::CONF_PARAM_NAME => self::getConfiguration()
         );
 
-        $eZSolrBase = eZSolr::solrBaseFactory();
-        $result = $eZSolrBase->pushElevateConfiguration( $params );
+        // Keep previous behaviour, but should not be needed
+        if ( $shard === null )
+        {
+            $shard = new eZSolrBase();
+        }
+        
+        $result = $shard->pushElevateConfiguration( $params );
 
         if ( ! $result )
         {

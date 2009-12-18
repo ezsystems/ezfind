@@ -612,7 +612,8 @@ class eZSolr
     {
         // 1: remove the assciated "elevate" configuration
         eZFindElevateConfiguration::purge( '', $contentObject->attribute( 'id' ) );
-        eZFindElevateConfiguration::synchronizeWithSolr();
+        //eZFindElevateConfiguration::synchronizeWithSolr();
+        $this->pushElevateConfiguration();
 
         // @todo Remove if accepted. Optimize is bad on runtime.
         $optimize = false;
@@ -1088,7 +1089,7 @@ class eZSolr
         }
         if ($this->UseMultiLanguageCores === true)
         {
-            foreach($SolrLanguageShards as $shard )
+            foreach($this->SolrLanguageShards as $shard )
             {
                 $shard->deleteDocs( array(), $deleteQuery, true, $optimize );
             }
@@ -1311,7 +1312,29 @@ class eZSolr
 
     }
     
-  
+
+    /**
+     * synchronises elevate configuration across language shards in case of
+     * multiple lnguage indexes, or the default one
+     *
+     * @TODO: handle exceptions properly
+     */
+    public function pushElevateConfiguration()
+    {
+        if ( $this->UseMultiLanguageCores === true )
+        {
+            foreach( $this->SolrLanguageShards as $shard )
+            {
+                eZFindElevateConfiguration::synchronizeWithSolr( $shard );
+            }
+            return true;
+        }
+        else
+        {
+            return eZFindElevateConfiguration::synchronizeWithSolr( $this->Solr );
+        }
+
+    }
 
     /**
      * eZSolrBase instance used for interaction with the solr server

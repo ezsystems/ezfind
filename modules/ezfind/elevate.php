@@ -217,13 +217,17 @@ elseif( $http->hasPostVariable( 'ezfind-searchelevateconfigurations-do' ) or
 // Synchronise Elevate configuration with Solr :
 elseif( $http->hasPostVariable( 'ezfind-elevate-synchronise' ) )
 {
-    if ( eZFindElevateConfiguration::synchronizeWithSolr() )
+    $solr = new eZSolr();
+    //if ( eZFindElevateConfiguration::synchronizeWithSolr() )
+    if ( $solr->pushElevateConfiguration() )
     {
         $feedback['synchronisation_ok'] = true;
     }
     else
     {
         $feedback['synchronisation_fail'] = true;
+        //TODO: aggregate error messages from multiple shards in eZSolr->pushElevateConfiguration()
+        //then change here accordingly
         $feedback['synchronisation_fail_message'] = eZFindElevateConfiguration::$lastSynchronizationError;
     }
 }
