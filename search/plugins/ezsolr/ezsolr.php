@@ -1285,7 +1285,7 @@ class eZSolr
     private function initLanguageShards()
     {
         $this->SolrLanguageShards = array();
-        if ( $this->UseMultiLangueCores === true )
+        if ( $this->UseMultiLanguageCores === true )
         {
             
             $languages = $this->SiteINI->variable( 'RegionalSettings', 'SiteLanguageList' );
