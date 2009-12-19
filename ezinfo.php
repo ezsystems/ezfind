@@ -39,9 +39,9 @@ class eZFindInfo
     {
         return array(
             'Name' => "eZ Find",
-            'Version' => '2.1.1-dev',
-            'Copyright' => "Copyright Â© 2008-2009 eZ Systems AS.",
-            'Info_url' => "http://ez.no",
+            'Version' => '2.2.0-dev-alpha1',
+            'Copyright' => "Copyright © 2008-2009 eZ Systems AS.",
+            'Info_url' => "http://ez.no/ezfind",
             'License' => "GNU General Public License v2.0",
             '3rdparty_software' =>
             array ( 'name' => 'Solr',
