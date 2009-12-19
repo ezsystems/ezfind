@@ -374,7 +374,7 @@ class ezfeZPSolrQueryBuilder
             $facetQueryParamList,
             $spellCheckParamList,
             $elevateParamList );
-        eZDebug::writeDebug( $queryParams, 'Final query parameters sent to Solr backend' );
+        //eZDebug::writeDebug( $queryParams, 'Final query parameters sent to Solr backend' );
         return $queryParams;
     }
 
@@ -406,6 +406,9 @@ class ezfeZPSolrQueryBuilder
      * When SearchMainLanguageOnly is set to 'disabled', results will be returned with respecting the fallback defined in SiteLanguageList[] :
      *  of all matching results, the ones in eng-GB will be returned, and in case no translation in eng-GB exists for a result,
      *  it will be returned in fre-FR if existing.
+     *
+     * @TODO Offer a more relaxed option, allowing search across translations regardless of
+     * available translations
      *
      * @return string The correct language filtering string, appended to the 'fq' parameter in the Solr request.
      */
