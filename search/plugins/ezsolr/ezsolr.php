@@ -1162,7 +1162,7 @@ class eZSolr
      */
     static function engineText()
     {
-        return ezi18n( 'ezfind', 'eZ Find 2.1 search plugin &copy; 2009 eZ Systems AS, powered by Apache Solr 1.4dev' );
+        return ezi18n( 'ezfind', 'eZ Find 2.2 search plugin &copy; 2009 eZ Systems AS, powered by Apache Solr 1.4' );
     }
 
     /**
