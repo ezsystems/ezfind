@@ -144,7 +144,10 @@ class ezfSolrDocumentFieldName
                                   'boolean' => 'b',
                                   'date' => 'dt',
                                   'random' => 'random',
-                                  'keyword' => 'k' );
+                                  'keyword' => 'k',
+                                  'lckeyword' => 'lk',
+                                  'textgen' => 'tg',
+                                  'alphaOnlySort' => 'as');
 
     static $DefaultType = 'string';
     static $PHPCreator = null;
