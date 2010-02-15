@@ -1,7 +1,7 @@
 <h2>{$block.name|wash()}</h2>
 <form id="search-form-{$block.id}" action="{'ezajax/search'|ezurl('no')}" method="post">
     <input id="search-string-{$block.id}" type="text" name="SearchStr" value="" />
-    <input id="search-button-{$block.id}" class="button" type="submit" name="SearchButton" value="Search" />
+    <input id="search-button-{$block.id}" class="button" type="submit" name="SearchButton" value="{'Search'|i18n( 'design/ezflow/block/search' )}" />
     {def $customAttributesString='['}
     {foreach $block.custom_attributes as $name => $value}
         <input id="search-custom-attribute-{$name}-{$block.id}" type="hidden" name="{$name}" value="{$value}" />
@@ -20,6 +20,7 @@ eZAJAXSearch.cfg = {ldelim}
                         searchstring: '#search-string-{$block.id}',
                         searchbutton: '#search-button-{$block.id}',
                         searchresults: '#search-results-{$block.id}',
+                        dateformattype: 'shortdatetime',
                         spellcheck: '#spellcheck-{$block.id} a',
                         spellchecktemplate: '<div id="spellcheck-{$block.id}" class="ajax-search-spellcheck">{'Did you mean'|i18n( 'extension/ezfind/ajax-search' )}"<a>{ldelim}spellcheck{rdelim}</a>"?</div>',
                         facetsmainlisttemplate: '<div class="ajax-search-facets" id="facets-{$block.id}">{'Refine with facets'|i18n( 'extension/ezfind/ajax-search' )}<ul>{ldelim}inner_facet_list{rdelim}</ul></div>',
