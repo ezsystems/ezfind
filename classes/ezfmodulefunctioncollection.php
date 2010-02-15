@@ -270,31 +270,31 @@ class ezfModuleFunctionCollection
         $limit = 5;
         $facets = array();
         $facets[] = array( 'field' => 'class',
-                           'name'  => ezi18n( 'extension/ezfind/facets', 'Content type' ),
+                           'name'  => eZi18n::translate( 'extension/ezfind/facets', 'Content type' ),
                            'limit' => $limit );
         $facets[] = array( 'field' => 'author',
-                           'name'  => ezi18n( 'extension/ezfind/facets', 'Author' ),
+                           'name'  => eZi18n::translate( 'extension/ezfind/facets', 'Author' ),
                            'limit' => $limit );
         /*$facets[] = array( 'field' => 'published',
-                           'name'  => ezi18n( 'extension/ezfind/facets', 'Creation time' ),
+                           'name'  => eZi18n::translate( 'extension/ezfind/facets', 'Creation time' ),
                            'limit' => $limit );
         $facets[] = array( 'field' => 'modified',
-                           'name'  => ezi18n( 'extension/ezfind/facets', 'Last modified' ),
+                           'name'  => eZi18n::translate( 'extension/ezfind/facets', 'Last modified' ),
                            'limit' => $limit );*/
         $facets[] = array( 'field' => 'article/tags',
-                           'name'  => ezi18n( 'extension/ezfind/facets', 'Keywords' ),
+                           'name'  => eZi18n::translate( 'extension/ezfind/facets', 'Keywords' ),
                            'limit' => $limit );
 
         // Date facets
         /*$facets[] = array( 'field' => 'published',
-                           'name'  => ezi18n( 'extension/ezfind/facets', 'Creation time' ),
+                           'name'  => eZi18n::translate( 'extension/ezfind/facets', 'Creation time' ),
                            'limit' => $limit );
         */
         /*$facets[] = array( 'date' => 'modified',
                            'date.start' => 'NOW-1MONTH',
                            'date.end' => 'NOW',
                            'date.gap' => '%2B1DAY',
-                           'name'  => ezi18n( 'extension/ezfind/facets', 'Last modified' ),
+                           'name'  => eZi18n::translate( 'extension/ezfind/facets', 'Last modified' ),
                            'limit' => $limit );*/
 
         // @TODO : location ( in the content tree )

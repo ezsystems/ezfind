@@ -133,9 +133,9 @@ $tpl->setVariable( 'baseurl', $thisUrl );
 $Result = array();
 $Result['content'] = $tpl->fetch( "design:ezfind/elevation_detail.tpl" );
 $Result['path'] = array( array( 'url' => false,
-                                'text' => ezi18n( 'extension/ezfind', 'eZFind' ) ),
+                                'text' => eZi18n::translate( 'extension/ezfind', 'eZFind' ) ),
                          array( 'url' => false,
-                                'text' => ezi18n( 'extension/ezfind', 'Elevation detail' ) ) );
+                                'text' => eZi18n::translate( 'extension/ezfind', 'Elevation detail' ) ) );
 
 $Result['left_menu'] = "design:ezfind/backoffice_left_menu.tpl";
 ?>
