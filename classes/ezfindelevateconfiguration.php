@@ -25,6 +25,8 @@
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 
+require_once( 'kernel/common/i18n.php' );
+
 /**
  * File containing the eZFindElevateConfiguration class.
  *

@@ -28,6 +28,7 @@
 /*! \file ezfmodulefunctioncollection.php
 */
 
+require_once( 'kernel/common/i18n.php' );
 
 /**
  * The ezfModuleFunctionCollection contains methods for functions defined
