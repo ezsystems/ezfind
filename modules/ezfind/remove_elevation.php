@@ -31,7 +31,6 @@
  * @package eZFind
  */
 
-require_once( 'kernel/common/i18n.php' );
 require_once( "kernel/common/template.php" );
 
 $module = $Params['Module'];
