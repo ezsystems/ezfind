@@ -1,12 +1,17 @@
-var eZAJAXSearch = function() {
+var eZAJAXSearch = function()
+{
     var ret = {};
-    
-    var yCallback = function(Y, result) {
-        var successCallBack = function(id, o) {
-            if (o.responseJSON !== undefined) {
+
+    var yCallback = function(Y, result)
+    {
+        var successCallBack = function(id, o)
+        {
+            if (o.responseJSON !== undefined)
+            {
                 var response = o.responseJSON;
 
-                if (response.content.SearchResult !== undefined) {
+                if (response.content.SearchResult !== undefined)
+                {
                     var itemCount = response.content.SearchResult.length;
 
                     var resultsTarget = Y.get(ret.cfg.searchresults);
@@ -24,7 +29,6 @@ var eZAJAXSearch = function() {
                         resultsTarget.appendChild( scDiv );
                     }
 
-                    
                     var facets = response.content.SearchExtras.facets;
                     // Facets were returned, display them : 
                     if ( facets && facets.length != 0 )
@@ -119,7 +123,8 @@ var eZAJAXSearch = function() {
             }
         }
 
-        var performSearch = function() {
+        var performSearch = function()
+        {
             var searchInput = Y.get(ret.cfg.searchstring);
             var searchString = searchInput.get('value');
 
@@ -134,18 +139,20 @@ var eZAJAXSearch = function() {
             
             var backendUri = ret.cfg.backendUri ? ret.cfg.backendUri : 'ezflow::search' ;
             
-            if(searchString !== '') {
+            if(searchString !== '')
+            {
                 Y.io.ez(backendUri, {on: {success: successCallBack}, method: 'POST', data: data });
             }
         }
 
-        var handleClick = function(e) {
+        var handleClick = function(e)
+        {
             performSearch();
-
             e.preventDefault();
         }
 
-        var handleClickFromSpellcheck = function(e) {
+        var handleClickFromSpellcheck = function(e)
+        {
             Y.get(ret.cfg.searchstring).set( 'value', Y.get(ret.cfg.spellcheck).get('innerHTML') );
             handleClick( e );
         }
