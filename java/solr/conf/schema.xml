@@ -506,6 +506,8 @@
 	   <dynamicField name="*_dt"       type="date"    indexed="true"  stored="true" multiValued="true"/>
 	   <dynamicField name="*_random"   type="random"  indexed="true"  stored="true" multiValued="true"/>
 	   <dynamicField name="*_k"        type="keyword" indexed="true"  stored="true" multiValued="true"/>
+           <dynamicField name="*_lk"       type="lckeyword" indexed="true"  stored="true" multiValued="true"/>
+
 
 	  <field name="ezf_df_text" type="text"    indexed="true"  stored="true" multiValued="true" termVectors="true"/>
 
