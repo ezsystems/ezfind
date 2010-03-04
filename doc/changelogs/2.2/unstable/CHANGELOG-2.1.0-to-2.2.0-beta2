@@ -1,6 +1,7 @@
 Changes from 2.1.0final to 2.2.0-beta2
 
 *Features:
+- Implemented enhancement #015969: Enhance highlighting with configuration parameters in ezfind.ini
 
 *Bugs:
 - Fixed bug: wrong sql file for creating elevation data table for oracle
