@@ -194,7 +194,7 @@
     
   <div {*class="feedback"*} id="search_controls">
       <fieldset>
-          <legend>{'Refine with facets'|i18n( 'design/ezwebin/content/search' )}</legend>
+          <legend>{'Refine your search'|i18n( 'design/ezwebin/content/search' )}</legend>
          
           {def $activeFacetsCount=0}
           <ul id="active-facets-list">
