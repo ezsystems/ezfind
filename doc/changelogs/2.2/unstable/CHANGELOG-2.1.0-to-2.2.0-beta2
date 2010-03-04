@@ -1,0 +1,8 @@
+Changes from 2.1.0final to 2.2.0-beta2
+
+*Features:
+
+*Bugs:
+- Fixed bug: wrong sql file for creating elevation data table for oracle
+- Fixed bug #015715: bad sql query with elevate and oracle
+- fixed bug #015562: postQuery and utf-8

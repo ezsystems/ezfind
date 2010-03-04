@@ -139,7 +139,7 @@ class eZSolrBase
      *
      * @return string Result of HTTP Request ( without HTTP headers )
      */
-    protected function postQuery( $request, $postData, $contentType = 'application/x-www-form-urlencoded' )
+    protected function postQuery( $request, $postData, $contentType = 'application/x-www-form-urlencoded;charset=utf-8' )
     {
         $url = $this->SearchServerURI . $request;
         return $this->sendHTTPRequest( $url, $postData, $contentType );
