@@ -9,3 +9,4 @@ Changes from 2.1.0final to 2.2.0-beta2
 - fixed bug #015562: postQuery and utf-8
 - fixed bug #016314: Simple test with products is not indexed
 - fixed bug #015993: Boost functions not implemented/removed from eZFind 2.1
+- Fixed bug #016278: Schemafile for postgresql is incorrect (multiple primary keys)
