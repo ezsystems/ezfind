@@ -1518,7 +1518,11 @@ class ezfeZPSolrQueryBuilder
             // Fetch class list.
             $condArray = array( "is_searchable" => 1,
                                 "version" => eZContentClass::VERSION_STATUS_DEFINED );
-            if ( !is_array( $classIDArray ) )
+            if ( !$classIDArray )
+            {
+                $classIDArray = array();
+            }
+            else if ( !is_array( $classIDArray ) )
             {
                 $classIDArray = array( $classIDArray );
             }
