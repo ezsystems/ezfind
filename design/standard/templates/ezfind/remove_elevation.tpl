@@ -14,6 +14,10 @@
 {* DESIGN: Content START *}<div class="box-bc"><div class="box-ml"><div class="box-mr">{* <div class="box-bl"><div class="box-br"> *}<div class="box-content" style="padding-top: 2px;">
 
 <form name="ezfindremoveelevationform" method="post" action={concat( "/ezfind/remove_elevation/", $elevatedObject.id )|ezurl}>
+<input type="hidden" name="ezfind-removeelevation-objectid" value="{$elevatedObject.id}" />
+<input type="hidden" name="ezfind-removeelevation-searchquery" value="{$feedback.confirm_remove.search_query|wash}" />
+<input type="hidden" name="ezfind-removeelevation-languagecode" value="{$feedback.confirm_remove.language_code|wash}" />
+
 <table class="list cache" cellspacing="0">
    <tr>
        <th>{'Search query'|i18n( 'extension/ezfind/elevate' )}</th>
@@ -28,10 +32,7 @@
                {$feedback.confirm_remove.language_code}
             {/if}
         </td>
-    </tr>  
-    <input type="hidden" name="ezfind-removeelevation-objectid" value="{$elevatedObject.id}" />
-    <input type="hidden" name="ezfind-removeelevation-searchquery" value="{$feedback.confirm_remove.search_query|wash}" />
-    <input type="hidden" name="ezfind-removeelevation-languagecode" value="{$feedback.confirm_remove.language_code|wash}" />          
+    </tr> 
 </table>
 
 {* DESIGN: Content END *}</div></div></div>{* </div></div> *}</div>

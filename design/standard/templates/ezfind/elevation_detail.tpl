@@ -49,7 +49,7 @@
        <div class="button-left">
             <label style="display: inline; font-weight:normal;">{'for language:'|i18n( 'extension/ezfind/elevate')}
             <select name="ezfind-elevate-language">
-                   <option value="{$language_wildcard}"><em>{'All'|i18n( 'extension/ezfind/elevate' )}</em></option>
+                   <option value="{$language_wildcard}">{'All'|i18n( 'extension/ezfind/elevate' )}</option>
                    {foreach $elevatedObject.languages as $lang}
                        <option value="{$lang.locale}">{$lang.name}</option>
                    {/foreach}
@@ -57,9 +57,9 @@
             </label>
         </div>
         <div class="button-left">
-            <input type="hidden" name="elevateObjectID" value="{$elevatedObject.id}">
+            <input type="hidden" name="elevateObjectID" value="{$elevatedObject.id}" />
             <input class="button" type="submit" name="ezfind-elevate-do" value="{'Elevate'|i18n( 'extension/ezfind/elevate' )}" title="{'Store elevation'|i18n( 'extension/ezfind/elevate' )}"/>
-            <input type="hidden" name="redirectURI" value={$baseurl}>
+            <input type="hidden" name="redirectURI" value="{$baseurl}" />
        </div>
     </div>
 </fieldset>
@@ -138,7 +138,7 @@
               {/if}
           </td>
            <td width="10%">
-              <a href={concat( '/ezfind/remove_elevation/', $elevatedObject.id, '/', $conf.search_query, '/', $conf.language_code )|ezurl} title="{'Remove elevation by \'%searchQuery\' for \'%objectName\'.'|i18n( 'extension/ezfind/elevate', '', hash( '%objectName', $elevatedObject.name, '%searchQuery', $conf.search_query ) )}"><img src={'trash-icon-16x16.gif'|ezimage} /></a>
+              <a href={concat( '/ezfind/remove_elevation/', $elevatedObject.id, '/', $conf.search_query, '/', $conf.language_code )|ezurl} title="{'Remove elevation by \'%searchQuery\' for \'%objectName\'.'|i18n( 'extension/ezfind/elevate', '', hash( '%objectName', $elevatedObject.name, '%searchQuery', $conf.search_query ) )}"><img alt="{'Trash'|i18n( 'extension/ezfind/elevate' )}" src={'trash-icon-16x16.gif'|ezimage} /></a>
            </td>          
       </tr>        
    {/foreach}
@@ -170,7 +170,7 @@
     <div class="button-left">
     <label for="ezfind-elevationdetail-filter-language" style="display: inline;">{'Language'|i18n( 'extension/ezfind/elevate' )}:
     <select name="ezfind-elevationdetail-filter-language" id="ezfind-elevationdetail-filter-language">
-           <option value="{$language_wildcard}" {if is_set( $view_parameters.language )|not}selected="selected"{/if}><em>{'All'|i18n( 'extension/ezfind/elevate' )}</em></option>
+           <option value="{$language_wildcard}" {if is_set( $view_parameters.language )|not}selected="selected"{/if}>{'All'|i18n( 'extension/ezfind/elevate' )}</option>
            {foreach $elevatedObject.languages as $lang}
                <option value="{$lang.locale}" {if and( is_set( $view_parameters.language ), eq( $view_parameters.language, $lang.locale ))}selected="selected"{/if}>{$lang.name}</option>
            {/foreach}
