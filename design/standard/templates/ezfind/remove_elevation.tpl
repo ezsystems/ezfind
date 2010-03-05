@@ -3,10 +3,10 @@
 {* DESIGN: Header START *}<div class="box-header"><div class="box-tc"><div class="box-ml"><div class="box-mr"><div class="box-tl"><div class="box-tr">
 <h1 class="context-title">
 {if is_set( $feedback.removal_back_link )}
-    {"Removal confirmed ( for %objectName ) :"|i18n( 'extension/ezfind/elevate', '', hash( '%objectName', concat( '<a style="color: white;" href=', $elevatedObject.main_node.url_alias|ezurl, '>', $elevatedObject.name, '</a>' ) ) )}
+    {"Removal confirmed ( for %objectName ) :"|i18n( 'extension/ezfind/elevate', '', hash( '%objectName', concat( '<a href=', $elevatedObject.main_node.url_alias|ezurl, '>', $elevatedObject.name, '</a>' ) ) )}
 {else}
    {"Confirm removal of the following Elevate configuration ( for %objectName ) :"|i18n( 'extension/ezfind/elevate', '', 
-                                                                                         hash( '%objectName', concat( '<a style="color: white;" href=', $elevatedObject.main_node.url_alias|ezurl, '>', $elevatedObject.name, '</a>' ) ) )}
+                                                                                         hash( '%objectName', concat( '<a href=', $elevatedObject.main_node.url_alias|ezurl, '>', $elevatedObject.name, '</a>' ) ) )}
 {/if}                                                                                      
 </h1>
 {* DESIGN: Mainline *}<div class="header-mainline"></div>

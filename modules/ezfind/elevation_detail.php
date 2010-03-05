@@ -134,8 +134,14 @@ $Result = array();
 $Result['content'] = $tpl->fetch( "design:ezfind/elevation_detail.tpl" );
 $Result['path'] = array( array( 'url' => false,
                                 'text' => ezi18n( 'extension/ezfind', 'eZFind' ) ),
-                         array( 'url' => false,
-                                'text' => ezi18n( 'extension/ezfind', 'Elevation detail' ) ) );
+                         array( 'url' => 'ezfind/elevate',
+                                'text' => ezi18n( 'extension/ezfind', 'Elevation' ) ) );
 
+if ( $object instanceof eZContentObject ) 
+{
+	$Result['path'][] = array( 'url' => false,
+                                'text' => $object->attribute('name') );
+}
+                         
 $Result['left_menu'] = "design:ezfind/backoffice_left_menu.tpl";
 ?>
