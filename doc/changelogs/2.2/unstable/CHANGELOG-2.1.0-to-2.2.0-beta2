@@ -3,6 +3,7 @@ Changes from 2.1.0final to 2.2.0-beta2
 *Features:
 - Implemented enhancement #015969: Enhance highlighting with configuration parameters in ezfind.ini
 - Implemented enhancement #015682: Change Facet terminology
+- Implemented enhancement #015680: Change help text to make it more corporate
 
 *Bugs:
 - Fixed bug: wrong sql file for creating elevation data table for oracle

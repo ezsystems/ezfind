@@ -185,8 +185,8 @@
               <ul>
                   <li>{'The search is case insensitive. Upper and lower case characters may be used.'|i18n( 'design/ezfind/search' )}</li>
                   <li>{'The search result contains all search terms.'|i18n( 'design/ezfind/search' )}</li>
-                  <li>{'Phrase search can be achieved by using quotes, example: "No TV and no beer make Homer go something something"'|i18n( 'design/ezfind/search' )}</li>
-                  <li>{'Words may be excluded by using a minus ( - ) character, example: free -beer'|i18n( 'design/ezfind/search' )}</li>
+                  <li>{'Phrase search can be achieved by using quotes, example: "Quick brown fox jumps over the lazy dog"'|i18n( 'design/ezfind/search' )}</li>
+                  <li>{'Words may be excluded by using a minus ( - ) character, example: lazy -dog'|i18n( 'design/ezfind/search' )}</li>
               </ul>
           </div>
       </fieldset>
