@@ -42,7 +42,7 @@ class ezfSolrDocumentFieldXML extends ezfSolrDocumentFieldBase
      * @return text
      *
      * instead of walking thorugh the dom tree, strip all xml/html like
-     * this is more brute force, but hlps in the case of html literal blocks
+     * this is more brute force, but helps in the case of html literal blocks
      * which are returned verbatim by ezxml attribute meta data function
      */
     public function strip_html_tags( $text )
@@ -92,21 +92,21 @@ class ezfSolrDocumentFieldXML extends ezfSolrDocumentFieldBase
 
         switch ( $contentClassAttribute->attribute( 'data_type_string' ) )
         {
-        	case 'ezxmltext' :
-        	{
-                // $xmlData = $this->ContentObjectAttribute->attribute( 'content' )->attribute( 'xml_data' );
-                $xmlData = $this->ContentObjectAttribute->attribute( 'content' )->attribute( 'output' )->attribute( 'output_text' );
-        	} break;
+            case 'ezxmltext' :
+            {
+            // $xmlData = $this->ContentObjectAttribute->attribute( 'content' )->attribute( 'xml_data' );
+            $xmlData = $this->ContentObjectAttribute->attribute( 'content' )->attribute( 'output' )->attribute( 'output_text' );
+            } break;
 
-        	case 'ezmatrix' :
+            case 'ezmatrix' :
             {
                 $xmlData = $this->ContentObjectAttribute->attribute( 'content' )->xmlString();
             } break;
 
             default:
-        	{
-        		return array( $fieldName => '' );
-        	} break;
+            {
+                    return array( $fieldName => '' );
+            } break;
         }
         $cleanedXML = $this->strip_html_tags( $xmlData );
         return array( $fieldName => $cleanedXML );
