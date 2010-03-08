@@ -6,6 +6,7 @@ Changes from 2.1.0final to 2.2.0-beta2
 - Implemented enhancement #15680: Change help text to make it more corporate
 - Improved conformance with w3c standards (verified with HTML validator)
 - Deprecated ezfind::search ezjscore server call, use unified ezjsc::search instead
+- Implemented enhancement: basics for explicit distributed search
 
 *Bugs:
 - Fixed bug: wrong sql file for creating elevation data table for oracle

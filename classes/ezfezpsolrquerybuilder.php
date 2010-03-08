@@ -93,10 +93,18 @@ class ezfeZPSolrQueryBuilder
      *                                  ),
      *        'ForceElevation' => false,
      *        'EnableElevation' => true
+     *        'DistributedSearch" => array ( 'shards', array('shard1', 'shard2' , ...)
+     *                                        'searchfields', array ('myfield1, 'myfield2', ... )
+     *                                        'returnfields', array ('myfield1, 'myfield2', ... )
+     *                                        'rawfilterlist, array ('foreignfield:a', '(foreignfield:b AND otherfield:c)', ... )
+     *                                      )
      *      );
      * </code>
      * For full facet description, see facets design document.
      * For full description about 'ForceElevation', see elevate support design document ( elevate_support.rst.txt )
+     *
+     * the rawFilterList in distributed search is appended to the policyfilterlist with an 'OR' for each entry, as the policy list will
+     * in general not be applicable to foreign indexes. To be used with care!
      *
      * @param array Search types. Reserved.
      *
@@ -119,6 +127,7 @@ class ezfeZPSolrQueryBuilder
         $contentClassAttributeID = ( isset( $params['SearchContentClassAttributeID'] ) && $params['SearchContentClassAttributeID'] <> -1 ) ? $params['SearchContentClassAttributeID'] : false;
         $sectionID = isset( $params['SearchSectionID'] ) && $params['SearchSectionID'] > 0 ? $params['SearchSectionID'] : false;
         $dateFilter = isset( $params['SearchDate'] ) && $params['SearchDate'] > 0 ? $params['SearchDate'] : false;
+        // not used in query building: $asObjects
         $asObjects = isset( $params['AsObjects'] ) && $params['AsObjects'] ? $params['AsObjects'] : true;
         $spellCheck = isset( $params['SpellCheck'] ) && $params['SpellCheck'] > 0 ? $params['SpellCheck'] : array();
         $queryHandler = isset( $params['QueryHandler'] )  ?  $params['QueryHandler'] : self::$FindINI->variable( 'SearchHandler', 'DefaultSearchHandler' );
@@ -127,7 +136,41 @@ class ezfeZPSolrQueryBuilder
         $boostFunctions = isset( $params['BoostFunctions'] )  ?  $params['BoostFunctions'] : null;
         $forceElevation = isset( $params['ForceElevation'] )  ?  $params['ForceElevation'] : false;
         $enableElevation = isset( $params['EnableElevation'] )  ?  $params['EnableElevation'] : true;
-        //$distributedSearch = isset( $params['DistributedSearch'] ) ? $params['DistributedSearch'] : false;
+        $distributedSearch = isset( $params['DistributedSearch'] ) ? $params['DistributedSearch'] : false;
+
+
+        // distributed search option
+        // @since ezfind 2.2
+        $extraFieldsToSearch = array();
+        $extraFieldsToReturn = array();
+        $shardURLs = array();
+        $iniShards = self::$SolrINI->variable( 'SolrBase' , 'Shards' );
+        $shardQuery = NULL;
+        $shardFilterQuery = array();
+
+        if ( isset( $distributedSearch['shards'] ) )
+        {
+            foreach ( $distributedSearch['shards'] as $shard )
+            {
+                $shardURLs[] = $iniShards[$shard];
+            }
+            $shardQuery = implode(',', $shardURLs);
+        }
+        if ( isset( $distributedSearch['searchfields'] ) )
+        {
+            $extraFieldsToSearch = $distributedSearch['searchfields'];
+            
+        }
+        if ( isset( $distributedSearch['returnfields'] ) )
+        {
+            $extraFieldsToReturn = $distributedSearch['returnfields'];
+
+        }
+        if ( isset( $distributedSearch['rawfilterlist'] ) )
+        {
+            $shardFilterQuery = $distributedSearch['rawfilterlist'];
+
+        }
 
         // check if filter parameter is indeed an array, and set it otherwise
         if ( isset( $params['Filter']) && ! is_array( $params['Filter'] ) )
@@ -307,7 +350,7 @@ class ezfeZPSolrQueryBuilder
                 // build the query against all "text" like fields
                 // should take into account all the filter fields and class filters to shorten the query
                 // need to build: Solr q
-                $handlerParameters = array ( 'q' => $this->buildMultiFieldQuery( $searchText, $queryFields ),
+                $handlerParameters = array ( 'q' => $this->buildMultiFieldQuery( $searchText, array_merge($queryFields, $extraFieldsToSearch) ),
                                              'qt' => 'standard');
                 break;
 
@@ -330,7 +373,7 @@ class ezfeZPSolrQueryBuilder
                 // with possible other tuning variables then the stock provided 'ezpublish' in solrconfi.xml
                 // remark it should be lowercase in solrconfig.xml!
                 $handlerParameters = array ( 'q' => $searchText,
-                                             'qf' => implode( ' ', $queryFields ),
+                                             'qf' => implode( ' ', array_merge($queryFields, $extraFieldsToSearch) ),
                                              'qt' => $queryHandler );
 
         }
@@ -347,6 +390,18 @@ class ezfeZPSolrQueryBuilder
         $highLightSnippets = self::$FindINI->variable( 'HighLighting', 'SnippetsPerField' );
         $highLightFragmentSize = self::$FindINI->variable( 'HighLighting', 'FragmentSize' );
 
+        // special handling of filters in the case of distributed search filters
+        // incorporate distributed search filters if defined with an OR expression, and AND-ing all others
+        // need to do this as multiple fq elements are otherwise AND-ed by the Solr backend
+        // when using this to search across a dedicated set of languages, it will still be valid with the ezp permission
+        // scheme
+        if ( count( $shardFilterQuery ) > 0  )
+        {
+            $fqString = '((' . implode(') AND (', $filterQuery) . ')) OR ((' . implode(') OR (', $shardFilterQuery) . '))';
+            // modify the filterQuery array with this single string as the only element
+            $filterQuery=array($fqString);
+        }
+
         $queryParams =  array_merge(
             $handlerParameters,
             array(
@@ -361,7 +416,7 @@ class ezfeZPSolrQueryBuilder
                 eZSolr::getMetaFieldName( 'main_url_alias' ) . ' ' . eZSolr::getMetaFieldName( 'installation_url' ) . ' ' .
                 eZSolr::getMetaFieldName( 'id' ) . ' ' . eZSolr::getMetaFieldName( 'main_node_id' ) . ' ' .
                 eZSolr::getMetaFieldName( 'language_code' ) . ' ' . eZSolr::getMetaFieldName( 'name' ) .
-                ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ) ,
+                ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ) . implode(' ', $extraFieldsToReturn),
                 'fq' => $filterQuery,
                 'hl' => 'true',
                 'hl.fl' => implode( ' ', $highLightFields),
@@ -1607,6 +1662,7 @@ class ezfeZPSolrQueryBuilder
 }
 
 ezfeZPSolrQueryBuilder::$FindINI = eZINI::instance( 'ezfind.ini' );
+ezfeZPSolrQueryBuilder::$SolrINI = eZINI::instance( 'solr.ini' );
 // need to refactor this: its only valid for the standard Solr request syntax, not for dismax based variants
 // furthermore, negations should be added as well
 ezfeZPSolrQueryBuilder::$allowedBooleanOperators = array( 'AND',
