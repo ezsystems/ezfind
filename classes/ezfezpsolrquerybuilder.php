@@ -1028,7 +1028,7 @@ class ezfeZPSolrQueryBuilder
 
                     default:
                     {
-                        $fieldName = eZSolr::getFieldName( $facetDefinition['field'], 'facet' );
+                        $fieldName = eZSolr::getFieldName( $facetDefinition['field'], false, 'facet' );
                         if ( !$fieldName and empty( $facetDefinition['date'] ) )
                         {
                             eZDebug::writeNotice( 'Facet field does not exist in local installation, but may still be valid: ' .
