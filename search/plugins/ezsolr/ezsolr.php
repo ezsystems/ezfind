@@ -270,7 +270,7 @@ class eZSolr
      *
      * @return string Solr doc field name
      */
-    static function getMetaFieldName( $baseName, $context )
+    static function getMetaFieldName( $baseName, $context = 'search' )
     {
         /*
         return self::$SolrDocumentFieldName->lookupSchemaName( 'meta_' . $baseName,

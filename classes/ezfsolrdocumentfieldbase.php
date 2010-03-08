@@ -451,7 +451,7 @@ class ezfSolrDocumentFieldBase
      *      If $baseName equals 'main_url_alias',
      *      the return value will be : 'meta_main_url_alias_s'
      */
-    public static function generateMetaFieldName( $baseName, $context )
+    public static function generateMetaFieldName( $baseName, $context = 'search' )
     {
         return self::$DocumentFieldName->lookupSchemaName( self::META_FIELD_PREFIX . $baseName,
                                                            eZSolr::getMetaAttributeType( $baseName, $context ) );
