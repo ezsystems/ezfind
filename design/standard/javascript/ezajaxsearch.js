@@ -15,7 +15,7 @@ var eZAJAXSearch = function() {
 
                     var spellCheck = response.content.SearchExtras.spellcheck;
                     // A spellcheck proposal was made, display it : 
-                    if ( spellCheck.collation )
+                    if ( spellCheck && spellCheck.collation )
                     {
                         var scTemplate = ret.cfg.spellchecktemplate;
                         scTemplate = scTemplate.replace( /\{+spellcheck+\}/, spellCheck.collation );
@@ -127,9 +127,12 @@ var eZAJAXSearch = function() {
             data += '&SearchLimit=10';
             data += '&SearchOffset=0';
 
-            for ( var i = 0; i < ret.cfg.customSearchAttributes.length; i++ )
+            if ( ret.cfg.customSearchAttributes !== undefined )
             {
-                data += '&' + Y.get( ret.cfg.customSearchAttributes[i] ).get('name') + '=' + Y.get( ret.cfg.customSearchAttributes[i] ).get('value'); 
+                for ( var i = 0; i < ret.cfg.customSearchAttributes.length; i++ )
+                {
+                    data += '&' + Y.get( ret.cfg.customSearchAttributes[i] ).get('name') + '=' + Y.get( ret.cfg.customSearchAttributes[i] ).get('value'); 
+                }
             }
             
             var backendUri = ret.cfg.backendUri ? ret.cfg.backendUri : 'ezflow::search' ;
