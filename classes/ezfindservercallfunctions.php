@@ -11,6 +11,7 @@ class eZFindServerCallFunctions
      *
      * @param mixed $args
      * @return array
+     * @deprecated Use ezjsc::search instead (in ezjscore)
      */
     public static function search( $args )
     {

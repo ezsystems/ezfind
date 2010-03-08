@@ -20,7 +20,7 @@ var eZAJAXSearch = function()
 
                     var spellCheck = response.content.SearchExtras.spellcheck;
                     // A spellcheck proposal was made, display it : 
-                    if ( spellCheck.collation )
+                    if ( spellCheck && spellCheck.collation )
                     {
                         var scTemplate = ret.cfg.spellchecktemplate;
                         scTemplate = scTemplate.replace( /\{+spellcheck+\}/, spellCheck.collation );
@@ -38,17 +38,17 @@ var eZAJAXSearch = function()
                         {
                             var facet = facets[i];
                             // Name of the facet :
-                            var facetName = facet[0];
+                            var facetName = facet['name'];
                             var facetInnerList = ret.cfg.facetsinnerlisttemplate;                            
                             facetInnerList = facetInnerList.replace( /\{+facet_name+\}/, facetName );                                                        
                             
-                            if ( facet.length > 1 )
+                            if ( facet['list'].length > 0 )
                             {
-                                for( var j = 1; j < facet.length; j++ )
+                                for( var j = 0; j < facet['list'].length; j++ )
                                 {
-                                    var link = facet[j][0];
-                                    var value = facet[j][1];
-                                    var count = facet[j][2];
+                                    var link = facet['list'][j]['url'];
+                                    var value = facet['list'][j]['value'];
+                                    var count = facet['list'][j]['count'];
                                     var facetElement = ret.cfg.facetselementtemplate;
                                     facetElement = facetElement.replace( /\{+link+\}/, link );
                                     facetElement = facetElement.replace( /\{+value+\}/, value );
@@ -76,7 +76,7 @@ var eZAJAXSearch = function()
                                 var anim = new Y.Anim({
                                     node: '#' + id,
                                     easing: Y.Easing.backIn,
-                                    duration: 1.0,
+                                    duration: 0.5,
                                     
                                     from: 
                                     {
@@ -98,18 +98,23 @@ var eZAJAXSearch = function()
                             
                         }
                     }
-                    
-                    
-                    for(var i = 0; i < itemCount; i++) 
+
+                    for(var i = 0; i < itemCount; i++)
                     {
                         var item = response.content.SearchResult[i];
-                        
+
                         var template = ret.cfg.resulttemplate;
                         template = template.replace(/\{+title+\}/, item.name);
-                        
-                        var date = new Date( item.published * 1000 );
-                        var dateString = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ' ' + date.getFullYear() + '/' + date.getMonth() + '/' + date.getDay();
-                        template = template.replace(/\{+date+\}/, dateString);
+                        if ( item.published_date === undefined )
+                        {
+                            var date = new Date( item.published * 1000 );
+                            var dateString = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ' ' + date.getFullYear() + '/' + date.getMonth() + '/' + date.getDay();
+                            template = template.replace(/\{+date+\}/, dateString);
+                        }
+                        else
+                        {
+                            template = template.replace(/\{+date+\}/, item.published_date);
+                        }
                         template = template.replace(/\{+class_name+\}/, item.class_name);
                         template = template.replace(/\{+url_alias+\}/, item.url_alias);
                         template = template.replace(/\{+object_id+\}/, item.id);
@@ -123,22 +128,81 @@ var eZAJAXSearch = function()
             }
         }
 
+        var getValueForSelector = function(sel)
+        {
+            var value, node = Y.one(sel);
+
+            if ( node )
+            {
+                if ( node.get('nodeName').toLowerCase() === 'input'
+                     && ( node.get('type') === 'radio' || node.get('type') === 'checkbox') )
+                {
+                    value = (Y.one(sel + ':checked') != null) ? Y.one(sel + ':checked').get('value') : null;
+                }
+                else if ( node.get('nodeName').toLowerCase() == 'select'
+                          && node.hasAttribute('multiple') )
+                {
+                    value = [];
+                    node.get('options').each(function( option )
+                    {
+                        if ( option.get('selected') )
+                            value.push( option.get('value') );
+                    });
+                    value = value.join(',');
+                }
+                else
+                {
+                    value = node.get('value');
+                }
+            }
+
+            return value;
+        }
+
         var performSearch = function()
         {
-            var searchInput = Y.get(ret.cfg.searchstring);
-            var searchString = searchInput.get('value');
+            var searchString = getValueForSelector(ret.cfg.searchstring);
+            var dateFormatType = ret.cfg.dateformattype !== undefined ? ret.cfg.dateformattype : 'shortdatetime';
 
-            var data = 'SearchStr=' + searchString;
-            data += '&SearchLimit=10';
-            data += '&SearchOffset=0';
+            var value, data = 'SearchStr=' + searchString;
+            data += '&SearchLimit=' + getValueForSelector('[name=SearchLimit]');
 
-            for ( var i = 0; i < ret.cfg.customSearchAttributes.length; i++ )
+            if (value = getValueForSelector('[name=SearchOffset]'))
+                data += '&SearchOffset=' + value;
+
+            if (value = getValueForSelector('[name=SearchSectionID]'))
+                data += '&SearchSectionID=' + value;
+
+            if (value = getValueForSelector('[name=SearchDate]'))
+                data += '&SearchDate=' +  value;
+
+            if (value = getValueForSelector('[name=SearchContentClassAttributeID]'))
+                data += '&SearchContentClassAttributeID=' + value;
+
+            if (value = getValueForSelector('[name=SearchContentClassID]'))
+                data += '&SearchContentClassID=' + value;
+
+            if (value = getValueForSelector('[name=SearchContentClassIdentifier]'))
+                data += '&SearchContentClassIdentifier=' + value;
+
+            if (value = getValueForSelector('[name=SearchSubTreeArray]'))
+                data += '&SearchSubTreeArray=' + value;
+
+            if (value = getValueForSelector('[name=SearchTimestamp]'))
+                data += '&SearchTimestamp=' + value;
+
+            data += '&EncodingFormatDate=' + dateFormatType;
+
+            if ( ret.cfg.customSearchAttributes !== undefined )
             {
-                data += '&' + Y.get( ret.cfg.customSearchAttributes[i] ).get('name') + '=' + Y.get( ret.cfg.customSearchAttributes[i] ).get('value'); 
+                for ( var i = 0, l = ret.cfg.customSearchAttributes.length; i < l; i++ )
+                {
+                    data += '&' + Y.get( ret.cfg.customSearchAttributes[i] ).get('name') + '=' + Y.get( ret.cfg.customSearchAttributes[i] ).get('value'); 
+                }
             }
-            
-            var backendUri = ret.cfg.backendUri ? ret.cfg.backendUri : 'ezflow::search' ;
-            
+
+            var backendUri = ret.cfg.backendUri ? ret.cfg.backendUri : 'ezjsc::search' ;
+
             if(searchString !== '')
             {
                 Y.io.ez(backendUri, {on: {success: successCallBack}, method: 'POST', data: data });
@@ -156,11 +220,15 @@ var eZAJAXSearch = function()
             Y.get(ret.cfg.searchstring).set( 'value', Y.get(ret.cfg.spellcheck).get('innerHTML') );
             handleClick( e );
         }
-        var handleKeyPress = function(e) {
+
+        var handleKeyPress = function(e)
+        {
             var key = e.which || e.keyCode;
-            if (key == 13) {
+            if (key === 13)
+            {
                 performSearch();
                 e.halt();
+                return false;
             }
         }
 
@@ -169,7 +237,8 @@ var eZAJAXSearch = function()
     }
     ret.cfg = {};
 
-    ret.init = function() {
+    ret.init = function()
+    {
         var ins = YUI(YUI3_config).use('node', 'event', 'io-ez', yCallback);
     }
     

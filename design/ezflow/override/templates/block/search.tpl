@@ -15,7 +15,7 @@
 
 <script type="text/javascript">
 eZAJAXSearch.cfg = {ldelim}
-                        backendUri: 'ezfind::search',
+                        //backendUri: 'ezfind::search',
                         customSearchAttributes: {$customAttributesString},
                         searchstring: '#search-string-{$block.id}',
                         searchbutton: '#search-button-{$block.id}',
