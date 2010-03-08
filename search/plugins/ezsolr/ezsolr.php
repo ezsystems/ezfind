@@ -63,7 +63,7 @@ class eZSolr
     {
         return array(
             'id' => 'sint',
-            'class_name' => 'text',
+            'class_name' => 'string',
             'section_id' => 'sint',
             'owner_id' => 'sint',
             'contentclass_id' => 'sint',
@@ -124,13 +124,16 @@ class eZSolr
     /**
      * Get meta attribute Solr document field type
      *
-     * @param string Meta attribute name
+     * @param  string name Meta attribute name
+     * @param  string context search, facet, filter, sort
      *
      * @return string Solr document field type. Null if meta attribute type does not exists.
      */
-    static function getMetaAttributeType( $name )
+    static function getMetaAttributeType( $name, $context = 'search' )
     {
-        $attributeList = array_merge( array( 'guid' => 'string',
+       
+
+        $attributeList = array ('search' => array_merge( array( 'guid' => 'string',
                                              'installation_id' => 'string',
                                              'installation_url' => 'string',
                                              'name' => 'text',
@@ -143,21 +146,34 @@ class eZSolr
                                              'path' => 'sint',
                                              'object_states' => 'string'),
                                       self::metaAttributes(),
-                                      self::nodeAttributes() );
-        if ( empty( $attributeList[$name] ) )
+                                      self::nodeAttributes() ),
+                                'facet' =>  array( 
+                                             'owner_name' => 'string'),
+                                'filter' => array(),
+                                'sort' => array() );
+        if ( ! empty( $attributeList[$context][$name] ) )
+        {
+            return $attributeList[$context][$name];
+        }
+        elseif ( ! empty( $attributeList['search'][$name] ) )
+        {
+            return $attributeList['search'][$name];
+        }
+        else
         {
             return null;
         }
-        return $attributeList[$name];
+        //return $attributeList[$name];
     }
 
     /**
      * Get solr field name, from base name. The base name may either be a
-     * meta data name, or an eZ Publish content class attribute, specified by
+     * meta-data name, or an eZ Publish content class attribute, specified by
      * <class identifier>/<attribute identifier>[/<option>]
      *
      * @param string $baseName Base field name.
      * @param boolean $includingClassID conditions the structure of the answer. See return value explanation.
+     * @param $context is introduced in ez find 2.2 to allow for more optimal sorting, faceting, filtering
      *
      * @return mixed Internal base name. Returns null if no valid base name was provided.
      *               If $includingClassID is true, an associative array will be returned, as shown below :
@@ -166,12 +182,12 @@ class eZSolr
      *                      'contentClassId' => 16 );
      *               </code>
      */
-    static function getFieldName( $baseName, $includingClassID = false )
+    static function getFieldName( $baseName, $includingClassID = false, $context = 'search' )
     {
         // If the base name is a meta field, get the correct field name.
-        if ( eZSolr::hasMetaAttributeType( $baseName ) )
+        if ( eZSolr::hasMetaAttributeType( $baseName, $context ) )
         {
-            return eZSolr::getMetaFieldName( $baseName );
+            return eZSolr::getMetaFieldName( $baseName, $context );
         }
         else
         {
@@ -221,7 +237,7 @@ class eZSolr
                 return null;
             }
             $contectClassAttribute = eZContentClassAttribute::fetch( $contectClassAttributeID );
-            $fieldName = ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $subattribute );
+            $fieldName = ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $subattribute, $context );
 
             if ( $includingClassID )
             {
@@ -240,13 +256,13 @@ class eZSolr
      *
      * @return string Solr document field type
      */
-    static function hasMetaAttributeType( $name )
+    static function hasMetaAttributeType( $name, $context )
     {
-        return self::getMetaAttributeType( $name ) !== null;
+        return self::getMetaAttributeType( $name, $context ) !== null;
     }
 
     /**
-     * @deprecated since eZ Find 2.1
+     * @todo: cleanup the recursive lookup in ezfSolrDocumentFieldBase::generateMetaFieldName, it is only overhead
      *
      * Get meta attribute field name
      *
@@ -254,13 +270,13 @@ class eZSolr
      *
      * @return string Solr doc field name
      */
-    static function getMetaFieldName( $baseName )
+    static function getMetaFieldName( $baseName, $context )
     {
         /*
         return self::$SolrDocumentFieldName->lookupSchemaName( 'meta_' . $baseName,
                                                                eZSolr::getMetaAttributeType( $baseName ) );
         */
-        return ezfSolrDocumentFieldBase::generateMetaFieldName( $baseName );
+        return ezfSolrDocumentFieldBase::generateMetaFieldName( $baseName, $context );
     }
 
     /**
@@ -1383,6 +1399,9 @@ class eZSolr
 
     static $InstallationID;
     static $SolrDocumentFieldName;
+    // @since ezfind 2.2, information
+    public static $fieldTypeContexts = array ('search' => 'DatatypeMap', 'facet' => 'DatatypeMapFacet', 'sort' => 'DatatypeMapSort', 'filter' => 'DataTypeMapFilter');
+
 }
 
 eZSolr::$SolrDocumentFieldName = new ezfSolrDocumentFieldName();

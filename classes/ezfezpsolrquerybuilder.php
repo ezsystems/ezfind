@@ -794,17 +794,17 @@ class ezfeZPSolrQueryBuilder
                     case 'path':
                     case 'section_id':
                     {
-                        $field = eZSolr::getMetaFieldName( $field );
+                        $field = eZSolr::getMetaFieldName( $field, 'sort' );
                     } break;
 
                     case 'author':
                     {
-                        $field = eZSolr::getMetaFieldName( 'owner_name' );
+                        $field = eZSolr::getMetaFieldName( 'owner_name', 'sort' );
                     } break;
 
                     default:
                     {
-                        $field = eZSolr::getFieldName( $field );
+                        $field = eZSolr::getFieldName( $field, 'sort' );
                         if ( !$field )
                         {
                             eZDebug::writeNotice( 'Sort field does not exist in local installation, but may still be valid: ' .
@@ -910,7 +910,7 @@ class ezfeZPSolrQueryBuilder
                     }
 
                     // Get internal field name. Returns a class ID filter if applicable. Add it as an implicit filter if needed.
-                    $baseNameInfo = eZSolr::getFieldName( $baseName, true );
+                    $baseNameInfo = eZSolr::getFieldName( $baseName, true, 'filter' );
                     if ( is_array( $baseNameInfo ) and isset( $baseNameInfo['contentClassId'] ) )
                     {
                         $filterQueryList[] = '( ' . eZSolr::getMetaFieldName( 'contentclass_id' ) . ':' . $baseNameInfo['contentClassId'] . ' AND ' . $baseNameInfo['fieldName'] . ':' . $value . ' )' ;
@@ -1008,27 +1008,27 @@ class ezfeZPSolrQueryBuilder
                 {
                     case 'author':
                     {
-                        $queryPart['field'] = eZSolr::getMetaFieldName( 'owner_id' );
+                        $queryPart['field'] = eZSolr::getMetaFieldName( 'owner_id', 'facet' );
                     } break;
 
                     case 'class':
                     {
-                        $queryPart['field'] = eZSolr::getMetaFieldName( 'contentclass_id' );
+                        $queryPart['field'] = eZSolr::getMetaFieldName( 'contentclass_id', 'facet' );
                     } break;
 
                     case 'installation':
                     {
-                        $queryPart['field'] = eZSolr::getMetaFieldName( 'installation_id' );
+                        $queryPart['field'] = eZSolr::getMetaFieldName( 'installation_id', 'facet' );
                     } break;
 
                     case 'translation':
                     {
-                        $queryPart['field'] = eZSolr::getMetaFieldName( 'language_code' );
+                        $queryPart['field'] = eZSolr::getMetaFieldName( 'language_code', 'facet' );
                     } break;
 
                     default:
                     {
-                        $fieldName = eZSolr::getFieldName( $facetDefinition['field'] );
+                        $fieldName = eZSolr::getFieldName( $facetDefinition['field'], 'facet' );
                         if ( !$fieldName and empty( $facetDefinition['date'] ) )
                         {
                             eZDebug::writeNotice( 'Facet field does not exist in local installation, but may still be valid: ' .
@@ -1046,7 +1046,7 @@ class ezfeZPSolrQueryBuilder
             {
                 list( $field, $query ) = explode( ':', $facetDefinition['query'] );
 
-                $field = eZSolr::getFieldName( $field );
+                $field = eZSolr::getFieldName( $field, 'facet' );
                 if ( !$field )
                 {
                     eZDebug::writeNotice( 'Invalid query field provided: ' . $facetDefinition['query'],
@@ -1125,7 +1125,7 @@ class ezfeZPSolrQueryBuilder
             // Get date start option - may add validation later.
             if ( !empty( $facetDefinition['date'] ) )
             {
-                $fieldName = eZSolr::getFieldName( $facetDefinition['date'] );
+                $fieldName = eZSolr::getFieldName( $facetDefinition['date'], 'facet' );
                 if ( !$fieldName )
                 {
                     eZDebug::writeNotice( 'Facet field does not exist in local installation, but may still be valid: ' .
@@ -1629,6 +1629,7 @@ class ezfeZPSolrQueryBuilder
 
     /// Vars
     static $FindINI;
+    static $SolrINI;
 
     /**
      * Array containing the allowed boolean operators for the 'fq' parameter

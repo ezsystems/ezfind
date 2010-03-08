@@ -105,7 +105,7 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
      *
      * @todo Implement this
      */
-    public static function getFieldName( eZContentClassAttribute $classAttribute, $subAttribute = null )
+    public static function getFieldName( eZContentClassAttribute $classAttribute, $subAttribute = null, $context = 'search' )
     {
         switch ( $classAttribute->attribute( 'data_type_string' ) )
         {
@@ -117,7 +117,7 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                      $subAttribute !== '' and
                      //array_key_exists( $subAttribute, self::$subattributesDefinition ) and
                      $subAttribute != self::DEFAULT_SUBATTRIBUTE and
-                     ( $type = self::getTypeForSubattribute( $classAttribute, $subAttribute ) ) )
+                     ( $type = self::getTypeForSubattribute( $classAttribute, $subAttribute, $context ) ) )
                 {
                     // A subattribute was passed
                     return parent::generateSubattributeFieldName( $classAttribute,
@@ -149,7 +149,7 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
      * @param $subAttribute The subattribute's name
      * @return string The type of the subattribute, false otherwise.
      */
-    protected static function getTypeForSubattribute( eZContentClassAttribute $classAttribute, $subAttribute  )
+    protected static function getTypeForSubattribute( eZContentClassAttribute $classAttribute, $subAttribute, $context = 'search'  )
     {
         $q = "SELECT DISTINCT( ezcoa.data_type_string )
                 FROM   ezcontentobject_link AS ezcol,
@@ -176,7 +176,7 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                 " Picking the first one here : {$rows[0]['data_type_string']}";
                 eZDebug::writeWarning( $msg,  __METHOD__ );
             }
-            return ezfSolrDocumentFieldBase::getClassAttributeType( new eZContentClassAttribute( $rows[0] ) );
+            return ezfSolrDocumentFieldBase::getClassAttributeType( new eZContentClassAttribute( $rows[0] ), null, $context );
         }
         return false;
     }
@@ -228,9 +228,9 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
     /**
      * @see ezfSolrDocumentFieldBase::getClassAttributeType
      *
-     * @todo Implement specific behaviour
+     * @todo Implement specific behaviour and context aware typing
      */
-    static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null )
+    static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null, $context = 'search' )
     {
         if ( $subAttribute and
              $subAttribute !== '' and

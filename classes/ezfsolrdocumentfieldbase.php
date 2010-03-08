@@ -3,7 +3,7 @@
 //
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 // SOFTWARE NAME: eZ Find
-// SOFTWARE RELEASE: 2.1.x
+// SOFTWARE RELEASE: 2.2.x
 // COPYRIGHT NOTICE: Copyright (C) 2009 eZ Systems AS
 // SOFTWARE LICENSE: GNU General Public License v2.0
 // NOTICE: >
@@ -57,8 +57,12 @@ class ezfSolrDocumentFieldBase
     /**
      * Get data to index, and field name to use.
      *
+     * @since ez find 2.2: indexed values to be context aware
+     *      different fields may be used for searching, sorting and faceting
+     *
      * @return array Associative array with field name and field value.
      *               Field value can be an array.
+     *
      * Example 1:
      * <code>
      *   array( 'field_name_i' => 123 );
@@ -73,7 +77,12 @@ class ezfSolrDocumentFieldBase
     public function getData()
     {
         $contentClassAttribute = $this->ContentObjectAttribute->attribute( 'contentclass_attribute' );
-        $fieldName = self::getFieldName( $contentClassAttribute );
+        foreach( array_keys( eZSolr::$fieldTypeContexts ) as $context )
+        {
+            $fieldNameArray[] = self::getFieldName( $contentClassAttribute, $context );
+        }
+        $fieldName = self::getFieldName( $contentClassAttribute, $context );
+
 
         $metaData = $this->ContentObjectAttribute->metaData();
 
@@ -175,7 +184,7 @@ class ezfSolrDocumentFieldBase
      *
      * @return string Field type. Null if no field type is defined.
      */
-    static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null )
+    static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null, $context = 'search' )
     {
         // Subattribute-related behaviour here.
         $datatypeString = $classAttribute->attribute( 'data_type_string' );
@@ -185,7 +194,7 @@ class ezfSolrDocumentFieldBase
         {
             if ( self::isStaticDelegationAllowed( $customMapList[$datatypeString], 'getClassAttributeType' ) and
                  ( $returnValue = call_user_func_array( array( $customMapList[$datatypeString], 'getClassAttributeType' ),
-                                                        array( $classAttribute, $subAttribute ) ) )
+                                                        array( $classAttribute, $subAttribute, $context ) ) )
                )
             {
                 return $returnValue;
@@ -193,13 +202,18 @@ class ezfSolrDocumentFieldBase
         }
 
         // Fallback #1: single-fielded datatype behaviour here.
+        $datatypeMapList = self::$FindINI->variable( 'SolrFieldMapSettings', eZSolr::$fieldTypeContexts[$context] );
+        if ( !empty( $datatypeMapList[$classAttribute->attribute( 'data_type_string' )] ) )
+        {
+            return $datatypeMapList[$classAttribute->attribute( 'data_type_string' )];
+        }
+        // Fallback #2: search field datatypemap (pre ezfind 2.2 behaviour)
         $datatypeMapList = self::$FindINI->variable( 'SolrFieldMapSettings', 'DatatypeMap' );
         if ( !empty( $datatypeMapList[$classAttribute->attribute( 'data_type_string' )] ) )
         {
             return $datatypeMapList[$classAttribute->attribute( 'data_type_string' )];
         }
-
-        // Fallback #2: return default field.
+        // Fallback #3: return default field.
         return self::$FindINI->variable( 'SolrFieldMapSettings', 'Default' );
     }
 
@@ -266,7 +280,7 @@ class ezfSolrDocumentFieldBase
      *
      * @return string Fully qualified Solr field name.
      */
-    public static function getFieldName( eZContentClassAttribute $classAttribute, $subAttribute = null )
+    public static function getFieldName( eZContentClassAttribute $classAttribute, $subAttribute = null, $context = 'search' )
     {
         $datatypeString = $classAttribute->attribute( 'data_type_string' );
         $customMapList = self::$FindINI->variable( 'SolrFieldMapSettings', 'CustomMap' );
@@ -275,14 +289,14 @@ class ezfSolrDocumentFieldBase
         {
             if ( self::isStaticDelegationAllowed( $customMapList[$datatypeString], 'getFieldName' ) and
                  ( $returnValue = call_user_func_array( array( $customMapList[$datatypeString], 'getFieldName' ),
-                                                        array( $classAttribute, $subAttribute ) ) )
+                                                        array( $classAttribute, $subAttribute, $context ) ) )
                )
             {
                 return $returnValue;
             }
         }
 
-        return self::generateAttributeFieldName( $classAttribute, self::getClassAttributeType( $classAttribute ) );
+        return self::generateAttributeFieldName( $classAttribute, self::getClassAttributeType( $classAttribute, null, $context ) );
     }
 
     /**
@@ -429,10 +443,10 @@ class ezfSolrDocumentFieldBase
      *      If $baseName equals 'main_url_alias',
      *      the return value will be : 'meta_main_url_alias_s'
      */
-    public static function generateMetaFieldName( $baseName )
+    public static function generateMetaFieldName( $baseName, $context )
     {
         return self::$DocumentFieldName->lookupSchemaName( self::META_FIELD_PREFIX . $baseName,
-                                                           eZSolr::getMetaAttributeType( $baseName ) );
+                                                           eZSolr::getMetaAttributeType( $baseName, $context ) );
     }
 
     /**
