@@ -39,16 +39,16 @@ class eZFindInfo
     {
         return array(
             'Name' => "eZ Find",
-            'Version' => '2.2.0-dev-alpha1',
+            'Version' => '2.2.0-dev-beta2',
             'Copyright' => "Copyright © 2008-2009 eZ Systems AS.",
             'Info_url' => "http://ez.no/ezfind",
             'License' => "GNU General Public License v2.0",
             '3rdparty_software' =>
-            array ( 'name' => 'Solr',
-                    'Version' => '1.4-dev-rev 814543',
-                    'copyright' => 'The Apache Software Foundation.',
-                    'license' => 'Apache License, Version 2.0',
-                    'info_url' => 'http://lucene.apache.org/solr/' ) );
+                            array ( 'name' => 'Solr',
+                                    'Version' => '1.4-dev-rev 814543',
+                                    'copyright' => 'The Apache Software Foundation.',
+                                    'license' => 'Apache License, Version 2.0',
+                                    'info_url' => 'http://lucene.apache.org/solr/' ) );
     }
 }
 
