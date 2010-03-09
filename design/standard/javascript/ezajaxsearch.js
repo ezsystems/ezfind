@@ -23,7 +23,7 @@ var eZAJAXSearch = function()
                     if ( spellCheck && spellCheck.collation )
                     {
                         var scTemplate = ret.cfg.spellchecktemplate;
-                        scTemplate = scTemplate.replace( /\{+spellcheck+\}/, spellCheck.collation );
+                        scTemplate = scTemplate.replace( /\{+spellcheck+\}/g, spellCheck.collation );
                         var scDiv = Y.Node.create( scTemplate );
                         scDiv.on( 'click', handleClickFromSpellcheck );
                         resultsTarget.appendChild( scDiv );
@@ -40,7 +40,7 @@ var eZAJAXSearch = function()
                             // Name of the facet :
                             var facetName = facet['name'];
                             var facetInnerList = ret.cfg.facetsinnerlisttemplate;                            
-                            facetInnerList = facetInnerList.replace( /\{+facet_name+\}/, facetName );                                                        
+                            facetInnerList = facetInnerList.replace( /\{+facet_name+\}/g, facetName );                                                        
                             
                             if ( facet['list'].length > 0 )
                             {
@@ -50,20 +50,20 @@ var eZAJAXSearch = function()
                                     var value = facet['list'][j]['value'];
                                     var count = facet['list'][j]['count'];
                                     var facetElement = ret.cfg.facetselementtemplate;
-                                    facetElement = facetElement.replace( /\{+link+\}/, link );
-                                    facetElement = facetElement.replace( /\{+value+\}/, value );
-                                    facetElement = facetElement.replace( /\{+count+\}/, count );
-                                    facetInnerList = facetInnerList.replace( /\{+facet_element+\}/, facetElement + "{facet_element}" );                                
+                                    facetElement = facetElement.replace( /\{+link+\}/g, link );
+                                    facetElement = facetElement.replace( /\{+value+\}/g, value );
+                                    facetElement = facetElement.replace( /\{+count+\}/g, count );
+                                    facetInnerList = facetInnerList.replace( /\{+facet_element+\}/g, facetElement + "{facet_element}" );                                
                                 }
-                                facetInnerList = facetInnerList.replace( /\{+facet_element+\}/, '' );
-                                facetMainList = facetMainList.replace( /\{+inner_facet_list+\}/, facetInnerList + "{inner_facet_list}" );
+                                facetInnerList = facetInnerList.replace( /\{+facet_element+\}/g, '' );
+                                facetMainList = facetMainList.replace( /\{+inner_facet_list+\}/g, facetInnerList + "{inner_facet_list}" );
                             }
                         }
 
                         // Only display the "Refine with facets" block if actual facets were returned.
                         if ( facetMainList != ret.cfg.facetsmainlisttemplate )
                         {
-                            facetMainList = facetMainList.replace( /\{+inner_facet_list+\}/, "" );                            
+                            facetMainList = facetMainList.replace( /\{+inner_facet_list+\}/g, "" );                            
                             var facetsDiv = Y.Node.create( facetMainList );
                             
                             resultsTarget.appendChild( facetsDiv );                            
@@ -104,20 +104,20 @@ var eZAJAXSearch = function()
                         var item = response.content.SearchResult[i];
 
                         var template = ret.cfg.resulttemplate;
-                        template = template.replace(/\{+title+\}/, item.name);
+                        template = template.replace(/\{+title+\}/g, item.name);
                         if ( item.published_date === undefined )
                         {
                             var date = new Date( item.published * 1000 );
                             var dateString = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ' ' + date.getFullYear() + '/' + date.getMonth() + '/' + date.getDay();
-                            template = template.replace(/\{+date+\}/, dateString);
+                            template = template.replace(/\{+date+\}/g, dateString);
                         }
                         else
                         {
-                            template = template.replace(/\{+date+\}/, item.published_date);
+                            template = template.replace(/\{+date+\}/g, item.published_date);
                         }
-                        template = template.replace(/\{+class_name+\}/, item.class_name);
-                        template = template.replace(/\{+url_alias+\}/, item.url_alias);
-                        template = template.replace(/\{+object_id+\}/, item.id);
+                        template = template.replace(/\{+class_name+\}/g, item.class_name);
+                        template = template.replace(/\{+url_alias+\}/g, item.url_alias);
+                        template = template.replace(/\{+object_id+\}/g, item.id);
 
                         var itemContainer = Y.Node.create(template);
 
