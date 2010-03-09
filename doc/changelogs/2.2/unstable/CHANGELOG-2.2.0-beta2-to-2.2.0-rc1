@@ -1,0 +1,7 @@
+Changes from 2;2.0-beta2 to 2.2.0-rc1
+
+*Features:
+
+
+*Bugs:
+- Fixed bug #016394: Dedicated sort fields are broken
