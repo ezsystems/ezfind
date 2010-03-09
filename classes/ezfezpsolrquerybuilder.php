@@ -1046,7 +1046,7 @@ class ezfeZPSolrQueryBuilder
             {
                 list( $field, $query ) = explode( ':', $facetDefinition['query'] );
 
-                $field = eZSolr::getFieldName( $field, 'facet' );
+                $field = eZSolr::getFieldName( $field, false, 'facet' );
                 if ( !$field )
                 {
                     eZDebug::writeNotice( 'Invalid query field provided: ' . $facetDefinition['query'],
@@ -1125,7 +1125,7 @@ class ezfeZPSolrQueryBuilder
             // Get date start option - may add validation later.
             if ( !empty( $facetDefinition['date'] ) )
             {
-                $fieldName = eZSolr::getFieldName( $facetDefinition['date'], 'facet' );
+                $fieldName = eZSolr::getFieldName( $facetDefinition['date'], false, 'facet' );
                 if ( !$fieldName )
                 {
                     eZDebug::writeNotice( 'Facet field does not exist in local installation, but may still be valid: ' .

@@ -80,7 +80,7 @@ class ezfSolrDocumentFieldBase
         $fieldNameArray = array();
         foreach( array_keys( eZSolr::$fieldTypeContexts ) as $context )
         {
-            $fieldNameArray[] = self::getFieldName( $contentClassAttribute, $context );
+            $fieldNameArray[] = self::getFieldName( $contentClassAttribute, null, $context );
         }
         $fieldNameArray = array_unique( $fieldNameArray );
 
