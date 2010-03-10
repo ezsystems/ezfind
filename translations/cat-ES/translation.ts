@@ -3,15 +3,15 @@
     <name>design/admin/node/view/full</name>
     <message>
         <source>Show 10 items per page.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra 10 elements per pàgina.</translation>
     </message>
     <message>
         <source>Show 50 items per page.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra 50 elements per pàgina.</translation>
     </message>
     <message>
         <source>Show 25 items per page.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra 25 elements per pàgina.</translation>
     </message>
 </context>
 <context>
@@ -78,71 +78,58 @@
     </message>
 </context>
 <context>
+    <name>design/ezflow/block/search</name>
+    <message>
+        <source>Search</source>
+        <translation>Cerca</translation>
+    </message>
+</context>
+<context>
     <name>design/ezwebin/content/search</name>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Cerca</translation>
     </message>
     <message>
         <source>For more options try the %1Advanced search%2</source>
         <comment>The parameters are link start and end tags.</comment>
-        <translation type="unfinished"></translation>
+        <translation>Per a més opcions fes servir la %1Cerca avançada%2</translation>
     </message>
     <message>
         <source>No results were found when searching for &quot;%1&quot;.</source>
-        <translation type="unfinished"></translation>
+        <translation>No s&apos;han trobat resultats al cercar per &quot;%1&quot;.</translation>
     </message>
     <message>
         <source>Search tips</source>
-        <translation type="unfinished"></translation>
+        <translation>Consells de cerca</translation>
     </message>
     <message>
         <source>Check spelling of keywords.</source>
-        <translation type="unfinished"></translation>
+        <translation>Comprova com has escrit les paraules clau.</translation>
     </message>
     <message>
         <source>Try changing some keywords (eg, &quot;car&quot; instead of &quot;cars&quot;).</source>
-        <translation type="unfinished"></translation>
+        <translation>Pots provar canviant algunes paraules clau (per exemple, &quot;cotxe&quot; en comptes de &quot;cotxes&quot;).</translation>
     </message>
     <message>
         <source>Try searching with less specific keywords.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pots provar cercant amb menys paraules clau.</translation>
     </message>
     <message>
         <source>Reduce number of keywords to get more results.</source>
-        <translation type="unfinished"></translation>
+        <translation>Redueix el nombre de paraules clau per obtenir més resultats.</translation>
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation type="unfinished"></translation>
+        <translation>La cerca per &quot;%1&quot; ha retornat %2 coincidències</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajuda</translation>
     </message>
     <message>
-        <source>Facets</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Class</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Author</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Translation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>All</source>
-        <translation type="unfinished"></translation>
+        <source>Refine with facets</source>
+        <translation>Refina amb característiques</translation>
     </message>
 </context>
 <context>
@@ -161,6 +148,10 @@
     </message>
     <message>
         <source>Tip a friend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Related content</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -303,6 +294,17 @@
     </message>
 </context>
 <context>
+    <name>extension/ezfind/ajax-search</name>
+    <message>
+        <source>Did you mean</source>
+        <translation>Volies dir</translation>
+    </message>
+    <message>
+        <source>Refine with facets</source>
+        <translation>Refina amb característiques</translation>
+    </message>
+</context>
+<context>
     <name>extension/ezfind/backoffice_left_menu</name>
     <message>
         <source>eZFind</source>
@@ -318,7 +320,7 @@
     </message>
     <message>
         <source>Facets</source>
-        <translation>Façanes</translation>
+        <translation>Característiques</translation>
     </message>
 </context>
 <context>
@@ -329,11 +331,11 @@
     </message>
     <message>
         <source>Unable to open &apos;%1&apos;. Write access is required on this file in order to flush Solr&apos;s elevate configuration.</source>
-        <translation>No s&apos;ha pogut obrir &apos;%1&apos;. Es requereix accés d&apos;escriptura sobre aquest arxiu per netejar la configuració d&apos;elevació del Solr.</translation>
+        <translation type="obsolete">No s&apos;ha pogut obrir &apos;%1&apos;. Es requereix accés d&apos;escriptura sobre aquest arxiu per netejar la configuració d&apos;elevació del Solr.</translation>
     </message>
     <message>
         <source>Unable to write Solr&apos;s elevate configuration in &apos;%1&apos;, although the file could be properly opened.</source>
-        <translation>No s&apos;ha pogut escriure la configuració d&apos;elevació del Solr a &apos;%1&apos;, encara que l&apos;arxiu s&apos;ha pogut obrir correctament.</translation>
+        <translation type="obsolete">No s&apos;ha pogut escriure la configuració d&apos;elevació del Solr a &apos;%1&apos;, encara que l&apos;arxiu s&apos;ha pogut obrir correctament.</translation>
     </message>
     <message>
         <source>Hide preview of existing elevate configurations.</source>
@@ -571,6 +573,33 @@
         <source>Cancel removal of the elevate configuration</source>
         <translation>Cancel.la l&apos;esborrament de la configuració d&apos;elevació</translation>
     </message>
+    <message>
+        <source>An unknown error occured in updating Solr&apos;s elevate configuration.</source>
+        <translation>S&apos;ha produit un error al actualitzar la configuració d&apos;elevació del Solr.</translation>
+    </message>
+</context>
+<context>
+    <name>extension/ezfind/facets</name>
+    <message>
+        <source>Content type</source>
+        <translation>Tipus de contingut</translation>
+    </message>
+    <message>
+        <source>Author</source>
+        <translation>Autor</translation>
+    </message>
+    <message>
+        <source>Keywords</source>
+        <translation>Paraules clau</translation>
+    </message>
+    <message>
+        <source>Creation time</source>
+        <translation>Hora de creació</translation>
+    </message>
+    <message>
+        <source>Clear all</source>
+        <translation>Neteja tot</translation>
+    </message>
 </context>
 <context>
     <name>extension/ezfind/popupmenu</name>
@@ -591,7 +620,7 @@
     <name>ezfind</name>
     <message>
         <source>Search time: %1 msecs</source>
-        <translation>Temps de cerca: %1 ms</translation>
+        <translation type="obsolete">Temps de cerca: %1 ms</translation>
     </message>
     <message>
         <source>Core search time: %1 msecs</source>
@@ -603,7 +632,15 @@
     </message>
     <message>
         <source>eZ Find 2.0 search plugin &amp;copy; 2009 eZ Systems AS, powered by Apache Solr 1.4</source>
-        <translation>Extensió de cerca eZ Find 2.0 &amp;copy; 2009 eZ Systems AS, powered by Apache Solr 1.4</translation>
+        <translation type="obsolete">Extensió de cerca eZ Find 2.0 &amp;copy; 2009 eZ Systems AS, powered by Apache Solr 1.4</translation>
+    </message>
+    <message>
+        <source>Search took: %1 msecs, using </source>
+        <translation>La cerca ha trigat: %1 msecs, emprant </translation>
+    </message>
+    <message>
+        <source>eZ Find 2.2 search plugin &amp;copy; 2009 eZ Systems AS, powered by Apache Solr 1.4</source>
+        <translation>Extensió de cerca eZ Find 2.2 &amp;copy; 2009 eZ Systems AS, powered by Apache Solr 1.4</translation>
     </message>
 </context>
 </TS>

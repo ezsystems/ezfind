@@ -3,15 +3,15 @@
     <name>design/admin/node/view/full</name>
     <message>
         <source>Show 10 items per page.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar 10 elementos por página.</translation>
     </message>
     <message>
         <source>Show 50 items per page.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar 50 elementos por página.</translation>
     </message>
     <message>
         <source>Show 25 items per page.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar 25 elementos por página.</translation>
     </message>
 </context>
 <context>
@@ -78,71 +78,58 @@
     </message>
 </context>
 <context>
+    <name>design/ezflow/block/search</name>
+    <message>
+        <source>Search</source>
+        <translation>Buscar</translation>
+    </message>
+</context>
+<context>
     <name>design/ezwebin/content/search</name>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Buscar</translation>
     </message>
     <message>
         <source>For more options try the %1Advanced search%2</source>
         <comment>The parameters are link start and end tags.</comment>
-        <translation type="unfinished"></translation>
+        <translation>Para más opciones usa la %1Búsqueda avanzada%2</translation>
     </message>
     <message>
         <source>No results were found when searching for &quot;%1&quot;.</source>
-        <translation type="unfinished"></translation>
+        <translation>No se han encontrado resultados al buscar por &quot;%1&quot;.</translation>
     </message>
     <message>
         <source>Search tips</source>
-        <translation type="unfinished"></translation>
+        <translation>Consejos de búsqueda</translation>
     </message>
     <message>
         <source>Check spelling of keywords.</source>
-        <translation type="unfinished"></translation>
+        <translation>Comprueba cómo has escrito las palabras clave.</translation>
     </message>
     <message>
         <source>Try changing some keywords (eg, &quot;car&quot; instead of &quot;cars&quot;).</source>
-        <translation type="unfinished"></translation>
+        <translation>Prueba cambiando algunas palabras clave (por ejemplo, &quot;coche&quot; en vez de &quot;coches&quot;).</translation>
     </message>
     <message>
         <source>Try searching with less specific keywords.</source>
-        <translation type="unfinished"></translation>
+        <translation>Prueba usando menos palabras clave al buscar.</translation>
     </message>
     <message>
         <source>Reduce number of keywords to get more results.</source>
-        <translation type="unfinished"></translation>
+        <translation>Reduce el número de palabras clave para obtener más resultados.</translation>
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation type="unfinished"></translation>
+        <translation>La búsqueda por &quot;%1&quot; ha devuelto %2 coincidencias</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Ayuda</translation>
     </message>
     <message>
-        <source>Facets</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Class</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Author</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Translation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>All</source>
-        <translation type="unfinished"></translation>
+        <source>Refine with facets</source>
+        <translation>Refinar con características</translation>
     </message>
 </context>
 <context>
@@ -161,6 +148,10 @@
     </message>
     <message>
         <source>Tip a friend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Related content</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -303,6 +294,17 @@
     </message>
 </context>
 <context>
+    <name>extension/ezfind/ajax-search</name>
+    <message>
+        <source>Did you mean</source>
+        <translation>Querías decir</translation>
+    </message>
+    <message>
+        <source>Refine with facets</source>
+        <translation>Refinar con características</translation>
+    </message>
+</context>
+<context>
     <name>extension/ezfind/backoffice_left_menu</name>
     <message>
         <source>eZFind</source>
@@ -318,7 +320,7 @@
     </message>
     <message>
         <source>Facets</source>
-        <translation>Fachadas</translation>
+        <translation>Características</translation>
     </message>
 </context>
 <context>
@@ -329,11 +331,11 @@
     </message>
     <message>
         <source>Unable to open &apos;%1&apos;. Write access is required on this file in order to flush Solr&apos;s elevate configuration.</source>
-        <translation>No se ha podido abrir &apos;%1&apos;. Se necesita tener acceso de escritura en el archivo para poder limpiar la configuración de elevación del Solr.</translation>
+        <translation type="obsolete">No se ha podido abrir &apos;%1&apos;. Se necesita tener acceso de escritura en el archivo para poder limpiar la configuración de elevación del Solr.</translation>
     </message>
     <message>
         <source>Unable to write Solr&apos;s elevate configuration in &apos;%1&apos;, although the file could be properly opened.</source>
-        <translation>No se ha podido escribir la configuración de elevación del Solr en &apos;%1&apos;, aunque se ha podido abrir el archivo correctamente. </translation>
+        <translation type="obsolete">No se ha podido escribir la configuración de elevación del Solr en &apos;%1&apos;, aunque se ha podido abrir el archivo correctamente. </translation>
     </message>
     <message>
         <source>Hide preview of existing elevate configurations.</source>
@@ -571,6 +573,33 @@
         <source>Cancel removal of the elevate configuration</source>
         <translation>Cancelar el borrado de la configuración de elevación</translation>
     </message>
+    <message>
+        <source>An unknown error occured in updating Solr&apos;s elevate configuration.</source>
+        <translation>Se ha producido un error al actualizar la configuración de elevación del Solr.</translation>
+    </message>
+</context>
+<context>
+    <name>extension/ezfind/facets</name>
+    <message>
+        <source>Content type</source>
+        <translation>Tipo de contenido</translation>
+    </message>
+    <message>
+        <source>Author</source>
+        <translation>Autor</translation>
+    </message>
+    <message>
+        <source>Keywords</source>
+        <translation>Palabras clave</translation>
+    </message>
+    <message>
+        <source>Creation time</source>
+        <translation>Hora de creación</translation>
+    </message>
+    <message>
+        <source>Clear all</source>
+        <translation>Limpiar todo</translation>
+    </message>
 </context>
 <context>
     <name>extension/ezfind/popupmenu</name>
@@ -591,7 +620,7 @@
     <name>ezfind</name>
     <message>
         <source>Search time: %1 msecs</source>
-        <translation>Tiempo de búsqueda: %1 ms</translation>
+        <translation type="obsolete">Tiempo de búsqueda: %1 ms</translation>
     </message>
     <message>
         <source>Core search time: %1 msecs</source>
@@ -603,7 +632,15 @@
     </message>
     <message>
         <source>eZ Find 2.0 search plugin &amp;copy; 2009 eZ Systems AS, powered by Apache Solr 1.4</source>
-        <translation>Extensión de búsqueda eZ Find 2.0 &amp;copy; 2009 eZ Systems AS, powered by Apache Solr 1.4</translation>
+        <translation type="obsolete">Extensión de búsqueda eZ Find 2.0 &amp;copy; 2009 eZ Systems AS, powered by Apache Solr 1.4</translation>
+    </message>
+    <message>
+        <source>Search took: %1 msecs, using </source>
+        <translation>La búsqueda tardó: %1 msecs, usando </translation>
+    </message>
+    <message>
+        <source>eZ Find 2.2 search plugin &amp;copy; 2009 eZ Systems AS, powered by Apache Solr 1.4</source>
+        <translation>Extensión de búsqueda eZ Find 2.2 &amp;copy; 2009 eZ Systems AS, powered by Apache Solr 1.4</translation>
     </message>
 </context>
 </TS>
