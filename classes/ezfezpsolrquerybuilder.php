@@ -1044,7 +1044,7 @@ class ezfeZPSolrQueryBuilder
             // Get query part.
             if ( !empty( $facetDefinition['query'] ) )
             {
-                list( $field, $query ) = explode( ':', $facetDefinition['query'] );
+                list( $field, $query ) = explode( ':', $facetDefinition['query'], 2 );
 
                 $field = eZSolr::getFieldName( $field, false, 'facet' );
                 if ( !$field )
