@@ -1400,7 +1400,7 @@ class eZSolr
     static $InstallationID;
     static $SolrDocumentFieldName;
     // @since ezfind 2.2, information
-    public static $fieldTypeContexts = array ('search' => 'DatatypeMap', 'facet' => 'DatatypeMapFacet', 'sort' => 'DatatypeMapSort', 'filter' => 'DataTypeMapFilter');
+    public static $fieldTypeContexts = array ('search' => 'DatatypeMap', 'facet' => 'DatatypeMapFacet', 'sort' => 'DatatypeMapSort', 'filter' => 'DatatypeMapFilter');
 
 }
 
