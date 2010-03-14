@@ -913,15 +913,14 @@ class eZSolr
                 'StopWordArray' => array(),
                 'SearchExtras' => new ezfSearchResultInfo( array( 'error' => ezi18n( 'ezfind', $error ) ) ) );
         }
-
-        if ( count($resultArray) > 0 )
+        $objectRes = array();
+        if ( isset( $resultArray['response'] ) && is_array( $resultArray['response'] ) )
         {
             $result = $resultArray['response'];
             $searchCount = $result['numFound'];
             $maxScore = $result['maxScore'];
             $docs = $result['docs'];
             $localNodeIDList = array();
-            $objectRes = array();
             $nodeRowList = array();
 
             // Loop through result, and get eZContentObjectTreeNode ID
