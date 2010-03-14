@@ -176,15 +176,6 @@ class eZFindElevateConfiguration extends eZPersistentObject
         $results = array();
         $sortClause = $groupByLanguage ? array( 'language_code' => 'asc' ) : null;
 
-        if ( $countOnly )
-        {
-            $limit = null;
-            $asObject = false;
-            $fieldFilters = array();
-            $custom = array( array( 'operation' => 'count( * )',
-                                    'name' => 'count' ) );
-        }
-
         $conds = array( 'contentobject_id' => $objectID );
         if ( $languageCode and $languageCode !== '' )
             $conds['language_code'] = array( array( $languageCode, self::WILDCARD ) );
@@ -201,14 +192,13 @@ class eZFindElevateConfiguration extends eZPersistentObject
             }
         }
 
-        $rows = parent::fetchObjectList( self::definition(), $fieldFilters, $conds, $sortClause, $limit, $asObject, false, $custom );
-
         if ( $countOnly )
         {
-            return $rows[0]['count'];
+            return parent::count( self::definition(), $conds );
         }
         else
         {
+            $rows = parent::fetchObjectList( self::definition(), $fieldFilters, $conds, $sortClause, $limit, $asObject, false, $custom );
             foreach( $rows as $row )
             {
                 if ( $groupByLanguage )
