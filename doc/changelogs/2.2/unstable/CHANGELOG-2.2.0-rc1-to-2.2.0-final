@@ -1,0 +1,8 @@
+
+Changes from 2.2.0-rc1 to 2.2.0-final
+
+*Features:
+-
+
+*Bugs:
+- Fixed bug #016372: deleting of content lasts very long (optional setting though)

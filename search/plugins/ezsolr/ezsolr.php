@@ -624,8 +624,22 @@ class eZSolr
      * 
      * @return bool true if removal was successful
      */
-    function removeObject( $contentObject, $commit = true )
+    function removeObject( $contentObject, $commit = null )
     {
+        /*
+         * @since eZFind 2.2: allow delayed commits if explicitely set as configuration setting and
+         * the parameter $commit it is not set
+         * Default behaviour is as before
+         */
+        if (!isset($commit) && ($this->FindINI->variable( 'IndexOptions', 'DisableDeleteCommits' ) === 'true'))
+        {
+            $commit = false;
+        }
+        elseif ( !isset($commit) )
+        {
+            $commit = true;
+        }
+
         // 1: remove the assciated "elevate" configuration
         eZFindElevateConfiguration::purge( '', $contentObject->attribute( 'id' ) );
         //eZFindElevateConfiguration::synchronizeWithSolr();
