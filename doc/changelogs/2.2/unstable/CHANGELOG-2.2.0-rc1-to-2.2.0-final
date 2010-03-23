@@ -2,7 +2,7 @@
 Changes from 2.2.0-rc1 to 2.2.0-final
 
 *Features:
--
+- Updated solr.war to 1.5-dev (solr trunk rev  925669)
 
 *Bugs:
 - Fixed bug #016372: deleting of content lasts very long (optional setting though)
