@@ -420,13 +420,14 @@
 
     <!-- since fields of this type are by default not stored or indexed,
          any data added to them will be ignored outright.  --> 
-    <fieldtype name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" /> 
+    <fieldtype name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" />
+    <!-- The geopoint type holds latitude / longitude information
+      implictely it holds several subfields-->
+    <fieldType name="geopoint" class="solr.PointType" dimension="2" subFieldTypes="double"/>
+
 
  </types>
- <!-- The geopoint type holds latitude / longitude information
-      implictely it holds several subfields-->
- <fieldType name="geopoint" class="solr.PointType" dimension="2" subFieldTypes="double"/>
-
+ 
 
 
  <fields>
