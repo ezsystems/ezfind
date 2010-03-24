@@ -466,7 +466,7 @@ class ezfUpdateSearchIndexSolr
         {
             if ( !empty( $this->Options[$param] ) )
             {
-                $optionString .= ' --' . $param . '=' . escapeshellarg( $this->Options['db-host'] );
+                $paramString .= ' --' . $param . '=' . escapeshellarg( $this->Options[$param] );
             }
         }
 
