@@ -461,7 +461,7 @@ class ezfUpdateSearchIndexSolr
         global $argv;
         // Create options string.
         $paramString = '';
-        $paramList = array( 'db-host', 'db-user', 'db-password', 'db-type', 'db-driver' );
+        $paramList = array( 'db-host', 'db-user', 'db-password', 'db-type', 'db-driver', 'db-database' );
         foreach( $paramList as $param )
         {
             if ( !empty( $this->Options[$param] ) )
