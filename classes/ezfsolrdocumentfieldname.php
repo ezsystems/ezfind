@@ -147,7 +147,13 @@ class ezfSolrDocumentFieldName
                                   'keyword' => 'k',
                                   'lckeyword' => 'lk',
                                   'textgen' => 'tg',
-                                  'alphaOnlySort' => 'as');
+                                  'alphaOnlySort' => 'as',
+                                  'tint' => 'ti',
+                                  'tfloat' => 'tf',
+                                  'tdouble' => 'td',
+                                  'tlong' => 'tl',
+                                  'tdate' => 'tdt',
+                                  'geopoint' => 'gpt');
 
     static $DefaultType = 'string';
     static $PHPCreator = null;

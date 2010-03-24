@@ -423,6 +423,10 @@
     <fieldtype name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" /> 
 
  </types>
+ <!-- The geopoint type holds latitude / longitude information
+      implictely it holds several subfields-->
+ <fieldType name="geopoint" class="solr.PointType" dimension="2" subFieldTypes="double"/>
+
 
 
  <fields>
@@ -507,6 +511,14 @@
 	   <dynamicField name="*_random"   type="random"  indexed="true"  stored="true" multiValued="true"/>
 	   <dynamicField name="*_k"        type="keyword" indexed="true"  stored="true" multiValued="true"/>
            <dynamicField name="*_lk"       type="lckeyword" indexed="true"  stored="true" multiValued="true"/>
+              <!-- some trie-coded dynamic fields for faster range queries -->
+           <dynamicField name="*_ti" type="tint"    indexed="true"  stored="true"/>
+           <dynamicField name="*_tl" type="tlong"   indexed="true"  stored="true"/>
+           <dynamicField name="*_tf" type="tfloat"  indexed="true"  stored="true"/>
+           <dynamicField name="*_td" type="tdouble" indexed="true"  stored="true"/>
+           <dynamicField name="*_tdt" type="tdate"  indexed="true"  stored="true"/>
+             <!-- geopoint for geospatial/location searches, boosting, ... -->
+           <dynamicField name="*_gpt" type="geopoint"  indexed="true"  stored="true"/>
 
 
 	  <field name="ezf_df_text" type="text"    indexed="true"  stored="true" multiValued="true" termVectors="true"/>
