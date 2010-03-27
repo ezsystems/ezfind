@@ -23,10 +23,16 @@ package org.ezsystems.solr.handler.ezfind;
 //
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+
+
 import org.apache.solr.util.plugin.*;
-import org.apache.solr.request.*;
+import org.apache.solr.handler.*;
+import org.apache.solr.request.SolrQueryRequest;
+import org.apache.solr.request.SolrRequestHandler;
+import org.apache.solr.response.SolrQueryResponse;
+import org.apache.solr.core.SolrCore;
+
+
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.SolrException.ErrorCode;
 import org.apache.solr.common.params.SolrParams;
@@ -56,7 +62,7 @@ import java.net.URL;
  * <p/>
  */
 
-public class eZFindRequestHandler implements SolrRequestHandler, SolrCoreAware {
+public class eZFindRequestHandler extends RequestHandlerBase implements SolrCoreAware {
   
   /**
    * Storing the current core.
@@ -124,7 +130,7 @@ public class eZFindRequestHandler implements SolrRequestHandler, SolrCoreAware {
    * all interface obligations.
    */
   //@Override
-  public void handleRequest(SolrQueryRequest req, SolrQueryResponse rsp)
+  public void handleRequestBody(SolrQueryRequest req, SolrQueryResponse rsp)
   {
 	  String newElevateConfiguration = req.getParams().get( eZFindRequestHandler.CONF_PARAM_NAME );
 	  
