@@ -8,3 +8,5 @@ Changes from 2.2.0-rc1 to 2.2.0-final
 *Bugs:
 - Fixed bug #016372: deleting of content lasts very long (optional setting though)
 - Fixed bug #016506: bin/php/updatesearchindexsolr.php --db options not working
+- Fixed bug #016528: eZFind is broken in latest builds (related to geopoint schema.xml typo)
+- Fixed bug #016526: eZFind error updating Solr's elevate configuration

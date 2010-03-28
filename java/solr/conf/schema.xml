@@ -423,7 +423,7 @@
     <fieldtype name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" />
     <!-- The geopoint type holds latitude / longitude information
       implictely it holds several subfields-->
-    <fieldType name="geopoint" class="solr.PointType" dimension="2" subFieldTypes="double"/>
+    <fieldType name="geopoint" class="solr.PointType" dimension="2" subFieldType="double"/>
 
 
  </types>
