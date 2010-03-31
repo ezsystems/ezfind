@@ -1,0 +1,11 @@
+Changes from 2.2.0-beta2 to 2.2.0-rc1
+
+*Features:
+
+
+*Bugs:
+- Fixed bug #016394: Dedicated sort fields are broken
+- Fixed bug #016436: Warning : Undefined variable: 'DataTypeMapFilter' when making folder
+- Fixed bug #015942: warnings in morelikethis
+- Fixed bug #016353: Query error: Mixing of GROUP columns (MIN(),MAX(),COUNT(),...) with no GROUP in mysql strict mode
+- Fixed bug #015660: Faceting by date syntax issue

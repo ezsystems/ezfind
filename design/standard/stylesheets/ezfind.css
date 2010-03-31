@@ -1,0 +1,59 @@
+div#search_controls
+{
+	float:left;
+    margin-right:1%;
+    width:25%;
+}
+
+div#search_results
+{
+    float:left;
+    width:73%;	
+    padding-left: 5px;
+}
+
+ul#facet-list
+{
+	margin-left: 0;  
+}
+
+ul#active-facets-list
+{
+    margin-left: -15px;
+}
+
+ul#active-facets-list li
+{
+	list-style-type: none;
+	list-style: none;
+	background-image: none;
+}
+
+div.ajax-search-spellcheck
+{
+    margin-top: 3px;
+    margin-bottom: 7px;
+    font-style: italic;
+    /* color: #F06020; */
+    padding-bottom: 3px;
+    padding-left: 2px;
+}
+
+div.ajax-search-facets
+{
+    margin-top: 5px;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    border: 1px solid #F0F0F0;
+    font-size: 90%;
+    
+    /* for IE */
+    filter:'alpha(opacity=0)'; /* Will be faded in by the YUI animation */
+    /* CSS3 standard */
+    opacity: 0; /* Will be faded in by the YUI animation */	
+
+    /*height: 0;
+    width: 0;*/
+}

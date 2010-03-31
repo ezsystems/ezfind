@@ -1,0 +1,137 @@
+=========================================================
+Multiple cores stage 1: multilingual improvements
+=========================================================
+
+:Author:   Paul Borgermans, Bertrand Dunogier
+:Version: 1.0 draft
+:Revision: $Rev$
+:Date: $Date$
+
+.. sectnum::
+.. contents::
+.. NOTE : for a better reading experience, convert me to HTML with rst2html.
+
+Introduction
+============
+
+Until eZ Find 2.1, a signle schema is used which is non optimal for
+multi-lingual sites as every language needs to have its dedicated language dependent
+analyzer filters
+
+With support for multiple cores, this problem can easily tackled as each core (index)
+has its own schema.xml file, optimized per language
+
+Related issues
+==============
+
+* OsloBors project (urgent)
+* ... (TBS)
+
+
+Define more aggregator fields and make them configurable in ezfind.ini
+
+This speeds up searching in general and allows for multi-core searching with
+possible different information sources
+
+Core / Language configuration
+=============================
+Since the goal here is to provide better language specific analysis, each solr
+core needs to be configured for the language it will handle.
+
+Details
+=======
+
+solr.ini multi-core definitions
+-------------------------------
+
+MultiCore=yes|no
+
+Thsi means the base url becomes the multi-core base url, this is not yet the
+instance itself
+
+Cores[]
+Cores[identifier]=<url suffix>
+....
+
+ezfind.ini language mappings
+----------------------------
+
+Wether or not to enabled multi-core::
+
+    MultiCore=enabled|disabled
+
+Default core for unmapped languages::
+
+    DefaultCore=<identifier>
+
+Per language core <=> language code mapping::
+
+    LanguageMapCores[]
+    LanguageMapCores[<identifier>]=eng-GB
+    ....
+
+API changes
+-----------
+
+* eZSolr
+* Querybuilder
+* fetch functions
+* ...
+
+eZSolrDoc
++++++++++
+
+In order to make it possible to direct indexings to the appropriate language
+core, a new property is added to eZSolrDoc::
+
+    eZSolrDoc::languageCode
+    
+This property is filled when a new eZSolrDoc is created, so that when indexing,
+we can easily determine what language the doc is in.
+
+eZSolr
+++++++
+
+The main search class deals with the distributed search aspects
+For now, this is geared towards multiple indexes for languages.
+
+eZSolrBase
+++++++++++
+
+Added: pushElevateConfiguration
+'''''''''''''''''''''''''''''''
+Since elevate isn't supported in a multi-core environnement, this method has
+been added so that it can be overriden in eZSolrBaseMultiCore. It is just an 
+abstract version of the previous raw code from elevate.
+
+Searching over multiple cores
+-----------------------------
+
+* Search across languages (usually a single language will be searched for only)
+
+Since each core will store its own data per language, we need select operations
+to use all the cores at the same time, while maintaining language priority search
+
+Because every language version shares essentially the same schema file, all
+filtering, sorting and faceting remains available
+
+* search across other indexes
+
+For foreign indexes, the aggregated fields are to be used
+
+* common
+
+Searching has to be made using sharding; the request is sent to one core, but
+instructs it to shard it to other cores::
+
+    http://host:8983/solr/core0/select?shards=host:8983/solr/core0,host:8983/solr/core1&q=...
+
+Limitations of distributed search (not only cores, also independent servlets)
+-----------------------------------------------------------------------------
+
+See Solr Wiki: http://wiki.apache.org/solr/DistributedSearch
+
+* no elevation support (might be supported after all, to test)
+* no date faceting (to test, may be solved in Solr 1.4)
+* no spellcheck (to follow: https://issues.apache.org/jira/browse/SOLR-785 )
+

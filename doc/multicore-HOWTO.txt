@@ -1,0 +1,68 @@
+===============================
+eZ find & Solr multicore how-to
+===============================
+
+eZ find 2.2 introduces support for solr multicore feature. This finally allows
+for better language specific search & analysis.
+
+Starting solr multicore
+=======================
+A default configuration of solr multicore is shipped with ezfind.
+
+To start it, use the following command line instead of the default one::
+    $java/: java -Dsolr.solr.home=solr.multicore -jar start.jar
+
+Configuring solr for multicore
+==============================
+You will find in extension/ezfind/java a folder named solr.multicore. This is
+a distinct solr home that already provides multicore features.
+
+solr.xml
+--------
+Located in the solr.multicore folder mentionned above, this file is required to
+enable multicore.
+
+The <cores> element is used to configure the administration URL for the cores,
+as well as the list of available cores. Each 'core' sub-element configures a
+new core. The 'name' attribute determines what URL element is used to access
+this core, while the instanceDir attribute determines the subfolder of
+solr.multicore where this core configuration can be found.
+
+Creating a new core
+-------------------
+Note that even though only language specific cores are used by eZ find at the
+moment, cores can be used for much more than that.
+
+1) you need to copy one of the existing ones, for example
+extension/ezfind/java/solr.multicore/eng-GB to a new name, the easiest being
+the target locale name::
+
+    $ezroot: cd extension/ezfind/java/solr.multicore
+    $solr.multicore: cp -rp eng-GB nor-NO
+    
+2) edit solr.multicore/solr.xml and add the newly created core here::
+
+    <core name="eng-GB" instanceDir="eng-GB" />
+    <core name="nor-NO" instanceDir="nor-NO" />
+
+3) now, you must configure the core so that it actually knows what language
+it will handle, and will perform language specific analysis. To do so, edit
+the conf/schema.xml file located in this particular core::
+
+    extension/ezfind/java/solr.multicore/nor-NO/conf/schema.xml
+    
+In this file, you will find multiple occurences of 'English' (if you've used
+eng-GB as the source). All of these will be attributes of a 'filter' XML element.
+Edit these, and replace 'English' with your language. The list of supported
+languages can be found on solr's wiki:
+http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters#solr.SnowballPorterFilterFactory
+
+For nor-NO, you would use 'Norwegian'.
+
+Tips
+====
+To access the solr backoffice, you must use the URI specified in solr.xml::
+    http://localhost:8983/solr/admin/cores
+    
+This will give you an overview of the solr configuration, as well as a direct
+access to each core's admin.

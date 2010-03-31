@@ -1,0 +1,110 @@
+#!/bin/sh -e
+#
+# eZ Find init script for debian.
+#
+# Usage:
+#
+# Set the correct SOLR_HOME value, and copy this file to /etc/init.d
+# Symlink to /etc/init.d/solr to /etc/rc3.d/S70solr and /etc/rc5.d/S70solr
+#
+# Example:
+# cp solr /etc/init.d/solr
+# cd /etc/init.d && chmod 755 solr
+# cd /etc/rc2.d && ln -s ../init.d/solr S70solr
+# cd /etc/rc5.d && ln -s ../init.d/solr S70solr
+# cd /etc/rc2.d && ln -s ../init.d/solr K70solr
+# cd /etc/rc5.d && ln -s ../init.d/solr K70solr
+
+
+. /lib/lsb/init-functions
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DESC="Solr indexing server"
+NAME=solr
+SOLR_HOME=/usr/local/solr/java
+#Replace with the java directory of your eZFind extension (example: /var/www/ezpublish/extension/ezfind/java)
+
+PARAMETERS="-jar start.jar"
+DAEMON=/usr/bin/java
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+
+# Gracefully exit if the package has been removed.
+test -x $DAEMON || exit 0
+
+#
+#	Function that starts the daemon/service.
+#
+d_start() {
+	start-stop-daemon --start --pidfile $PIDFILE --chdir $SOLR_HOME --background --make-pidfile --exec $DAEMON -- $PARAMETERS
+} 
+#
+#	Function that stops the daemon/service.
+#
+d_stop() {
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE --name java
+        rm -f $PIDFILE
+}
+
+#
+#	Function that checks if solr is running
+#	Returns success (0) if solr is running, failure (1) if not running
+#
+d_status() {
+    if [ -f "$PIDFILE" ] && ps `cat $PIDFILE` >/dev/null 2>&1; then
+		return 0 # EXIT_SUCCESS
+    else
+	  	return 1 # EXIT_FAILURE
+    fi
+}
+
+case "$1" in
+  start)
+	echo " * Starting $DESC: $NAME"
+	if d_status; then
+		echo "   ...$NAME is already running."
+		return 1
+	fi
+	d_start
+	if d_status; then
+		echo "   ...done."
+	else
+		echo "   ...failed to start solr"
+		exit 1
+	fi
+	;;
+  stop)
+	echo " * Stopping $DESC: $NAME"
+	if d_status; then
+		d_stop
+		if d_status; then
+			echo "   ...$NAME is still running."
+			exit 1
+		else
+			echo "   ...done."
+		fi
+	else
+		echo "   ...$NAME is not running."
+	fi
+	;;
+  status)
+	if d_status; then
+		echo " * $NAME is running (PID: `cat $PIDFILE`)"
+	else
+		echo " * $NAME is not running."
+	fi
+	;;
+  restart|force-reload)
+	echo -n "Restarting $DESC: $NAME"
+	d_stop
+	sleep 1
+	d_start
+	echo "."
+	;;
+  *)
+	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

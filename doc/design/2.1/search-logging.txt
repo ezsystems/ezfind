@@ -1,0 +1,48 @@
+Search logging for eZ Find
+==========================
+
+This spec is about search logging with ez find
+
+Rationale
+~~~~~~~~~
+
+Using Solr itself as a storage medium provides a few advantages:
+- it is easy to store and analyze search queries and results
+- Solr is a non-blocking daemon for inserting lots data concurrently
+- a simple click-through mechanism allows for storing search results relevance feedback with some heuristics
+
+
+Implementation
+--------------
+
+items to log
+~~~~~~~~~~~~
+
+- timestamp
+- main search results
+- search phrase
+- session id of current user (to correlate search results)
+- username
+- total number of results
+- method used (dismax, simplestandard, ...)
+- other query parameters (offset, limit, boost factors, ...)
+
+
+data store
+~~~~~~~~~~
+
+- the search log data is stored in a seperate, dedicated Solr shard
+- data is regularly backed up in snapshots, should the index become corrupted
+- an xml dump can also be made regularly, just by doing (range queries) and store the resultoutput
+
+
+Openness
+~~~~~~~~
+It appears that Google Analytics is able to store search statistics :
+* http://code.google.com/intl/fr-FR/apis/analytics/docs/gdata/gdataReferenceDimensionsMetrics.html#d5InternalSearch
+* http://code.google.com/intl/fr-FR/apis/analytics/docs/gdata/gdataReferenceDimensionsMetrics.html#m5InternalSearch
+
+It is highly possible that other statistics tools support such features. Having
+an open architecture with regard to search logging implementation would help
+supporting such alternative/complements.
+More information here : http://www.google.com/support/googleanalytics/bin/answer.py?hl=en&answer=75817

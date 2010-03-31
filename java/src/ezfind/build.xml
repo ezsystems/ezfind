@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+ -->
+
+<project name="ezfind-solr-extension" default="help">
+	
+  <property name="solr-path" value="../../solr" />
+  <property name="ezfind-java-path" value="../.." />
+  <property name="ezfind-src-path" value="./src/main/java/" />
+  <property name="dest" value="${solr-path}/lib" />
+  <property name="version" value="2.2" />
+  <property name="fullnamever" value="ezsystems-${ant.project.name}-${version}"/>
+	
+  <description>
+    eZ Find Solr extension.
+  </description>
+
+  <path id="common.classpath">
+      <!-- pathelement path="${classpath}"/ -->
+      <pathelement path="${java.class.path}"/>  	
+      <pathelement path="${dest}/classes" />
+  	
+  	  <fileset dir="${dest}/">
+         <include name="*.jar"/>
+      </fileset>
+  	
+      <!-- fileset dir="${dest}/" includes="*.jar"/>  	
+      <dirset dir="${dest}/">
+         <include name="*.jar"/>
+      </dirset -->
+  </path>
+  <property name="common.classpath" refid="common.classpath" />
+	
+  <!-- path id="test.classpath">
+    <path refid="common.classpath" />
+    <pathelement path="${dest}/classes" />
+    <pathelement path="${dest}/test-classes" />
+    <pathelement path="${java.class.path}"/>
+  </path -->
+
+  <target name="help"> 
+  	<echo>Welcome to eZ Find's solr extension repository!</echo>
+  	<echo>Use 'ant compile' to compile the source code.</echo>
+  	<echo>Use 'ant build' to compile the source code AND place it in the suitable location.</echo>
+  </target>
+	
+  <target name="clean">
+    <delete failonerror="false" file="${dest}/${fullnamever}.jar"/>
+  </target>
+
+  <target name="init">
+  	<mkdir dir="${dest}"/>	
+    <mkdir dir="${dest}/classes"/>
+    <!-- mkdir dir="${build.javadoc}" / -->
+    <!-- ant dir="../../" inheritall="false" target="compile" />
+    <ant dir="../../" inheritall="false" target="make-manifest" / -->
+  </target>
+
+  <target name="compile" depends="init">
+  	<!-- echo>
+  		| Source     : ${ezfind-src-path}  
+  		| Target     : ${dest}/classes/
+  		| Classpath  : ${common.classpath}
+  	</echo -->
+    <javac srcdir="${ezfind-src-path}" 
+    	   destdir="${dest}/classes/" 
+    	   debug="on">
+      <classpath refid="common.classpath"/>
+      <!-- include name="org/apache/solr/**" / -->
+      <!-- include name="org/ezsystems/**" / -->
+    </javac>
+  </target>
+
+  <target name="build" depends="compile"> 
+  	<echo>Jarring from ${dest}/classes</echo>
+  	<jar jarfile="${dest}/${fullnamever}.jar" basedir="${dest}/classes">
+  	</jar>
+  </target>
+
+  <!-- target name="compileTests" depends="compile">
+  	<solr-javac destdir="${dest}/test-classes"
+  	                classpathref="test.classpath">
+  	  <src path="src/test/java" />
+  	</solr-javac>
+  </target -->
+
+  <!-- target name="test" depends="compileTests">
+  	<mkdir dir="${junit.output.dir}"/>
+
+  	<junit printsummary="on"
+           haltonfailure="no"
+           errorProperty="tests.failed"
+           failureProperty="tests.failed"
+           dir="src/test/resources/"
+           >
+      <formatter type="brief" usefile="false" if="junit.details"/>
+      <classpath refid="test.classpath"/>
+      <formatter type="xml"/>
+      <batchtest fork="yes" todir="${junit.output.dir}" unless="testcase">
+        <fileset dir="src/test/java" includes="${junit.includes}"/>
+      </batchtest>
+      <batchtest fork="yes" todir="${junit.output.dir}" if="testcase">
+        <fileset dir="src/test/java" includes="**/${testcase}.java"/>
+      </batchtest>
+    </junit>
+
+    <fail if="tests.failed">Tests failed!</fail>
+  </target -->
+
+  <!-- target name="test-reports"
+          description="Generates HTML test reports.">
+    <mkdir dir="${junit.reports}"/>
+    <junitreport todir="${junit.output.dir}">
+      <fileset dir="${junit.output.dir}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${junit.reports}"/>
+    </junitreport>
+  </target -->
+
+  <!-- target name="dist" depends="build">
+    <mkdir dir="${solr-path}/dist/solr-cell-lib"/>
+    <copy file="build/${fullnamever}.jar" todir="${solr-path}/dist"/>
+    <copy todir="${solr-path}/dist/solr-cell-lib">
+      <fileset dir="lib"/>
+    </copy>
+  </target -->
+
+  <!-- target name="example" depends="build">
+    < Copy the jar into example/solr/lib  >
+    <copy file="${dest}/${fullnamever}.jar" todir="${example}/solr/lib"/>
+    <copy todir="${example}/solr/lib">
+      <fileset dir="lib">
+        <include name="**/*.jar"/>
+      </fileset>
+    </copy>
+  </target -->
+
+  <!-- target name="javadoc">
+   	<sequential>
+      <mkdir dir="${build.javadoc}/contrib-${name}"/>
+
+      <path id="javadoc.classpath">
+        <path refid="common.classpath"/>
+      </path>
+
+      <invoke-javadoc
+        destdir="${build.javadoc}/contrib-${name}"
+      	title="${Name} ${version} contrib-${fullnamever} API">
+        <sources>
+          <packageset dir="src/main/java"/>
+        </sources>
+      </invoke-javadoc>
+    </sequential>
+  </target -->
+
+
+</project>

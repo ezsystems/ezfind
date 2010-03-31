@@ -1,0 +1,17 @@
+Changes from 2.0.0beta1 to 2.0.0final - released 2009/02/19
+
+*Features:
+
+
+*Bugs:
+- fixed issue #014254: eZMatrix datatype is not searched
+- fixed issue #014111: Results that contain literal text can create strange output
+- fixed issue #014069: Fillter doesn't take care of content type when filtering on an attribute identifier
+- fixed issue #013615: eZ find doesn't index related objects
+- fixed issue #014248: Search.tpl bad google navigator parameters when using Facets
+- implemented enhancement #013710: crash while indexing related objects
+
+
+*Enhancements:
+
+- implemented enhancement #014070: "or" logic on filters, that would allow filtering on multiple content types or criterias

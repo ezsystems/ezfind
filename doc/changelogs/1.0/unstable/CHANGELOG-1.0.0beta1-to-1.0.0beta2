@@ -1,0 +1,11 @@
+Changes from 1.0.0beta1 to 1.0.0beta2
+
+
+*Bugfixes:
+- Fixed issue #11603: replace mktime() with time().
+- Fixed issue #11604: Error in Solr request.
+- Fixed issue #11617: Publishing times out on Windows when Solr is not running.
+- Fixed issue #11673: Add isolatin1 filter to standard text analysis
+- Fixed issue #11796: Information about bin/php/ezpgenerateautoloads.php missing 
+  from installation documentation.
+  ( Merged from stable/1.0 rev. 2034 )

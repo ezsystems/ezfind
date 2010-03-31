@@ -1,0 +1,69 @@
+==================================================
+How to build the Solr extensions used in eZ Find ?
+==================================================
+
+.. sectnum::
+.. contents::
+
+
+**IMPORTANT NOTE** : Building the extensions is NOT mandatory for being able to
+use eZ Find. The pre-built jar files are shipped with eZ Find.
+
+Introduction
+============
+
+This little note explains how to build the Solr extensions used in eZ Find.
+In effect, a few additions were necessary to make the integration of Solr in eZ Publish complete.
+
+
+Prerequisites
+=============
+
+You need to have the Ant_ utility installed and available to the user you are logged-in with.
+
+.. _Ant: http://ant.apache.org/
+
+You will then need to get Solr's libraries ( jar files ). Here is how you can proceed :
+
+* Checkout Solr's trunk :
+
+::
+
+ > svn checkout http://svn.apache.org/repos/asf/lucene/solr/trunk
+
+* Navigate inside Solr's trunk. Build the distribution :
+
+::
+
+ ant clean
+ ant compile
+ ant dist
+
+You might encounter errors at compile time. Although very unlikely, if this should this be the case, try to reproduce the same procedure in one of the stable branches.
+If you prefer a **very safe** approach, build the exact same version as the one
+shipped with eZ Find.
+
+* The jar files are created in the ``dist`` repository, right under your build root.
+  Move the jar files named ``apache-solr-*`` in your eZ Find extension : ``extension/ezfind/java/solr/lib/`` ( path given from eZ Publish's root ). The ``lib`` directory inside Solr's home may not exist. Create it.
+
+
+Building
+========
+
+* Navigate to the ``extension/ezfind/java/src/ezfind`` directory
+* Run ``ant`` for explanations. ``ant build`` is what you need to do. You should now see the file ``ezsystems-ezfind-solr-extension-<version>.jar`` in the ``extension/ezfind/java/solr/lib/`` directory.
+
+Then load/reload Solr, so that these new extensions are taken into account.
+Shutdown the service the usual way, and restart it.
+
+
+Testing
+=======
+
+To test whether the new extensions were actuall taken into account, resolve the following URL in a browser :
+
+::
+
+ http://localhost:8983/solr/select?q=&qt=ezfind
+
+You may need to adjust the hostname and the port.

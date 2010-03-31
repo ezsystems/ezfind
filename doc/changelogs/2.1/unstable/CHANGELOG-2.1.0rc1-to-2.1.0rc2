@@ -1,0 +1,10 @@
+Changes from 2.1.0rc1 to 2.1.0rc2
+
+*Features:
+
+- Implemented enhancement #015516: Not possible to clear whole Solr index
+
+*Bugs:
+
+- Fixed bug #015506: MaxQueryTerms setting in ini file not considered due to typo
+- Fixed bug #015507: MoreLikeThis objects are displayed on the wrong order

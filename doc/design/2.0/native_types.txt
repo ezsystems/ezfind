@@ -1,0 +1,87 @@
+eZ Find - Authentication, Design
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:Author:   Kåre Køhler Høvik
+:Revision: 
+:Date:     
+
+
+Introduction
+============
+
+Description
+-----------
+
+All content indexed in eZ Find today is index as strings. This limits both the 
+quality of the search result, and possibilities of the search. To enhance the 
+search functionality, native datatypes should be used where possible.
+
+
+Design
+======
+
+Classes
+-------
+
+ezfSolrDocumentFieldBase
+^^^^^^^^^^^^^^^^^^^^^^^^
+Default class  defining functions needed to extract data needed for the 
+indexing process.
+
+
+Implementation
+==============
+
+ezfSolrDocumentFieldBase
+------------------------
+
+Default Document field class containing the required functions for accessing the 
+data to index a document field. 
+Functions:
+
+getData()
+Returns the data to index. Return type is a hash , format <field_name> =>
+<value>. The solr document might specify a prefix which should be used for the
+field name. 
+
+getCollectionData()
+Return collection list. Returns empty array if isCollection() is false.
+Return value array.
+
+isCollection()
+Returns true if is collection. Return value false.
+
+getFieldType()
+Returns the name of the field type from the SOLR schema.
+
+getFieldName( <eZContentClassAttribue> )
+Returns the field name for a specified content class attribute.
+
+instance()
+Returns instance of ezfDocumentFieldBase or sub-class. Takes
+eZContentObjectAttribute as parameter.
+
+Loading ezfSolrDocumentFieldBase sub-class
+------------------------------------------
+
+Defining the field types are done 2 ways.
+* Simple types are defined in configuration files ( ini ). Example:
+  [SolrIndexMap]
+  Map[eztext]=text
+  Map[ezinteger]=sint
+  etc..
+* Custom data types may extend the ezfSolrDocumentFieldBase class. This may be
+done to achive propper mapping of data to the Solr index. Loading 
+ezfSolrDocumentFieldBase sub-classes should be ini based. An ini file will 
+define custom eZContentObjectAttribute->attribute( 'data_type_string' ) to 
+ezfSolrDocumentFieldBase sub-class mapping. ezfSolrDocumentFieldBase
+sub- classes will be loaded using the eZExtension::findExtensionType() function
+to load the requested plugin.
+
+
+
+..
+   Local Variables:
+   mode: rst
+   fill-column: 79
+   End:
+   vim: et syn=rst tw=79 nocin

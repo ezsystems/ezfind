@@ -1,0 +1,21 @@
+Changes from 2.1.0final to 2.2.0-beta2
+
+*Features:
+- Implemented enhancement #15969: Enhance highlighting with configuration parameters in ezfind.ini
+- Implemented enhancement #15682: Change Facet terminology
+- Implemented enhancement #15680: Change help text to make it more corporate
+- Improved conformance with w3c standards (verified with HTML validator)
+- Deprecated ezfind::search ezjscore server call, use unified ezjsc::search instead
+- Implemented enhancement: basics for explicit distributed search
+
+*Bugs:
+- Fixed bug: wrong sql file for creating elevation data table for oracle
+- Fixed bug #15715: bad sql query with elevate and oracle
+- fixed bug #15562: postQuery and utf-8
+- fixed bug #16314: Simple test with products is not indexed
+- fixed bug #15993: Boost functions not implemented/removed from eZFind 2.1
+- Fixed bug #16278: Schemafile for postgresql is incorrect (multiple primary keys)
+- Fixed warning "Unknown content class identifier ''" when $classIDArray is default value (false)
+- Fixed bug #16278: Schemafile for postgresql is incorrect (multiple primary keys)
+- Fixed bug #16301: TC-32 - There is a hidden link in "Elevation Details" result
+- Fixed bug #15648: Problem with the ajax search in the Front Page editing of eZ Flow, when eZ Find is activated

@@ -1,0 +1,80 @@
+=========================================================
+Better filtering, faceting, sorting with dedicated fields
+=========================================================
+
+:Author:   Paul Borgermans
+:Version: 1.0 draft
+:Revision: $Rev$
+:Date: $Date$
+
+.. sectnum::
+.. contents::
+.. NOTE : for a better reading experience, convert me to HTML with rst2html.
+
+Introduction
+============
+
+Currently, attributes are analyzed into (usually) a single field.
+
+However, faceting, sorting, and filtering have different (analysis) needs than
+regular searching. Sorting can also only be done on Solr single valued fields.
+
+
+Related issues
+==============
+
+http://issues.ez.no/IssueView.php?Id=15423&activeItem=22
+http://issues.ez.no/IssueView.php?Id=15164&activeItem=21
+http://issues.ez.no/IssueView.php?Id=14215&activeItem=1
+
+http://project.issues.ez.no/IssueView.php?Id=6413
+
+Possible on the fly refactoring: removing the short form suffixes
+=================================================================
+
+Motivation: the schema changes involve change in the suffixes used in the Solr
+fields. In the current implementation, these suffixes are actually short forms
+of (unique) identifiers in Solr schema.xml
+
+The refactoring involves the removal of these short form identifiers, and replace them
+by their full equivalent.
+
+Advantages:
+
+* this improves the readability of debug and diagnostic tools
+* removes a translation step on the PHP side (reduces overhead)
+* offers the possibility for more fine-tuning and customisation
+  without needing changes in the code
+
+Disadvantages:
+
+* needs a reindex of all objects
+* when raw filters are used (templates), these need to be adapted to the
+  new suffixes
+
+
+
+Solution overview
+=================
+
+Have the option (settings) to configure an attribute/datatype to be analyzed into
+dedicated ways for searching on one hand and faceting/sorting/filtering on the other
+
+Provide more field types in the API and schema.xml to accomodate:
+
+- simple strings
+- numerical (int, float, currency/price, ...)
+- date/time
+
+This also with variations into multivalued/monovalued indexing
+
+Let the sort/filter/facet and search API's take these settings into account
+
+
+Details
+=======
+
+* update 1.4 solr.war, many late bug fixes related to trie fields and faceting,
+  sorting
+* date, int, float to use trierange types for filtering, faceting, sorting
+*
