@@ -1,0 +1,116 @@
+eZ Find - Sub attribute filtering, Design
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:Author:   Bertrand Dunogier, Nicolas Pastorino
+:Revision: 1.0
+:Date: 01/05/2009
+
+.. sectnum::
+.. contents::
+.. NOTE : for a better reading experience, convert me to HTML with rst2html.
+
+
+
+CURRENT IMPLEMENTATION
+======================
+When an object with a related object is indexed, the related objects are fetched,
+and their metadata are concatenated to one big string. The indexed object is
+most likely (FIXME: check) the main language of the siteaccess the object is
+published from.
+
+USE CASES
+=========
+
+Fulltext search
+---------------
+When searching for "foo", eZ find should return objects who have a relation to
+another object which has the text "foo".
+
+Specific attribute search
+-------------------------
+It is currently possible to filter results on a <content_class>/<attribute> base.
+It should be possible to go one level deeper in attribute filtering :
+<content_class>/<attribute>/<sub_attribute>.
+
+This lack is limiting in some cases where the search-user wants to span filtering
+out of the object's scope. It is particularly relevant in eZ Find since eZ Publish
+deployers make an extensive usage of object relations.
+
+Take the following structure :
+Article/Image ---- ( is related to ) ---> Image --- ( has attribute ) ---> Caption
+Problem : I can not retrieve articles based on the metadata ( caption ) embedded
+in their media assets.
+
+ISSUES
+======
+Depth level
+-----------
+This issue typically arises for object relation attributes. An attribute may have subattributes, which in turn have subattributes.
+Should the depth level be configurable ? 
+Should it be set to 1, period ?
+Having it higher than 1 may decrease search relevancy at all, except if boosting is correctly handled. 
+Example :
+A -- ( is related to ) --> B -- ( is related to ) --> C -- ( is related to ) --> D 
+Only D out of the 4 objects contains the text 'eZ Systems'. Searching for 'eZ Systems' in full text mode will return A too
+while A is semantically far away from D. It could be possible to not copy the
+subattributes in the default search field, making them *not* available in full
+text search, but making them available in filtered searches (
+objectA/attributeB/attributeC:blah ) 
+
+
+Languages
+---------
+When indexing related objects, current settings won't let us determine what
+language has to be used to index related objects.
+
+3 sites languages, fre-FR, ger-DE, eng-GB.
+fre-FR siteaccess, lang priority: fre-FR, ger-DE, eng-GB.
+backoffice in english by default.
+
+An object A is created in fre-FR, related to B, in ger-DE and eng-GB.
+
+ * Issue 1: How can eZ find know that it has to index the related object data in ger-DE and not in eng-GB ? This information belongs to each siteaccess...
+ * issue 2: Admitting that Issue 1 is fixed, what happens if B is edited, and fre-FR is added ? Do we have to reindex A, since the indexed content has changed (translation of related content added).
+
+Permissions
+-----------
+Each related object may have its own set of permissions. When looking into
+relations, should we also index related objects permission informations ? If yes,
+how do we end up testing these permissions on related objects ?
+
+qf parameter
+------------
+When searching, Solr needs to be instructed as to which fields to perform the
+search on. The parameter is called 'qf' when using a dismax-like handler, while
+when using the standard search handler all search fields are passed in the 'q'
+parameter. This list needs to be inferred from the existing content classes.
+When using subattributes, the subfields need to be passed in this list too. For
+most of the datatypes containing subfields, the list of subattributes is fixed.
+An issue arises when using dynamic subattributes, like in the case of
+'ezobjectrelation' and 'ezobjectrelationlist' datatypes. For the latter, the
+authorized content classes can be restricted, optionnally, which solves the
+issue in this specific case. In other cases ( 'ezobjectrelation' or
+'ezobjectrelationlist' with no class limitation ), the list of all possible
+subattribute field names must be created. Its volume is the sum of all field
+sets, a field set being all attributes of a content class.
+
+An optimization of this calculation could be to infer from the 'ezcontentobject_link' table 
+which content classes are actually "related" to another one.
+
+
+DESIGN NOTES
+============
+Ideas
+-----
+* Fields are currently prefixed by : 
+  - attr_
+  - meta_
+  Adding a new prefix for subattributes ( 'subattr_' ) could allow
+  subattribute-specific behaviours in Solr's configuration ( copyField for ex.
+  ). It also prevent name conflicts.
+
+Check the design doc 'native_types.txt'
+
+
+Tasks
+-----
+* remove useless and over engineered methods in ezfSolrDocumentFieldName

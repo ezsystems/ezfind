@@ -1,0 +1,140 @@
+#!/bin/bash
+#
+# eZ Find init script for RHEL and CENTOS.
+# 
+# Usage:
+# 
+# Set the correct SOLR_HOME value, and copy this file to /etc/init.d
+# Symlink to /etc/init.d/solr to /etc/rc3.d/S70solr and /etc/rc5.d/S70solr
+#
+# Example:
+# cp solr /etc/init.d/solr
+# cd /etc/init.d && chmod 755 solr
+# cd /etc/rc3.d && ln -s ../init.d/solr S70solr
+# cd /etc/rc5.d && ln -s ../init.d/solr S70solr
+# cd /etc/rc3.d && ln -s ../init.d/solr K70solr
+# cd /etc/rc5.d && ln -s ../init.d/solr K70solr
+
+DESC="Solr indexing server"
+NAME=solr
+SOLR_HOME= # Set solr home here (example: /var/www/ezpublish/extension/ezfind/java)
+JAVA_HOME= # Set java home here if java is not available in /usr/bin/java or /usr/local/bin/java
+
+source /etc/rc.d/init.d/functions
+
+for JAVA in "$JAVA_HOME/bin/java" "/usr/bin/java" "/usr/local/bin/java"
+do
+	if [ -x $JAVA ]
+        then
+		break
+	fi
+done
+if [ ! -x $JAVA ]
+then
+	echo "Unable to locate java. Please set JAVA_HOME environment variable."
+	exit
+fi
+
+RETVAL=0
+
+d_start() {
+    CURRENT_DIR=`pwd`
+    cd $SOLR_HOME
+    daemon --check $NAME --pidfile /var/run/solr.pid nohup $JAVA -jar start.jar > /dev/null 2>&1 &
+    RETVAL=$?
+    sleep 1 # Sleep 1 second, to make sure java is registered.
+    pid=`pidof java`
+    echo $pid > /var/run/solr.pid
+    cd $CURRENT_DIR
+    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$NAME
+    return $RETVAL
+}
+
+d_stop() {
+    killproc -p /var/run/solr.pid $NAME >> /dev/null 2&>1
+    RETVAL=$?
+    [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/$NAME
+    return $RETVAL
+}
+
+d_restart() {
+    d_stop >> /dev/null 2&>1
+    sleep 1
+    d_start >> /dev/null 2&>1
+}
+
+d_reload() {
+    killproc -p /var/run/solr.pid $NAME -HUP 2&>1
+    RETVAL=$?
+    return $RETVAL
+}
+
+d_status() {
+    status -p /var/run/solr.pid $NAME >> /dev/null 2&>1
+    return $?
+}
+
+case "$1" in
+  start)
+    echo " * Starting $DESC ($NAME)"
+    d_status
+    if [ $? -eq 0 ]
+    then
+      echo "   ...already running."
+    else
+      if d_start
+      then
+        echo "   ...done."
+      else
+        echo "   ...failed."
+        RETVAL=1
+      fi
+    fi
+    ;;
+  stop)
+    echo " * Stopping $DESC ($NAME)"
+    if d_stop
+    then
+      echo "   ...done."
+    else
+      echo "   ...failed."
+      RETVAL=1
+    fi
+    ;;
+  restart)
+    echo " * Restarting $DESC ($NAME)"
+    d_status
+    if [ $? -ne 0 ]
+    then
+      echo "   ...not running."
+      RETVAL=1
+    else
+      if d_restart
+      then
+        echo " * ...done."
+      else
+        echo " * ...failed."
+        RETVAL=1
+      fi
+    fi
+    ;;
+  reload)
+    echo " * Reloading $DESC ($NAME): "
+    d_reload
+    echo "   ...done."
+    ;;
+  status)
+    d_status
+    if [ $? -eq 0 ]
+    then
+      echo " * $DESC ($NAME) is running"
+    else
+      echo " * $DESC ($NAME) is not running"
+    fi
+    ;;
+  *)
+    echo $"Usage: $0 {start|stop|restart|reload|status}"
+    RETVAL=1
+esac
+
+exit $RETVAL

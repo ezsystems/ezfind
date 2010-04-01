@@ -1,0 +1,101 @@
+eZ Find - Enhanced Multilanguage support, Design
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:Author:   Nicolas Pastorino
+:Revision: 1.0
+:Date: 06/01/2009
+
+.. sectnum::
+.. contents::
+.. NOTE : for a better reading experience, convert me to HTML with rst2html.
+
+
+Introduction
+============
+
+Description
+-----------
+
+Currently, one single index is used to store the indexed content from a given
+content base. Documents contains the following fields, depicting their
+language/localisation status :
+
+* ``meta_language_code_s`` : the language code of the current document
+* ``meta_available_language_codes_s`` : the list of language codes in which the
+  content object exists
+
+Solr's configuration is centralized in the two main files :
+
+* solrconfig.xml
+* schema.xml
+
+containing, among other, the <fieldType> definitions, with, for each of them,
+the list of <analyzer>s and <filter>s. These 2 elements may contain semantic
+processing, which are currently not applied per-language, by design.
+Having the possibility to have per-language processing would let us : 
+
+* increase the built-in Spellcheck's relevancy
+* use synonyms list per language
+* use stopwords list per language 
+
+Any per-language customization shall increase the global relevancy of Solr as
+search engine for eZ Publish. This is made possible through having several
+cores, one per language. Every core can then easily contain specific settings,
+applied to one single language.
+
+
+
+Design
+======
+.. TODO
+
+Multicores in Solr
+------------------
+Using Solr in a multicore setup ( [1_] ) allows for having different configuration
+files, and different processings too.
+
+Updating through language-cores, querying through one single ``select`` core
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+It seems possible to have one single index used by several cores ( 4_ ).
+
+**Issue** :
+
+What is the effect of having one index and several core ? Will all analyses work
+correctly, both for query-time and index-time ? The list of analyzers for a
+fieldType can be broken down ( in schema.xml ) into the ones applied at
+index-time and the ones applied at index-time. Language-specific processing may
+occur at both places, which dismisses the option of querying all documents
+through one single, dedicated core.
+
+
+Updating and querying through language-cores
+''''''''''''''''''''''''''''''''''''''''''''
+**Issue** : 
+
+How to search several cores simultaneously? This would happen when search results
+localization must match the site.ini[RegionalSettings].SiteLanguageList[] ( when
+ezfind.ini[LanguageSearch]SearchMainLanguageOnly = disabled ).
+Do search results need to be merged ? If yes : How ? Client-side or inside Solr
+? How is relevancy handled in this case ?
+
+
+Migration notes
+---------------
+.. TODO
+
+References
+==========
+.. _1:
+
+[1]: http://wiki.apache.org/solr/MultiCore
+
+.. _2:
+
+[2]: http://wiki.apache.org/solr/CoreAdmin
+
+.. _3:
+
+[3]: http://wiki.apache.org/solr/MultipleIndexes
+
+.. _4:
+
+[4]: http://www.nabble.com/Sending-queries-to-multicore-installation-td19486412.html#a19489077

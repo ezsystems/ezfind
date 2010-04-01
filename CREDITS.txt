@@ -1,0 +1,6 @@
+eZ Systems would like to thank the following active contributors, 
+whose work inspired early versions of eZ Find :
+
+* Kristof Coomans <kristof[dot]coomans[at]telenet[dot]be> on http://projects.ez.no/ezsolr
+* Paul Borgermans <pb[at]ez[dot]no> ( when not employed yet by eZ Systems )
+* SCK-CEN as a legal entity <http://www.sckcen.be/>

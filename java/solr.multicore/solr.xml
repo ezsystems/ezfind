@@ -1,0 +1,7 @@
+<solr persistent="true" sharedLib="lib">
+  <cores adminPath="/admin/cores">
+    <core name="eng-GB" instanceDir="eng-GB" />
+    <core name="fre-FR" instanceDir="fre-FR" />
+    <core name="nor-NO" instanceDir="nor-NO" />
+  </cores>
+</solr>

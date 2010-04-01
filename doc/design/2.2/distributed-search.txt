@@ -1,0 +1,18 @@
+On the fly refactoring: aggregator fields
+=========================================
+
+Define more aggregator fields and make them configurable in ezfind.ini
+
+This speeds up searching in general and allows for multi-core searching with
+possible different information sources
+
+Note: these are not the final field names
+
+* id (will be copied to from current ezfind unique id)
+* date_modified
+* date_created
+* author
+* uri
+* tags
+* name/title/any short field(s)
+* body

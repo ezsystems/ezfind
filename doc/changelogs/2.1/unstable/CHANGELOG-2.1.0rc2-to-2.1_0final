@@ -1,0 +1,11 @@
+Changes from 2.1.0rc2 to 2.1.0final - released 2009-09-28
+
+*Features:
+
+
+*Bugs:
+
+- fixed bug QA: highlighting fields are not expanded into a string, standard search did not specify highlight field
+- fixed bug QA: reverted fix for #015435: Debug shows error when you don't add SearchContentClassID param to your search as this caused the qf list to be too short
+- fixed bug QA: highlighting was no activated for range, wildcard, fuzzy searches in "standard" search
+- fixed bug #015554: Missing linebreak in schema files

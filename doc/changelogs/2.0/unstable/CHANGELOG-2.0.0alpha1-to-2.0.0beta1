@@ -1,0 +1,32 @@
+Changes from 2.0.0alpha1 to 2.0.0beta1
+
+*Features:
+- API: small one, related to enhancement requuests: added more flexibility in the API to
+  allow more control on optimize and commit
+- more like this tuning, returning the list of used keywords (part 1)
+- preparing boost functions at query time
+
+
+*Bugs:
+
+- implemented enhancement #013932: commit() is slow due to spellchecker configuration (in combination with very large indexes)
+- implemented enhancement #013794: Need controll of optimize() (added new config parameter and adapted the API) 
+- fixed bug #013889: /bin/php/updatesearchindexsolr.php doesn't index all objects
+- changed "minimum must match" definition in solrconfig.xml (rev 3315)
+- fixed bug	#013351: rhel service script searches for a JAVA_HOME var, but then uses simply "java"
+- fixed bug #013959: Incorrect date formatting on win32
+- implemented enhancement #012766 No timeout is set on socket connections from ezfind to solr
+- implemented enhancement #013795: eZSolrBase::addDocs() should check if solr returns error (via VL)
+- fixed bug in the comments of issue #012864 (policy limitation does not work): array_pop instead of array_shift
+- implemented bug/enhancement #014042: Undefined indexes in ezsolr.php when publishing objects (via VL)
+- fixed bug #014112: ironic typo in search.tpl
+- fixed part of bug #014111: Results that contain literal text can create strange output. schema.xml will not tokenize, but html constructs are still returned in highlight snippets
+- changed error into normal debug message when facet fields are missing
+- implemented correct implementation for bug #013889: /bin/php/updatesearchindexsolr.php doesn't index all objects, using array() as limitation instead of false
+- changed search heuristic that should not be there so only string/text fields are searched
+- corrected integer declaration to int in schema.xml
+- corrected bug #014435: Allow for RANGE queries (quotes were added, creating an invalid expression for range queries)
+- corrected bug #014472	Typos, in "more like this" filter and facet parameters
+- corrected bug #014068: Filter definition must be an array in ezfind fetch, although documentation seems to allow string definition
+- fixed bug #014253: problem with limitation (and also added visibility parameter)
+- implemented workaround for bug #013676: Updating Visibility of a node doesn't change search result

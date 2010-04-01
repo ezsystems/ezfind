@@ -1,0 +1,283 @@
+eZ Find - Elevate support, Design
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:Author:   Nicolas Pastorino
+:Revision: 1.0
+:Date: 16/01/2009
+
+.. sectnum::
+.. contents::
+.. NOTE : for a better reading experience, convert me to HTML with rst2html.
+
+
+Introduction
+============
+
+Description
+-----------
+
+Add elevate support to eZ Find. Read this for low-level info about how it is
+supported in Solr : [1_].
+
+Excerpt :
+ "The QueryElevationComponent enables you to configure the top results for a 
+ given query regardless of the normal lucene scoring. This component matches 
+ the user query text to a configured Map of top results."
+
+
+
+Design
+======
+
+Solr side
+---------
+The elevate feature takes the form of a searchComponent in solrconfig.xml. It
+needs to be added as a 'last-components' in the requestHandler dedicated to
+eZFind, called 'ezpublish'. Right after spellcheck in the current state of
+eZFind.
+
+The elevator configuration provided as example in the current solrconfig.xml is
+suited to the usage we might have of it. For details on the configuration
+directives, refer to [1_].
+
+
+eZ Publish side
+---------------
+
+The idea is to be able to associate query words to a given content object, so
+that it is elevated when a query exactly containing these keywords is
+performed. It must also be possible to make sure an object is not returned as
+search result when a specific query is made ( ``<doc id="B" exclude="true" />`` ).
+Note : support for negative Elevation as explained above will be added in a
+second phase.
+
+A global eZFind dashboard in the administration interface could be
+the place to achieve this. Alternatively/jointly, a new action on every content
+object could satisfy this need, either as a button in the full view of the
+object, either as a new action in the Javascript menu of every Object/node.
+
+The default sort parameter passed from eZFind ( 'score desc' ) does not collide
+with the elevate function. However, when another sort parameter is passed,
+elevate's behaviour is overridden by the sort method ( [2_] ). If elevate should
+be applied whatever the sort parameter is, a new parameter must be passed as
+parameter in the query ::
+
+ forceElevation=true
+ ( supported from Solr@rev:735117 at runtime )
+
+This parameter should be added to the search() method of the search plugin, and
+all overlying fetch functions.
+
+
+Syncing the elevate configuration
+---------------------------------
+
+Priming elevate.xml
+'''''''''''''''''''
+``elevate.xml`` will be placed, with an empty configuration, in java/solr/conf.
+By default, from ezfind 2.0aplha, the index directory is placed in /srv/solr.
+Before lauching solr the first time, a manual installation step is to move elevate.xml in the dataDir.
+The dataDir can be found in the following configuration directive in
+solrconfig.xml in ``<dataDir>${solr.data.dir:/srv/solr}</dataDir>``
+
+
+Syncing
+'''''''
+
+Solr uses an XML configuration file ( elevate.xml ). A few constraints increase
+the difficulty-level of this task : 
+
+1. Solr can be running on a different machine than the one running eZ Publish
+2. Solr needs to be relaunched for the new configuration to be loaded.
+
+**Phase 1**
+
+A direct update of the local configuration file. Constraints :
+
+* Solr must be running on the same machine as the eZ Publish instance.
+* Write access on elevate.xml is required.
+* The actual path to elevate.xml needs to be known of eZ Publish. This could be provided as a configuration directive if needed.
+
+**Phase 2**
+
+A solution satisfying point 1. above shall be implemented : pushing the configuration in Solr through ReST. 
+This implies developing a custom requestHandler in Solr, taking as input the updated elevate.xml file ( POST ), 
+replacing it, and reloading the configuration. Possible security issue here. Low impact.
+
+Another solution based on rsync was envisaged at some point. Due to the utility
+of having an eZFind-dedicated, extensible requestHandler in the Solr version we
+ship, this solution was put aside.
+
+
+Configuration storage
+'''''''''''''''''''''
+A new table, dedicated to storing the elevate configuration, is required.
+
++----------------+-------------------+---------------+
+| search_query   | contentobject_id  | language_code |
++================+===================+===============+
+| foo bar        | 73                | eng-GB        |
++----------------+-------------------+---------------+
+| foo bar        | 83                | eng-GB        |
++----------------+-------------------+---------------+
+| foo            | 69                |  \*    // all |
++----------------+-------------------+---------------+
+| bar            | 100               | fre-FR        |
++----------------+-------------------+---------------+
+| bar            | 100               | eng-GB        |
++----------------+-------------------+---------------+
+
+Datatypes :
+
+* search_query : VARCHAR( 255 ). This might be way too large, but prevents us from having issues. Might be shrinked down to a shorter value when the typical use-cases are nailed down, helping us define the maximum size.
+* contentobject_id : INT(11) ( just like in ezcontentobject )
+* language_code : VARCHAR(20) ( like in ezcontentobject_attribute )
+
+
+Primary key : 
+
+* search_query + contentobject_id + language_code
+
+Indices : 
+
+* search_query
+* more indeces shall be added if the performances are not satisfactory.
+
+**Open questions :**
+
+* Case-sensitivity ?
+
+**Class diagram**
+
+.. image:: ./Elevate_support_in_eZFind.jpg
+   :scale: 100
+   :alt: Elevate support in eZFind
+
+**Sequence diagrams**
+
+.. image:: ./Generating_the_configuration_and_pushing_it_to_Solr.jpg
+   :scale: 100
+   :alt: Generating the configuration and pushing it to Solr
+
+
+How to make sure Solr is taking the updated conf into account ?
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+**Phase 1**
+
+In a first phase, placing elevate.xml in the dataDir and triggering a commit to
+reload the elevate configuration will be implemented.
+
+**Phase 2**
+
+If elevate.xml is stored in the configuration directory, a manual relaunch of Solr is required. 
+An existing core admin request handler seems to be existing ( [3_] ). It would
+allow for an automatic config reload without interrupting the service at all.
+The folowing modifications would be required in order to be able to use the
+core administration : 
+
+1. Add a multicore configuration file ``ezfind/java/solr/solr.xml``, containing for instance 
+
+::
+
+   <solr persistent="true" sharedLib="lib">
+        <cores adminPath="/admin/cores">
+                <core name="ezfind" instanceDir="." />
+        </cores>
+   </solr>
+
+
+
+2. Append the name of the solr core to ``solr.ini[SolrBase].SearchServerURI``
+   as well as in the default parameter value in ``eZSolrBase::eZSolrBase(..)`` :
+
+:: 
+ 
+ http://localhost:8983/solr/ezfind/
+
+3. Here is a code snippet which actually reloads a Solr core : 
+
+::
+
+   $solr = new eZSolrBase( 'http://localhost:8983/solr/' );
+   $params = array( 'fake' => 'param' );
+   $solr->rawSolrRequest( 'admin/cores?action=RELOAD&core=ezfind', $params ); 
+
+
+Possible security here ( DOS / relatively low impact ).
+
+**Phase 2, alternative**
+
+Leveraging the requestHandler dedicated to uploading a new conf is an option.
+This requestHandler could take care of reloading the configuration once it was updated.
+
+
+Elevate Dashboard
+-----------------
+
+The elevate configuration will be available from all places where the eZFind
+configuration is to be available :
+* Tree menu ( left column ) : javascript left-click menu
+* Subitems list ( form a node's full view  ) : javascript left-click menu
+* Dedicated tab in the back-office.
+
+
+The following functions should be accessible through the GUI :
+
+1. Associate elevate keywords to a given object, for one, several or all languages.
+2. Search for all objects elevated by given keywords, for one or all languages.
+
+
+**GUI design**
+
+.. image:: ./elevate_dashboard.jpg
+   :scale: 100
+   :alt: Elevate dashboard GUI design
+
+
+**Ideas**
+
+* Smoothen the ergonomy with ajax-based actions : 
+
+  - search field to retrieve an object. Re-use the one used in eZFlow ?
+  - autocomplete on the Search query field
+
+
+**Questions**
+
+* Must we support full accessibility ( ie : no javascript at all ) ?
+
+
+Migration notes
+---------------
+Adding support for elevate does not require a full re-indexing. Upgrading
+eZFind, taking over the former index data, and relaunching the Solr service is
+sufficient.
+Should the configuration be stored on another machine, the configuration will
+need to be initialized locally ( DB, local file, depending on the decision made
+above ).
+
+NB : the sql script creating the configuration storage table will have to be
+run, unless an automatic creation is chosen.
+
+Known issues
+============
+
+* If an object has been elevated for 'all' languages, and one adds a translation to it, the configuration must be synchonized.
+  Possible workarounds :  
+  - post publish workflow, doing the job.
+  - have a cronjob synchronize the configuration regularly
+
+
+References
+==========
+.. _1: 
+
+[1]: http://wiki.apache.org/solr/QueryElevationComponent
+
+.. _2:
+
+[2]: http://wiki.apache.org/solr/QueryElevationComponent#head-535ffbfce5188a06ddf41be36034c479a328f0d1
+
+.. _3:
+
+[3]: http://wiki.apache.org/solr/CoreAdmin#head-3f125034c6a64611779442539812067b8b430930

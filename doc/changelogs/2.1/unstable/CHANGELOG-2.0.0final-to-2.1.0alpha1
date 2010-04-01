@@ -1,0 +1,25 @@
+Changes from 2.0.0final to 2.1.0alpha1
+
+*Features:
+- Implemented #014036: Elevate support
+- Implemented #013894: inid.d/solr start doesn't output anything
+- Implemented #014725: Add an optimize index cronjob
+- Implemented #014357: ezFind 2.0.0pre svn publish_date ignored
+  Added the publish_date parameter for fetch(ezfind, search)
+- Implemented #014807: add support for object states
+- Implemented #014733: eZ Find elevate admin templates needs tidying up
+- Implemented #014849: Implement missing methods introduced with eZP4.1
+
+
+*Bugs:
+- Fixed bug #14562: SearchMainLanguageOnly setting ignores disabled setting
+- Fixed bug #14357: ezFind 2.0.0pre svn publish_date ignored
+- Fixed bug #14551: fixed cronjob ezfindexcontent.php, and removed index optimization from this cronjob
+- Fixed bug #14726: Class filtering on a standard content search is broken when parameter is given as a class identifier array
+- Fixed bug #14539: Copyright violation - ezsolr
+- Fixed bug #14960: Main URL alias always presented in search results, even when a subtree filter is applied
+- fixed wrong charset declaration in cronjob.ini.append.php
+- fixed bug #014958: Wrong operator usage in example_morelikethis_article.tpl
+- fixed bug #014845: strict warning in ezfezpsolrquerybuilder.php
+- fixed bug #015044: When an object is removed, or a translation of the latter, the elevation configuration is not udpated.
+- fixed bug #014502: cannot disbale spellcheck in ezfeZPSolrQueryBuilder::buildSearch

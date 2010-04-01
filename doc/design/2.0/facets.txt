@@ -1,0 +1,120 @@
+eZ Find - Facets, Design
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:Author:   Kåre Køhler Høvik
+:Revision: 
+:Date:     
+
+
+Introduction
+============
+
+Description
+-----------
+
+The primary use for faceting is drilldown into a subset of hits resulting from 
+a query. The chosen facet value is used to construct a filter query which 
+literally matches that value in the index.
+
+This must be as easy as possible to set up for developers, meaning it should 
+be controlled from the design templates. If no facets are defined, class will
+be used.
+
+
+Design
+======
+
+An eZ Publish specific query builder should be buildt as part of this feature. 
+The query builder should be based on the code in 
+extension/ezfind/search/plugins/ezsolr/ezsolr.php , but include a more general
+interface.
+
+This feature should also contain a custom fetch function to be able to specify
+facets and future features. Suggested syntax;
+fetch( ezfind, search, <params> );
+
+Suggested facet parameters:
+facet.field - Specifies a specific field which should work as a facet. This is
+              specified by <class_identifier>/<class_attribute>[/<sub_structure]
+              The substructure is only availble for complex data types. To enable
+              <sub_structure> support, support for native indexing must implement
+              this ( See design for indexing native types ).
+              Other fields supported:
+              - author - eZ Publish content object author.
+              - class - eZ Publish content class.
+              - translation - Translation.
+facet.prefix - Limits the facet fields to only list facets where the field value
+               starts with <facet.prefix>
+facet.sort - Sort by 'count' or 'alpha'. 'alpha' will sort the facet results by 
+             field value, alpha-numerical.
+facet.limit - Maximum number of facets. Default value is 20.
+facet.offset - Offset, default value 0.
+facet.mincount - Return only facets with more results than <facet.mincount>.
+                 Default value 0.
+facet.missing - If set to true, the facet count will include empty results. 
+                Default value false.
+facet.date.start - Start date for facet.  
+facet.date.end - End date for facet.  
+facet.date.gap - Size of date range.  
+facet.date.hardend - See [1].  
+facet.date.other - See [1].
+
+One query may include multiple facets. This is supported by using nested arrays.
+Example, 1 facet:
+fetch( ezfind, search, hash( 'query', 'Cabriolet',
+                             'facet', array( hash( 'field', 'car/modell',
+                                                   'limit', 20 ) ) ) )
+
+Example, 2 facets:
+fetch( ezfind, search, hash( 'query', 'Cabriolet',
+                             'facet', array( hash( 'field', 'car/make',
+                                                   'limit', 25 ),
+                                             hash( 'field', 'car/size',
+                                                   'missing', true(),
+                                                   'limit', 25 ) ) ) )
+
+Basic search options should include :
+- query - Query string
+- offset - Result set offset
+- limit - Result set limit
+
+It must also be possible to filter the search result with facet filters. Facet
+filters are limitations wich are provided by the facet results. Example
+filters:
+
+fetch( ezfind, search, hash( 'query', 'Cabriolet',
+                             'filter', hash( 'owner_id', 12 ) ) );
+
+fetch( ezfind, search, hash( 'query', 'Cabriolet',
+                             'filter', hash( 'owner_id', 12,
+                                             'language_code', 'eng-GB' ) ) );
+
+Additional parameters will be added in the sorts functionality.
+
+Classes
+-------
+
+ezfeZPSolrQueryBuilder
+^^^^^^^^^^^^^^^^^^^^^^
+eZ Find query builder, connecting eZ Publish with Solr query syntax.
+
+ezfModuleFunctionCollection
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+eZ Find module function collection. Provides the *ezfind* fetch function.
+
+ezfSearchResultInfo
+^^^^^^^^^^^^^^^^^^^
+Container class for extended search result values. Facet information is store
+in this container class.
+
+
+References
+==========
+[1]: http://wiki.apache.org/solr/SimpleFacetParameters
+
+
+..
+   Local Variables:
+   mode: rst
+   fill-column: 79
+   End:
+   vim: et syn=rst tw=79 nocin

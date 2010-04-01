@@ -1,0 +1,36 @@
+Changes from 1.0.0beta1 to 2.0.0alpha1
+
+*Features:
+- Added indexing of native types. See also: doc/design/1.1/native_types.txt
+- Added support for facets. See also: doc/design/1.1/facets.txt
+- Added support for sorting. See also: doc/design/1.1/sorting.txt
+- Implemented #11928: eZ Find for ezp4 should use DOM to create document XML.
+- Implemented #11967: Add facet - installation.
+- Implemented #11973: Add possibility to use all meta data fields for facets.
+- Implemented #11974: Add subtree_array limitation to template fetch function.
+- Implemented #11975: Add facet.query support to query handling.
+- Fixed issue #12451: Could you add a "-Dsolr" option to the shell scripts java command line?
+- Added support for spellchecking as an option to normal searches
+- Added support for "More Like This"
+- Added support for index time boosting of classes, attributes, datatypes
+
+
+*Bugs:
+- Fixed issue #11933: Internal PHP reference counter overflow.
+- Fixed issue #11824: eZ Find installation documentation missing setup
+  information about permissions.
+  ( Merged from ezp3/stable, rev. 2156 )
+- Fixed issue #12015: Hidden status not respected.
+- Fixed issue #12105: Empty Search doesn't get disabled.
+- Fixed issue #12130: Problem populating the index when using updatesearchindexsolr.php .
+- Fixed issue #12124: Roles assigned to groups with limitations are not supported.
+- Fixed issue #12263: policyLimitationFilterQuery paranthesis problem.
+- Fixed issue #12017: Indexing problems in trunk (2203).
+- Fixed issue #12293: Spaces does not work for facets.
+- Fixed issue #12312: $parameters['SortBy'] not compatible with ezsearch.
+- Fixed issue #12348: Fix design templates for eZ Publish Now
+- Fixed issue #12367: $node.object.published return invalid timestamp for remote objects.
+- Fixed issue #11711: JS based help dropdown.
+- Fixed issue #12547: Filtering handled isuficiently.
+- Fixed issue #13153: Deleted objects are not immediately cleared in the active Solr Index
+

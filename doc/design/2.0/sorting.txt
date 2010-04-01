@@ -1,0 +1,58 @@
+eZ Find - Search, Design
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:Author:   Kåre Køhler Høvik
+:Revision: 
+:Date:     
+
+
+Introduction
+============
+
+Description
+-----------
+
+Add sort options to the fetch( ezfind, search, ... ) template function.
+
+
+Design
+======
+
+Sort options for fetch( ezfind, search, hash( ... ) ) are specified in the
+hash parameter by 'sort_by'. The possible sort options are:
+- relevance | score ( default )
+- <class_name>/<attribute_name>[/<sub_structure>] | <class_attribute_id>[/<sub_structure>]
+- modified
+- published
+- author
+- class_name
+- class_identifier
+- name
+- path
+- section_id
+
+Sort order are:
+- asc
+- desc
+
+Examples: 
+- fetch( ezfind, search, hash( 'query', 'eZ Publish',
+                               'sort_by', array( 'modified', 'asc' ) ) )
+- fetch( ezfind, search, hash( 'query', 'eZ Publish',
+                               'sort_by', array( 'created', 'desc' ) ) )
+- fetch( ezfind, search, hash( 'query', 'eZ Publish',
+                               'sort_by', array( array( 'class_name', 'asc' ),
+                                                 array( 'created', 'desc' ) ) ) )
+- fetch( ezfind, search, hash( 'query', 'eZ Publish',
+                               'sort_by', array( 'class_name', 'asc',
+                                                 'created', 'desc' ) ) )
+
+The implementation will be done by extending the functionality in 
+ezfeZPSolrQueryBuilder.
+
+
+..
+   Local Variables:
+   mode: rst
+   fill-column: 79
+   End:
+   vim: et syn=rst tw=79 nocin
