@@ -5,4 +5,4 @@ Changes from 2.2.0 to 2.3.0-alpha1
 - added commit utility script
 
 *Bugs:
-- 
+- fixed bug #016591: fetch rawSolrRequest not working with ezfind 2.2

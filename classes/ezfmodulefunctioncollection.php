@@ -139,10 +139,10 @@ class ezfModuleFunctionCollection
      *
      * @return array result as a PHP array
      */
-    public function rawSolrRequest( $base, $request, $parameters = array() )
+    public function rawSolrRequest( $baseURI, $request, $parameters = array() )
     {
 
-        $solr = eZSolr::solrBase( $base );
+        $solr = new eZSolrBase( $baseURI );
         return array( 'result' => $solr->rawSolrRequest( $request, $parameters ) );
     }
 
