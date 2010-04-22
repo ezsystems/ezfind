@@ -425,6 +425,7 @@
       implictely it holds several subfields-->
     <fieldType name="geopoint" class="solr.PointType" dimension="2" subFieldType="double"/>
 
+    <fieldtype name="binary" class="solr.BinaryField"/>
 
  </types>
  
@@ -520,6 +521,8 @@
            <dynamicField name="*_tdt" type="tdate"  indexed="true"  stored="true"/>
              <!-- geopoint for geospatial/location searches, boosting, ... -->
            <dynamicField name="*_gpt" type="geopoint"  indexed="true"  stored="true"/>
+             <!-- storage fields accepts base64 encoded strings -->
+           <dynamicField name="*_bst" type="binary"  indexed="false"  stored="true"/>
 
 
 	  <field name="ezf_df_text" type="text"    indexed="true"  stored="true" multiValued="true" termVectors="true"/>

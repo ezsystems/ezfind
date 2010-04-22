@@ -3,6 +3,7 @@ Changes from 2.2.0 to 2.3.0-alpha1
 
 *Features:
 - added commit utility script
+- added initial skeleton for serializing attributes into Solr backend
 
 *Bugs:
 - fixed bug #016591: fetch rawSolrRequest not working with ezfind 2.2
