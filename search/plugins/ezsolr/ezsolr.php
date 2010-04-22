@@ -489,7 +489,7 @@ class eZSolr
             // Loop through all eZContentObjectAttributes and add them to the Solr document.
             // @since eZ Find 2.3: look for the attribute storage setting
             
-            $doAttributeStorage = (($this->FindINI-variable( 'IndexOptions', 'EnableSolrAttributeStorage')) === 'true') ? true : false;
+            $doAttributeStorage = (($this->FindINI->variable( 'IndexOptions', 'EnableSolrAttributeStorage')) === 'true') ? true : false;
 
             foreach ( $currentVersion->contentObjectAttributes( $languageCode ) as $attribute )
             {
