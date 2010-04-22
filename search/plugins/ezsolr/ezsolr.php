@@ -487,6 +487,10 @@ class eZSolr
             eZContentObject::recursionProtectionStart();
 
             // Loop through all eZContentObjectAttributes and add them to the Solr document.
+            // @since eZ Find 2.3: look for the attribute storage setting
+            
+            $doAttributeStorage = (($this->FindINI-variable( 'IndexOptions', 'EnableSolrAttributeStorage')) === 'true') ? true : false;
+
             foreach ( $currentVersion->contentObjectAttributes( $languageCode ) as $attribute )
             {
                 $metaDataText = '';
@@ -506,6 +510,13 @@ class eZSolr
                 {
                     $documentFieldBase = ezfSolrDocumentFieldBase::getInstance( $attribute );
                     $this->addFieldBaseToDoc( $documentFieldBase, $doc, $boostAttribute );
+                }
+                
+                // @todo do it in a cleaner way
+                if ($doAttributeStorage)
+                {
+                    $storageField = ezfSolrStorage::getSolrStorageField( $attribute );
+                    $doc->addField( $storageField[0], $storageField[1] );
                 }
             }
             eZContentObject::recursionProtectionEnd();
