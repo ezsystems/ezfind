@@ -55,7 +55,7 @@ class ezfSolrStorage
     {
         $classAttribute = $contentObjectAttribute->contentClassAttribute();
         return array (
-            self::STORAGE_ATTR_FIELD_PREFIX . $classAttribute->attribute('identifier') . self::STORAGE_ATTR_FIELD_SUFFIX =>
+            self::STORAGE_ATTR_FIELD_PREFIX . $classAttribute->attribute('identifier') . self::STORAGE_ATTR_FIELD_SUFFIX,
             base64_encode( self::serializeAttribute( $contentObjectAttribute ) )
 
         );
