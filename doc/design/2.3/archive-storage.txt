@@ -1,0 +1,29 @@
+=============================================================
+Archive storage: part 1. Storing attribute content in Solr
+=============================================================
+
+Introduction
+============
+
+As part of the archive master user story, which ultimately
+will provide alternate storge of content that might even be removed
+from the eZ Publish database, this spec deals with storage of
+attribute content in Solr
+
+Solution overview
+=================
+
+A new configuration option is introduced:
+
+[IndexOptions]
+# Configure attribute storage in the Solr backend
+# Warning: this may inflate the index size on large installations
+# EnableSolrAttributeStorage=true | false
+EnableSolrAttributeStorage=false
+
+If this is set to true, attribute content will be serialized into a JSON master structure
+
+For Solr, the backend schema field to use is "binary", which accepts base64 encoded arbitrary content
+
+So for storage, the entire JSON string is encoded accordingly and sent along the other index fields
+
