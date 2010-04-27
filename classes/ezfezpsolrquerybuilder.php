@@ -257,8 +257,15 @@ class ezfeZPSolrQueryBuilder
         //maybe we should add meta data to the index to filter them out.
 
         $highLightFields = $queryFields;
-        $queryFields[] = eZSolr::getMetaFieldName( 'name' );
-        $queryFields[] = eZSolr::getMetaFieldName( 'owner_name' );
+        
+        
+        //when dedicated attributes are searched for, don't add meta-fields to the $queryfields list
+        if (! $contentClassAttributeID )
+        {
+            $queryFields[] = eZSolr::getMetaFieldName( 'name' );
+            $queryFields[] = eZSolr::getMetaFieldName( 'owner_name' );
+        }
+        
 
         $spellCheckParamList = array();
         // @param $spellCheck expects array (true|false, dictionary identifier, ...)
