@@ -11,3 +11,4 @@ Changes from 2.2.0 to 2.3.0-alpha1
 *Bugs:
 - fixed bug #016591: fetch rawSolrRequest not working with ezfind 2.2
 - fixed bug #016743: meta_name and meta_owner_name are always added to the query
+- fixed bug #016771: Installation Facet : Missing statement in : extension/ezfind/classes/ezfsearchresultinfo.php

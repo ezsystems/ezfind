@@ -190,6 +190,7 @@ class ezfSearchResultInfo
                                 $fieldInfo['queryLimit'][$installationID] = 'installation_id:' . $installationID;
                                 $fieldInfo['countList'][$installationID] = $count;
                             }
+                            $facetArray[] = $fieldInfo;
                         } break;
 
                         // author facet field
