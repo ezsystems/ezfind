@@ -1,5 +1,5 @@
 
-Changes from 2.2.0 to 2.3.0-alpha1
+Changes from 2.2.0 to 2.3.0-alpha
 
 *Features:
 - added commit utility script
@@ -7,6 +7,7 @@ Changes from 2.2.0 to 2.3.0-alpha1
 
 *Enhancements:
 - Implemented enhancement #016711: Making extension aware of the order/priority in which they need to be loaded
+- Added custom handling for eztext as part of the ezxml handler when its used to hold html markup and to avoid highlighting problems
 
 *Bugs:
 - fixed bug #016591: fetch rawSolrRequest not working with ezfind 2.2

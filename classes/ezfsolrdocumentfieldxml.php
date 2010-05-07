@@ -103,6 +103,11 @@ class ezfSolrDocumentFieldXML extends ezfSolrDocumentFieldBase
                 $xmlData = $this->ContentObjectAttribute->attribute( 'content' )->xmlString();
             } break;
 
+            case 'eztext' :
+            {
+                $xmlData = $this->ContentObjectAttribute->attribute( 'data_text' );
+            } break;
+
             default:
             {
                     return array( $fieldName => '' );
