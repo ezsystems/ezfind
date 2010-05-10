@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<software>
+    <metadata>
+        <name>eZ Find</name>
+        <version>eZ Find</version>
+        <copyright>Copyright (C) 1999-2010 eZ Systems AS.</copyright>
+        <license>GNU General Public License v2.0</license>
+        <info_url>http://ez.no/ezfind</info_url>
+
+        <software>
+            <uses>
+                <name>Solr</name>
+                <license>Apache License, Version 2.0</license>
+                <copyright>The Apache Software Foundation.</copyright>
+                <info_url>http://lucene.apache.org/solr/</info_url>
+                <version>1.5-dev-rev 925669</version>
+            </uses>
+        </software>
+
+    </metadata>
+
+    <dependencies>
+        <requires>
+            <extension name="ezjscore" />
+        </requires>
+        <extends>
+            <extension name="ezwebin" />
+            <extension name="ezflow" />
+        </extends>
+    </dependencies>
+
+</software>
