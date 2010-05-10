@@ -706,7 +706,7 @@ class ezfeZPSolrQueryBuilder
                 $mltQuery = eZSolr::getMetaFieldName( 'node_id') . ':' . $query;
                 break;
             case 'oid':
-                $mltQuery = eZSolr::getMetaFieldName( 'object_id') . ':' . $query;
+                $mltQuery = eZSolr::getMetaFieldName( 'id') . ':' . $query;
                 break;
             case 'url':
                 $mltVariant = 'stream.url';
