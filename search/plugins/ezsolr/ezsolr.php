@@ -491,6 +491,11 @@ class eZSolr
             
             $doAttributeStorage = (($this->FindINI->variable( 'IndexOptions', 'EnableSolrAttributeStorage')) === 'true') ? true : false;
 
+            if ($doAttributeStorage)
+            {
+                $allAttributeData = array();
+            }
+
             foreach ( $currentVersion->contentObjectAttributes( $languageCode ) as $attribute )
             {
                 $metaDataText = '';
@@ -512,14 +517,20 @@ class eZSolr
                     $this->addFieldBaseToDoc( $documentFieldBase, $doc, $boostAttribute );
                 }
                 
-                // @todo do it in a cleaner way
                 if ($doAttributeStorage)
                 {
-                    $storageField = ezfSolrStorage::getSolrStorageField( $attribute );
-                    $doc->addField( $storageField[0], $storageField[1] );
+                    $storageFieldName = ezfSolrStorage::getSolrStorageFieldName( $attributeIdentifier );
+                    $attributeData = ezfSolrStorage::getAttributeData($attribute);
+                    $allAttributeData['data_map'][$attributeIdentifier] = $attributeData;
+                    $doc->addField( $storageFieldName, ezfSolrStorage::serializeData( $attributeData ) );
                 }
             }
             eZContentObject::recursionProtectionEnd();
+
+            if ($doAttributeStorage)
+            {
+                $doc->addField( 'as_all_bst', ezfSolrStorage::serializeData( $allAttributeData ) );
+            }
 
             $docList[$languageCode] = $doc;
         }
@@ -701,6 +712,8 @@ class eZSolr
         $error = 'Server not running';
         $searchCount = 0;
 
+        $asObjects = isset( $params['AsObjects'] ) ? $params['AsObjects'] : true;
+
         $coreToUse = null;
         $shardQueryPart = null;
         if ( $this->UseMultiLanguageCores === true )
@@ -815,8 +828,33 @@ class eZSolr
                 unset( $tmpNodeRowList );
             }
 
+            //need refactoring from the moment Solr has globbing in fl parameter
             foreach ( $docs as $idx => $doc )
             {
+                if ( !$asObjects )
+                {
+                    $emit = array();
+                    foreach($doc as $fieldName => $fieldValue)
+                    {
+                        list($prefix, $rest) = explode ('_', $fieldName, 2);
+                        if ( $prefix === 'meta' )
+                        {
+                            $emit[$rest] = $fieldValue;
+                        }
+                        elseif ($prefix === 'as')
+                        {
+
+                            $emit['data_map'][substr($rest,0, -4)] = ezfSolrStorage::unserializeData($fieldValue);
+                        }
+
+                    }
+                    $objectRes[] = $emit;
+                    unset($emit);
+                    continue;
+
+                    
+                }
+
                 if ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' )] == self::installationID() )
                 {
                     // Search result document is from current installation

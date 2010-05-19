@@ -7,31 +7,73 @@
  * @version //autogentag//
  * @package ezfind
  *
- * @todo: finalize API
+ * @todo: see if we need to make this an abstract class to accomodate CouchDB, MongoDB, so API is not frozen
+ *        also, perhaps better use dependency injection instead for class attribute specific
+ *        handlers to facilitate custom overrides
  *
- * ezfSolrStorage stores serialized versions of attribute content
+ * ezfSolrStorage is a helper class to store serialized versions of attribute content
  * meta-data from eZ Publish objects is inserted in its stored form already
  */
 
 class ezfSolrStorage
 {
-    function  __construct()
+
+    /**
+     *
+     */
+    const STORAGE_ATTR_FIELD_PREFIX = 'as_';
+    const STORAGE_ATTR_FIELD_SUFFIX = '_bst';
+    const CONTENT_METHOD_TOSTRING = 'to_string';
+    const CONTENT_METHOD_CUSTOM_HANDLER = 'custom_handler';
+    const STORAGE_VERSION_FORMAT = '1';
+
+    /* var $handler; */
+
+    function  __construct( )
     {
 
     }
 
     /**
      * @param eZContentObjectAttribute $contentObjectAttribute the attribute to serialize
-     * @return json encoded string for further processing
+     * @return array for further processing
      */
-    public static function serializeAttribute ( eZContentObjectAttribute $contentObjectAttribute )
+
+    public static function getAttributeData (eZContentObjectAttribute $contentObjectAttribute)
     {
-        $target = array(
-            'method' => self::SERIALIZE_METHOD_TOSTRING,
-            'attributedatatype' => $contentObjectAttribute->attribute( 'class_identifier' ),
-            'content' => $contentObjectAttribute->toString()
-                );
-        return json_encode( $target );
+        $dataTypeIdentifier = $contentObjectAttribute->attribute( 'data_type_string' );
+        $contentClassAttribute = eZContentClassAttribute::fetch( $contentObjectAttribute->attribute( 'contentclassattribute_id' ) );
+        $atttributeHandler =  $dataTypeIdentifier . 'SolrStorage';
+        // prefill the array with generic metadata first
+        $target = array (
+            'data_type_identifier' => $dataTypeIdentifier,
+            'version_format' => self::STORAGE_VERSION_FORMAT,
+            'attribute_identifier' => $contentClassAttribute->attribute( 'identifier' ),
+            'has_content' => $contentObjectAttribute->hasContent(),
+
+            );
+        if ( class_exists ( $atttributeHandler ) )
+        {
+            $attributeContent = call_user_func( $atttributeHandler . '::getAttributeContent',
+                     $contentObjectAttribute, $contentClassAttribute );
+            return array_merge($target, $attributeContent, array('content_method' => self::CONTENT_METHOD_CUSTOM_HANDLER ));
+
+        }
+        else
+        {
+            $target = array_merge( $target, array(
+                'content_method' => self::CONTENT_METHOD_TOSTRING,
+                'content' => $contentObjectAttribute->toString(),
+                'has_rendered_content' => false,
+                'rendered' => null
+                ));
+            return $target;
+        }
+    }
+
+    public static function serializeData ( $attributeData )
+    {
+            return base64_encode( json_encode( $attributeData ) );
     }
 
     /**
@@ -39,52 +81,23 @@ class ezfSolrStorage
      * @param string $jsonString
      * @return mixed
      */
-    public static function unserializeAttribute ( $jsonString )
+    public static function unserializeData ( $storageString )
     {
         // primitive for now, it does not return the content in a general usable form yet
-        $attributeContentArray = json_decode( $jsonString, true );
-        return $attributeContentArray['content'];
+        // could insert code to use fromString methods returning an array for the content part
+        return json_decode( base64_decode( $storageString, true ) );
+        
     }
 
     /**
      *
-     * @param eZContentObjectAttribute $contentObjectAttribute
-     * @return <type> 
+     * @param string $fieldNameBase
+     * @return string Solr field name
      */
-    public static function getSolrStorageField( eZContentObjectAttribute $contentObjectAttribute )
+    public static function getSolrStorageFieldName( $fieldNameBase )
     {
-        $classAttribute = $contentObjectAttribute->contentClassAttribute();
-        return array (
-            self::STORAGE_ATTR_FIELD_PREFIX . $classAttribute->attribute('identifier') . self::STORAGE_ATTR_FIELD_SUFFIX,
-            base64_encode( self::serializeAttribute( $contentObjectAttribute ) )
-
-        );
-    }
-
-    /**
-     *
-     * @param <type> $fieldValue
-     * @return <type> 
-     */
-    public static function decodeSolrStorageFieldValue ( $fieldValue )
-    {
-        return ( self::unserializeAttribute( base64_decode( $fieldValue ) ) );
-    }
-
-    /**
-     *
-     * @param string $fieldName
-     * @param string $fieldValue the encoded field value
-     * @return array with fieldName and the result of deserialize 
-     */
-    public static function decodeSolrStorageField ( $fieldName, $fieldValue )
-    {
-        return ( array( $fieldName, self::decodeSolrStorageFieldValue( $fieldValue ) )  );
-    }
-
-    const STORAGE_ATTR_FIELD_PREFIX = 'as_';
-    const STORAGE_ATTR_FIELD_SUFFIX = '_bst';
-    const SERIALIZE_METHOD_TOSTRING = 'tostring';
+        return  self::STORAGE_ATTR_FIELD_PREFIX . $fieldNameBase . self::STORAGE_ATTR_FIELD_SUFFIX;
+    }  
 }
 
 ?>

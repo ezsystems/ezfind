@@ -128,7 +128,7 @@ class ezfeZPSolrQueryBuilder
         $sectionID = isset( $params['SearchSectionID'] ) && $params['SearchSectionID'] > 0 ? $params['SearchSectionID'] : false;
         $dateFilter = isset( $params['SearchDate'] ) && $params['SearchDate'] > 0 ? $params['SearchDate'] : false;
         // not used in query building: $asObjects
-        $asObjects = isset( $params['AsObjects'] ) && $params['AsObjects'] ? $params['AsObjects'] : true;
+        $asObjects = isset( $params['AsObjects'] ) ? $params['AsObjects'] : true;
         $spellCheck = isset( $params['SpellCheck'] ) && $params['SpellCheck'] > 0 ? $params['SpellCheck'] : array();
         $queryHandler = isset( $params['QueryHandler'] )  ?  $params['QueryHandler'] : self::$FindINI->variable( 'SearchHandler', 'DefaultSearchHandler' );
         $ignoreVisibility = isset( $params['IgnoreVisibility'] )  ?  $params['IgnoreVisibility'] : false;
@@ -137,6 +137,8 @@ class ezfeZPSolrQueryBuilder
         $forceElevation = isset( $params['ForceElevation'] )  ?  $params['ForceElevation'] : false;
         $enableElevation = isset( $params['EnableElevation'] )  ?  $params['EnableElevation'] : true;
         $distributedSearch = isset( $params['DistributedSearch'] ) ? $params['DistributedSearch'] : false;
+        $fieldsToReturn = isset( $params['FieldsToReturn'] ) ? $params['FieldsToReturn'] : array();
+        $highlightParams = isset( $params['HighLightParams'] ) ? $params['HighLightParams'] : array();
 
 
         // distributed search option
@@ -409,6 +411,27 @@ class ezfeZPSolrQueryBuilder
             $filterQuery=array($fqString);
         }
 
+        $fieldsToReturnString = eZSolr::getMetaFieldName( 'guid' ) . ' ' . eZSolr::getMetaFieldName( 'installation_id' ) . ' ' .
+                eZSolr::getMetaFieldName( 'main_url_alias' ) . ' ' . eZSolr::getMetaFieldName( 'installation_url' ) . ' ' .
+                eZSolr::getMetaFieldName( 'id' ) . ' ' . eZSolr::getMetaFieldName( 'main_node_id' ) . ' ' .
+                eZSolr::getMetaFieldName( 'language_code' ) . ' ' . eZSolr::getMetaFieldName( 'name' ) .
+                ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ) . ' ' . implode(' ', $extraFieldsToReturn);
+
+        if ( ! $asObjects )
+        {
+            if ( empty( $fieldsToReturn ))
+            {
+                // @todo: needs to be refined with Solr supporting globbing in fl argument, otherwise requests will be to heavy for large fields as for example binary file content
+                $fieldsToReturnString = 'score, *';
+            }
+            else
+            {
+                $fieldsToReturnString .= ' ' . implode( ' ', $fieldsToReturn);
+            }
+
+        }
+
+
         $queryParams =  array_merge(
             $handlerParameters,
             array(
@@ -418,12 +441,7 @@ class ezfeZPSolrQueryBuilder
                 'indent' => 'on',
                 'version' => '2.2',
                 'bq' => $this->boostQuery(),
-                'fl' =>
-                eZSolr::getMetaFieldName( 'guid' ) . ' ' . eZSolr::getMetaFieldName( 'installation_id' ) . ' ' .
-                eZSolr::getMetaFieldName( 'main_url_alias' ) . ' ' . eZSolr::getMetaFieldName( 'installation_url' ) . ' ' .
-                eZSolr::getMetaFieldName( 'id' ) . ' ' . eZSolr::getMetaFieldName( 'main_node_id' ) . ' ' .
-                eZSolr::getMetaFieldName( 'language_code' ) . ' ' . eZSolr::getMetaFieldName( 'name' ) .
-                ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ) . implode(' ', $extraFieldsToReturn),
+                'fl' => $fieldsToReturnString,
                 'fq' => $filterQuery,
                 'hl' => 'true',
                 'hl.fl' => implode( ' ', $highLightFields),

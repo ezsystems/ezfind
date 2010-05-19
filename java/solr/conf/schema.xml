@@ -551,7 +551,6 @@
 		 <copyField source="*_t" dest="ezf_sp_words"/>
 		 <copyField source="*_s" dest="ezf_sp_words"/>
 
-
 	
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 

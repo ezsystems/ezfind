@@ -4,6 +4,7 @@ Changes from 2.2.0 to 2.3.0-alpha
 *Features:
 - added commit utility script
 - added initial skeleton for serializing attributes into Solr backend
+- implemented asObjects=false, attribute content can be delivered from backend directly along searches/fetches
 
 *Enhancements:
 - Implemented enhancement #016711: Making extension aware of the order/priority in which they need to be loaded

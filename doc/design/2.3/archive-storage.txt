@@ -1,6 +1,6 @@
-=============================================================
-Archive storage: part 1. Storing attribute content in Solr
-=============================================================
+=========================================================================
+Archive storage: part 1. Storing & retrieving (attribute) content in Solr
+=========================================================================
 
 Introduction
 ============
@@ -26,4 +26,65 @@ If this is set to true, attribute content will be serialized into a JSON master 
 For Solr, the backend schema field to use is "binary", which accepts base64 encoded arbitrary content
 
 So for storage, the entire JSON string is encoded accordingly and sent along the other index fields
+
+The search function is further adapted with new parameters to control the fields returned and deserialize functions
+
+Implementation
+==============
+
+The implementation relies on a few new classes:
+
+class ezfSolrStorage
+{
+
+
+    /**
+     * @param eZContentObjectAttribute $contentObjectAttribute the attribute to serialize
+     * @return array for further processing
+     */
+
+    public static function getAttributeData (eZContentObjectAttribute $contentObjectAttribute)
+     /**
+     *
+     * @param array $attributeData
+     * @return mixed
+     */
+    public static function serializeData ( $attributeData )
+
+    /**
+     *
+     * @param string $storageString
+     * @return mixed
+     */
+    public static function unserializeData ( $storageString )
+
+
+    /**
+     *
+     * @param string $fieldNameBase
+     * @return string Solr field name
+     */
+    public static function getSolrStorageFieldName( $fieldNameBase )
+}
+
+The base Solr Storage class calls datatype specific handlers (if these exist) in order to construct a
+data structure with the following items:
+
+Metadata:
+
+- storage format version
+- storage format method
+- datatype identifier
+- attribute identifier
+- has content?
+- has rendered content
+
+Content:
+
+- content
+- rendered content (optional)
+
+
+
+The data structure is basically a nested (hash) array which is then converted to JSON + base64 encoded string for storage and subsequent display
 

@@ -111,7 +111,11 @@ $FunctionList['search'] = array( 'name' => 'search',
                                                         array( 'name' => 'distributed_search',
                                                                'type' => 'array',
                                                                'required' => false,
-                                                               'default' => null ),           ) );
+                                                               'default' => null ),
+                                                        array ( 'name'  => 'fields_to_return',
+                                                                'type' => 'array',
+                                                                'required' => false,
+                                                                'default' => null )) );
 
 
 $FunctionList['getDefaultSearchFacets'] = array( 'name' => 'getDefaultSearchFacets',
