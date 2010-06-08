@@ -440,6 +440,14 @@ class eZSolrBase
             curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
             curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, $connectionTimeout );
             curl_setopt( $ch, CURLOPT_TIMEOUT, $processTimeout );
+            if ($this->SolrINI->variable( 'SolrBase', 'SearchServerAuthentication' ) === 'enabled' )
+            {
+                if ($this->SolrINI->variable( 'SolrBase', 'SearchServerAuthenticationMethod' ) === 'basic')
+                {
+                    curl_setopt( $ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC );
+                    curl_setopt( $ch, CURLOPT_USERPWD, $this->SolrINI->variable( 'SolrBase', 'SearchServerUserPass' ));
+                }
+            }
             //CURLOPT_TIMEOUT
             if ( $postData !== false )
             {

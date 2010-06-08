@@ -10,7 +10,7 @@ Changes from 2.2.0 to 2.3.0-alpha
 - Implemented enhancement #016711: Making extension aware of the order/priority in which they need to be loaded
 - Added custom handling for eztext as part of the ezxml handler when its used to hold html markup and to avoid highlighting problems
 - Added extension.xml that replaces both ezinfo.php and loading.php. Requires eZ Publish 4.4 or higher.
-
+- Implemented enhancement #016894: Provide optional basic authentication for eZ Find backend
 
 *Bugs:
 - fixed bug #015243: fetch morelikethis query_type=oid generate wrong query
