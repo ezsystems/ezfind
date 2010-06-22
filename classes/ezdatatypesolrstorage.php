@@ -39,12 +39,7 @@ class ezdatatypeSolrStorage
         return  $target ;
     }
 
-    /**
-     *
-     * @param string $jsonString
-     * @return mixed
-     */
-
+    
 }
 
 

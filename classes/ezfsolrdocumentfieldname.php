@@ -153,7 +153,8 @@ class ezfSolrDocumentFieldName
                                   'tdouble' => 'td',
                                   'tlong' => 'tl',
                                   'tdate' => 'tdt',
-                                  'geopoint' => 'gpt');
+                                  'geopoint' => 'gpt',
+                                  'geohash' => 'gh');
 
     static $DefaultType = 'string';
     static $PHPCreator = null;

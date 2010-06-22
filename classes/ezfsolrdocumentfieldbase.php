@@ -417,7 +417,7 @@ class ezfSolrDocumentFieldBase
      */
     public static function generateSubattributeFieldName( eZContentClassAttribute $classAttribute, $subfieldName, $type )
     {
-        return self::$DocumentFieldName->lookupSchemaName( self::SUBATTR_FIELD_PREFIX . $classAttribute->attribute( 'identifier' ) . '-' . $subfieldName,
+        return self::$DocumentFieldName->lookupSchemaName( self::SUBATTR_FIELD_PREFIX . $classAttribute->attribute( 'identifier' ) . self::SUBATTR_FIELD_SEPARATOR . $subfieldName,
                                                            $type );
     }
 
@@ -475,7 +475,7 @@ class ezfSolrDocumentFieldBase
      */
     public static function generateSubmetaFieldName( $baseName, eZContentClassAttribute $classAttribute )
     {
-        return self::$DocumentFieldName->lookupSchemaName( self::SUBMETA_FIELD_PREFIX . $classAttribute->attribute( 'identifier' ) . '-' . $baseName,
+        return self::$DocumentFieldName->lookupSchemaName( self::SUBMETA_FIELD_PREFIX . $classAttribute->attribute( 'identifier' ) . self::SUBATTR_FIELD_SEPARATOR . $baseName,
                                                            eZSolr::getMetaAttributeType( $baseName ) );
     }
 
@@ -543,6 +543,14 @@ class ezfSolrDocumentFieldBase
      *      with 'subattr_' instead of '_attr'
      */
     const SUBATTR_FIELD_PREFIX = 'subattr_';
+
+    /**
+     * Separator for sub attributes
+     * Since eZ Find 2.3, this is changed to a lucene query syntax friendly string
+     * which is important for function queries and some internal Solr calls
+     * as well
+     */
+    const SUBATTR_FIELD_SEPARATOR = '___';
 }
 
 ezfSolrDocumentFieldBase::$FindINI = eZINI::instance( 'ezfind.ini' );
