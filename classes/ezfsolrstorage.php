@@ -85,7 +85,7 @@ class ezfSolrStorage
     {
         // primitive for now, it does not return the content in a general usable form yet
         // could insert code to use fromString methods returning an array for the content part
-        return json_decode( base64_decode( $storageString, true ) );
+        return json_decode( base64_decode( $storageString ) , true );
         
     }
 
