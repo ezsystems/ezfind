@@ -118,6 +118,7 @@ var eZAJAXSearch = function()
                         template = template.replace(/\{+class_name+\}/g, item.class_name);
                         template = template.replace(/\{+url_alias+\}/g, item.url_alias);
                         template = template.replace(/\{+object_id+\}/g, item.id);
+                        template = template.replace(/\{+node_id+\}/g, item.node_id);
 
                         var itemContainer = Y.Node.create(template);
 
