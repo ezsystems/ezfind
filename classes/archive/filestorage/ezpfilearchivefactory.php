@@ -23,9 +23,6 @@ class ezpFileArchiveFactory
             case 'filesystem':
                 return new ezpFileArchiveFileSystem();
                 //break;
-            case 'gridfs':
-                return new ezpFileArchiveGridFS();
-                //break;
             default:
                 return FALSE;
                 //break;
