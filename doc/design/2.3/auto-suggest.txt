@@ -9,7 +9,7 @@ Implementation with facets
 Rationale
 ---------
 One of the advantages of using facets are the caching mechanisms in Solr and the
-natural ranking of terms according to their "popularity", ie occurences in the overall index
+natural ranking of terms according to their "popularity", e.g occurrences in the overall index
 
 Query to be used
 ----------------
@@ -19,7 +19,7 @@ The following query and facet related (GET) query parameters are to be used:
 q=*:*
 facet=true  (enable facets)
 facet.field=ezf_sp_word (the field to look for suggestions, the spell check field is the most suited)
-facet.prefix=$input (the chracters typed so far by he user)
+facet.prefix=$input (the characters typed so far by the user)
 facet.limit=$limit (number of suggestions to return)
 
 
