@@ -1,0 +1,31 @@
+==============================
+Autosuggest feature in eZ Find
+==============================
+
+
+Implementation with facets
+==========================
+
+Rationale
+---------
+One of the advantages of using facets are the caching mechanisms in Solr and the
+natural ranking of terms according to their "popularity", ie occurences in the overall index
+
+Query to be used
+----------------
+
+The following query and facet related (GET) query parameters are to be used:
+
+q=*:*
+facet=true  (enable facets)
+facet.field=ezf_sp_word (the field to look for suggestions, the spell check field is the most suited)
+facet.prefix=$input (the chracters typed so far by he user)
+facet.limit=$limit (number of suggestions to return)
+
+
+
+
+Concerns
+========
+
+- security can become an issue, maybe add the security filter from ezsolr class
