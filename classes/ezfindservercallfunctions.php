@@ -94,6 +94,31 @@ class eZFindServerCallFunctions
         return $result;
     }
 
+    /**
+     * Returns autocomplete suggestions for given params
+     * 
+     * @param mixed $args
+     * @return array
+     */
+    public static function autocomplete( $args )
+    {
+        $result = array();
+        $ini = eZINI::instance( 'ezfind.ini' );
+
+        $input = isset( $args[0] ) ? $args[0] : null;
+        $limit = isset( $args[1] ) ? (int)$args[1] : (int)$ini->variable( 'AutoCompleteSettings', 'Limit' );
+
+        $params = array( 'q' => '*:*',
+                         'facet' => 'true',
+                         'facet.field' => 'ezf_sp_words',
+                         'facet.prefix' => $input,
+                         'facet.limit' => $limit );
+
+        $sorlBase = new eZSolrBase();
+        $result = $sorlBase->rawSolrRequest( '/select', $params, 'json' );
+
+        return $result['facet_counts']['facet_fields']['ezf_sp_words'];
+    }
 
 }
 

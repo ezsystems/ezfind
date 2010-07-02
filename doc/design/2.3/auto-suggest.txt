@@ -18,7 +18,7 @@ The following query and facet related (GET) query parameters are to be used:
 
 q=*:*
 facet=true  (enable facets)
-facet.field=ezf_sp_word (the field to look for suggestions, the spell check field is the most suited)
+facet.field=ezf_sp_words (the field to look for suggestions, the spell check field is the most suited)
 facet.prefix=$input (the characters typed so far by the user)
 facet.limit=$limit (number of suggestions to return)
 
