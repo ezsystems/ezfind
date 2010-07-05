@@ -109,6 +109,7 @@ class eZFindServerCallFunctions
         $limit = isset( $args[1] ) ? (int)$args[1] : (int)$ini->variable( 'AutoCompleteSettings', 'Limit' );
 
         $params = array( 'q' => '*:*',
+                         'json.nl' => 'arrarr',
                          'facet' => 'true',
                          'facet.field' => 'ezf_sp_words',
                          'facet.prefix' => $input,
@@ -117,22 +118,8 @@ class eZFindServerCallFunctions
         $sorlBase = new eZSolrBase();
         $result = $sorlBase->rawSolrRequest( '/select', $params, 'json' );
 
-        $result = array_filter( $result['facet_counts']['facet_fields']['ezf_sp_words'], array( __CLASS__, 'filterString' ) );
-
-        return $result;
+        return $result['facet_counts']['facet_fields']['ezf_sp_words'];
     }
-
-    /**
-     * A helper function used by array_filter to filter out non string values
-     * 
-     * @param mixed $var
-     * @return bool
-     */
-    public static function filterString( $var )
-    {
-        return is_string( $var );
-    }
-
 }
 
 ?>
