@@ -5,5 +5,5 @@ DesignExtensions[]=ezfind
 
 [StylesheetSettings]
 CSSFileList[]=ezfind.css
-CSSFileList[]=ezajax_autosuggest.css
+CSSFileList[]=ezajax_autocomplete.css
 */ ?>

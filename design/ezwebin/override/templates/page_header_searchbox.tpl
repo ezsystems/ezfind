@@ -20,14 +20,16 @@
 
 {if $pagedata.is_edit|not()}
 
-{ezscript_require( array('ezjsc::yui2', 'ezajax_autosuggest.js') )}
+{ezscript_require( array('ezjsc::yui2', 'ezajax_autocomplete.js') )}
 <script type="text/javascript">
-var cfg = {ldelim}
-                url: "{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}",
-                minquerylength: 1,
-                resultlimit: 20
-           {rdelim};
-ezajaxautosuggest.init(cfg);
+eZAJAXAutoComplete.cfg = {ldelim}
+                             url: "{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}",
+                             inputid: 'searchtext',
+                             containerid: 'ezautocompletecontainer',
+                             minquerylength: {ezini( 'AutoCompleteSettings', 'MinQueryLength', 'ezfind.ini' )},
+                             resultlimit: {ezini( 'AutoCompleteSettings', 'Limit', 'ezfind.ini' )}
+                         {rdelim};
+eZAJAXAutoComplete.init();
 </script>
 
 {/if}
