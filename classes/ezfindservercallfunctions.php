@@ -117,7 +117,20 @@ class eZFindServerCallFunctions
         $sorlBase = new eZSolrBase();
         $result = $sorlBase->rawSolrRequest( '/select', $params, 'json' );
 
-        return $result['facet_counts']['facet_fields']['ezf_sp_words'];
+        $result = array_filter( $result['facet_counts']['facet_fields']['ezf_sp_words'], array( __CLASS__, 'filterString' ) );
+
+        return $result;
+    }
+
+    /**
+     * A helper function used by array_filter to filter out non string values
+     * 
+     * @param mixed $var
+     * @return bool
+     */
+    public static function filterString( $var )
+    {
+        return is_string( $var );
     }
 
 }
