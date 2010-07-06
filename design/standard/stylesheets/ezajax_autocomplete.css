@@ -2,6 +2,10 @@ div#searchbox {
     text-align:left;
 }
 
+div#ezautocomplete {
+    z-index: 1000;
+}
+
 div#header .yui-ac-content li {
     margin: 0;
     padding: 2px 5px;

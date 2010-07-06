@@ -23,7 +23,7 @@
 {ezscript_require( array('ezjsc::jquery', 'ezjsc::yui2', 'ezajax_autocomplete.js') )}
 <script type="text/javascript">
 
-jQuery('#ezautocompletecontainer').css('width', jQuery('input#searchtext').css('width'));
+jQuery('#ezautocompletecontainer').css('width', jQuery('input#searchtext').width() + 60);
 
 eZAJAXAutoComplete.cfg = {ldelim}
                              url: "{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}",
