@@ -105,7 +105,7 @@ class eZFindServerCallFunctions
         $result = array();
         $ini = eZINI::instance( 'ezfind.ini' );
 
-        $input = isset( $args[0] ) ? $args[0] : null;
+        $input = isset( $args[0] ) ? strtolower( $args[0] ) : null;
         $limit = isset( $args[1] ) ? (int)$args[1] : (int)$ini->variable( 'AutoCompleteSettings', 'Limit' );
 
         $params = $ini->variable( 'AutoCompleteSettings', 'SolrParams' );
