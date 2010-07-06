@@ -7,7 +7,7 @@
     {else}
     <div id="ezautocomplete">
         <input id="searchtext" name="SearchText" type="text" value="" size="12" />
-        <input id="ezautocompletebutton" class="button" type="submit" value="{'Search'|i18n('design/ezwebin/pagelayout')}" alt="{'Search'|i18n('design/ezwebin/pagelayout')}" />
+        <input id="searchbutton" class="button" type="submit" value="{'Search'|i18n('design/ezwebin/pagelayout')}" alt="{'Search'|i18n('design/ezwebin/pagelayout')}" />
         <div id="ezautocompletecontainer"></div>
     </div>
     {if eq( $ui_context, 'browse' )}
@@ -20,8 +20,11 @@
 
 {if $pagedata.is_edit|not()}
 
-{ezscript_require( array('ezjsc::yui2', 'ezajax_autocomplete.js') )}
+{ezscript_require( array('ezjsc::jquery', 'ezjsc::yui2', 'ezajax_autocomplete.js') )}
 <script type="text/javascript">
+
+jQuery('#ezautocompletecontainer').css('width', jQuery('input#searchtext').css('width'));
+
 eZAJAXAutoComplete.cfg = {ldelim}
                              url: "{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}",
                              inputid: 'searchtext',

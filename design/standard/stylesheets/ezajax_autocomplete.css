@@ -10,18 +10,7 @@ div#header .yui-ac-content li {
     list-style: none;
     zoom: 1;
     display: block;
-}
-
-div#ezautocomplete {
-    width: 222px;
-    padding-bottom: 2em;
-}
-
-#ezautocompletebutton {
-    position: absolute;
-    left: 227px;
-    margin-bottom:-0.5em;
-    margin-top:0;
+    float: none;
 }
 
 .customResult {
@@ -30,19 +19,15 @@ div#ezautocomplete {
 
 .yui-ac {
     position: relative;
-    font-family: arial;
-    font-size: 100%;
 }
 
 .yui-ac-input {
-    position: absolute;
     width: 100%;
 }
 
 .yui-ac-container {
     position: absolute;
     top: 1.6em;
-    width: 100%;
 }
 
 .yui-ac-content {

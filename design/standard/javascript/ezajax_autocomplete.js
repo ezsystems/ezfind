@@ -17,7 +17,7 @@ var eZAJAXAutoComplete = function() {
         dsJSON.connXhrMode = "cancelStaleRequests";
         dsJSON.responseSchema = {
                 resultsList: "content",
-                fields: ["t", "i"],
+                fields: ["facet", "count"],
                 metaFields: { errorMessage: "error_text" }
         };
 
