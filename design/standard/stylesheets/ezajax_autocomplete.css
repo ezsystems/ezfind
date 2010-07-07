@@ -6,6 +6,11 @@ div#ezautocomplete {
     z-index: 1000;
 }
 
+div#ezautocomplete .yui-ac-content{
+    overflow:auto;
+    overflow-y:hidden;
+}
+
 div#header .yui-ac-content li {
     margin: 0;
     padding: 2px 5px;

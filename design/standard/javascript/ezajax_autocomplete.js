@@ -24,6 +24,7 @@ var eZAJAXAutoComplete = function() {
         var autoComplete = new YAHOO.widget.AutoComplete(ret.cfg.inputid, ret.cfg.containerid, dsJSON);
         autoComplete.useShadow = true;
         autoComplete.minQueryLength = ret.cfg.minquerylength;
+        autoComplete.allowBrowserAutocomplete = false;
         autoComplete.generateRequest = function(q) {
             return "::" + q + "::" + ret.cfg.resultlimit + "?ContentType=json";
         };
