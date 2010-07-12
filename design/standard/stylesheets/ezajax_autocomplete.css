@@ -30,9 +30,10 @@ div#header .yui-ac-content li {
     position: relative;
 }
 
+/*
 .yui-ac-input {
     width: 100%;
-}
+} */
 
 .yui-ac-container {
     position: absolute;
@@ -73,6 +74,7 @@ div#header .yui-ac-content li {
 }
 
 .yui-ac-content li {
+    background-image: none;
     margin: 0;
     padding: 2px 5px;
     cursor: default;
