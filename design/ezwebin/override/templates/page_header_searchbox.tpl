@@ -25,14 +25,15 @@
 
 jQuery('#ezautocompletecontainer').css('width', jQuery('input#searchtext').width() + 60);
 
-eZAJAXAutoComplete.cfg = {ldelim}
-                             url: "{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}",
-                             inputid: 'searchtext',
-                             containerid: 'ezautocompletecontainer',
-                             minquerylength: {ezini( 'AutoCompleteSettings', 'MinQueryLength', 'ezfind.ini' )},
-                             resultlimit: {ezini( 'AutoCompleteSettings', 'Limit', 'ezfind.ini' )}
-                         {rdelim};
-eZAJAXAutoComplete.init();
+var ezAutoHeader = eZAJAXAutoComplete(),
+ezAutoHeaderConfig = {ldelim}
+    url: "{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}",
+    inputid: 'searchtext',
+    containerid: 'ezautocompletecontainer',
+    minquerylength: {ezini( 'AutoCompleteSettings', 'MinQueryLength', 'ezfind.ini' )},
+    resultlimit: {ezini( 'AutoCompleteSettings', 'Limit', 'ezfind.ini' )}
+{rdelim};
+ezAutoHeader.init(ezAutoHeaderConfig);
 </script>
 
 {/if}

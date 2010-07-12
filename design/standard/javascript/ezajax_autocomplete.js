@@ -3,8 +3,7 @@
  */
 var eZAJAXAutoComplete = function() {
 
-    var ret = {};
-    ret.cfg = {};
+    var _cfg = {};
 
     /**
      * Initializes the widget
@@ -12,7 +11,7 @@ var eZAJAXAutoComplete = function() {
      * @private
      */
     var initAutosuggest = function() {
-        var dsJSON = new YAHOO.util.DataSource(ret.cfg.url);
+        var dsJSON = new YAHOO.util.DataSource(_cfg.url);
         dsJSON.responseType = YAHOO.util.DataSource.TYPE_JSON;
         dsJSON.connXhrMode = "cancelStaleRequests";
         dsJSON.responseSchema = {
@@ -21,34 +20,34 @@ var eZAJAXAutoComplete = function() {
                 metaFields: { errorMessage: "error_text" }
         };
 
-        var autoComplete = new YAHOO.widget.AutoComplete(ret.cfg.inputid, ret.cfg.containerid, dsJSON);
+        var autoComplete = new YAHOO.widget.AutoComplete(_cfg.inputid, _cfg.containerid, dsJSON);
         autoComplete.useShadow = true;
-        autoComplete.minQueryLength = ret.cfg.minquerylength;
+        autoComplete.minQueryLength = _cfg.minquerylength;
         autoComplete.allowBrowserAutocomplete = false;
         autoComplete.generateRequest = function(q) {
-            return "::" + q + "::" + ret.cfg.resultlimit + "?ContentType=json";
+            return "::" + q + "::" + _cfg.resultlimit + "?ContentType=json";
         };
-       
     }
 
-    /**
-     * The initialization of the module
-     * 
-     * @param {Array}
-     *            url, 
-     *            inputid, 
-     *            containerid, 
-     *            minQueryLength,
-     *            resultlimit
-     */
-    ret.init = function() {
-        YUILoader.require([ 'autocomplete' ]);
-        YUILoader.onSuccess = function() {
-            initAutosuggest();
-        };
-        var options = [];
-        YUILoader.insert(options, 'js');
+    return {
+        /**
+         * The initialization of the module
+         * 
+         * @param {Array}
+         *            url, 
+         *            inputid, 
+         *            containerid, 
+         *            minQueryLength,
+         *            resultlimit
+         */
+        init : function(configuration) {
+            _cfg = configuration;
+            YUILoader.require([ 'autocomplete' ]);
+            YUILoader.onSuccess = function() {
+                initAutosuggest();
+            };
+            var options = [];
+            YUILoader.insert(options, 'js');
+        }
     }
-
-    return ret;
-}();
+};
