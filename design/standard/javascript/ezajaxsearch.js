@@ -125,6 +125,13 @@ var eZAJAXSearch = function()
                         resultsTarget.removeClass('loading');
                         resultsTarget.appendChild(itemContainer);
                     }
+
+                    if ( itemCount === 0 )
+                    {
+                        var itemContainer = Y.Node.create(ret.cfg.noresultstring);
+                        resultsTarget.removeClass('loading');
+                        resultsTarget.appendChild(itemContainer);
+                    }
                 }
             }
         }

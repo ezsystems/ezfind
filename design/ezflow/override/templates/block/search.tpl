@@ -32,6 +32,7 @@ ezAutoBlock_{$block.id}.init(ezAutoBlockConfig_{$block.id});
 eZAJAXSearch.cfg = {ldelim}
                         //backendUri: 'ezfind::search',
                         customSearchAttributes: {$customAttributesString},
+                        noresultstring: '{'No search results...'|i18n( 'extension/ezfind/ajax-search' )}',
                         searchstring: '#search-string-{$block.id}',
                         searchbutton: '#search-button-{$block.id}',
                         searchresults: '#search-results-{$block.id}',
