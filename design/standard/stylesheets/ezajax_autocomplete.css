@@ -38,6 +38,7 @@ div#header .yui-ac-content li {
     overflow:auto;
     overflow-y:hidden;
     z-index: 9050;
+    ^padding-bottom: 15px;
 }
 
 .yui-ac-shadow {
