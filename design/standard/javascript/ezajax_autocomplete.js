@@ -3,7 +3,7 @@
  */
 var eZAJAXAutoComplete = function() {
 
-    var _cfg = {};
+    var _cfg = {}, YAHOO;
 
     /**
      * Initializes the widget
@@ -32,6 +32,7 @@ var eZAJAXAutoComplete = function() {
     return {
         /**
          * The initialization of the module
+         * Using YUI3 loader to avoid race conditions
          * 
          * @param {Array}
          *            url, 
@@ -42,12 +43,10 @@ var eZAJAXAutoComplete = function() {
          */
         init : function(configuration) {
             _cfg = configuration;
-            YUILoader.require([ 'autocomplete' ]);
-            YUILoader.onSuccess = function() {
+            YUI(YUI3_config).use('yui2-connection', 'yui2-autocomplete', function (Y) {
+                YAHOO = Y.YUI2;
                 initAutosuggest();
-            };
-            var options = [];
-            YUILoader.insert(options, 'js');
+            });
         }
     }
 };
