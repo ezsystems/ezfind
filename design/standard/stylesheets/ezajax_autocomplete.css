@@ -6,11 +6,6 @@ div#ezautocomplete {
     z-index: 1000;
 }
 
-div#ezautocomplete .yui-ac-content{
-    overflow:auto;
-    overflow-y:hidden;
-}
-
 div#header .yui-ac-content li {
     margin: 0;
     padding: 2px 5px;
@@ -30,11 +25,6 @@ div#header .yui-ac-content li {
     position: relative;
 }
 
-/*
-.yui-ac-input {
-    width: 100%;
-} */
-
 .yui-ac-container {
     position: absolute;
     top: 1.6em;
@@ -45,7 +35,8 @@ div#header .yui-ac-content li {
     width: 100%;
     border: 1px solid #808080;
     background: #fff;
-    overflow: hidden;
+    overflow:auto;
+    overflow-y:hidden;
     z-index: 9050;
 }
 
