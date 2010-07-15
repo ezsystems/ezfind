@@ -1,6 +1,3 @@
-div#searchbox {
-    text-align:left;
-}
 
 div#ezautocomplete {
     z-index: 1000;
@@ -28,6 +25,7 @@ div#header .yui-ac-content li {
 .yui-ac-container {
     position: absolute;
     top: 1.6em;
+    text-align:left;
 }
 
 .yui-ac-content {

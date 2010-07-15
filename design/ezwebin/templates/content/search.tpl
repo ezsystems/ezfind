@@ -134,9 +134,11 @@
 </div>
 
 <p>
+<div id="ezautocomplete">
     <input class="halfbox" type="text" size="20" name="SearchText" id="Search" value="{$search_text|wash}" />
     <input class="button" name="SearchButton" type="submit" value="{'Search'|i18n('design/ezwebin/content/search')}" />
-    
+    <div id="ezautocompletecontainer"></div>
+</div>
 </p>
 {if $search_extras.spellcheck_collation}
      {def $spell_url=concat('/content/search/',$search_text|count_chars()|gt(0)|choose('',concat('?SearchText=',$search_extras.spellcheck_collation|urlencode)))|ezurl}
@@ -314,6 +316,18 @@
 
 
 <script language="JavaScript" type="text/javascript">
+jQuery('#ezautocompletecontainer').css('width', jQuery('input#Search').width());
+var ezAutoHeader = eZAJAXAutoComplete();
+ezAutoHeader.init({ldelim}
+
+    url: "{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}",
+    inputid: 'Search',
+    containerid: 'ezautocompletecontainer',
+    minquerylength: {ezini( 'AutoCompleteSettings', 'MinQueryLength', 'ezfind.ini' )},
+    resultlimit: {ezini( 'AutoCompleteSettings', 'Limit', 'ezfind.ini' )}
+
+{rdelim});
+
 <!--{literal}
 ezfSetBlock( 'ezfFacets', ezfGetCookie( 'ezfFacets' ) );
 ezfSetBlock( 'ezfHelp', ezfGetCookie( 'ezfHelp' ) );
