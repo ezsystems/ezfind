@@ -117,8 +117,8 @@ class eZFindServerCallFunctions
                          'facet.prefix' => $input,
                          'facet.limit' => $limit );
 
-        $sorlBase = new eZSolrBase();
-        $result = $sorlBase->rawSolrRequest( '/select', $params, 'json' );
+        $solrBase = new eZSolrBase();
+        $result = $solrBase->rawSolrRequest( '/select', $params, 'json' );
 
         return $result['facet_counts']['facet_fields'][$facetField];
     }
