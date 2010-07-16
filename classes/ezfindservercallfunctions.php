@@ -108,16 +108,19 @@ class eZFindServerCallFunctions
         $input = isset( $args[0] ) ? mb_strtolower( $args[0], 'UTF-8' ) : null;
         $limit = isset( $args[1] ) ? (int)$args[1] : (int)$ini->variable( 'AutoCompleteSettings', 'Limit' );
 
-        $params = $ini->variable( 'AutoCompleteSettings', 'SolrParams' );
+        $facetField = $ini->variable( 'AutoCompleteSettings', 'FacetField' );
 
-        // Replace <input> and <limit> tags with proper values
-        $params[array_search( '<input>', $params)] = $input;
-        $params[array_search( '<limit>', $params)] = $limit;
+        $params = array( 'q' => '*:*',
+                         'json.nl' => 'arrarr',
+                         'facet' => 'true',
+                         'facet.field' => $facetField,
+                         'facet.prefix' => $input,
+                         'facet.limit' => $limit );
 
         $sorlBase = new eZSolrBase();
         $result = $sorlBase->rawSolrRequest( '/select', $params, 'json' );
 
-        return $result['facet_counts']['facet_fields']['ezf_sp_words'];
+        return $result['facet_counts']['facet_fields'][$facetField];
     }
 }
 
