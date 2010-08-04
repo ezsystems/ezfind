@@ -64,6 +64,7 @@ class eZSolrDoc
      *
      * @param string Field name
      * @param mixed Field content. $content may be a value or an array containing values.
+     *     if the the array has more than one element, the schema declaration must be multi-valued too
      * @param float Field boost ( optional ).
      */
     public function addField ( $name, $content, $boost = false )
