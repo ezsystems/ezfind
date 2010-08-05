@@ -11,16 +11,6 @@
 
 class ezdatatypeSolrStorage
 {
-
-    /**
-     *
-     */
-
-    function  __construct( )
-    {
-
-    }
-
     /**
      * @param eZContentObjectAttribute $contentObjectAttribute the attribute to serialize
      * @return array with keys 'content', 'has_rendered_content', 'rendered'
@@ -38,9 +28,6 @@ class ezdatatypeSolrStorage
 
         return  $target ;
     }
-
-    
 }
-
 
 ?>

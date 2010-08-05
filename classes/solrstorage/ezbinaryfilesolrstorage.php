@@ -13,16 +13,6 @@ class ezbinaryfileSolrStorage extends ezdatatypeSolrStorage
 {
 
     /**
-     *
-     */
-
-
-    function  __construct( )
-    {
-
-    }
-
-    /**
      * @param eZContentObjectAttribute $contentObjectAttribute the attribute to serialize
      * @return json encoded string for further processing
      * required first level elements 'method', 'version_format', 'data_type_identifier', 'content'
