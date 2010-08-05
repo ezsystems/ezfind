@@ -43,7 +43,7 @@ class ezfSolrStorage
     {
         $dataTypeIdentifier = $contentObjectAttribute->attribute( 'data_type_string' );
         $contentClassAttribute = eZContentClassAttribute::fetch( $contentObjectAttribute->attribute( 'contentclassattribute_id' ) );
-        $atttributeHandler =  $dataTypeIdentifier . 'SolrStorage';
+        $attributeHandler =  $dataTypeIdentifier . 'SolrStorage';
         // prefill the array with generic metadata first
         $target = array (
             'data_type_identifier' => $dataTypeIdentifier,
@@ -52,9 +52,9 @@ class ezfSolrStorage
             'has_content' => $contentObjectAttribute->hasContent(),
 
             );
-        if ( class_exists ( $atttributeHandler ) )
+        if ( class_exists ( $attributeHandler ) )
         {
-            $attributeContent = call_user_func( array( $atttributeHandler, 'getAttributeContent'),
+            $attributeContent = call_user_func( array( $attributeHandler, 'getAttributeContent'),
                      $contentObjectAttribute, $contentClassAttribute );
             return array_merge($target, $attributeContent, array('content_method' => self::CONTENT_METHOD_CUSTOM_HANDLER ));
 
