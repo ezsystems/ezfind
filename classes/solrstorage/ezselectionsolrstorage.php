@@ -18,8 +18,8 @@ class ezselectionSolrStorage extends ezdatatypeSolrStorage
      */
     public static function getAttributeContent( eZContentObjectAttribute $contentObjectAttribute, eZContentClassAttribute $contentClassAttribute )
     {
-        $selectedOptionsList   = array_fill_keys( $this->contentObjectAttribute->content(), true );
-        $availableOptionsArray = $this->contentObjectAttribute->attribute( 'class_content' );
+        $selectedOptionsList   = array_fill_keys( $contentObjectAttribute->content(), true );
+        $availableOptionsArray = $contentObjectAttribute->attribute( 'class_content' );
         $finalAvailableOptions = array();
 
         foreach ( $availableOptionsArray['options'] as $availableOption )
