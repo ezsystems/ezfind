@@ -14,11 +14,12 @@ class ezmatrixSolrStorage extends ezdatatypeSolrStorage
 
     /**
      * @param eZContentObjectAttribute $contentObjectAttribute the attribute to serialize
+     * @param eZContentClassAttribute $contentClassAttribute the content class of the attribute to serialize
      * @return json encoded string for further processing
      * required first level elements 'method', 'version_format', 'data_type_identifier', 'content'
      * optional first level element is 'rendered' which should store (template) rendered xhtml snippets
      */
-    public static function getAttributeContent(eZContentObjectAttribute $contentObjectAttribute, $contentClassAttribute)
+    public static function getAttributeContent( eZContentObjectAttribute $contentObjectAttribute, eZContentClassAttribute $contentClassAttribute)
     {
 
         
