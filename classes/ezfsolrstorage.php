@@ -54,7 +54,7 @@ class ezfSolrStorage
             );
         if ( class_exists ( $atttributeHandler ) )
         {
-            $attributeContent = call_user_func( $atttributeHandler . '::getAttributeContent',
+            $attributeContent = call_user_func( array( $atttributeHandler, 'getAttributeContent'),
                      $contentObjectAttribute, $contentClassAttribute );
             return array_merge($target, $attributeContent, array('content_method' => self::CONTENT_METHOD_CUSTOM_HANDLER ));
 
