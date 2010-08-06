@@ -26,8 +26,10 @@ class ezoptionSolrStorage extends ezdatatypeSolrStorage
         foreach ( $content->attribute( 'option_list' ) as $value )
         {
             $optionArray['option_list'][] = array(
+                'id' => $value['id'],
                 'value' => $value['value'],
-                'additional_price' => $value['additional_price']
+                'additional_price' => $value['additional_price'],
+                'is_default' => $value['is_default'],
             );
         }
 
