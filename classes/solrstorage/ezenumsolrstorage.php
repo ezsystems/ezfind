@@ -19,7 +19,7 @@ class ezenumSolrStorage extends ezdatatypeSolrStorage
     public static function getAttributeContent( eZContentObjectAttribute $contentObjectAttribute, eZContentClassAttribute $contentClassAttribute )
     {
         $availableEnumerations = array();
-        foreach ( $contentObjectAttribute->content()->Enumerations  as $enumeration )
+        foreach ( $contentObjectAttribute->content()->ObjectEnumerations  as $enumeration )
         {
             $availableEnumerations[] = array(
                 'id' => $enumeration->EnumID,
