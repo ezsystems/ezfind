@@ -118,7 +118,8 @@ class eZSolr
                       'is_hidden' => 'boolean',
                       'is_invisible' => 'boolean',
                       'sort_field' => 'string',
-                      'sort_order' => 'string' );
+                      'sort_order' => 'string',
+                      'depth' => 'sint');
     }
 
     /**
@@ -352,6 +353,7 @@ class eZSolr
         }
         // Get global object values
         $mainNode = $contentObject->attribute( 'main_node' );
+        $mainNodePathArray = $mainNode->attribute( 'path_array' );
         // initialize array of parent node path ids, needed for multivalued path field and subtree filters
         $nodePathArray = array();
         if ( !$mainNode )
@@ -482,6 +484,14 @@ class eZSolr
                 {
                     $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'path' ), $pathNodeID );
                 }
+            }
+
+            // Since eZ Fnd 2.3
+            // cannot call metafield field bame constructor as we are creating multiple fields
+            foreach ($mainNodePathArray as $key => $pathNodeID)
+            {
+                $doc->addField( 'meta_main_path_element_' . $key . '_si', $pathNodeID );
+
             }
 
             eZContentObject::recursionProtectionStart();
