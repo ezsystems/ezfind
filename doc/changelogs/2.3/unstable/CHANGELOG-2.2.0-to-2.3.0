@@ -1,13 +1,14 @@
 
-Changes from 2.2.0 to 2.3.0-alpha
+Changes from 2.3.0-alpha to 2.3.0-beta
 
 *Features:
 
 *Enhancements:
-- Implemented enhancement Enhancement #017075: indexing view count
+- Implemented enhancement #017075: indexing view count
+- Implemented enhancement #017067: Subtree search in ezflow with ezfind (patch) (via Gunnstein)
 
 *Bugs:
-
+-
 
 Changes from 2.2.0 to 2.3.0-alpha
 

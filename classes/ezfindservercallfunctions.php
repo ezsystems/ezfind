@@ -30,10 +30,16 @@ class eZFindServerCallFunctions
 
         if ( $searchLimit > 30 ) $searchLimit = 30;
 
+        if ( $http->hasPostVariable( 'SearchSubTreeArray' ) && $http->postVariable( 'SearchSubTreeArray' ) )
+        {
+            $search_sub_tree_array = explode( ',', $http->postVariable( 'SearchSubTreeArray' ) );
+        }
+
         //Prepare the search params
         $param = array( 'SearchOffset' => $searchOffset,
                         'SearchLimit' => $searchLimit+1,
-                        'SortArray' => array( 'score', 0 )
+                        'SortArray' => array( 'score', 0 ),
+                        'SearchSubTreeArray' => $search_sub_tree_array
                       );
 
         if ( $http->hasPostVariable( 'enable-spellcheck' ) and $http->postVariable( 'enable-spellcheck' ) == 1 )
