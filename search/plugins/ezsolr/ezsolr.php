@@ -119,7 +119,8 @@ class eZSolr
                       'is_invisible' => 'boolean',
                       'sort_field' => 'string',
                       'sort_order' => 'string',
-                      'depth' => 'sint');
+                      'depth' => 'sint',
+                      'view_count' => 'sint');
     }
 
     /**
