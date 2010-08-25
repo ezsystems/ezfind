@@ -213,26 +213,26 @@ class ezfModuleFunctionCollection
         }
         else
         {
-            if ( $countOnly )
-            {
-                $limit = null;
-                $fieldFilters = array();
-                $custom = array( array( 'operation' => 'count( * )',
-                                        'name' => 'count' ) );
-            }
-
             if ( $languageCode )
                 $conds = array( 'language_code' => $languageCode );
 
-            $sorts = array( 'search_query' => 'asc' );
-            $results = eZPersistentObject::fetchObjectList( eZFindElevateConfiguration::definition(),
-                                                            $fieldFilters,
-                                                            $conds,
-                                                            $sorts,
-                                                            $limit,
-                                                            false,
-                                                            false,
-                                                            $custom );
+            if ( $countOnly )
+            {
+                $results = eZPersistentObject::count( eZFindElevateConfiguration::definition(),
+                                                                $conds );
+            }
+            else
+            {
+                $sorts = array( 'search_query' => 'asc' );
+                $results = eZPersistentObject::fetchObjectList( eZFindElevateConfiguration::definition(),
+                                                                $fieldFilters,
+                                                                $conds,
+                                                                $sorts,
+                                                                $limit,
+                                                                false,
+                                                                false,
+                                                                $custom );
+            }
         }
         // END polymorphic part
 
@@ -244,9 +244,6 @@ class ezfModuleFunctionCollection
         }
         else
         {
-            if ( $searchQuery === null and $countOnly )
-                return array( 'result' => $results[0]['count'] );
-
             return array( 'result' => $results );
         }
     }
