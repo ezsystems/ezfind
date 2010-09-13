@@ -10,7 +10,7 @@ Changes from 2.3.0-beta to 2.3.0-final/rc
 *Bugs:
 - #017153: TC-393 - (Autocomplete) Tag inputs rendered no results in autocomplete (eZ Publish issue tracker)
 - #017154: TC-391 - (Autocomplete) Sometimes autocomplete sugests unexistent terms
-
+- #015557: hidden objects not searchable in admin interface
 
 Changes from 2.3.0-alpha to 2.3.0-beta
 ======================================

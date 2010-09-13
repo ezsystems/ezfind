@@ -111,8 +111,6 @@ class ezfeZPSolrQueryBuilder
      * @return array Solr query results.
      *
      * @see ezfeZPSolrQueryBuilder::buildBoostFunctions()
-     * @todo implement case $asObjects == false
-     * @todo add a field list parameter for use if $asObjects == false
 
      */
     public function buildSearch( $searchText, $params = array(), $searchTypes = array() )
@@ -127,11 +125,13 @@ class ezfeZPSolrQueryBuilder
         $contentClassAttributeID = ( isset( $params['SearchContentClassAttributeID'] ) && $params['SearchContentClassAttributeID'] <> -1 ) ? $params['SearchContentClassAttributeID'] : false;
         $sectionID = isset( $params['SearchSectionID'] ) && $params['SearchSectionID'] > 0 ? $params['SearchSectionID'] : false;
         $dateFilter = isset( $params['SearchDate'] ) && $params['SearchDate'] > 0 ? $params['SearchDate'] : false;
-        // not used in query building: $asObjects
         $asObjects = isset( $params['AsObjects'] ) ? $params['AsObjects'] : true;
         $spellCheck = isset( $params['SpellCheck'] ) && $params['SpellCheck'] > 0 ? $params['SpellCheck'] : array();
         $queryHandler = isset( $params['QueryHandler'] )  ?  $params['QueryHandler'] : self::$FindINI->variable( 'SearchHandler', 'DefaultSearchHandler' );
-        $ignoreVisibility = isset( $params['IgnoreVisibility'] )  ?  $params['IgnoreVisibility'] : false;
+        // eZFInd 2.3: check ini setting and take it as a default instead of false
+        $visibilityDefaultSetting = self::$SiteINI->variable( 'SiteAccessSettings', 'ShowHiddenNodes');
+        $visibilityDefault = ( $visibilityDefaultSetting === 'true' ) ? true : false;
+        $ignoreVisibility = isset( $params['IgnoreVisibility'] )  ?  $params['IgnoreVisibility'] : $visibilityDefault;
         $limitation = isset( $params['Limitation'] )  ?  $params['Limitation'] : null;
         $boostFunctions = isset( $params['BoostFunctions'] )  ?  $params['BoostFunctions'] : null;
         $forceElevation = isset( $params['ForceElevation'] )  ?  $params['ForceElevation'] : false;
@@ -1689,6 +1689,7 @@ class ezfeZPSolrQueryBuilder
 
 ezfeZPSolrQueryBuilder::$FindINI = eZINI::instance( 'ezfind.ini' );
 ezfeZPSolrQueryBuilder::$SolrINI = eZINI::instance( 'solr.ini' );
+ezfeZPSolrQueryBuilder::$SiteINI = eZINI::instance( 'site.ini' );
 // need to refactor this: its only valid for the standard Solr request syntax, not for dismax based variants
 // furthermore, negations should be added as well
 ezfeZPSolrQueryBuilder::$allowedBooleanOperators = array( 'AND',
