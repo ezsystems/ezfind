@@ -14,7 +14,7 @@ Changes from 2.3.0-beta to 2.3.0-final/rc
 - fixed bug #017275: ezfind cli scripts requires sessions, but don't need to.
 - fixed bug #017251: addDocs does not report solr error
 - fixed bug #016365: Error on indexing with empty info in attribute with datatype date - missing objects in search result.
-
+- fixed bug #017210: eZFind searching for class attributes NAME:INTEGER (serching for integer) 
 
 Changes from 2.3.0-alpha to 2.3.0-beta
 ======================================
