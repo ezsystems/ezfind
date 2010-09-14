@@ -290,11 +290,11 @@
 
 <fieldtype name="spell" class="solr.TextField" positionIncrementGap="100">
       <analyzer>
-        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <tokenizer class="solr.LetterTokenizerFactory"/>
         <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
         <filter class="solr.StandardFilterFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
-        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="0" catenateWords="1" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
+        <!-- <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="0" catenateWords="1" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/> -->
         <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
       </analyzer>
     </fieldtype>
@@ -321,6 +321,23 @@
 	       <tokenizer class="solr.PatternTokenizerFactory" pattern=", *" />
 	       <filter class="solr.TrimFilterFactory" />              
 	       <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
+	       <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+	     </analyzer>
+	     <analyzer type="query">
+	       <tokenizer class="solr.PatternTokenizerFactory" pattern=", *" />
+	       <filter class="solr.TrimFilterFactory" />
+	       <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+	       <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
+	       <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+	     </analyzer>
+	   </fieldtype>	
+
+<!-- eZ Find: This field type is dedicated to ez publish keywords.  -->
+	<fieldtype name="lckeyword" class="solr.TextField" positionIncrementGap="100">
+	     <analyzer type="index">
+	       <tokenizer class="solr.PatternTokenizerFactory" pattern=", *" />
+	       <filter class="solr.TrimFilterFactory" />
+	       <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
 	       <filter class="solr.LowerCaseFilterFactory"/>
 	       <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
 	     </analyzer>
@@ -333,7 +350,6 @@
 	       <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
 	     </analyzer>
 	   </fieldtype>	
-
 
     <!-- This is an example of using the KeywordTokenizer along
          With various TokenFilterFactories to produce a sortable field
@@ -405,8 +421,14 @@
     <!-- since fields of this type are by default not stored or indexed,
          any data added to them will be ignored outright.  --> 
     <fieldtype name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" /> 
+    <!-- The geopoint type holds latitude / longitude information
+      implictely it holds several subfields-->
+    <fieldType name="geopoint" class="solr.PointType" dimension="2" subFieldType="double"/>
+
+    <fieldtype name="binary" class="solr.BinaryField"/>
 
  </types>
+
 
 
  <fields>
@@ -490,6 +512,18 @@
 	   <dynamicField name="*_dt"       type="date"    indexed="true"  stored="true" multiValued="true"/>
 	   <dynamicField name="*_random"   type="random"  indexed="true"  stored="true" multiValued="true"/>
 	   <dynamicField name="*_k"        type="keyword" indexed="true"  stored="true" multiValued="true"/>
+           <dynamicField name="*_lk"       type="lckeyword" indexed="true"  stored="true" multiValued="true"/>
+              <!-- some trie-coded dynamic fields for faster range queries -->
+           <dynamicField name="*_ti" type="tint"    indexed="true"  stored="true"/>
+           <dynamicField name="*_tl" type="tlong"   indexed="true"  stored="true"/>
+           <dynamicField name="*_tf" type="tfloat"  indexed="true"  stored="true"/>
+           <dynamicField name="*_td" type="tdouble" indexed="true"  stored="true"/>
+           <dynamicField name="*_tdt" type="tdate"  indexed="true"  stored="true"/>
+             <!-- geopoint for geospatial/location searches, boosting, ... -->
+           <dynamicField name="*_gpt" type="geopoint"  indexed="true"  stored="true"/>
+             <!-- storage fields accepts base64 encoded strings -->
+           <dynamicField name="*_bst" type="binary"  indexed="false"  stored="true"/>
+
 
 	  <field name="ezf_df_text" type="text"    indexed="true"  stored="true" multiValued="true" termVectors="true"/>
 
@@ -510,15 +544,16 @@
         is added to the index.  It's used either to index the same field differently,
         or to add multiple fields to the same field for easier/faster searching.  -->
 
-	     <copyField source="*_k" dest="ezf_df_text"/>
-	     <copyField source="*_t" dest="ezf_df_text"/>
-		 <copyField source="*_s" dest="ezf_df_text"/>
-        <copyField source="*_k" dest="ezf_sp_words"/>
-		 <copyField source="*_t" dest="ezf_sp_words"/>
-		 <copyField source="*_s" dest="ezf_sp_words"/>
+    <copyField source="*_lk" dest="ezf_df_text"/>
+    <copyField source="*_k" dest="ezf_df_text"/>
+    <copyField source="*_t" dest="ezf_df_text"/>
+    <copyField source="*_s" dest="ezf_df_text"/>
+    <copyField source="*_lk" dest="ezf_sp_words"/>
+    <copyField source="*_k" dest="ezf_sp_words"/>
+    <copyField source="*_t" dest="ezf_sp_words"/>
+    <copyField source="*_s" dest="ezf_sp_words"/>
 
 
-	
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 
 	  destination field is to use the dynamic field syntax. 
