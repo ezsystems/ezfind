@@ -32,7 +32,7 @@ $cli = eZCLI::instance();
 
 $scriptSettings = array();
 $scriptSettings['description'] = 'Sends a commit update message to the Solr search server';
-$scriptSettings['use-session'] = true;
+$scriptSettings['use-session'] = false;
 $scriptSettings['use-modules'] = true;
 $scriptSettings['use-extensions'] = true;
 

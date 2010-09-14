@@ -8,9 +8,10 @@ Changes from 2.3.0-beta to 2.3.0-final/rc
 
 
 *Bugs:
-- #017153: TC-393 - (Autocomplete) Tag inputs rendered no results in autocomplete (eZ Publish issue tracker)
-- #017154: TC-391 - (Autocomplete) Sometimes autocomplete sugests unexistent terms
-- #015557: hidden objects not searchable in admin interface
+- fixed bug #017153: TC-393 - (Autocomplete) Tag inputs rendered no results in autocomplete (eZ Publish issue tracker)
+- fixed bug #017154: TC-391 - (Autocomplete) Sometimes autocomplete sugests unexistent terms
+- fixed bug #015557: hidden objects not searchable in admin interface
+- fixed bug #017275: ezfind cli scripts requires sessions, but don't need to.
 
 Changes from 2.3.0-alpha to 2.3.0-beta
 ======================================

@@ -196,7 +196,11 @@ class ezfUpdateSearchIndexSolr
                 //eZSearch::removeObject( $object );
                 //pass false as we are going to do a commit at the end
                 //
-                $searchEngine->addObject( $object, false );
+                $result = $searchEngine->addObject( $object, false );
+                if (! $result)
+                {
+                    $this->CLI->output(' Failed indexing object with ID ' . $object->attribute('id'));
+                }
                 ++$count;
             }
         }
