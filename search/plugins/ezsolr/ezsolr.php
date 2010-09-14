@@ -610,7 +610,11 @@ class eZSolr
         {
            foreach( $fieldBaseData as $key => $value )
            {
-                $doc->addField( $key, $value, $boost );
+               // since ezfind 2.3, a NULL value returned from $fieldBase in the $value elements is used as a flag not to index
+               if (! is_null($value))
+               {
+                   $doc->addField( $key, $value, $boost );
+               }
            }
            return true;
         }

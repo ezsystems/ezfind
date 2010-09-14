@@ -369,6 +369,12 @@ class ezfSolrDocumentFieldBase
                 {
                     $value = self::convertTimestampToDate( $value );
                 }
+                // Flag this as not to index
+                else
+                {
+                    $value = null;
+                }
+               
             } break;
 
             case 'boolean':
