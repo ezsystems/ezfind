@@ -560,12 +560,19 @@ class eZSolr
         {
             $optimize = true;
         }
+        
         if ( $this->UseMultiLanguageCores === true)
         {
+            $result = true;
             foreach( $availableLanguages as $languageCode )
             {
-                $this->SolrLanguageShards[$languageCode]->addDocs( array( $docList[$languageCode] ), $commit, $optimize, $commitWithin );
+                $languageResult = $this->SolrLanguageShards[$languageCode]->addDocs( array( $docList[$languageCode] ), $commit, $optimize, $commitWithin );
+                if (! $languageResult )
+                {
+                    $result = false;
+                }
             }
+            return $result;
         }
         else
         {
