@@ -1655,6 +1655,7 @@ class ezfeZPSolrQueryBuilder
     /// Vars
     static $FindINI;
     static $SolrINI;
+    static $SiteINI;
 
     /**
      * Array containing the allowed boolean operators for the 'fq' parameter
