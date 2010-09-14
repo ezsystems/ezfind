@@ -54,17 +54,43 @@ class ezfeZPSolrQueryBuilder
      * not always safe
      * @param string $searchText
      * @param array $solrFields
-     * @param string $mode
+     * @param string $boostFields a hash array
      *
      */
-    public function buildMultiFieldQuery( $searchText, $solrFields = array(), $mode = null )
+    public function buildMultiFieldQuery( $searchText, $solrFields = array(), $boostFields = array() )
     {
-        // simple implode implying an OR functionality, $mode is ignored
+        // simple implode implying an OR functionality
         $multiFieldQuery = '';
+        // prepare boostfields arguments if any
+        $processedBoostFields = array();
+        foreach ($boostFields as $baseName => $boostValue)
+        {
+            if (strpos($boostValue, ':') !== false && is_numeric($baseName))
+            {
+                // split at the first colon, leave the rest intact
+                list( $baseName, $boostValue ) = explode(':', $boostValue, 2);
+            }
+            if (is_numeric($boostValue))
+            {
+                // Get internal field name.
+                $baseName = eZSolr::getFieldName($baseName);
+                $processedBoostFields[$baseName] = $boostValue;
+            }
+        }
+
+
         foreach ($solrFields as $field)
         {
             //don't mind the last extra space, it's ignored by Solr
-            $multiFieldQuery .= $field . ':(' . $searchText . ') ';
+            $multiFieldQuery .= $field . ':(' . $searchText . ')';
+            // check if we need to apply a boost
+            if (array_key_exists($field, $processedBoostFields))
+            {
+                $multiFieldQuery .= '^' . $processedBoostFields[$field];
+            }
+            
+            $multiFieldQuery .= ' ';
+            
         }
         return $multiFieldQuery;
     }
@@ -359,8 +385,17 @@ class ezfeZPSolrQueryBuilder
                 // build the query against all "text" like fields
                 // should take into account all the filter fields and class filters to shorten the query
                 // need to build: Solr q
-                $handlerParameters = array ( 'q' => $this->buildMultiFieldQuery( $searchText, array_merge($queryFields, $extraFieldsToSearch) ),
+                if (array_key_exists('fields', $boostFunctions))
+                {
+                
+                    $handlerParameters = array ( 'q' => $this->buildMultiFieldQuery( $searchText, array_merge($queryFields, $extraFieldsToSearch), $boostFunctions['fields'] ),
                                              'qt' => 'standard');
+                }
+                else
+                {
+                    $handlerParameters = array ( 'q' => $this->buildMultiFieldQuery( $searchText, array_merge($queryFields, $extraFieldsToSearch) ),
+                                             'qt' => 'standard');
+                }
                 break;
 
             case 'simplestandard':
