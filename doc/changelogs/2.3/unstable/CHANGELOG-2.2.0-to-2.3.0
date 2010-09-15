@@ -16,6 +16,7 @@ Changes from 2.3.0-beta to 2.3.0-final/rc
 - fixed bug #016365: Error on indexing with empty info in attribute with datatype date - missing objects in search result.
 - fixed bug #017210: eZFind searching for class attributes NAME:INTEGER (serching for integer) 
 - fixed bug #016626: Boost functions fields in templates not processed
+- fixed bug #017286: ezfSolrDocumentFieldBase::getInstance become slower and slower over time
 
 Changes from 2.3.0-alpha to 2.3.0-beta
 ======================================

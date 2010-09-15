@@ -320,7 +320,7 @@ class ezfSolrDocumentFieldBase
      */
     static function getInstance( eZContentObjectAttribute $objectAttribute )
     {
-        if ( array_key_exists( $objectAttribute->attribute( 'id' ), self::$singletons ) )
+        if ( isset( self::$singletons[$objectAttribute->attribute( 'id' )] ) )
         {
             return self::$singletons[$objectAttribute->attribute( 'id' )];
         }
@@ -330,7 +330,7 @@ class ezfSolrDocumentFieldBase
 
             // Check if using custom handler.
             $customMapList = self::$FindINI->variable( 'SolrFieldMapSettings', 'CustomMap' );
-            if ( array_key_exists( $datatypeString, $customMapList ) )
+            if ( isset( $customMapList[$datatypeString] ) )
             {
                 $fieldBaseClass = $customMapList[$datatypeString];
                 if ( class_exists( $fieldBaseClass ) )
