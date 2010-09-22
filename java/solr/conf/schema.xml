@@ -68,7 +68,10 @@
        exceed a certain size (in characters).
     -->
     <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
-
+    
+    <!-- needed for the hardcoded meta fields -->
+    <fieldType name="mstring" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
+    
     <!-- boolean type: "true" or "false" -->
     <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true" omitNorms="true"/>
 
@@ -458,31 +461,31 @@
        when adding a document.
    -->
 
-  <field name="meta_guid_s" type="string" indexed="true" stored="true" /> <!-- Global unique ID ( per installation per object per language ) -->
+  <field name="meta_guid_ms" type="mstring" indexed="true" stored="true" /> <!-- Global unique ID ( per installation per object per language ) -->
 
    <!-- Installation information -->
-   <field name="meta_installation_id_s" type="string" indexed="true" stored="true" />               <!-- Installation identified -->
-   <field name="meta_installation_url_s" type="string" indexed="true" stored="true"/>
+   <field name="meta_installation_id_ms" type="mstring" indexed="true" stored="true" />               <!-- Installation identified -->
+   <field name="meta_installation_url_ms" type="mstring" indexed="true" stored="true"/>
 
    <!-- Object information -->
    <field name="meta_id_si" type="sint" indexed="true" stored="true"/>                     <!-- Object ID -->
    <field name="meta_section_id_si" type="sint" indexed="true" stored="true"/>                     <!-- Section ID -->
    <field name="meta_published_dt" type="date" indexed="true" stored="true"/>              <!-- Object publish date -->
    <field name="meta_name_t" type="text" indexed="true" stored="true" termVectors="true"/>  <!-- Object name -->
-   <field name="meta_main_node_id_s" type="string" indexed="true" stored="true"/>           <!-- Main node ID -->
-   <field name="meta_language_code_s" type="string" indexed="true" stored="true"/>          <!-- Language code --> 
-   <field name="meta_available_language_codes_s" type="string" indexed="true" stored="true" multiValued="true"/>          <!-- List of available language codes in the corresponding content object -->    
+   <field name="meta_main_node_id_ms" type="mstring" indexed="true" stored="true"/>           <!-- Main node ID -->
+   <field name="meta_language_code_ms" type="mstring" indexed="true" stored="true"/>          <!-- Language code --> 
+   <field name="meta_available_language_codes_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- List of available language codes in the corresponding content object -->    
    <field name="meta_anon_access_b" type="boolean" indexed="true" stored="false" />         <!-- Anonymous user access to object -->
 
    <!-- Location information ( may be multiple ) -->
-   <field name="meta_main_url_alias_s" type="string" indexed="true" stored="true"/>                <!-- Main location URL aliases -->
+   <field name="meta_main_url_alias_ms" type="mstring" indexed="true" stored="true"/>                <!-- Main location URL aliases -->
    <field name="meta_node_id_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- Location node ID -->
    <field name="meta_path_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- Location path IDs -->
-   <field name="meta_path_string_s" type="string" indexed="true" stored="true" multiValued="true"/> <!-- Location path string -->
+   <field name="meta_path_string_ms" type="mstring" indexed="true" stored="true" multiValued="true"/> <!-- Location path string -->
    <field name="meta_depth_si" type="sint" indexed="true" stored="true" multiValued="true"/>       <!-- Location depths -->
-   <field name="meta_url_alias_s" type="string" indexed="true" stored="true" multiValued="true"/>   <!-- Location URL aliases -->
-   <field name="meta_sort_field_s" type="string" indexed="true" stored="true" multiValued="true"/>  <!-- Location sort field -->
-   <field name="meta_sort_order_s" type="string" indexed="true" stored="true" multiValued="true"/>  <!-- Location sort order -->
+   <field name="meta_url_alias_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>   <!-- Location URL aliases -->
+   <field name="meta_sort_field_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>  <!-- Location sort field -->
+   <field name="meta_sort_order_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>  <!-- Location sort order -->
 
 
    <!-- Here, default is used to create a "timestamp" field indicating
@@ -505,6 +508,8 @@
 	   <dynamicField name="*_sf"       type="sfloat"  indexed="true"  stored="true" multiValued="true"/>
 	   <dynamicField name="*_sd"       type="sdouble" indexed="true"  stored="true" multiValued="true"/>
 	   <dynamicField name="*_s"        type="string"  indexed="true"  stored="true" multiValued="true" termVectors="true"/>
+           <!-- for data that should be treated as a string, but that should not be part of the default text or spell check index" -->
+           <dynamicField name="*_ms"        type="mstring"  indexed="true"  stored="true" multiValued="true" termVectors="true"/>
 	   <dynamicField name="*_sl"       type="slong"   indexed="true"  stored="true" multiValued="true"/>
 	   <dynamicField name="*_l"        type="long"    indexed="true"  stored="true" multiValued="true"/>
 	   <dynamicField name="*_t"        type="text"    indexed="true"  stored="true" multiValued="true" termVectors="true"/>
@@ -532,7 +537,7 @@
  <!-- Field to use to determine and enforce document uniqueness. 
       Unless this field is marked with required="false", it will be a required field
    -->
- <uniqueKey>meta_guid_s</uniqueKey>
+ <uniqueKey>meta_guid_ms</uniqueKey>
 
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
  <defaultSearchField>ezf_df_text</defaultSearchField>

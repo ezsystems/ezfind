@@ -63,13 +63,13 @@ class eZSolr
     {
         return array(
             'id' => 'sint',
-            'class_name' => 'string',
+            'class_name' => 'mstring',
             'section_id' => 'sint',
             'owner_id' => 'sint',
             'contentclass_id' => 'sint',
             'current_version' => 'sint',
-            'remote_id' => 'string',
-            'class_identifier' => 'string',
+            'remote_id' => 'mstring',
+            'class_identifier' => 'mstring',
             'main_node_id' => 'sint',
             'modified' => 'date',
             'published' => 'date',
@@ -135,18 +135,18 @@ class eZSolr
     {
        
 
-        $attributeList = array ('search' => array_merge( array( 'guid' => 'string',
-                                             'installation_id' => 'string',
-                                             'installation_url' => 'string',
+        $attributeList = array ('search' => array_merge( array( 'guid' => 'mstring',
+                                             'installation_id' => 'mstring',
+                                             'installation_url' => 'mstring',
                                              'name' => 'text',
                                              'anon_access' => 'boolean',
-                                             'language_code' => 'string',
-                                             'available_language_codes' => 'string',
-                                             'main_url_alias' => 'string',
+                                             'language_code' => 'mstring',
+                                             'available_language_codes' => 'mstring',
+                                             'main_url_alias' => 'mstring',
                                              'owner_name' => 'text',
                                              'owner_group_id' => 'sint',
                                              'path' => 'sint',
-                                             'object_states' => 'string'),
+                                             'object_states' => 'mstring'),
                                       self::metaAttributes(),
                                       self::nodeAttributes() ),
                                 'facet' =>  array( 
