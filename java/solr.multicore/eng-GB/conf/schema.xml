@@ -69,8 +69,6 @@
     -->
     <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
 
-    <!-- needed for the hardcoded meta fields -->
-    <fieldType name="mstring" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
     
     <!-- needed for the hardcoded meta fields -->
     <fieldType name="mstring" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
