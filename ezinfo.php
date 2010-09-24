@@ -39,7 +39,7 @@ class eZFindInfo
     {
         return array(
             'Name' => "eZ Find",
-            'Version' => '2.3.0-alpha',
+            'Version' => '2.3.0',
             'Copyright' => "Copyright (C) 1999-2010 eZ Systems AS.",
             'Info_url' => "http://ez.no/ezfind",
             'License' => "GNU General Public License v2.0",
