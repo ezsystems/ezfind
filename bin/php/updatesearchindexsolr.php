@@ -613,7 +613,7 @@ class ezfUpdateSearchIndexSolr
         if ( !file_exists( 'settings/siteaccess/' . $siteaccess ) )
         {
             if ( !$isQuiet )
-                $cli->notice( "Siteaccess $optionData does not exist, using default siteaccess" );
+                $cli->notice( "Siteaccess $siteaccess does not exist, using default siteaccess" );
         }
     }
 
