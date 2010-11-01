@@ -367,7 +367,7 @@ class eZFindElevateConfiguration extends eZPersistentObject
         }
         else
         {
-            $message = ezi18n( 'extension/ezfind/elevate', "Error while generating the configuration XML" );
+            $message = ezpI18n::tr( 'extension/ezfind/elevate', "Error while generating the configuration XML" );
             self::$lastSynchronizationError = $message;
             eZDebug::writeError( $message, __METHOD__ );
             return false;
@@ -482,7 +482,7 @@ class eZFindElevateConfiguration extends eZPersistentObject
 
         if ( ! $result )
         {
-            $message = ezi18n( 'extension/ezfind/elevate', 'An unknown error occured in updating Solr\'s elevate configuration.' );
+            $message = ezpI18n::tr( 'extension/ezfind/elevate', 'An unknown error occured in updating Solr\'s elevate configuration.' );
             eZDebug::writeError( $message, __METHOD__ );
             throw new Exception( $message );
         }

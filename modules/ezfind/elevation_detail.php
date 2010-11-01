@@ -133,9 +133,9 @@ $tpl->setVariable( 'baseurl', $thisUrl );
 $Result = array();
 $Result['content'] = $tpl->fetch( "design:ezfind/elevation_detail.tpl" );
 $Result['path'] = array( array( 'url' => false,
-                                'text' => ezi18n( 'extension/ezfind', 'eZFind' ) ),
+                                'text' => ezpI18n::tr( 'extension/ezfind', 'eZFind' ) ),
                          array( 'url' => 'ezfind/elevate',
-                                'text' => ezi18n( 'extension/ezfind', 'Elevation' ) ) );
+                                'text' => ezpI18n::tr( 'extension/ezfind', 'Elevation' ) ) );
 
 if ( $object instanceof eZContentObject ) 
 {

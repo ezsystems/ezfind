@@ -113,7 +113,7 @@ $Result = array();
 $Result['content'] = $tpl->fetch( "design:ezfind/remove_elevation.tpl" );
 $Result['left_menu'] = "design:ezfind/backoffice_left_menu.tpl";
 $Result['path'] = array( array( 'url' => false,
-                                'text' => ezi18n( 'extension/ezfind', 'eZFind' ) ),
+                                'text' => ezpI18n::tr( 'extension/ezfind', 'eZFind' ) ),
                          array( 'url' => false,
-                                'text' => ezi18n( 'extension/ezfind', 'Remove Elevation' ) ) );
+                                'text' => ezpI18n::tr( 'extension/ezfind', 'Remove Elevation' ) ) );
 ?>
