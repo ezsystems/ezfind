@@ -794,7 +794,7 @@ class eZSolr
                 'SearchResult' => false,
                 'SearchCount' => 0,
                 'StopWordArray' => array(),
-                'SearchExtras' => new ezfSearchResultInfo( array( 'error' => ezi18n( 'ezfind', $error ) ) ) );
+                'SearchExtras' => new ezfSearchResultInfo( array( 'error' => ezpI18n::tr( 'ezfind', $error ) ) ) );
         }
 
         $highLights = array();
@@ -996,7 +996,7 @@ class eZSolr
                 'SearchResult' => false,
                 'SearchCount' => 0,
                 'StopWordArray' => array(),
-                'SearchExtras' => new ezfSearchResultInfo( array( 'error' => ezi18n( 'ezfind', $error ) ) ) );
+                'SearchExtras' => new ezfSearchResultInfo( array( 'error' => ezpI18n::tr( 'ezfind', $error ) ) ) );
         }
         $objectRes = array();
         if ( isset( $resultArray['response'] ) && is_array( $resultArray['response'] ) )
@@ -1262,7 +1262,7 @@ class eZSolr
      */
     static function engineText()
     {
-        return ezi18n( 'ezfind', 'eZ Find 2.3 search plugin &copy; 1999-2010 eZ Systems AS, powered by Apache Solr 1.5-dev' );
+        return ezpI18n::tr( 'ezfind', 'eZ Find 2.3 search plugin &copy; 1999-2010 eZ Systems AS, powered by Apache Solr 1.5-dev' );
     }
 
     /**
