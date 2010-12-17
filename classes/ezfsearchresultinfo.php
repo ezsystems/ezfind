@@ -61,6 +61,7 @@ class ezfSearchResultInfo
     {
         return array( 'facet_fields',
                       'facet_queries',
+                      'facet_dates',
                       'engine',
                       'hasError',
                       'error',
