@@ -1056,8 +1056,7 @@ class ezfeZPSolrQueryBuilder
                  empty( $facetDefinition['query'] ) and
                  empty( $facetDefinition['date'] ) )
             {
-                eZDebug::writeDebug( 'No facet field or query provided.',
-                                     'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
+                eZDebug::writeDebug( 'No facet field or query provided.', __METHOD__ );
                 continue;
             }
 
@@ -1093,7 +1092,7 @@ class ezfeZPSolrQueryBuilder
                         {
                             eZDebug::writeNotice( 'Facet field does not exist in local installation, but may still be valid: ' .
                                                   $facetDefinition['field'],
-                                                  'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
+                                                  __METHOD__ );
                             continue;
                         }
                         $queryPart['field'] = $fieldName;
@@ -1110,7 +1109,7 @@ class ezfeZPSolrQueryBuilder
                 if ( !$field )
                 {
                     eZDebug::writeNotice( 'Invalid query field provided: ' . $facetDefinition['query'],
-                                          'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
+                                          __METHOD__ );
                     continue;
                 }
 
@@ -1141,7 +1140,7 @@ class ezfeZPSolrQueryBuilder
                     default:
                     {
                         eZDebug::writeWarning( 'Invalid sort option provided: ' . $facetDefinition['sort'],
-                                               'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
+                                               __METHOD__ );
                     } break;
                 }
             }
@@ -1190,7 +1189,7 @@ class ezfeZPSolrQueryBuilder
                 {
                     eZDebug::writeNotice( 'Facet field does not exist in local installation, but may still be valid: ' .
                                           $facetDefinition['date'],
-                                          'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
+                                          __METHOD__ );
                     continue;
                 }
                 else
@@ -1241,7 +1240,7 @@ class ezfeZPSolrQueryBuilder
                     default:
                     {
                         eZDebug::writeWarning( 'Invalid option gived for date.other: ' . $facetDefinition['date.other'],
-                                               'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
+                                               __METHOD__ );
                     } break;
                 }
             }
@@ -1400,8 +1399,7 @@ class ezfeZPSolrQueryBuilder
             }
         }
 
-        eZDebug::writeError( 'No valid content class',
-                             'ezfeZPSolrQueryBuilder::getContentClassFilterQuery()' );
+        eZDebug::writeError( 'No valid content class', __METHOD__ );
 
         return null;
     }
@@ -1528,8 +1526,7 @@ class ezfeZPSolrQueryBuilder
                         }
                         else
                         {
-                            eZDebug::writeDebug( $limitationType,
-                                             'ezfeZPSolrQueryBuilder::policyLimitationFilterQuery unknown limitation type: ' . $limitationType );
+                            eZDebug::writeDebug( $limitationType, __METHOD__ . ' unknown limitation type: ' . $limitationType );
                             continue;
                         }
                     }
@@ -1580,8 +1577,7 @@ class ezfeZPSolrQueryBuilder
             $filterQuery .= ' AND ' . eZSolr::getMetaFieldName( 'is_invisible' ) . ':false';
         }
 
-        eZDebug::writeDebug( $filterQuery,
-                             'ezfeZPSolrQueryBuilder::policyLimitationFilterQuery' );
+        eZDebug::writeDebug( $filterQuery, __METHOD__ );
 
         return $filterQuery;
     }
