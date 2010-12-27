@@ -211,7 +211,7 @@ class ezfeZPSolrQueryBuilder
         $filterQuery = array();
 
         // Add subtree query filter
-        if ( count( $subtrees ) > 0 )
+        if ( !empty( $subtrees ) )
         {
             $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = $subtrees;
             $subtreeQueryParts = array();
@@ -439,7 +439,7 @@ class ezfeZPSolrQueryBuilder
         // need to do this as multiple fq elements are otherwise AND-ed by the Solr backend
         // when using this to search across a dedicated set of languages, it will still be valid with the ezp permission
         // scheme
-        if ( count( $shardFilterQuery ) > 0  )
+        if ( !empty( $shardFilterQuery ) )
         {
             $fqString = '((' . implode(') AND (', $filterQuery) . ')) OR ((' . implode(') OR (', $shardFilterQuery) . '))';
             // modify the filterQuery array with this single string as the only element
@@ -677,7 +677,7 @@ class ezfeZPSolrQueryBuilder
 
 
         // Add subtree query filter
-        if ( count( $subtrees ) > 0 )
+        if ( !empty( $subtrees ) )
         {
             $subtreeQueryParts = array();
             foreach ( $subtrees as $subtreeNodeID )
@@ -1246,7 +1246,7 @@ class ezfeZPSolrQueryBuilder
                 }
             }
 
-            if ( count( $queryPart ) )
+            if ( !empty( $queryPart ) )
             {
                 foreach( $queryPart as $key => $value )
                 {
@@ -1265,7 +1265,7 @@ class ezfeZPSolrQueryBuilder
             }
         }
 
-        if ( count( $queryParamList ) )
+        if ( !empty( $queryParamList ) )
         {
             $queryParamList['facet'] = 'true';
         }
@@ -1417,11 +1417,11 @@ class ezfeZPSolrQueryBuilder
     {
         $filterQuery = false;
         $policies = array();
-        if ( is_array( $limitation ) && ( count( $limitation ) == 0 ) )
+        if ( is_array( $limitation ) && empty( $limitation ) )
         {
             return $filterQuery;
         }
-        elseif ( is_array( $limitation ) && ( count( $limitation ) > 0 ) )
+        elseif ( is_array( $limitation ) && !empty( $limitation ) )
         {
             $policies = $limitation;
         }
@@ -1538,13 +1538,13 @@ class ezfeZPSolrQueryBuilder
                 $filterQueryPolicyLimitations[] = '( ' . implode( ' OR ', $filterQueryPolicyLimitationParts ) . ' )';
             }
 
-            if ( count( $filterQueryPolicyLimitations ) > 0 )
+            if ( !empty( $filterQueryPolicyLimitations ) )
             {
                 $filterQueryPolicies[] = '( ' . implode( ' AND ', $filterQueryPolicyLimitations ) . ')';
             }
         }
 
-        if ( count( $filterQueryPolicies ) > 0 )
+        if ( !empty( $filterQueryPolicies ) )
         {
             $filterQuery = implode( ' OR ', $filterQueryPolicies );
         }
@@ -1663,7 +1663,7 @@ class ezfeZPSolrQueryBuilder
                 }
             }
 
-            if ( count( $classIDArray ) > 0 )
+            if ( !empty( $classIDArray ) )
             {
                 $condArray['contentclass_id'] = array( $classIDArray );
             }
