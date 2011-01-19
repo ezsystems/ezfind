@@ -993,7 +993,10 @@ class eZSolr
                     $resultTree = new eZFindResultNode( $nodeRowList[$nodeID] );
                     $resultTree->setContentObject( new eZContentObject( $nodeRowList[$nodeID] ) );
                     $resultTree->setAttribute( 'is_local_installation', true );
-                    if ( !$resultTree->attribute( 'object' )->attribute( 'can_read' ) )
+                    // can_read permission must be checked as they could be out of sync in Solr, however, when called from template with:
+                    // limitation, hash( 'accessWord', ... ) this check should not be performed as it has precedence.
+                    // See: http://issues.ez.no/15978
+                    if ( !isset( $params['Limitation'], $params['Limitation']['accessWord'] ) && !$resultTree->attribute( 'object' )->attribute( 'can_read' ) )
                     {
                         $searchCount--;
                         eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $nodeID,
@@ -1154,14 +1157,16 @@ class eZSolr
                     $resultTree = new eZFindResultNode( $nodeRowList[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0]] );
                     $resultTree->setContentObject( new eZContentObject( $nodeRowList[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0]] ) );
                     $resultTree->setAttribute( 'is_local_installation', true );
-                    if ( !$resultTree->attribute( 'object' )->attribute( 'can_read' ) )
+                    // can_read permission must be checked as they could be out of sync in Solr, however, when called from template with:
+                    // limitation, hash( 'accessWord', ... ) this check should not be performed as it has precedence.
+                    // See: http://issues.ez.no/15978
+                    if ( !isset( $params['Limitation'], $params['Limitation']['accessWord'] ) && !$resultTree->attribute( 'object' )->attribute( 'can_read' ) )
                     {
                         $searchCount--;
                         eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0],
                                               'eZSolr::search()' );
                         continue;
                     }
-
 
                     $globalURL = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' )] .
                         '/(language)/' . $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'language_code' )];
