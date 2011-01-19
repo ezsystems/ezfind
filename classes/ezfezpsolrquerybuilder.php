@@ -1301,21 +1301,41 @@ class ezfeZPSolrQueryBuilder
     /**
      * Create policy limitation query.
      *
-     * @param $limitation array in the same format as $accessResult['policies']
-     * @param $ignoreVisibility boolean
+     * @param array $limitation Override the limitation of the user. Same format as the return of eZUser::hasAccessTo()
+     * @param boolean $ignoreVisibility Set to true for the visibility to be ignored
      * @return string Lucene/Solr query string which can be used as filter query for Solr
      */
     protected function policyLimitationFilterQuery( $limitation = null, $ignoreVisibility = false )
     {
         $filterQuery = false;
         $policies = array();
-        if ( is_array( $limitation ) && ( count( $limitation ) == 0 ) )
+
+        if ( is_array( $limitation ) )
         {
-            return $filterQuery;
-        }
-        elseif ( is_array( $limitation ) && ( count( $limitation ) > 0 ) )
-        {
-            $policies = $limitation;
+            if ( empty( $limitation ) )
+            {
+                return false;
+            }
+
+            if ( isset( $limitation['accessWord'] ) )
+            {
+                switch ( $limitation['accessWord'] )
+                {
+                    case 'limited':
+                        if ( isset( $limitation['policies'] ) )
+                        {
+                            $policies = $limitation['policies'];
+                            break;
+                        }
+                        // break omitted, "limited" without policies == "no"
+                    case 'no':
+                        return 'NOT *:*';
+                    case 'yes':
+                        break;
+                    default:
+                        return false;
+                }
+            }
         }
         else
         {
