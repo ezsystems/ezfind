@@ -124,6 +124,15 @@ class ezfUpdateSearchIndexSolr
             }
         }
 
+        // Check that Solr server is up and running
+        if ( !$this->isSolrRunning() )
+        {
+            $this->CLI->output( "The Solr server couldn't be reached." );
+            $this->CLI->output( 'Please, ensure the server is started and the configuration of eZFind correct.' );
+            $this->Script->shutdown();
+            exit();
+        }
+
         $this->initializeDB();
 
         /*
@@ -617,6 +626,17 @@ class ezfUpdateSearchIndexSolr
         }
     }
 
+    /**
+     * Tells whether Solr is running by replying to ping request
+     *
+     * @return bool
+     */
+    protected function isSolrRunning()
+    {
+        $solrBase = new eZSolrBase();
+        $pingResult = $solrBase->ping();
+        return isset( $pingResult['status'] ) && $pingResult['status'] === 'OK';
+    }
 
     /// Vars
 
