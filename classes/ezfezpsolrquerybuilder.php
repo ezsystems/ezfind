@@ -1455,11 +1455,13 @@ class ezfeZPSolrQueryBuilder
         {
             // policy limitations are concatenated with AND
             $filterQueryPolicyLimitations = array();
+            $filterQueryPolicyPathLimitations = array();
 
             foreach ( $limitationList as $limitationType => $limitationValues )
             {
                 // limitation values of one type in a policy are concatenated with OR
                 $filterQueryPolicyLimitationParts = array();
+                $isPathLimitation = false;
 
                 switch ( $limitationType )
                 {
@@ -1473,6 +1475,7 @@ class ezfeZPSolrQueryBuilder
                             // we only take the last node ID in the path identification string
                             $subtreeNodeID = array_pop( $pathArray );
                             $filterQueryPolicyLimitationParts[] = eZSolr::getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
+                            $isPathLimitation = true;
                         }
                     } break;
 
@@ -1485,6 +1488,7 @@ class ezfeZPSolrQueryBuilder
                             // we only take the last node ID in the path identification string
                             $nodeID = array_pop( $pathArray );
                             $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $nodeID;
+                            $isPathLimitation = false;
                         }
                     } break;
 
@@ -1532,12 +1536,20 @@ class ezfeZPSolrQueryBuilder
                     }
                 }
 
-                $filterQueryPolicyLimitations[] = '( ' . implode( ' OR ', $filterQueryPolicyLimitationParts ) . ' )';
+                if($isPathLimitation)
+                {
+                	$filterQueryPolicyPathLimitations[] = '( ' . implode( ' OR ', $filterQueryPolicyLimitationParts ) . ' )';
+                }
+                else
+                {
+                	$filterQueryPolicyLimitations[] = '( ' . implode( ' OR ', $filterQueryPolicyLimitationParts ) . ' )';
+                }
             }
 
             if ( !empty( $filterQueryPolicyLimitations ) )
             {
-                $filterQueryPolicies[] = '( ' . implode( ' AND ', $filterQueryPolicyLimitations ) . ')';
+                $filterQueryPolicies[] = '( (' . implode( ' AND ', $filterQueryPolicyLimitations ) 
+                	. ') OR ('. implode( ' OR ', $filterQueryPolicyPathLimitations ) .') )';
             }
         }
 
