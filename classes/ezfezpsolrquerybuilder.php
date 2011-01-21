@@ -1552,8 +1552,8 @@ class ezfeZPSolrQueryBuilder
             if ( !empty( $filterQueryPolicyLimitations ) )
             {
                 $filterQueryPolicies[] = '( (' . implode( ' AND ', $filterQueryPolicyLimitations ) 
-                	. ') OR ('. implode( ' OR ', $filterQueryPolicyPathLimitations ) .') )';
-            }
+                	. ') OR ('. implode( ' OR ', $filterQueryPolicyPathLimitations ) .') ) ';
+            }            
         }
 
         if ( !empty( $filterQueryPolicies ) )
