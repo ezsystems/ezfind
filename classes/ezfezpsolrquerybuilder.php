@@ -1455,7 +1455,7 @@ class ezfeZPSolrQueryBuilder
         // policies are concatenated with OR
         foreach ( $policies as $limitationList )
         {
-            // policy limitations are concatenated with AND
+            // policy limitations are concatenated with AND except constraints on paths that need to use OR
             $filterQueryPolicyLimitations = array();
             $filterQueryPolicyPathLimitations = array();
 
