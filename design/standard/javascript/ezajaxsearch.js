@@ -14,7 +14,7 @@ var eZAJAXSearch = function()
                 {
                     var itemCount = response.content.SearchResult.length;
 
-                    var resultsTarget = Y.get(ret.cfg.searchresults);
+                    var resultsTarget = Y.one(ret.cfg.searchresults);
                     resultsTarget.set('innerHTML', '');
                     resultsTarget.addClass('loading');
 
@@ -205,7 +205,7 @@ var eZAJAXSearch = function()
             {
                 for ( var i = 0, l = ret.cfg.customSearchAttributes.length; i < l; i++ )
                 {
-                    data += '&' + Y.get( ret.cfg.customSearchAttributes[i] ).get('name') + '=' + Y.get( ret.cfg.customSearchAttributes[i] ).get('value'); 
+                    data += '&' + Y.one( ret.cfg.customSearchAttributes[i] ).get('name') + '=' + Y.one( ret.cfg.customSearchAttributes[i] ).get('value'); 
                 }
             }
 
@@ -225,7 +225,7 @@ var eZAJAXSearch = function()
 
         var handleClickFromSpellcheck = function(e)
         {
-            Y.get(ret.cfg.searchstring).set( 'value', Y.get(ret.cfg.spellcheck).get('innerHTML') );
+            Y.one(ret.cfg.searchstring).set( 'value', Y.one(ret.cfg.spellcheck).get('innerHTML') );
             handleClick( e );
         }
 
@@ -240,8 +240,8 @@ var eZAJAXSearch = function()
             }
         }
 
-        Y.get(ret.cfg.searchbutton).on('click', handleClick);
-        Y.get(ret.cfg.searchstring).on('keypress', handleKeyPress);
+        Y.one(ret.cfg.searchbutton).on('click', handleClick);
+        Y.one(ret.cfg.searchstring).on('keypress', handleKeyPress);
     }
     ret.cfg = {};
 
