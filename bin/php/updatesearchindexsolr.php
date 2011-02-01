@@ -115,7 +115,7 @@ class ezfUpdateSearchIndexSolr
         {
           
             
-            $this->CLI->output( 'You did not specify a siteaccess. The admin siteaccess is a required option in most cases.' );
+            $this->CLI->warning( 'You did not specify a siteaccess. The admin siteaccess is a required option in most cases.' );
             $input = readline( 'Are you sure the default siteaccess has all available languages defined? ([y] or [q] to quit )' );
             if ( $input === 'q' )
             {
@@ -127,8 +127,8 @@ class ezfUpdateSearchIndexSolr
         // Check that Solr server is up and running
         if ( !$this->isSolrRunning() )
         {
-            $this->CLI->output( "The Solr server couldn't be reached." );
-            $this->CLI->output( 'Please, ensure the server is started and the configuration of eZFind correct.' );
+            $this->CLI->error( "The Solr server couldn't be reached." );
+            $this->CLI->error( 'Please, ensure the server is started and the configuration of eZFind correct.' );
             $this->Script->shutdown();
             exit();
         }
@@ -167,7 +167,7 @@ class ezfUpdateSearchIndexSolr
         else
         {
             //OBS !!, invalid.
-            $this->CLI->output( 'Invalid parameters provided.' );
+            $this->CLI->error( 'Invalid parameters provided.' );
             $this->Script->shutdown();
             exit();
         }
@@ -208,7 +208,7 @@ class ezfUpdateSearchIndexSolr
                 $result = $searchEngine->addObject( $object, false );
                 if (! $result)
                 {
-                    $this->CLI->output(' Failed indexing object with ID ' . $object->attribute('id'));
+                    $this->CLI->error(' Failed indexing object with ID ' . $object->attribute('id'));
                 }
                 ++$count;
             }
@@ -327,7 +327,7 @@ class ezfUpdateSearchIndexSolr
                             }
                             else
                             {
-                                $this->CLI->output( "\n" . 'Returned invalid PID: ' . $newPid );
+                                $this->CLI->error( "\n" . 'Returned invalid PID: ' . $newPid );
                             }
                         }
                     }
@@ -514,7 +514,7 @@ class ezfUpdateSearchIndexSolr
             }
         }
 
-        $this->CLI->output( "\n" . 'Did not index content correctly: ' . "\n" . var_export( $output, 1 ) );
+        $this->CLI->error( "\n" . 'Did not index content correctly: ' . "\n" . var_export( $output, 1 ) );
 
         return 0;
     }
