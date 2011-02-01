@@ -59,7 +59,7 @@ $script = eZScript::instance( array( 'description' => ( "eZ publish search index
 $solrUpdate = new ezfUpdateSearchIndexSolr( $script, $cli );
 $solrUpdate->run();
 
-$script->shutdown();
+$script->shutdown( 0 );
 
 /**
  * Class containing controlling functions for updating the search index.
@@ -119,8 +119,7 @@ class ezfUpdateSearchIndexSolr
             $input = readline( 'Are you sure the default siteaccess has all available languages defined? ([y] or [q] to quit )' );
             if ( $input === 'q' )
             {
-                $this->Script->shutdown();
-                exit();
+                $this->Script->shutdown( 0 );
             }
         }
 
@@ -129,7 +128,7 @@ class ezfUpdateSearchIndexSolr
         {
             $this->CLI->error( "The Solr server couldn't be reached." );
             $this->CLI->error( 'Please, ensure the server is started and the configuration of eZFind correct.' );
-            $this->Script->shutdown();
+            $this->Script->shutdown( 1 );
             exit();
         }
 
@@ -168,8 +167,7 @@ class ezfUpdateSearchIndexSolr
         {
             //OBS !!, invalid.
             $this->CLI->error( 'Invalid parameters provided.' );
-            $this->Script->shutdown();
-            exit();
+            $this->Script->shutdown( 2 );
         }
     }
 
@@ -186,8 +184,8 @@ class ezfUpdateSearchIndexSolr
         $node = eZContentObjectTreeNode::fetch( $nodeID );
         if ( !is_object($node) )
         {
-            $this->Script->shutdown();
-            exit();
+            $this->CLI->error( "An error occured while trying fetching node $nodeID" );
+            $this->Script->shutdown( 3 );
         }
         $searchEngine = new eZSolr();
 
@@ -215,8 +213,7 @@ class ezfUpdateSearchIndexSolr
         }
 
         $this->CLI->output( $count );
-        $this->Script->shutdown();
-        exit();
+        $this->Script->shutdown( 0 );
     }
 
     /**
@@ -245,8 +242,7 @@ class ezfUpdateSearchIndexSolr
             $input = readline( 'Enter path to PHP-CLI executable ( or [q] to quit )' );
             if ( $input === 'q' )
             {
-                $this->Script->shutdown();
-                exit();
+                $this->Script->shutdown( 0 );
             }
 
             exec( $input . ' -v', $output );
@@ -454,8 +450,7 @@ class ezfUpdateSearchIndexSolr
         {
             // We are the child process
             $this->execute( $nodeID, $offset, $limit, true );
-            $this->Script->shutdown();
-            exit();
+            $this->Script->shutdown( 0 );
         }
     }
 
