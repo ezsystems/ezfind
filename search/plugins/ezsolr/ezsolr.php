@@ -361,7 +361,7 @@ class eZSolr
             return false;
         }
 
-		$mainNodePathArray = $mainNode->attribute( 'path_array' );
+        $mainNodePathArray = $mainNode->attribute( 'path_array' );
         // initialize array of parent node path ids, needed for multivalued path field and subtree filters
         $nodePathArray = array();
 
