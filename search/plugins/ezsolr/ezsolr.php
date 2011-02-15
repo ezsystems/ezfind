@@ -133,7 +133,7 @@ class eZSolr
      */
     static function getMetaAttributeType( $name, $context = 'search' )
     {
-       
+
 
         $attributeList = array ('search' => array_merge( array( 'guid' => 'mstring',
                                              'installation_id' => 'mstring',
@@ -149,7 +149,7 @@ class eZSolr
                                              'object_states' => 'mstring'),
                                       self::metaAttributes(),
                                       self::nodeAttributes() ),
-                                'facet' =>  array( 
+                                'facet' =>  array(
                                              'owner_name' => 'string'),
                                 'filter' => array(),
                                 'sort' => array() );
@@ -499,7 +499,7 @@ class eZSolr
 
             // Loop through all eZContentObjectAttributes and add them to the Solr document.
             // @since eZ Find 2.3: look for the attribute storage setting
-            
+
             $doAttributeStorage = (($this->FindINI->variable( 'IndexOptions', 'EnableSolrAttributeStorage')) === 'true') ? true : false;
 
             if ($doAttributeStorage)
@@ -527,7 +527,7 @@ class eZSolr
                     $documentFieldBase = ezfSolrDocumentFieldBase::getInstance( $attribute );
                     $this->addFieldBaseToDoc( $documentFieldBase, $doc, $boostAttribute );
                 }
-                
+
                 if ($doAttributeStorage)
                 {
                     $storageFieldName = ezfSolrStorage::getSolrStorageFieldName( $attributeIdentifier );
@@ -560,7 +560,7 @@ class eZSolr
         {
             $optimize = true;
         }
-        
+
         if ( $this->UseMultiLanguageCores === true)
         {
             $result = true;
@@ -578,7 +578,7 @@ class eZSolr
         {
             return $this->Solr->addDocs( $docList, $commit, $optimize, $commitWithin );
         }
-        
+
 
     }
 
@@ -638,7 +638,7 @@ class eZSolr
         {
             $this->Solr->commit();
         }
-        
+
     }
 
     /**
@@ -662,10 +662,10 @@ class eZSolr
 
     /**
      * Removes an object from the Solr search server
-     * 
+     *
      * @param eZContentObject $contentObject the content object to remove
      * @param bool $commit wether or not to commit after removing the object
-     * 
+     *
      * @return bool true if removal was successful
      */
     function removeObject( $contentObject, $commit = null )
@@ -767,7 +767,7 @@ class eZSolr
                                   'eZSolr::search()' );
             $resultArray = null;
         }
-        
+
         else
         {
             eZDebug::createAccumulator( 'Query build', 'eZ Find' );
@@ -874,7 +874,7 @@ class eZSolr
                     unset($emit);
                     continue;
 
-                    
+
                 }
 
                 if ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' )] == self::installationID() )
@@ -937,13 +937,13 @@ class eZSolr
      * More like this is pretty similar to normal search, but usually only the object or node id are sent to Solr
      * However, streams or a search text body can also be passed .. Solr will extract the important terms and build a
      * query for us
-     * 
+     *
      * @param string $queryType is one of 'noid', 'oid', 'url', 'text'
      * @param $queryValue the node id, object id, url or text body to use
      * @param array parameters. @see ezfeZPSolrQueryBuilder::buildMoreLikeThis()
      *
      * @return array List of eZFindResultNode objects.
-     * 
+     *
      * @todo: add functionality not to call the DB to recreate objects : $asObjects == false
      */
     function moreLikeThis( $queryType, $queryValue, $params = array() )
@@ -952,7 +952,7 @@ class eZSolr
         eZDebug::accumulatorStart( 'MoreLikeThis' );
         $error = 'Server not running';
         $searchCount = 0;
-        //mlt does not support distributed search yet, so find out which is 
+        //mlt does not support distributed search yet, so find out which is
         //the language core to use and qyery only this one
         //search across languages does not make sense here
         $coreToUse = null;
@@ -1391,7 +1391,7 @@ class eZSolr
         $this->SolrLanguageShards = array();
         if ( $this->UseMultiLanguageCores == true )
         {
-            
+
             $languages = $this->SiteINI->variable( 'RegionalSettings', 'SiteLanguageList' );
             $languageMapping = $this->FindINI->variable( 'LanguageSearch','LanguagesCoresMap');
             $shardMapping = $this->SolrINI->variable ('SolrBase', 'Shards');
@@ -1415,7 +1415,7 @@ class eZSolr
 
 
     }
-    
+
 
     /**
      * synchronises elevate configuration across language shards in case of

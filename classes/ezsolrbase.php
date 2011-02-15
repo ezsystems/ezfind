@@ -40,20 +40,20 @@ class eZSolrBase
      * @var string
      */
     var $SearchServerURI;
-    
+
     var $SolrINI;
 
     /**
      * Constructor.
      * Initializes the solr URI and various INI files
-     * 
+     *
      * @param string $baseURI An optional solr URI that overrides the INI one.
      */
     function __construct( $baseURI = false )
     {
         // @todo Modify this code to adapt to the new URI parameters
         // Also keep BC with the previous settings
-        
+
         //$this->SearchServerURI = $baseURI;
         $this->SolrINI = eZINI::instance( 'solr.ini' );
         $iniSearchServerURI = $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' );
@@ -150,7 +150,7 @@ class eZSolrBase
      *
      * @param string $request request name
      * @param string $getParams HTTP GET parameters, as an associative array
-     * 
+     *
      * @return Result of HTTP Request ( without HTTP headers )
      */
     function getQuery( $request, $getParams )
@@ -212,12 +212,12 @@ class eZSolrBase
 
     /**
      * Sends a ping request to solr
-     * 
+     *
      * @note OBS ! Experimental.
-     * 
+     *
      * @param string $wt
      *        Query response writer. Defaults to PHP array response format
-     * 
+     *
      * @return array The ping operation result
      */
     function ping ( $wt = 'php' )
@@ -386,7 +386,7 @@ class eZSolrBase
 
     /**
      * Sends the solr server a search request
-     * 
+     *
      * @param array|ezfSolrQueryBuilder $params
      *        Query parameters, either:
      *        - an array, as returned by ezfeZPSolrQueryBuilder::buildSearch
@@ -399,10 +399,10 @@ class eZSolrBase
     {
         return $this->rawSolrRequest ( '/select' , $params, $wt );
     }
-    
+
     /**
      * Sends the updated elevate configuration to Solr
-     * 
+     *
      * @params array $params Raw query parameters
      *
      *
@@ -527,7 +527,7 @@ class eZSolrBase
                 "User-Agent: $userAgent\r\n" .
                 "Pragma: no-cache\r\n" .
                 "Connection: close\r\n\r\n";
-            
+
             stream_set_timeout( $fp, $processTimeout );
             fputs( $fp, $request );
             if ( $method == 'POST' )
