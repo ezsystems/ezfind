@@ -20,11 +20,26 @@ class eZFindTestSuite extends ezpDatabaseTestSuite
         $this->addTestSuite( 'ezfSolrDocumentFieldNameTest' );
         $this->addTestSuite( 'eZSolrTest' );
         $this->addTestSuite( 'eZFindElevateConfigurationTest' );
+        $this->addTestSuite( 'eZSolrBaseRegression' );
     }
 
     public static function suite()
     {
         return new self();
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        // make sure extension is enabled and settings are read
+        ezpExtensionHelper::load( 'ezfind' );
+    }
+
+    public function tearDown()
+    {
+        ezpExtensionHelper::unload( 'ezfind' );
+        parent::tearDown();
     }
 }
 
