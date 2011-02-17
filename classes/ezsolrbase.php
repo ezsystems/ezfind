@@ -35,6 +35,10 @@
  */
 class eZSolrBase
 {
+    const DEFAULT_REQUEST_CONTENTTYPE = 'application/x-www-form-urlencoded;charset=utf-8';
+
+    const DEFAULT_REQUEST_USERAGENT = 'eZ Publish';
+
     /**
      * The solr search server URI
      * @var string
@@ -139,10 +143,10 @@ class eZSolrBase
      *
      * @return string Result of HTTP Request ( without HTTP headers )
      */
-    protected function postQuery( $request, $postData, $contentType = 'application/x-www-form-urlencoded;charset=utf-8' )
+    protected function postQuery( $request, $postData, $contentType = self::DEFAULT_REQUEST_CONTENTTYPE )
     {
         $url = $this->SearchServerURI . $request;
-        return $this->sendHTTPRequest( $url, $postData, $contentType );
+        return $this->sendHTTPRequestRetry( $url, $postData, $contentType );
     }
 
     /**
@@ -155,7 +159,7 @@ class eZSolrBase
      */
     function getQuery( $request, $getParams )
     {
-        return $this->sendHTTPRequest( eZSolrBase::buildHTTPGetQuery( $request, $getParams ) );
+        return $this->sendHTTPRequestRetry( eZSolrBase::buildHTTPGetQuery( $request, $getParams ) );
     }
 
     /*!
@@ -416,18 +420,70 @@ class eZSolrBase
         return $this->rawSearch( $params );
     }
 
-    /*!
-     Send HTTP request. This code is based on eZHTTPTool::sendHTTPRequest, but contains
-     Some improvements. Will use Curl, if curl is present.
+    /**
+     * Proxy method to {@link self::sendHTTPRequest()}.
+     * Sometimes, an overloaded Solr server can result a timeout and drop the connection
+     * In this case, we will retry just after, with a max number of retries defined in solr.ini ([SolrBase].ProcessMaxRetries)
+     *
+     * @param string $url
+     * @param string $postData POST data as string (field=value&foo=bar). Default is false (HTTP Request will be GET)
+     * @param string $contentType Default is {@link self::DEFAULT_REQUEST_CONTENTTYPE}
+     * @param string $userAgent Default is {@link self::DEFAULT_REQUEST_USERAGENT}
+     *
+     * @return HTTP result ( without headers ), false if the request fails.
+     */
+    protected function sendHTTPRequestRetry( $url, $postData = false, $contentType = self::DEFAULT_REQUEST_CONTENTTYPE, $userAgent = self::DEFAULT_REQUEST_USERAGENT )
+    {
+        $maxRetries = (int)$this->SolrINI->variable( 'SolrBase', 'ProcessMaxRetries');
+        if ( $maxRetries < 1 )
+        {
+            eZDebug::writeWarning( 'solr.ini : [SolrBase].ProcessMaxRetries cannot be < 1' );
+            $maxRetries = 1;
+        }
 
-     \param \a $url
-     \param \a $postData ( optional, default false )
-     \param \a $contentType ( optional, default '' )
-     \param \a $userAgent ( optional, default 'eZ Publish' )
+        $tries = 0;
+        while ( $tries < $maxRetries )
+        {
+            try
+            {
+                $tries++;
+                return $this->sendHTTPRequest( $url, $postData, $contentType, $userAgent );
+            }
+            catch ( ezfSolrException $e )
+            {
+                $doRetry = false;
+                $errorMessage = $e->getMessage();
+                switch ( $e->getCode() )
+                {
+                    case ezfSolrException::REQUEST_TIMEDOUT : // Code error 28. Server is most likely overloaded
+                    case ezfSolrException::CONNECTION_TIMEDOUT : // Code error 7, same thing
+                        $errorMessage .= ' // Retry #'.$tries;
+                        $doRetry = true;
+                    break;
+                }
 
-     \return HTTP result ( without headers ), false if the request fails.
-    */
-    function sendHTTPRequest( $url, $postData = false, $contentType = 'application/x-www-form-urlencoded;charset=UTF-8', $userAgent = 'eZ Publish' )
+                if ( !$doRetry )
+                    break;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Send HTTP request. This code is based on eZHTTPTool::sendHTTPRequest, but contains
+     * Some improvements. Will use Curl, if curl is present.
+     *
+     * @param string $url
+     * @param string $postData POST data as string (field=value&foo=bar). Default is false (HTTP Request will be GET)
+     * @param string $contentType Default is {@link self::DEFAULT_REQUEST_CONTENTTYPE}
+     * @param string $userAgent Default is {@link self::DEFAULT_REQUEST_USERAGENT}
+     *
+     * @throws ezfSolrException Throws an ezfSolrException if the request results a timeout.
+     *                          If curl is available, this exception will also be thrown, with its error number and message
+     * @return HTTP result ( without headers ), false if the request fails.
+     */
+    function sendHTTPRequest( $url, $postData = false, $contentType = self::DEFAULT_REQUEST_CONTENTTYPE, $userAgent = self::DEFAULT_REQUEST_USERAGENT )
     {
         $connectionTimeout = $this->SolrINI->variable( 'SolrBase', 'ConnectionTimeout' );
         $processTimeout = $this->SolrINI->variable( 'SolrBase', 'ProcessTimeout' );
@@ -453,11 +509,11 @@ class eZSolrBase
 
             $data = curl_exec( $ch );
             $errNo = curl_errno( $ch );
+            $err = curl_error( $ch );
             curl_close( $ch );
             if  ( $errNo )
             {
-                eZDebug::writeError( 'curl error: ' . $errNo, __METHOD__ );
-                return false;
+                throw new ezfSolrException( __METHOD__ . ' - curl error: ' . $err, $errNo );
             }
             else
             {
@@ -557,8 +613,7 @@ class eZSolrBase
             fclose($fp);
             if ( $info['timed_out'] )
             {
-                eZDebug::writeError( 'connection error: processing timed out', __METHOD__ );
-                return false;
+                throw new ezfSolrException( __METHOD__ . ' - connection error: processing timed out', ezfSolrException::REQUEST_TIMEDOUT );
             }
             else
             {
