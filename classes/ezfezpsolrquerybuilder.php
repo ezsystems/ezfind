@@ -88,9 +88,9 @@ class ezfeZPSolrQueryBuilder
             {
                 $multiFieldQuery .= '^' . $processedBoostFields[$field];
             }
-            
+
             $multiFieldQuery .= ' ';
-            
+
         }
         return $multiFieldQuery;
     }
@@ -187,7 +187,7 @@ class ezfeZPSolrQueryBuilder
         if ( isset( $distributedSearch['searchfields'] ) )
         {
             $extraFieldsToSearch = $distributedSearch['searchfields'];
-            
+
         }
         if ( isset( $distributedSearch['returnfields'] ) )
         {
@@ -329,7 +329,7 @@ class ezfeZPSolrQueryBuilder
         //maybe we should add meta data to the index to filter them out.
 
         $highLightFields = $queryFields;
-        
+
         //@since eZ Find 2.3
         //when dedicated attributes are searched for, don't add meta-fields to the $queryfields list
         if (! $contentClassAttributeID )
@@ -337,7 +337,7 @@ class ezfeZPSolrQueryBuilder
             $queryFields[] = eZSolr::getMetaFieldName( 'name' );
             $queryFields[] = eZSolr::getMetaFieldName( 'owner_name' );
         }
-        
+
 
         $spellCheckParamList = array();
         // @param $spellCheck expects array (true|false, dictionary identifier, ...)
@@ -387,7 +387,7 @@ class ezfeZPSolrQueryBuilder
                 // need to build: Solr q
                 if (array_key_exists('fields', $boostFunctions))
                 {
-                
+
                     $handlerParameters = array ( 'q' => $this->buildMultiFieldQuery( $searchText, array_merge($queryFields, $extraFieldsToSearch), $boostFunctions['fields'] ),
                                              'qt' => 'standard');
                 }
@@ -430,7 +430,7 @@ class ezfeZPSolrQueryBuilder
         * @TODO: move highlighting part to its own function and enable customisation of
         * all Solr side parameters
         */
-        
+
         $highLightSnippets = self::$FindINI->variable( 'HighLighting', 'SnippetsPerField' );
         $highLightFragmentSize = self::$FindINI->variable( 'HighLighting', 'FragmentSize' );
 
