@@ -18,8 +18,8 @@ class ezfSolrException extends ezfBaseException
      * Error code for a solr request timeout
      * @var int
      */
-    const REQUEST_TIMEDOUT = 28,
-          CONNECTION_TIMEDOUT = 7;
+    const REQUEST_TIMEDOUT = 28, // Copy of CURLE_OPERATION_TIMEOUTED constant
+          CONNECTION_TIMEDOUT = 7; // Copy of CURLE_COULDNT_CONNECT constant that can be resulted by a connection timeout
 
     public function __construct( $message = '', $code = 0 )
     {
