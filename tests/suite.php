@@ -30,6 +30,23 @@ class eZFindTestSuite extends ezpDatabaseTestSuite
     {
         return new self();
     }
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        // make sure extension is enabled and settings are read
+        ezpExtensionHelper::load( 'ezfind' );
+
+        $sqlFiles = array( 'extension/ezfind/sql/mysql/mysql.sql' );
+        ezpTestDatabaseHelper::insertSqlData( $this->sharedFixture, $sqlFiles );
     }
+
+    public function tearDown()
+    {
+        ezpExtensionHelper::unload( 'ezfind' );
+        parent::tearDown();
+    }
+}
 
 ?>

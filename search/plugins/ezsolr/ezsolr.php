@@ -139,10 +139,12 @@ class eZSolr
                                              'installation_id' => 'mstring',
                                              'installation_url' => 'mstring',
                                              'name' => 'text',
+                                             'sort_name' => 'mstring',
                                              'anon_access' => 'boolean',
                                              'language_code' => 'mstring',
                                              'available_language_codes' => 'mstring',
                                              'main_url_alias' => 'mstring',
+                                             'main_path_string' => 'mstring',
                                              'owner_name' => 'text',
                                              'owner_group_id' => 'sint',
                                              'path' => 'sint',
@@ -524,6 +526,8 @@ class eZSolr
 
             // Set Object attributes
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'name' ), $contentObject->name( false, $languageCode ) );
+            // Also add value to the "sort_name" field as "name" is unsortable, due to Solr limitation (tokenized field)
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'sort_name' ), $contentObject->name( false, $languageCode ) );
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'anon_access' ), $anonymousAccess );
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'language_code' ), $languageCode );
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'available_language_codes' ), $availableLanguages );
@@ -565,6 +569,9 @@ class eZSolr
 
             // Add main url_alias
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' ), $mainNode->attribute( 'url_alias' ) );
+
+            // Add main path_string
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_path_string' ), $mainNode->attribute( 'path_string' ) );
 
             // add nodeid of all parent nodes path elements
             foreach ( $nodePathArray as $pathArray )
