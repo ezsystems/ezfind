@@ -33,12 +33,12 @@
 
 /*!
   eZSolr is a search plugin to eZ Publish.
-*/
+ */
 class eZSolr
 {
     /*!
      \brief Constructor
-    */
+     */
     function eZSolr()
     {
         eZDebug::createAccumulatorGroup( 'solr', 'Solr search plugin' );
@@ -129,10 +129,12 @@ class eZSolr
                                              'installation_id' => 'string',
                                              'installation_url' => 'string',
                                              'name' => 'text',
+                                             'sort_name' => 'string',
                                              'anon_access' => 'boolean',
                                              'language_code' => 'string',
                                              'available_language_codes' => 'string',
                                              'main_url_alias' => 'string',
+                                             'main_path_string' => 'string',
                                              'owner_name' => 'text',
                                              'owner_group_id' => 'sint',
                                              'path' => 'sint',
@@ -411,6 +413,8 @@ class eZSolr
 
             // Set Object attributes
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'name' ), $contentObject->name( false, $languageCode ) );
+            // Also add value to the "sort_name" field as "name" is unsortable, due to Solr limitation (tokenized field)
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'sort_name' ), $contentObject->name( false, $languageCode ) );
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'anon_access' ), $anonymousAccess );
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'language_code' ), $languageCode );
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'available_language_codes' ), $availableLanguages );
@@ -452,6 +456,9 @@ class eZSolr
 
             // Add main url_alias
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' ), $mainNode->attribute( 'url_alias' ) );
+
+            // Add main path_string
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_path_string' ), $mainNode->attribute( 'path_string' ) );
 
             // add nodeid of all parent nodes path elements
             foreach ( $nodePathArray as $pathArray )
@@ -528,7 +535,7 @@ class eZSolr
         {
            foreach( $fieldBaseData as $key => $value )
            {
-                $doc->addField( $key, $value, $boost );
+               $doc->addField( $key, $value, $boost );
            }
            return true;
         }
@@ -537,7 +544,7 @@ class eZSolr
 
     /*!
      Send commit message to eZ Find engine
-    */
+     */
     function commit()
     {
         //$updateURI = $this->SearchServerURI . '/update';
@@ -887,7 +894,7 @@ class eZSolr
     function initSpellChecker()
     {
 
-        $return = $this->Solr->rawSearch( array( 'q' => 'solr', 'qt' => 'spellchecker', 'wt' => 'php', 'cmd' => 'rebuild') );
+            $return = $this->Solr->rawSearch( array( 'q' => 'solr', 'qt' => 'spellchecker', 'wt' => 'php', 'cmd' => 'rebuild') );
 
     }
 
@@ -944,7 +951,7 @@ class eZSolr
      \param \a $languageCode ( optional )
 
      \return guid
-    */
+     */
     function guid( $contentObject, $languageCode = '' )
     {
         return md5( self::installationID() . '-' . $contentObject->attribute( 'id' ) . '-' . $languageCode );
@@ -1020,7 +1027,7 @@ class eZSolr
      Get engine text
 
      \return engine text
-    */
+     */
     static function engineText()
     {
         return ezi18n( 'ezfind', 'eZ Find 2.1 search plugin &copy; 2009 eZ Systems AS, powered by Apache Solr 1.4dev' );

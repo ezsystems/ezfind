@@ -68,7 +68,7 @@
        exceed a certain size (in characters).
     -->
     <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
-
+    
     <!-- boolean type: "true" or "false" -->
     <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true" omitNorms="true"/>
 
@@ -293,10 +293,10 @@
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
         <filter class="solr.StandardFilterFactory"/>
-        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/> 
         <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="0" catenateWords="1" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
         <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
-      </analyzer>
+       </analyzer>
     </fieldtype>
 
     <fieldType name="textSpell" class="solr.TextField" positionIncrementGap="100" >
@@ -447,6 +447,7 @@
    <field name="meta_section_id_si" type="sint" indexed="true" stored="true"/>                     <!-- Section ID -->
    <field name="meta_published_dt" type="date" indexed="true" stored="true"/>              <!-- Object publish date -->
    <field name="meta_name_t" type="text" indexed="true" stored="true" termVectors="true"/>  <!-- Object name -->
+   <field name="meta_sort_name_s" type="string" indexed="true" stored="true"/>  <!-- Object name for sorting (not tokenized) -->
    <field name="meta_main_node_id_s" type="string" indexed="true" stored="true"/>           <!-- Main node ID -->
    <field name="meta_language_code_s" type="string" indexed="true" stored="true"/>          <!-- Language code --> 
    <field name="meta_available_language_codes_s" type="string" indexed="true" stored="true" multiValued="true"/>          <!-- List of available language codes in the corresponding content object -->    
@@ -457,6 +458,7 @@
    <field name="meta_node_id_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- Location node ID -->
    <field name="meta_path_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- Location path IDs -->
    <field name="meta_path_string_s" type="string" indexed="true" stored="true" multiValued="true"/> <!-- Location path string -->
+   <field name="meta_main_path_string_s" type="string" indexed="true" stored="true"/> <!-- Location main path string (not multi-valued, for sorting) -->
    <field name="meta_depth_si" type="sint" indexed="true" stored="true" multiValued="true"/>       <!-- Location depths -->
    <field name="meta_url_alias_s" type="string" indexed="true" stored="true" multiValued="true"/>   <!-- Location URL aliases -->
    <field name="meta_sort_field_s" type="string" indexed="true" stored="true" multiValued="true"/>  <!-- Location sort field -->
@@ -510,14 +512,14 @@
         is added to the index.  It's used either to index the same field differently,
         or to add multiple fields to the same field for easier/faster searching.  -->
 
-	     <copyField source="*_k" dest="ezf_df_text"/>
-	     <copyField source="*_t" dest="ezf_df_text"/>
-		 <copyField source="*_s" dest="ezf_df_text"/>
-        <copyField source="*_k" dest="ezf_sp_words"/>
-		 <copyField source="*_t" dest="ezf_sp_words"/>
-		 <copyField source="*_s" dest="ezf_sp_words"/>
+    <copyField source="*_k" dest="ezf_df_text"/>
+    <copyField source="*_t" dest="ezf_df_text"/>
+    <copyField source="*_s" dest="ezf_df_text"/>
+    <copyField source="*_k" dest="ezf_sp_words"/>
+    <copyField source="*_t" dest="ezf_sp_words"/>
+    <copyField source="*_s" dest="ezf_sp_words"/>
 
-
+	
 	
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 
