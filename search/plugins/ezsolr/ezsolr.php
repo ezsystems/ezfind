@@ -356,12 +356,14 @@ class eZSolr
         $mainNode = $contentObject->attribute( 'main_node' );
         if ( !$mainNode )
         {
-            eZDebug::writeError( 'Unable to fetch main node for object: ' . $contentObject->attribute( 'id' ), 'eZSolr::addObject()' );
+            eZDebug::writeError( 'Unable to fetch main node for object: ' . $contentObject->attribute( 'id' ), __METHOD__ );
             return false;
         }
+
         $mainNodePathArray = $mainNode->attribute( 'path_array' );
         // initialize array of parent node path ids, needed for multivalued path field and subtree filters
         $nodePathArray = array();
+
         //included in $nodePathArray
         //$pathArray = $mainNode->attribute( 'path_array' );
         $currentVersion = $contentObject->currentVersion();
