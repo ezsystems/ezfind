@@ -131,23 +131,25 @@ class eZSolr
      */
     static function getMetaAttributeType( $name, $context = 'search' )
     {
-       
+
 
         $attributeList = array ('search' => array_merge( array( 'guid' => 'string',
                                              'installation_id' => 'string',
                                              'installation_url' => 'string',
                                              'name' => 'text',
+                                             'sort_name' => 'string',
                                              'anon_access' => 'boolean',
                                              'language_code' => 'string',
                                              'available_language_codes' => 'string',
                                              'main_url_alias' => 'string',
+                                             'main_path_string' => 'string',
                                              'owner_name' => 'text',
                                              'owner_group_id' => 'sint',
                                              'path' => 'sint',
                                              'object_states' => 'string'),
                                       self::metaAttributes(),
                                       self::nodeAttributes() ),
-                                'facet' =>  array( 
+                                'facet' =>  array(
                                              'owner_name' => 'string'),
                                 'filter' => array(),
                                 'sort' => array() );
@@ -433,6 +435,8 @@ class eZSolr
 
             // Set Object attributes
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'name' ), $contentObject->name( false, $languageCode ) );
+            // Also add value to the "sort_name" field as "name" is unsortable, due to Solr limitation (tokenized field)
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'sort_name' ), $contentObject->name( false, $languageCode ) );
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'anon_access' ), $anonymousAccess );
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'language_code' ), $languageCode );
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'available_language_codes' ), $availableLanguages );
@@ -474,6 +478,9 @@ class eZSolr
 
             // Add main url_alias
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' ), $mainNode->attribute( 'url_alias' ) );
+
+            // Add main path_string
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_path_string' ), $mainNode->attribute( 'path_string' ) );
 
             // add nodeid of all parent nodes path elements
             foreach ( $nodePathArray as $pathArray )
@@ -538,7 +545,7 @@ class eZSolr
         {
             return $this->Solr->addDocs( $docList, $commit, $optimize, $commitWithin );
         }
-        
+
 
     }
 
@@ -570,7 +577,7 @@ class eZSolr
         {
            foreach( $fieldBaseData as $key => $value )
            {
-                $doc->addField( $key, $value, $boost );
+               $doc->addField( $key, $value, $boost );
            }
            return true;
         }
@@ -594,7 +601,7 @@ class eZSolr
         {
             $this->Solr->commit();
         }
-        
+
     }
 
     /**
@@ -618,10 +625,10 @@ class eZSolr
 
     /**
      * Removes an object from the Solr search server
-     * 
+     *
      * @param eZContentObject $contentObject the content object to remove
      * @param bool $commit wether or not to commit after removing the object
-     * 
+     *
      * @return bool true if removal was successful
      */
     function removeObject( $contentObject, $commit = null )
@@ -721,7 +728,7 @@ class eZSolr
                                   'eZSolr::search()' );
             $resultArray = null;
         }
-        
+
         else
         {
             eZDebug::createAccumulator( 'Query build', 'eZ Find' );
@@ -866,13 +873,13 @@ class eZSolr
      * More like this is pretty similar to normal search, but usually only the object or node id are sent to Solr
      * However, streams or a search text body can also be passed .. Solr will extract the important terms and build a
      * query for us
-     * 
+     *
      * @param string $queryType is one of 'noid', 'oid', 'url', 'text'
      * @param $queryValue the node id, object id, url or text body to use
      * @param array parameters. @see ezfeZPSolrQueryBuilder::buildMoreLikeThis()
      *
      * @return array List of eZFindResultNode objects.
-     * 
+     *
      * @todo: add functionality not to call the DB to recreate objects : $asObjects == false
      */
     function moreLikeThis( $queryType, $queryValue, $params = array() )
@@ -881,7 +888,7 @@ class eZSolr
         eZDebug::accumulatorStart( 'MoreLikeThis' );
         $error = 'Server not running';
         $searchCount = 0;
-        //mlt does not support distributed search yet, so find out which is 
+        //mlt does not support distributed search yet, so find out which is
         //the language core to use and qyery only this one
         //search across languages does not make sense here
         $coreToUse = null;
@@ -1320,7 +1327,7 @@ class eZSolr
         $this->SolrLanguageShards = array();
         if ( $this->UseMultiLanguageCores == true )
         {
-            
+
             $languages = $this->SiteINI->variable( 'RegionalSettings', 'SiteLanguageList' );
             $languageMapping = $this->FindINI->variable( 'LanguageSearch','LanguagesCoresMap');
             $shardMapping = $this->SolrINI->variable ('SolrBase', 'Shards');
@@ -1344,7 +1351,7 @@ class eZSolr
 
 
     }
-    
+
 
     /**
      * synchronises elevate configuration across language shards in case of

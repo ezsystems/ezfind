@@ -792,12 +792,15 @@ class ezfeZPSolrQueryBuilder
                         $field = 'score';
                     } break;
 
+                    case 'name':
+                    {
+                        $field = eZSolr::getMetaFieldName( 'sort_name', 'sort' );
+                    }break;
+
                     case 'published':
                     case 'modified':
                     case 'class_name':
                     case 'class_identifier':
-                    case 'name':
-                    case 'path':
                     case 'section_id':
                     {
                         $field = eZSolr::getMetaFieldName( $field, 'sort' );
@@ -806,6 +809,17 @@ class ezfeZPSolrQueryBuilder
                     case 'author':
                     {
                         $field = eZSolr::getMetaFieldName( 'owner_name', 'sort' );
+                    } break;
+
+                    case 'class_id':
+                    {
+                        $field = eZSolr::getMetaFieldName( 'contentclass_id', 'sort' );
+                    } break;
+
+                    case 'path':
+                    {
+                        // Assume sorting on main node path_string as it is not possible to sort on multivalued fields due to Solr limitation
+                        $field = eZSolr::getMetaFieldName( 'main_path_string', 'sort' );
                     } break;
 
                     default:

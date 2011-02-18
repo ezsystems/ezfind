@@ -22,6 +22,7 @@ class eZFindTestSuite extends ezpDatabaseTestSuite
         $this->addTestSuite( 'eZFindElevateConfigurationTest' );
         $this->addTestSuite( 'eZSolrMultiCoreBaseTest' );
         $this->addTestSuite( 'eZSolrBaseRegression' );
+        $this->addTestSuite( 'eZFindFetchRegression' );
     }
 
     public static function suite()
@@ -35,6 +36,9 @@ class eZFindTestSuite extends ezpDatabaseTestSuite
 
         // make sure extension is enabled and settings are read
         ezpExtensionHelper::load( 'ezfind' );
+
+        $sqlFiles = array( 'extension/ezfind/sql/mysql/mysql.sql' );
+        ezpTestDatabaseHelper::insertSqlData( $this->sharedFixture, $sqlFiles );
     }
 
     public function tearDown()
