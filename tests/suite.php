@@ -23,6 +23,7 @@ class eZFindTestSuite extends ezpDatabaseTestSuite
         $this->addTestSuite( 'eZSolrMultiCoreBaseTest' );
         $this->addTestSuite( 'eZSolrBaseRegression' );
         $this->addTestSuite( 'eZFindFetchRegression' );
+        $this->addTestSuite( 'eZSolrRegression' );
     }
 
     public static function suite()
