@@ -332,6 +332,33 @@ class eZSolr
     }
 
     /**
+     * Returns the relative URL Alias for a given search result,
+     * depending on whether a subtree filter was applied or not.
+     *
+     * @param array $doc The search result, directly received from Solr.
+     * @return int The NodeID corresponding the search result
+     */
+    protected function getNodeID( $doc )
+    {
+        if ( isset( $this->postSearchProcessingData['subtree_array'] ) and !empty( $this->postSearchProcessingData['subtree_array'] ) )
+        {
+            foreach ( $this->postSearchProcessingData['subtree_array'] as $subtree )
+            {
+                foreach ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )] as $pathString )
+                {
+                    if ( substr_count( $pathString, '/' . $subtree . '/' ) > 0 )
+                    {
+                        $nodeArray = explode( '/', rtrim( $pathString, '/' ));
+                        return (int) array_pop( $nodeArray );
+                    }
+                }
+            }
+        }
+
+        return (int) $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0];
+    }
+
+    /**
      * Adds a content object to the Solr search server.
      *
      * @param eZContentObject $contentObject object to add to search engine.
@@ -774,7 +801,7 @@ class eZSolr
 
             }
         }
-        if ( count($resultArray) > 0 )
+        if ( !empty( $resultArray ) )
         {
             $result = $resultArray['response'];
             $searchCount = $result['numFound'];
@@ -789,11 +816,11 @@ class eZSolr
             {
                 if ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' )] == self::installationID() )
                 {
-                    $localNodeIDList[] = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0];
+                    $localNodeIDList[] = $this->getNodeID( $doc );
                 }
             }
 
-            if ( count( $localNodeIDList ) )
+            if ( !empty( $localNodeIDList ) )
             {
                 $tmpNodeRowList = eZContentObjectTreeNode::fetch( $localNodeIDList, false, false );
                 // Workaround for eZContentObjectTreeNode::fetch behaviour
@@ -817,12 +844,13 @@ class eZSolr
                 {
                     // Search result document is from current installation
 //                    var_dump( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' ), $doc, $nodeRowList );die();
-                    $resultTree = new eZFindResultNode( $nodeRowList[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0]] );
-                    $resultTree->setContentObject( new eZContentObject( $nodeRowList[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0]] ) );
+                    $nodeID = $this->getNodeID( $doc );
+                    $resultTree = new eZFindResultNode( $nodeRowList[$nodeID] );
+                    $resultTree->setContentObject( new eZContentObject( $nodeRowList[$nodeID] ) );
                     $resultTree->setAttribute( 'is_local_installation', true );
                     if ( !$resultTree->attribute( 'can_read' ) )
                     {
-                        eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0],
+                        eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $nodeID,
                                               'eZSolr::search()' );
                         continue;
                     }
