@@ -346,7 +346,7 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                                                                         self::$subattributesDefinition[self::DEFAULT_SUBATTRIBUTE] );
                 $returnArray[$defaultFieldName] = $this->getPlainTextRepresentation();
                 return $returnArray;
-            };
+            }
                 break;
             default:
             {

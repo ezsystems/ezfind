@@ -100,7 +100,7 @@ class ezfSearchResultInfo
                 {
                     return $this->ResultArray['error'];
                 }
-            };
+            }
 
             case 'facet_queries':
             {
