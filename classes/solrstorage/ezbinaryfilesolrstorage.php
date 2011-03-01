@@ -31,7 +31,7 @@ class ezbinaryfileSolrStorage extends ezdatatypeSolrStorage
         }
         else
         {
-            
+
             $binaryFile = eZBinaryFile::fetch($attributeID, $version);
             $content = $binaryFile->storedFileInfo();
         }
@@ -46,7 +46,7 @@ class ezbinaryfileSolrStorage extends ezdatatypeSolrStorage
 
 
         $target = array(
-                
+
                 'content' => $content,
                 'has_rendered_content' => false,
                 'rendered' => null,

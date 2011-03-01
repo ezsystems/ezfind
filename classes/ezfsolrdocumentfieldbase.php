@@ -102,7 +102,7 @@ class ezfSolrDocumentFieldBase
 
             $processedMetaDataArray[] = $this->preProcessValue( $metaData,
                                             self::getClassAttributeType( $contentClassAttribute ) );
-           
+
         }
         $fields = array();
         foreach ( $fieldNameArray as $fieldName )
@@ -374,7 +374,7 @@ class ezfSolrDocumentFieldBase
                 {
                     $value = null;
                 }
-               
+
             } break;
 
             case 'boolean':

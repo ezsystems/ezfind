@@ -20,7 +20,7 @@ class ezauthorSolrStorage extends ezdatatypeSolrStorage
     {
         $authorList = array();
         foreach ( $contentObjectAttribute->attribute( 'content' )->attribute( 'author_list' ) as $author )
-        {   
+        {
             $authorList[] = array(
                 'id' => $author['id'],
                 'name' => $author['name'],

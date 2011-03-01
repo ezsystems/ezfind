@@ -17,7 +17,7 @@ class ezfSolrDocumentFieldGmapLocation extends ezfSolrDocumentFieldBase
                                                     'latitude' => 'float',
                                                     'longitude' => 'float');
 
-    
+
     const DEFAULT_SUBATTRIBUTE = 'address';
 
     function __construct( eZContentObjectAttribute $attribute )
@@ -25,7 +25,7 @@ class ezfSolrDocumentFieldGmapLocation extends ezfSolrDocumentFieldBase
         parent::__construct( $attribute );
     }
 
- 
+
     public function getData()
     {
         $data = array();

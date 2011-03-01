@@ -26,7 +26,7 @@ class ezfSolrUtils
 
     }*/
 
-    
+
     /**
      *
      * @param eZSolrBase $fromCore
@@ -86,7 +86,7 @@ class ezfSolrUtils
             return false;
         }
     }
-    
+
     /**
      *
      * @param eZSolrBase $fromCore
@@ -100,7 +100,7 @@ class ezfSolrUtils
      * @param boolean $commit
      * @param boolean $optimize
      * @param int $commitWithin
-     * @return boolean success 
+     * @return boolean success
      */
     public static function moveDocument ( eZSolrBase $fromCore, eZSolrBase $toCore, $keyField, $docID, $params = array(), $commit = false, $optimize = false, $commitWithin = 0 )
     {
@@ -127,7 +127,7 @@ class ezfSolrUtils
      *                 'add_fields' (hash array key->value)
      * @param <type> $commit
      * @param <type> $optimize
-     * @param <type> $commitWithin 
+     * @param <type> $commitWithin
      */
     public static function copyDocumentsByQuery ( eZSolrBase $fromCore, eZSolrBase $toCore, $keyField, $filterQuery, $params = array(), $commit = false, $optimize = false, $commitWithin = 0 )
     {

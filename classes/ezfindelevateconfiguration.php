@@ -477,7 +477,7 @@ class eZFindElevateConfiguration extends eZPersistentObject
         {
             $shard = new eZSolrBase();
         }
-        
+
         $result = $shard->pushElevateConfiguration( $params );
 
         if ( ! $result )

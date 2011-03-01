@@ -86,7 +86,7 @@ class ezfSolrStorage
         // primitive for now, it does not return the content in a general usable form yet
         // could insert code to use fromString methods returning an array for the content part
         return json_decode( base64_decode( $storageString ) , true );
-        
+
     }
 
     /**
@@ -97,7 +97,7 @@ class ezfSolrStorage
     public static function getSolrStorageFieldName( $fieldNameBase )
     {
         return  self::STORAGE_ATTR_FIELD_PREFIX . $fieldNameBase . self::STORAGE_ATTR_FIELD_SUFFIX;
-    }  
+    }
 }
 
 ?>

@@ -113,8 +113,8 @@ class ezfUpdateSearchIndexSolr
         }
         else
         {
-          
-            
+
+
             $this->CLI->warning( 'You did not specify a siteaccess. The admin siteaccess is a required option in most cases.' );
             $input = readline( 'Are you sure the default siteaccess has all available languages defined? ([y] or [q] to quit )' );
             if ( $input === 'q' )

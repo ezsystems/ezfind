@@ -23,7 +23,7 @@ abstract class ezpFileArchive
     abstract protected function archiveFile( $path, $seeds, $prefix = null, $realm = null );
 
     /**
-     * 
+     *
      */
     abstract protected function getArchiveFileName( $path, $seeds, $prefix = null, $realm = null );
 

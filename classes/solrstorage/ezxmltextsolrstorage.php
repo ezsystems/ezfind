@@ -38,7 +38,7 @@ class ezxmltextSolrStorage extends ezdatatypeSolrStorage
         return  $target;
     }
 
-   
+
 }
 
 

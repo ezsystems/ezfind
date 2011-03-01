@@ -137,11 +137,11 @@ $Result['path'] = array( array( 'url' => false,
                          array( 'url' => 'ezfind/elevate',
                                 'text' => ezpI18n::tr( 'extension/ezfind', 'Elevation' ) ) );
 
-if ( $object instanceof eZContentObject ) 
+if ( $object instanceof eZContentObject )
 {
 	$Result['path'][] = array( 'url' => false,
                                 'text' => $object->attribute('name') );
 }
-                         
+
 $Result['left_menu'] = "design:ezfind/backoffice_left_menu.tpl";
 ?>

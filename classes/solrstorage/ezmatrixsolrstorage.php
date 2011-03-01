@@ -22,7 +22,7 @@ class ezmatrixSolrStorage extends ezdatatypeSolrStorage
     public static function getAttributeContent( eZContentObjectAttribute $contentObjectAttribute, eZContentClassAttribute $contentClassAttribute)
     {
 
-        
+
 
         $attributeContents = $contentObjectAttribute->content();
         $cellList          = $attributeContents->attribute( 'cells' );

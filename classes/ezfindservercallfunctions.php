@@ -102,7 +102,7 @@ class eZFindServerCallFunctions
 
     /**
      * Returns autocomplete suggestions for given params
-     * 
+     *
      * @param mixed $args
      * @return array
      */

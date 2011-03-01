@@ -114,7 +114,7 @@ class eZSolrDoc
 
     var $Doc;
     var $RootElement;
-    
+
     /**
      * The document's language code
      * @var string
