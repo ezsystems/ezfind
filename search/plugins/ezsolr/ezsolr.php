@@ -236,8 +236,7 @@ class eZSolr
             }
             if ( !$contectClassAttributeID )
             {
-                eZDebug::writeNotice( 'Could not get content class from base name: ' . $baseName,
-                                      'eZSolr::getFieldName()' );
+                eZDebug::writeNotice( 'Could not get content class from base name: ' . $baseName, __METHOD__ );
                 return null;
             }
             $contectClassAttribute = eZContentClassAttribute::fetch( $contectClassAttributeID );
@@ -639,7 +638,7 @@ class eZSolr
             {
                 $errorMessage = '$fieldBase not an object';
             }
-            eZDebug::writeNotice( $errorMessage , 'eZSolr::addFieldBaseToDoc' );
+            eZDebug::writeNotice( $errorMessage , __METHOD__ );
             return false;
         }
         else
@@ -785,9 +784,9 @@ class eZSolr
                     $shardQueryPart = array( 'shards' => implode(',', $this->SolrLanguageShardURIs ));
                 }
             }
-            //eZDebug::writeNotice( $languages, 'eZSolr::search() languages' );
-            eZDebug::writeNotice( $shardQueryPart, 'eZSolr::search() shards' );
-            //eZDebug::writeNotice( $this->SolrLanguageShardURIs, 'eZSolr::search() this languagesharduris' );
+            //eZDebug::writeNotice( $languages, __METHOD__ . ' languages' );
+            eZDebug::writeNotice( $shardQueryPart, __METHOD__ . ' shards' );
+            //eZDebug::writeNotice( $this->SolrLanguageShardURIs, __METHOD__ . ' this languagesharduris' );
         }
         else
         {
@@ -799,8 +798,7 @@ class eZSolr
              trim( $searchText ) == '' )
         {
             $error = 'Empty search is not allowed.';
-            eZDebug::writeNotice( $error,
-                                  'eZSolr::search()' );
+            eZDebug::writeNotice( $error, __METHOD__ );
             $resultArray = null;
         }
 
@@ -926,8 +924,7 @@ class eZSolr
                     // See: http://issues.ez.no/15978
                     if ( !isset( $params['Limitation'], $params['Limitation']['accessWord'] ) && !$resultTree->attribute( 'can_read' ) )
                     {
-                        eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $nodeID,
-                                              'eZSolr::search()' );
+                        eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $nodeID, __METHOD__ );
                         continue;
                     }
 
@@ -1089,8 +1086,7 @@ class eZSolr
                     // See: http://issues.ez.no/15978
                     if ( !isset( $params['Limitation'], $params['Limitation']['accessWord'] ) && !$resultTree->attribute( 'can_read' ) )
                     {
-                        eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0],
-                                              'eZSolr::search()' );
+                        eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0], __METHOD__ );
                         continue;
                     }
 

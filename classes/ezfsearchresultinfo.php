@@ -166,8 +166,7 @@ class ezfSearchResultInfo
                                 }
                                 else
                                 {
-                                    eZDebug::writeWarning( 'Could not fetch eZContentClass: ' . $contentClassID,
-                                                           'ezfSearchResultInfo::attribute()' );
+                                    eZDebug::writeWarning( 'Could not fetch eZContentClass: ' . $contentClassID, __METHOD__ );
                                 }
                             }
                             $facetArray[] = $fieldInfo;
@@ -211,8 +210,7 @@ class ezfSearchResultInfo
                                 }
                                 else
                                 {
-                                    eZDebug::writeWarning( 'Could not fetch owner ( eZContentObject ): ' . $ownerID,
-                                                           'ezfSearchResultInfo::attribute()' );
+                                    eZDebug::writeWarning( 'Could not fetch owner ( eZContentObject ): ' . $ownerID, __METHOD__ );
                                 }
                             }
                             $facetArray[] = $fieldInfo;
