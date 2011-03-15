@@ -739,8 +739,8 @@
         <translation>検索時間: %1ms </translation>
     </message>
     <message>
-        <source>eZ Find 2.3 search plugin &amp;copy; 1999-2010 eZ Systems AS, powered by Apache Solr 1.5-dev</source>
-        <translation>eZ Find 2.3 検索プラグイン &amp;copy; 1999-2010 eZ Systems AS, powered by Apache Solr 1.5-dev</translation>
+        <source>eZ Find 2.3 search plugin &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 1.5-dev</source>
+        <translation>eZ Find 2.3 検索プラグイン &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 1.5-dev</translation>
     </message>
 </context>
 </TS>
