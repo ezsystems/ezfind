@@ -683,7 +683,7 @@
     </message>
     <message>
         <source>Core search time: %1 msecs</source>
-        <translation>Coeur de la recherche effectuée en %1 msecs</translation>
+        <translation>Temps de recherche solr: %1 msecs</translation>
     </message>
     <message>
         <source>N/A</source>
