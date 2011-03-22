@@ -1,13 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0">
-<context>
-    <name>kernel/navigationpart</name>
-    <message>
-        <source>eZFind</source>
-        <translation>Recherche</translation>
-    </message>
-</context>
+<!DOCTYPE TS><TS>
 <context>
     <name>design/admin/content/search</name>
     <message>
@@ -25,15 +16,15 @@
     <message>
         <source>For more options try the %1Advanced search%2.</source>
         <comment>The parameters are link start and end tags.</comment>
-        <translation></translation>
+        <translation>Pour plus d&apos;options essayez la %1Recherche avancée%2.</translation>
     </message>
     <message>
         <source>The following words were excluded from the search</source>
-        <translation>les mots suivants seront exclus de la recherche</translation>
+        <translation>Les mots suivants sont exclus de la recherche</translation>
     </message>
     <message>
         <source>No results were found while searching for &lt;%1&gt;</source>
-        <translation>Aucun resultats trouvé pour la recherche &lt;%1&gt;</translation>
+        <translation>Aucun résultat trouvé pour la recherche &lt;%1&gt;</translation>
     </message>
     <message>
         <source>Search tips</source>
@@ -49,30 +40,30 @@
     </message>
     <message>
         <source>Try more general keywords.</source>
-        <translation>Essayer avec des termes plus générique</translation>
+        <translation>Essayez des termes plus génériques.</translation>
     </message>
     <message>
         <source>Fewer keywords result in more matches. Try reducing keywords until you get a result.</source>
-        <translation>Il y a des résultats avec moins de mots-clés, essayez  de réduire le nombre de  mots-clés pour obtenir un résultat.</translation>
+        <translation>Il y a des résultats avec moins de mots-clés, essayez de réduire le nombre de mots-clés pour obtenir un résultat.</translation>
     </message>
     <message>
         <source>Search for &lt;%1&gt; returned %2 matches</source>
-        <translation>La recherche de &lt;%1&gt; a renvoyé %2 résultats</translation>
+        <translation>La recheche de &lt;%1&gt; retourne %2 resultat(s)</translation>
     </message>
 </context>
 <context>
     <name>design/admin/node/view/full</name>
     <message>
         <source>Show 10 items per page.</source>
-        <translation>10 réponses par page.</translation>
+        <translation>Affichez 10 éléments par page.</translation>
     </message>
     <message>
         <source>Show 50 items per page.</source>
-        <translation>50 réponses par page.</translation>
+        <translation>Affichez 50 éléments par page.</translation>
     </message>
     <message>
         <source>Show 25 items per page.</source>
-        <translation>25 réponses par page.</translation>
+        <translation>Affichez 25 éléments par page.</translation>
     </message>
 </context>
 <context>
@@ -115,7 +106,7 @@
     </message>
     <message>
         <source>No results were found when searching for &quot;%1&quot;</source>
-        <translation>Aucun résultat pour la recherche &quot;%1&quot;</translation>
+        <translation>Aucun résultat pour la recherche de &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Search tips</source>
@@ -127,7 +118,7 @@
     </message>
     <message>
         <source>Try changing some keywords eg. car instead of cars.</source>
-        <translation>Essayez de changer certains mot-clés par ex. voiture au lieu de voitures.</translation>
+        <translation>Essayez de changer certains mots-clés par ex. voiture au lieu de voitures.</translation>
     </message>
     <message>
         <source>Try more general keywords.</source>
@@ -139,30 +130,30 @@
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>La recherche &quot;%1&quot; retourne %2 résultat(s)</translation>
+        <translation>Le recherche &quot;%1&quot; retourne %2 résultat(s)</translation>
     </message>
 </context>
 <context>
     <name>design/ezfind/search</name>
     <message>
+        <source>Spell check suggestion: did you mean</source>
+        <translation>Suggestion d&apos;orthographe : voulez-vous dire</translation>
+    </message>
+    <message>
         <source>The search is case insensitive. Upper and lower case characters may be used.</source>
-        <translation>La recherche est insensible à la casse.Majuscule et minuscule peuvent etre utilisés.</translation>
+        <translation>La recherche est insensible à la casse. Majuscules et minuscules peuvent être utilisées.</translation>
     </message>
     <message>
         <source>The search result contains all search terms.</source>
         <translation>Le résultat de la recherche contient tous les termes recherchés.</translation>
     </message>
     <message>
-        <source>Spell check suggestion: did you mean</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Phrase search can be achieved by using quotes, example: &quot;Quick brown fox jumps over the lazy dog&quot;</source>
-        <translation>Une recherche d'une expression est obtenu en utlisant les guillemets, par exemple 'le renard a sauté au dessus du chien paresseux' </translation>
+        <translation>Une recherche d&quot;une expression est obtenu en utlisant les guillemets, par exemple &quot;le renard a sauté au dessus du chien paresseux&quot; </translation>
     </message>
     <message>
         <source>Words may be excluded by using a minus ( - ) character, example: lazy -dog</source>
-        <translation>Des mots peuvent être exclus en utilisant le caractère "moins" (-), par exemple : paresseux -chien</translation>
+        <translation>Des mots peuvent être exclus en utilisant le caractère &quot;moins&quot; ( - ), par exemple: paresseux -chien</translation>
     </message>
 </context>
 <context>
@@ -197,7 +188,7 @@
     </message>
     <message>
         <source>Try changing some keywords (eg, &quot;car&quot; instead of &quot;cars&quot;).</source>
-        <translation>Essayez de changer certains mot-clés (par ex. &quot;voiture&quot; au lieu de &quot;voitures&quot;).</translation>
+        <translation>Essayez de changer certains mots-clés (par ex. &quot;voiture&quot; au lieu de &quot;voitures&quot;).</translation>
     </message>
     <message>
         <source>Try searching with less specific keywords.</source>
@@ -209,7 +200,7 @@
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>La recherche &quot;%1&quot; retourne %2 résultat(s)</translation>
+        <translation>Le recherche &quot;%1&quot; retourne %2 résultat(s)</translation>
     </message>
     <message>
         <source>Help</source>
@@ -217,39 +208,7 @@
     </message>
     <message>
         <source>Refine your search</source>
-        <translation>Affiner la recherche</translation>
-    </message>
- <message>
-        <source>Facets</source>
-        <translation>Filtre</translation>
-    </message>
-    <message>
-        <source>Class</source>
-        <translation>Type de contenu</translation>
-    </message>
-    <message>
-        <source>Author</source>
-        <translation>Auteur</translation>
-    </message>
-    <message>
-        <source>Translation</source>
-        <translation>Traduction</translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation>Groupes</translation>
-    </message>
-    <message>
-        <source>All</source>
-        <translation>Tous</translation>
-    </message>
-    <message>
-        <source>Refine with facets</source>
-        <translation>Affiner avec les filtres</translation>
-    </message>
-    <message>
-        <source>Spell check suggestion: did you mean</source>
-        <translation>Vouliez-vous rechercher</translation>
+        <translation>Affinez la recherche</translation>
     </message>
 </context>
 <context>
@@ -268,70 +227,29 @@
     </message>
     <message>
         <source>Tip a friend</source>
-        <translation>Envoyer a un ami</translation>
+        <translation>Envoyez à un ami</translation>
     </message>
     <message>
         <source>Related content</source>
-        <translation>Contenu connexe</translation>
+        <translation>Contenus connexes</translation>
+    </message>
+</context>
+<context>
+    <name>design/ezwebin/pagelayout</name>
+    <message>
+        <source>Search text:</source>
+        <translation>Rechercher le texte:</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Recherche</translation>
     </message>
 </context>
 <context>
     <name>design/standard/content/search</name>
     <message>
-        <source>Advanced search</source>
-        <translation>Recherche avancée</translation>
-    </message>
-    <message>
-        <source>Search all the words</source>
-        <translation>Recherche tous les mots</translation>
-    </message>
-    <message>
-        <source>Search the exact phrase</source>
-        <translation>Recherche la phrase exacte</translation>
-    </message>
-    <message>
-        <source>Search with at least one of the words</source>
-        <translation>Recherche au mois l&apos;un des mots</translation>
-    </message>
-    <message>
-        <source>Class</source>
-        <translation>Classe</translation>
-    </message>
-    <message>
-        <source>Any class</source>
-        <translation>N&apos;importe quelle classe</translation>
-    </message>
-    <message>
-        <source>Class attribute</source>
-        <translation>Attribut de la classe</translation>
-    </message>
-    <message>
-        <source>Any attribute</source>
-        <translation>N&apos;importe quel attribut</translation>
-    </message>
-    <message>
-        <source>Update attributes</source>
-        <translation>Mettre à jour les attributs</translation>
-    </message>
-    <message>
-        <source>In</source>
-        <translation>Dans</translation>
-    </message>
-    <message>
-        <source>Any section</source>
-        <translation>N&apos;importe quelle section</translation>
-    </message>
-    <message>
-        <source>Published</source>
-        <translation>Publié</translation>
-    </message>
-    <message>
-        <source>Any time</source>
-        <translation>N&apos;importe quelle date</translation>
-    </message>
-    <message>
         <source>Last day</source>
-        <translation>Depuis un jour</translation>
+        <translation>Depuis une journée</translation>
     </message>
     <message>
         <source>Last week</source>
@@ -348,6 +266,58 @@
     <message>
         <source>Last year</source>
         <translation>Depuis un an</translation>
+    </message>
+    <message>
+        <source>Advanced search</source>
+        <translation>Recherche avancée</translation>
+    </message>
+    <message>
+        <source>Search all the words</source>
+        <translation>Rechercher tous les mots</translation>
+    </message>
+    <message>
+        <source>Search the exact phrase</source>
+        <translation>Rechercher la phrase exacte</translation>
+    </message>
+    <message>
+        <source>Search with at least one of the words</source>
+        <translation>Rechercher avec au moins un des mots</translation>
+    </message>
+    <message>
+        <source>Class</source>
+        <translation>Classe</translation>
+    </message>
+    <message>
+        <source>Any class</source>
+        <translation>Toutes les classes</translation>
+    </message>
+    <message>
+        <source>Class attribute</source>
+        <translation>Attribut de la classe</translation>
+    </message>
+    <message>
+        <source>Any attribute</source>
+        <translation>Tous les attributs</translation>
+    </message>
+    <message>
+        <source>Update attributes</source>
+        <translation>Mettre à jour les attributs</translation>
+    </message>
+    <message>
+        <source>In</source>
+        <translation>Dans</translation>
+    </message>
+    <message>
+        <source>Any section</source>
+        <translation>Toutes les sections</translation>
+    </message>
+    <message>
+        <source>Published</source>
+        <translation>Publié</translation>
+    </message>
+    <message>
+        <source>Any time</source>
+        <translation>Toutes les dates</translation>
     </message>
     <message>
         <source>Display per page</source>
@@ -379,11 +349,11 @@
     </message>
     <message>
         <source>No results were found when searching for &quot;%1&quot;</source>
-        <translation>Aucun résultat pour la recherche &quot;%1&quot;</translation>
+        <translation>Aucun résultat pour la recherche de &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>La recherche &quot;%1&quot; retourne %2 résultat(s)</translation>
+        <translation>Le recherche &quot;%1&quot; retourne %2 résultat(s)</translation>
     </message>
     <message>
         <source>Score</source>
@@ -395,37 +365,18 @@
     </message>
 </context>
 <context>
-    <name>extension/ezfind</name>
-    <message>
-        <source>eZFind</source>
-        <translation>ezFind</translation>
-    </message>
-    <message>
-        <source>Elevation</source>
-        <translation>Elevation</translation>
-    </message>
-    <message>
-        <source>Elevation detail</source>
-        <translation>Détail de l&apos;élévation</translation>
-    </message>
-    <message>
-        <source>Remove Elevation</source>
-        <translation>Supprimer l&apos;élévation</translation>
-    </message>
-</context>
-<context>
     <name>extension/ezfind/ajax-search</name>
     <message>
         <source>No search results...</source>
-        <translation>Aucun résultats</translation>
+        <translation>Aucun résultat...</translation>
     </message>
     <message>
         <source>Did you mean</source>
-        <translation>Voulez vous dire</translation>
+        <translation>Voulez-vous dire</translation>
     </message>
     <message>
         <source>Refine with facets</source>
-        <translation>Affiner avec les filtres</translation>
+        <translation>Affinez avec les filtres</translation>
     </message>
 </context>
 <context>
@@ -436,7 +387,7 @@
     </message>
     <message>
         <source>Elevation</source>
-        <translation>Elevation</translation>
+        <translation>Elévation</translation>
     </message>
     <message>
         <source>Boost</source>
@@ -450,32 +401,20 @@
 <context>
     <name>extension/ezfind/elevate</name>
     <message>
-        <source>Error while generating the configuration XML</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Unable to open &apos;%1&apos;. Write access is required on this file in order to flush Solr&apos;s elevate configuration.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Unable to write Solr&apos;s elevate configuration in &apos;%1&apos;, although the file could be properly opened.</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Hide preview of existing elevate configurations.</source>
-        <translation></translation>
+        <translation>Masquer les configurations d&apos;élévations.</translation>
     </message>
     <message>
         <source>Preview existing configurations</source>
-        <translation></translation>
+        <translation>Apercu des configurations</translation>
     </message>
     <message>
         <source>Show preview of existing elevate configurations.</source>
-        <translation></translation>
+        <translation>Afficher la prévisualistaion des configurations d&apos;élévation.</translation>
     </message>
     <message>
         <source>Elevation</source>
-        <translation>Elevation</translation>
+        <translation>Elévation</translation>
     </message>
     <message>
         <source>Please enter a search query.</source>
@@ -487,11 +426,11 @@
     </message>
     <message>
         <source>Missing language information.</source>
-        <translation></translation>
+        <translation>Abscence du paramètre de langue</translation>
     </message>
     <message>
         <source>Successful creation of the following Elevate configuration</source>
-        <translation></translation>
+        <translation>Création réussite de la configuration de l&apos;élévation</translation>
     </message>
     <message>
         <source>Details</source>
@@ -499,11 +438,11 @@
     </message>
     <message>
         <source>Successful synchronization of the local Elevate configuration with Solr&apos;s.</source>
-        <translation></translation>
+        <translation>Synchonisation réussite de la configuration locale de l&apos;élévation avec Solr.</translation>
     </message>
     <message>
         <source>Synchronise Elevate configuration with Solr</source>
-        <translation></translation>
+        <translation>Synchroniser la configuration de l&apos;élévation avec Solr</translation>
     </message>
     <message>
         <source>Synchronise</source>
@@ -511,15 +450,15 @@
     </message>
     <message>
         <source>Synchronise the Elevate configuration with Solr.</source>
-        <translation></translation>
+        <translation>Synchroniser la configuration de l&apos;élévation avec Solr.</translation>
     </message>
     <message>
         <source>Elevate an object</source>
-        <translation>Promouvoir un objet</translation>
+        <translation>Promouvoir l&apos;objet</translation>
     </message>
     <message>
         <source>&quot;Elevating an object&quot; for a given search query means that this object will be returned among the very first search results when a search is triggered using this search query.</source>
-        <translation></translation>
+        <translation>&quot;Promouvoir un objet&quot; pour une recherche donnée signifie qu&apos;un objet sera retourné dans les premiers résultats de recherche quand une recherche déclenchera cette requête.</translation>
     </message>
     <message>
         <source>Search query</source>
@@ -527,19 +466,19 @@
     </message>
     <message>
         <source>Search query to elevate the object for.</source>
-        <translation></translation>
+        <translation>Requête de recherche pour promouvoir l&apos; object</translation>
     </message>
     <message>
         <source>Elevate object</source>
-        <translation>Promouvoir l'objet</translation>
+        <translation>Promouvoir l&apos;objet</translation>
     </message>
     <message>
         <source>Browse for the object to associate elevation to.</source>
-        <translation>Parcourir afin de trouver l'objet à promouvoir</translation>
+        <translation>Parcourir afin de trouver l&apos;objet à promouvoir</translation>
     </message>
     <message>
         <source>Elevate %objectlink with &amp;nbsp;  %searchquery &amp;nbsp;  for language:</source>
-        <translation></translation>
+        <translation>Promouvoir %objectlink avec &amp;nbsp; %searchquery &amp;nbsp; pour la langue:</translation>
     </message>
     <message>
         <source>All</source>
@@ -547,11 +486,11 @@
     </message>
     <message>
         <source>Elevate</source>
-        <translation>Elever</translation>
+        <translation>Promouvoir</translation>
     </message>
     <message>
         <source>Store elevation</source>
-        <translation>Sauvegarder la promotion</translation>
+        <translation>Sauvegarder l&apos;lévation</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -563,7 +502,7 @@
     </message>
     <message>
         <source>Search for elevated objects</source>
-        <translation>Rechercher les objets promus</translation>
+        <translation>Recherche des objets promus</translation>
     </message>
     <message>
         <source>By search query</source>
@@ -575,7 +514,7 @@
     </message>
     <message>
         <source>Select a translation to narrow down the search.</source>
-        <translation></translation>
+        <translation>Sélectionner une traduction pour affiner la recherche.</translation>
     </message>
     <message>
         <source>Fuzzy match</source>
@@ -586,16 +525,16 @@
         <translation>Correspondance partielle pour la requête de recherche.</translation>
     </message>
     <message>
-        <source>Find matching elevate configurations</source>
-        <translation></translation>
+        <source>Filter</source>
+        <translation>Filtre</translation>
     </message>
     <message>
         <source>Find elevate configurations matching the search query entered.</source>
-        <translation></translation>
+        <translation>Trouver la configuration de l&apos;élévation correspondante à la requête de recherche entré.</translation>
     </message>
     <message>
         <source>By object</source>
-        <translation>par objet</translation>
+        <translation>Par objet</translation>
     </message>
     <message>
         <source>Browse</source>
@@ -607,7 +546,7 @@
     </message>
     <message>
         <source>fuzzy match</source>
-        <translation>correspondance partielle</translation>
+        <translation>requête partielle</translation>
     </message>
     <message>
         <source>Existing configurations</source>
@@ -627,19 +566,27 @@
     </message>
     <message>
         <source>See elevate configuration details for &apos;%objectName&apos;</source>
-        <translation></translation>
+        <translation>Voir le détail de la promotion pour &apos;%objectName&apos;</translation>
     </message>
     <message>
         <source>Remove elevation by &apos;%searchQuery&apos; for &apos;%objectName&apos;.</source>
-        <translation></translation>
+        <translation>Supprimer la promotion par &apos;*searchQuery&apos; pour &apos;%objectName&apos;.</translation>
     </message>
     <message>
         <source>See all objects elevated by &apos;%searchQuery&apos;</source>
-        <translation></translation>
+        <translation>Voir tous les objets promus par &apos;%searchQuery&apos;</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Editer</translation>
+    </message>
+    <message>
+        <source>Trash</source>
+        <translation>Corbeille</translation>
     </message>
     <message>
         <source>Elevation detail for object %objectName</source>
-        <translation></translation>
+        <translation>Détail de la promotion pour l&apos;objet %objectName</translation>
     </message>
     <message>
         <source>Missing content object.</source>
@@ -650,8 +597,16 @@
         <translation>Promouvoir %objectName</translation>
     </message>
     <message>
+        <source>Elevate %objectlink with:</source>
+        <translation>Promouvoir %objectlink avec:</translation>
+    </message>
+    <message>
+        <source>for language:</source>
+        <translation>pour le langage:</translation>
+    </message>
+    <message>
         <source>Existing configurations for %objectName</source>
-        <translation></translation>
+        <translation>Configurations existantes pour %objectName</translation>
     </message>
     <message>
         <source>in %selectedLanguage</source>
@@ -659,27 +614,23 @@
     </message>
     <message>
         <source>containing &apos;%searchQuery&apos;</source>
-        <translation></translation>
+        <translation>contenant &apos;%searchQuery&apos;</translation>
     </message>
     <message>
         <source>Search query to filter the result set on.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Filter</source>
-        <translation>Filtre</translation>
+        <translation>Requête de la recherche pour filtrer les résultats.</translation>
     </message>
     <message>
         <source>Filter configurations by language</source>
-        <translation></translation>
+        <translation>Filtrer la configuration par langage</translation>
     </message>
     <message>
         <source>Removal confirmed ( for %objectName ) :</source>
-        <translation></translation>
+        <translation>Suppression confirmé ( pour %objectName ) :</translation>
     </message>
     <message>
         <source>Confirm removal of the following Elevate configuration ( for %objectName ) :</source>
-        <translation></translation>
+        <translation>Confirmer la suppression de la promotion ( pour %objectName ) :</translation>
     </message>
     <message>
         <source>Back</source>
@@ -687,51 +638,19 @@
     </message>
     <message>
         <source>Remove</source>
-        <translation>Delete</translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <source>Confirm removal of the elevate configuration</source>
-        <translation></translation>
+        <translation>Confirmer la suppression de la promotion</translation>
     </message>
     <message>
         <source>Cancel removal of the elevate configuration</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>An unknown error occured in updating Solr&apos;s elevate configuration.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Trash</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Elevate %objectlink with:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>for language:</source>
-        <translation></translation>
+        <translation>Annuler la suppression de la promotion</translation>
     </message>
 </context>
 <context>
     <name>extension/ezfind/facets</name>
-    <message>
-        <source>Content type</source>
-        <translation>Type de contenu</translation>
-    </message>
-    <message>
-        <source>Author</source>
-        <translation>Auteur</translation>
-    </message>
-    <message>
-        <source>Keywords</source>
-        <translation>Mots-clés</translation>
-    </message>
     <message>
         <source>Creation time</source>
         <translation>Date de création</translation>
@@ -745,7 +664,7 @@
     <name>extension/ezfind/popupmenu</name>
     <message>
         <source>eZ Find</source>
-        <translation>Ez Find</translation>
+        <translation>eZ Find</translation>
     </message>
     <message>
         <source>Elevate</source>
@@ -759,8 +678,8 @@
 <context>
     <name>ezfind</name>
     <message>
-        <source>Search time: %1 msecs</source>
-        <translation>Recherche Effectuée en %1 msecs</translation>
+        <source>Search took: %1 msecs, using </source>
+        <translation>Temps de recherche : %1 msecs, en utilisant</translation>
     </message>
     <message>
         <source>Core search time: %1 msecs</source>
@@ -769,22 +688,6 @@
     <message>
         <source>N/A</source>
         <translation>N/A</translation>
-    </message>
-    <message>
-        <source>Server not running</source>
-        <translation>Serveur indisponible</translation>
-    </message>
-    <message>
-        <source>eZ Find search plugin &amp;copy; 2007 eZ Systems AS, eZ Labs</source>
-        <translation>Extension eZ Find &amp;copy; 2007 eZ Systems AS, eZ Labs</translation>
-    </message>
-    <message>
-        <source>Search took: %1 msecs, using </source>
-        <translation>Temps de recherche : %1 msecs, en utilisant</translation>
-    </message>
-    <message>
-        <source>eZ Find 2.3 search plugin &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 1.5-dev</source>
-        <translation>Extension du moteur de recherche eZ Find 2.3 &amp;copy; 1999-2011 eZ Systems AS, adossꥠsur Apache Solr 1.5-dev</translation>
     </message>
 </context>
 </TS>
