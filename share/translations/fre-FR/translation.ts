@@ -11,7 +11,7 @@
     </message>
     <message>
         <source>The same location</source>
-        <translation>Au même endroit</translation>
+        <translation>Le même emplacement</translation>
     </message>
     <message>
         <source>For more options try the %1Advanced search%2.</source>
@@ -44,7 +44,7 @@
     </message>
     <message>
         <source>Fewer keywords result in more matches. Try reducing keywords until you get a result.</source>
-        <translation>Il y a des résultats avec moins de mots-clés, essayez de réduire le nombre de mots-clés pour obtenir un résultat.</translation>
+        <translation>Moins de mots-clés donnent plus de résultats. Essayez de réduire le nombre de mots clés jusqu'à obtenir un résultat.</translation>
     </message>
     <message>
         <source>Search for &lt;%1&gt; returned %2 matches</source>
@@ -93,7 +93,7 @@
     <name>design/base</name>
     <message>
         <source>The following words were excluded from the search</source>
-        <translation>Les mots suivants sont exclus de la recherche</translation>
+        <translation>Les mots suivants ont été exclus de la recherche</translation>
     </message>
     <message>
         <source>Search</source>
@@ -126,11 +126,11 @@
     </message>
     <message>
         <source>Fewer keywords gives more results, try reducing keywords until you get a result.</source>
-        <translation>Il y a des résultats avec moins de mots-clés, essayez  de réduire le nombre de  mots-clés pour obtenir un résultat.</translation>
+        <translation>Moins de mots clés donnent plus de résultats. Essayez de réduire le nombre de mots clés jusqu'à obtenir un résultat.</translation>
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>Le recherche &quot;%1&quot; retourne %2 résultat(s)</translation>
+        <translation>La recherche de "%1" retourne %2 résultat(s)</translation>
     </message>
 </context>
 <context>
@@ -223,7 +223,7 @@
     </message>
     <message>
         <source>%login_link_startLog in%login_link_end or %create_link_startcreate a user account%create_link_end to comment.</source>
-        <translation>%login_link_startIdentifiez vous %login_link_end ou %create_link_startCreer un compte utilisateur %create_link_end pour participer.</translation>
+        <translation>%login_link_startIdentifiez vous %login_link_end ou %create_link_startCréer un compte utilisateur %create_link_end pour participer.</translation>
     </message>
     <message>
         <source>Tip a friend</source>
@@ -317,7 +317,7 @@
     </message>
     <message>
         <source>Any time</source>
-        <translation>Toutes les dates</translation>
+        <translation>N'importe quelle date</translation>
     </message>
     <message>
         <source>Display per page</source>
@@ -353,7 +353,7 @@
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>Le recherche &quot;%1&quot; retourne %2 résultat(s)</translation>
+        <translation>La recherche de &quot;%1&quot; retourne %2 résultat(s)</translation>
     </message>
     <message>
         <source>Score</source>
@@ -387,7 +387,7 @@
     </message>
     <message>
         <source>Elevation</source>
-        <translation>Elévation</translation>
+        <translation>&Eacute;lévation</translation>
     </message>
     <message>
         <source>Boost</source>
@@ -414,7 +414,7 @@
     </message>
     <message>
         <source>Elevation</source>
-        <translation>Elévation</translation>
+        <translation>&Eacute;lévation</translation>
     </message>
     <message>
         <source>Please enter a search query.</source>
@@ -426,11 +426,11 @@
     </message>
     <message>
         <source>Missing language information.</source>
-        <translation>Abscence du paramètre de langue</translation>
+        <translation>Absence du paramètre de langue</translation>
     </message>
     <message>
         <source>Successful creation of the following Elevate configuration</source>
-        <translation>Création réussite de la configuration de l&apos;élévation</translation>
+        <translation>Création réussie de la configuration de l&apos;élévation</translation>
     </message>
     <message>
         <source>Details</source>
@@ -438,7 +438,7 @@
     </message>
     <message>
         <source>Successful synchronization of the local Elevate configuration with Solr&apos;s.</source>
-        <translation>Synchonisation réussite de la configuration locale de l&apos;élévation avec Solr.</translation>
+        <translation>Synchonisation réussie de la configuration locale de l&apos;élévation avec Solr.</translation>
     </message>
     <message>
         <source>Synchronise Elevate configuration with Solr</source>
@@ -466,7 +466,7 @@
     </message>
     <message>
         <source>Search query to elevate the object for.</source>
-        <translation>Requête de recherche pour promouvoir l&apos; object</translation>
+        <translation>Requête de recherche pour promouvoir l&apos;objet</translation>
     </message>
     <message>
         <source>Elevate object</source>
@@ -490,7 +490,7 @@
     </message>
     <message>
         <source>Store elevation</source>
-        <translation>Sauvegarder l&apos;lévation</translation>
+        <translation>Sauvegarder l&apos;élévation</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -510,7 +510,7 @@
     </message>
     <message>
         <source>Language</source>
-        <translation>Langage</translation>
+        <translation>Langue</translation>
     </message>
     <message>
         <source>Select a translation to narrow down the search.</source>
@@ -530,7 +530,7 @@
     </message>
     <message>
         <source>Find elevate configurations matching the search query entered.</source>
-        <translation>Trouver la configuration de l&apos;élévation correspondante à la requête de recherche entré.</translation>
+        <translation>Trouver la configuration de l&apos;élévation correspondante à la requête de recherche entrée.</translation>
     </message>
     <message>
         <source>By object</source>
@@ -578,7 +578,7 @@
     </message>
     <message>
         <source>Edit</source>
-        <translation>Editer</translation>
+        <translation>Modifier</translation>
     </message>
     <message>
         <source>Trash</source>
@@ -618,7 +618,7 @@
     </message>
     <message>
         <source>Search query to filter the result set on.</source>
-        <translation>Requête de la recherche pour filtrer les résultats.</translation>
+        <translation>Requête de recherche pour filtrer les résultats.</translation>
     </message>
     <message>
         <source>Filter configurations by language</source>
@@ -626,7 +626,7 @@
     </message>
     <message>
         <source>Removal confirmed ( for %objectName ) :</source>
-        <translation>Suppression confirmé ( pour %objectName ) :</translation>
+        <translation>Suppression confirmée (pour %objectName) :</translation>
     </message>
     <message>
         <source>Confirm removal of the following Elevate configuration ( for %objectName ) :</source>
@@ -668,7 +668,7 @@
     </message>
     <message>
         <source>Elevate</source>
-        <translation>Elever</translation>
+        <translation>&Eacute;lever</translation>
     </message>
     <message>
         <source>Elevation detail</source>
