@@ -1,3 +1,4 @@
 java/solr/data
 java/logs
 .project
+.DS_Store
