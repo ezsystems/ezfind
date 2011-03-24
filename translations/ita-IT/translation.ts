@@ -1,6 +1,56 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0" language="it_IT">
+<!DOCTYPE TS><TS>
+<context>
+    <name>design/admin/content/search</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Cerca</translation>
+    </message>
+    <message>
+        <source>All content</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The same location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>For more options try the %1Advanced search%2.</source>
+        <comment>The parameters are link start and end tags.</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following words were excluded from the search</source>
+        <translation type="unfinished">Sono state escluse dalla ricerca le seguenti parole</translation>
+    </message>
+    <message>
+        <source>No results were found while searching for &lt;%1&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search tips</source>
+        <translation type="unfinished">Suggerimenti per la ricerca</translation>
+    </message>
+    <message>
+        <source>Check spelling of keywords.</source>
+        <translation type="unfinished">Controlla la correttezza delle parole chiave.</translation>
+    </message>
+    <message>
+        <source>Try changing some keywords e.g. &amp;quot;car&amp;quot; instead of &amp;quot;cars&amp;quot;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Try more general keywords.</source>
+        <translation type="unfinished">Cerca di usare parole chiave più generiche.</translation>
+    </message>
+    <message>
+        <source>Fewer keywords result in more matches. Try reducing keywords until you get a result.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search for &lt;%1&gt; returned %2 matches</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 <context>
     <name>design/admin/node/view/full</name>
     <message>
@@ -14,6 +64,29 @@
     <message>
         <source>Show 25 items per page.</source>
         <translation>Mostra 25 elementi per pagina.</translation>
+    </message>
+</context>
+<context>
+    <name>design/admin/pagelayout</name>
+    <message>
+        <source>Search in all content</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Cerca</translation>
+    </message>
+    <message>
+        <source>Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search in &apos;%node&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced search.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -72,11 +145,30 @@
     </message>
     <message>
         <source>Phrase search can be achieved by using quotes, example: &quot;No TV and no beer make Homer go something something&quot;</source>
-        <translation>La ricerca di una frase si può ottenere usando le virgolette, ad esempio: &quot;Senza tv e senza birra Homer diventa matto&quot;</translation>
+        <translation type="obsolete">La ricerca di una frase si può ottenere usando le virgolette, ad esempio: &quot;Senza tv e senza birra Homer diventa matto&quot;</translation>
     </message>
     <message>
         <source>Words may be excluded by using a minus ( - ) character, example: free -beer</source>
-        <translation>Le parole possono essere escluse usando un segno meno ( - ), ad esempio: libero -birra</translation>
+        <translation type="obsolete">Le parole possono essere escluse usando un segno meno ( - ), ad esempio: libero -birra</translation>
+    </message>
+    <message>
+        <source>Spell check suggestion: did you mean</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Phrase search can be achieved by using quotes, example: &quot;Quick brown fox jumps over the lazy dog&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Words may be excluded by using a minus ( - ) character, example: lazy -dog</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>design/ezflow/block/search</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Cerca</translation>
     </message>
 </context>
 <context>
@@ -124,27 +216,27 @@
     </message>
     <message>
         <source>Facets</source>
-        <translation>Faccette</translation>
+        <translation type="obsolete">Faccette</translation>
     </message>
     <message>
         <source>Class</source>
-        <translation>Classe</translation>
+        <translation type="obsolete">Classe</translation>
     </message>
     <message>
         <source>Author</source>
-        <translation>Autore</translation>
+        <translation type="obsolete">Autore</translation>
     </message>
     <message>
         <source>Translation</source>
-        <translation>Traduzione</translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation></translation>
+        <translation type="obsolete">Traduzione</translation>
     </message>
     <message>
         <source>All</source>
-        <translation>Tutti</translation>
+        <translation type="obsolete">Tutti</translation>
+    </message>
+    <message>
+        <source>Refine your search</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -164,6 +256,21 @@
     <message>
         <source>Tip a friend</source>
         <translation>Segnala ad un amico</translation>
+    </message>
+    <message>
+        <source>Related content</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>design/ezwebin/pagelayout</name>
+    <message>
+        <source>Search text:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Cerca</translation>
     </message>
 </context>
 <context>
@@ -289,19 +396,34 @@
     <name>extension/ezfind</name>
     <message>
         <source>eZFind</source>
-        <translation>eZFind</translation>
+        <translation type="obsolete">eZFind</translation>
     </message>
     <message>
         <source>Elevation</source>
-        <translation>Innalzamento</translation>
+        <translation type="obsolete">Innalzamento</translation>
     </message>
     <message>
         <source>Elevation detail</source>
-        <translation>Dettagli innalzamento</translation>
+        <translation type="obsolete">Dettagli innalzamento</translation>
     </message>
     <message>
         <source>Remove Elevation</source>
-        <translation>Elimina innalzamento</translation>
+        <translation type="obsolete">Elimina innalzamento</translation>
+    </message>
+</context>
+<context>
+    <name>extension/ezfind/ajax-search</name>
+    <message>
+        <source>No search results...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Did you mean</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refine with facets</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -327,15 +449,15 @@
     <name>extension/ezfind/elevate</name>
     <message>
         <source>Error while generating the configuration XML</source>
-        <translation>Errore nella generazione della configurazione XML</translation>
+        <translation type="obsolete">Errore nella generazione della configurazione XML</translation>
     </message>
     <message>
         <source>Unable to open &apos;%1&apos;. Write access is required on this file in order to flush Solr&apos;s elevate configuration.</source>
-        <translation>Impossibile aprire &apos;%1&apos;. Si richiede permesso di scrittura su questo file per poter lanciare la configurazione di innalzamento di Solr.</translation>
+        <translation type="obsolete">Impossibile aprire &apos;%1&apos;. Si richiede permesso di scrittura su questo file per poter lanciare la configurazione di innalzamento di Solr.</translation>
     </message>
     <message>
         <source>Unable to write Solr&apos;s elevate configuration in &apos;%1&apos;, although the file could be properly opened.</source>
-        <translation>Impossibile scrivere la configurazione d&apos;innalzamento di Solr in &apos;%1&apos;, sebbene questo file possa essere correttamente aperto.</translation>
+        <translation type="obsolete">Impossibile scrivere la configurazione d&apos;innalzamento di Solr in &apos;%1&apos;, sebbene questo file possa essere correttamente aperto.</translation>
     </message>
     <message>
         <source>Hide preview of existing elevate configurations.</source>
@@ -463,7 +585,7 @@
     </message>
     <message>
         <source>Find matching elevate configurations</source>
-        <translation>Cerca le configurazioni d&apos;innalzamento corrispondenti</translation>
+        <translation type="obsolete">Cerca le configurazioni d&apos;innalzamento corrispondenti</translation>
     </message>
     <message>
         <source>Find elevate configurations matching the search query entered.</source>
@@ -573,6 +695,33 @@
         <source>Cancel removal of the elevate configuration</source>
         <translation>Annulla eliminazione della configurazione d&apos;innalzamento</translation>
     </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elevate %objectlink with:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>for language:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>extension/ezfind/facets</name>
+    <message>
+        <source>Creation time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear all</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>extension/ezfind/popupmenu</name>
@@ -593,7 +742,7 @@
     <name>ezfind</name>
     <message>
         <source>Search time: %1 msecs</source>
-        <translation>Tempo ricerca: %1 msec</translation>
+        <translation type="obsolete">Tempo ricerca: %1 msec</translation>
     </message>
     <message>
         <source>Core search time: %1 msecs</source>
@@ -605,11 +754,15 @@
     </message>
     <message>
         <source>Server not running</source>
-        <translation>Il server non funziona</translation>
+        <translation type="obsolete">Il server non funziona</translation>
     </message>
     <message>
         <source>eZ Find search plugin &amp;copy; 2007 eZ Systems AS, eZ Labs</source>
-        <translation>eZ Find search plugin &amp;copy; 2007 eZ Systems AS, eZ Labs</translation>
+        <translation type="obsolete">eZ Find search plugin &amp;copy; 2007 eZ Systems AS, eZ Labs</translation>
+    </message>
+    <message>
+        <source>Search took: %1 msecs, using </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

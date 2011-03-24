@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0" language="es_ES">
+<!DOCTYPE TS><TS>
 <context>
     <name>design/admin/content/search</name>
     <message>
@@ -382,11 +380,11 @@
     <name>extension/ezfind</name>
     <message>
         <source>eZFind</source>
-        <translation>eZFind</translation>
+        <translation type="obsolete">eZFind</translation>
     </message>
     <message>
         <source>Elevation</source>
-        <translation>Elevación</translation>
+        <translation type="obsolete">Elevación</translation>
     </message>
     <message>
         <source>Elevation detail</source>
@@ -394,7 +392,7 @@
     </message>
     <message>
         <source>Remove Elevation</source>
-        <translation>Eliminar Elevación</translation>
+        <translation type="obsolete">Eliminar Elevación</translation>
     </message>
 </context>
 <context>
@@ -435,7 +433,7 @@
     <name>extension/ezfind/elevate</name>
     <message>
         <source>Error while generating the configuration XML</source>
-        <translation>Se ha producido un error al general la configuración XML</translation>
+        <translation type="obsolete">Se ha producido un error al general la configuración XML</translation>
     </message>
     <message>
         <source>Unable to open &apos;%1&apos;. Write access is required on this file in order to flush Solr&apos;s elevate configuration.</source>
@@ -683,7 +681,7 @@
     </message>
     <message>
         <source>An unknown error occured in updating Solr&apos;s elevate configuration.</source>
-        <translation>Se ha producido un error al actualizar la configuración de elevación del Solr.</translation>
+        <translation type="obsolete">Se ha producido un error al actualizar la configuración de elevación del Solr.</translation>
     </message>
     <message>
         <source>Edit</source>
@@ -706,15 +704,15 @@
     <name>extension/ezfind/facets</name>
     <message>
         <source>Content type</source>
-        <translation>Tipo de contenido</translation>
+        <translation type="obsolete">Tipo de contenido</translation>
     </message>
     <message>
         <source>Author</source>
-        <translation>Autor</translation>
+        <translation type="obsolete">Autor</translation>
     </message>
     <message>
         <source>Keywords</source>
-        <translation>Palabras clave</translation>
+        <translation type="obsolete">Palabras clave</translation>
     </message>
     <message>
         <source>Creation time</source>
@@ -768,7 +766,7 @@
     </message>
     <message>
         <source>eZ Find 2.3 search plugin &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 1.5-dev</source>
-        <translation>Extensión de búsqueda eZ Find 2.3 &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 1.5-dev</translation>
+        <translation type="obsolete">Extensión de búsqueda eZ Find 2.3 &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 1.5-dev</translation>
     </message>
 </context>
 </TS>

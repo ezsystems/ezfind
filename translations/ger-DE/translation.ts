@@ -1,283 +1,706 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="de_DE">
+<!DOCTYPE TS><TS>
 <defaultcodec></defaultcodec>
+<context>
+    <name>design/admin/content/search</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All content</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The same location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>For more options try the %1Advanced search%2.</source>
+        <comment>The parameters are link start and end tags.</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following words were excluded from the search</source>
+        <translation type="unfinished">Die folgenden Wörter wurden von der Suche ausgeschlossen</translation>
+    </message>
+    <message>
+        <source>No results were found while searching for &lt;%1&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search tips</source>
+        <translation type="unfinished">Suchhinweise</translation>
+    </message>
+    <message>
+        <source>Check spelling of keywords.</source>
+        <translation type="unfinished">Rechtschreibeprüfung für Suchbegriffe.</translation>
+    </message>
+    <message>
+        <source>Try changing some keywords e.g. &amp;quot;car&amp;quot; instead of &amp;quot;cars&amp;quot;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Try more general keywords.</source>
+        <translation type="unfinished">Versuchen Sie es mit allgemeineren Suchbegriffen.</translation>
+    </message>
+    <message>
+        <source>Fewer keywords result in more matches. Try reducing keywords until you get a result.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search for &lt;%1&gt; returned %2 matches</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>design/admin/node/view/full</name>
+    <message>
+        <source>Show 10 items per page.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show 50 items per page.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show 25 items per page.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>design/admin/pagelayout</name>
+    <message>
+        <source>Search in all content</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search in &apos;%node&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced search.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 <context>
     <name>design/base</name>
     <message>
-        <location filename="" line="7471221"/>
         <source>The following words were excluded from the search</source>
         <translation>Die folgenden Wörter wurden von der Suche ausgeschlossen</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Search</source>
         <translation>Suchen</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>For more options try the %1Advanced search%2</source>
         <comment>The parameters are link start and end tags.</comment>
         <translation>Für erweiterte Optionen benutzen Sie bitte die %1erweiterten Suche%2</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>No results were found when searching for &quot;%1&quot;</source>
         <translation>Zur Suchanfrage &quot;%1&quot; wurden keine Ergebnisse gefunden</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Search tips</source>
         <translation>Suchhinweise</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Check spelling of keywords.</source>
         <translation>Rechtschreibeprüfung für Suchbegriffe.</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Try changing some keywords eg. car instead of cars.</source>
         <translation>Versuchen sie einige Suchbegriffe zu ändern, beispielsweise &quot;Auto&quot; statt &quot;Autos&quot;.</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Try more general keywords.</source>
         <translation>Versuchen Sie es mit allgemeineren Suchbegriffen.</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Fewer keywords gives more results, try reducing keywords until you get a result.</source>
         <translation>Weniger Suchbegriffe liefern mehr Ergebnisse, versuchen Sie die Menge der Suchbegriffe zu reduzieren.</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
         <translation>Die Suche nach &quot;%1&quot; lieferte %2 Treffer</translation>
+    </message>
+</context>
+<context>
+    <name>design/ezfind/search</name>
+    <message>
+        <source>Spell check suggestion: did you mean</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The search is case insensitive. Upper and lower case characters may be used.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The search result contains all search terms.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Phrase search can be achieved by using quotes, example: &quot;Quick brown fox jumps over the lazy dog&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Words may be excluded by using a minus ( - ) character, example: lazy -dog</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>design/ezflow/block/search</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>design/ezwebin/content/search</name>
     <message>
-        <location filename="" line="7471221"/>
         <source>Search</source>
         <translation>Suche</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>For more options try the %1Advanced search%2</source>
         <comment>The parameters are link start and end tags.</comment>
         <translation>Für erweiterte Optionen benutzen Sie bitte die %1erweiterten Suche%2</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>No results were found when searching for &quot;%1&quot;.</source>
         <translation>Zur Suchanfrage &quot;%1&quot; wurden keine Ergebnisse gefunden.</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Search tips</source>
         <translation>Suchhinweise</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Check spelling of keywords.</source>
         <translation>Rechtschreibeprüfung für Suchbegriffe.</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Try changing some keywords (eg, &quot;car&quot; instead of &quot;cars&quot;).</source>
         <translation>Versuchen sie einige Suchbegriffe zu ändern (z.B. &quot;Auto&quot; statt &quot;Autos&quot;).</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Try searching with less specific keywords.</source>
         <translation>Versuchen Sie es mit allgemeineren Suchbegriffen.</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Reduce number of keywords to get more results.</source>
         <translation>Versuchen Sie die Menge der Suchbegriffe zu reduzieren um mehr Treffer zu erzielen.</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
         <translation>Die Suche nach &quot;%1&quot; lieferte %2 Treffer</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refine your search</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>design/ezwebin/full/article</name>
+    <message>
+        <source>Comments</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New comment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%login_link_startLog in%login_link_end or %create_link_startcreate a user account%create_link_end to comment.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tip a friend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Related content</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>design/ezwebin/pagelayout</name>
+    <message>
+        <source>Search text:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>design/standard/content/search</name>
     <message>
-        <location filename="" line="7471221"/>
         <source>Advanced search</source>
         <translation>Erweiterte Suche</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Search all the words</source>
         <translation>Nach allen Begriffen suchen</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Search the exact phrase</source>
         <translation>Nach der genauen Wortfolge suchen</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Search with at least one of the words</source>
         <translation>Suche mit mindestens einem dieser Wörter</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Class</source>
         <translation>Klasse</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Any class</source>
         <translation>Beliebige Klasse</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Class attribute</source>
         <translation>Klasseneigenschaft</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Any attribute</source>
         <translation>Beliebiges Attribut</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Update attributes</source>
         <translation>Eigenschaften aktualisieren</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>In</source>
         <translation>In</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Any section</source>
         <translation>Beliebige Sektion</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Published</source>
         <translation>Publiziert</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Any time</source>
         <translation>Beliebiges Datum</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Last day</source>
         <translation>Letzter Tag</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Last week</source>
         <translation>Letzte Woche</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Last month</source>
         <translation>Letzer Monat</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Last three months</source>
         <translation>Letzen drei Monate</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Last year</source>
         <translation>Letztes Jahr</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Display per page</source>
         <translation>Ergebnisse pro Seite</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>5 items</source>
         <translation>5 Stück</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>10 items</source>
         <translation>10 Stück</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>20 items</source>
         <translation>20 Stück</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>30 items</source>
         <translation>30 Stück</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>50 items</source>
         <translation>50 Stück</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Search</source>
         <translation>Suche</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>No results were found when searching for &quot;%1&quot;</source>
         <translation>Zur Suchanfrage &quot;%1&quot; wurden keine Ergebnisse gefunden</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
         <translation>Die Suche nach &quot;%1&quot; lieferte %2 Treffer</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Score</source>
         <translation>Relevanz</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Name</source>
         <translation>Name</translation>
     </message>
 </context>
 <context>
-    <name>ezfind</name>
+    <name>extension/ezfind/ajax-search</name>
     <message>
-        <location filename="" line="7471221"/>
-        <source>Search time: %1 msecs</source>
-        <translation>Suchdauer: %1 msecs</translation>
+        <source>No search results...</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
+        <source>Did you mean</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refine with facets</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>extension/ezfind/backoffice_left_menu</name>
+    <message>
+        <source>eZFind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elevation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Boost</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Facets</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>extension/ezfind/elevate</name>
+    <message>
+        <source>Hide preview of existing elevate configurations.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preview existing configurations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show preview of existing elevate configurations.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elevation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please enter a search query.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please choose a valid object.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Missing language information.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Successful creation of the following Elevate configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Successful synchronization of the local Elevate configuration with Solr&apos;s.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronise Elevate configuration with Solr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronise</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronise the Elevate configuration with Solr.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elevate an object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&quot;Elevating an object&quot; for a given search query means that this object will be returned among the very first search results when a search is triggered using this search query.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search query</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search query to elevate the object for.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elevate object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Browse for the object to associate elevation to.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elevate %objectlink with &amp;nbsp;  %searchquery &amp;nbsp;  for language:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elevate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Store elevation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel elevation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search for elevated objects</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>By search query</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select a translation to narrow down the search.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fuzzy match</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fuzzy match on the search query.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Find elevate configurations matching the search query entered.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>By object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Browse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Objects elevated by &quot;%search_query&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>fuzzy match</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Existing configurations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No existing Elevate configuration.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Content object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See elevate configuration details for &apos;%objectName&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove elevation by &apos;%searchQuery&apos; for &apos;%objectName&apos;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>See all objects elevated by &apos;%searchQuery&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elevation detail for object %objectName</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Missing content object.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elevate %objectName</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elevate %objectlink with:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>for language:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Existing configurations for %objectName</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>in %selectedLanguage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>containing &apos;%searchQuery&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search query to filter the result set on.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter configurations by language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Removal confirmed ( for %objectName ) :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm removal of the following Elevate configuration ( for %objectName ) :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm removal of the elevate configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel removal of the elevate configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>extension/ezfind/facets</name>
+    <message>
+        <source>Creation time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear all</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>extension/ezfind/popupmenu</name>
+    <message>
+        <source>eZ Find</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elevate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Elevation detail</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ezfind</name>
+    <message>
+        <source>Search time: %1 msecs</source>
+        <translation type="obsolete">Suchdauer: %1 msecs</translation>
+    </message>
+    <message>
         <source>Core search time: %1 msecs</source>
         <translation>Kern Suchdauer: %1 msecs</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>N/A</source>
         <translation>nicht erreichbar</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>Server not running</source>
-        <translation>Server läuft nicht</translation>
+        <translation type="obsolete">Server läuft nicht</translation>
     </message>
     <message>
-        <location filename="" line="7471221"/>
         <source>eZ Find search plugin &amp;copy; 2007 eZ Systems AS, eZ Labs</source>
-        <translation>eZ Find search plugin &amp;copy; 2007 eZ Systems AS, eZ Labs</translation>
+        <translation type="obsolete">eZ Find search plugin &amp;copy; 2007 eZ Systems AS, eZ Labs</translation>
+    </message>
+    <message>
+        <source>Search took: %1 msecs, using </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
