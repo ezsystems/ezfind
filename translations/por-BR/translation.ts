@@ -1,4 +1,6 @@
-<!DOCTYPE TS><TS>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0">
 <context>
     <name>design/admin/content/search</name>
     <message>
@@ -400,11 +402,11 @@
     <name>extension/ezfind</name>
     <message>
         <source>eZFind</source>
-        <translation type="obsolete">eZFind</translation>
+        <translation type="unfinished">eZFind</translation>
     </message>
     <message>
         <source>Elevation</source>
-        <translation type="obsolete">Elevação</translation>
+        <translation type="unfinished">Elevação</translation>
     </message>
     <message>
         <source>Elevation detail</source>
@@ -412,7 +414,7 @@
     </message>
     <message>
         <source>Remove Elevation</source>
-        <translation type="obsolete">Remover elevação</translation>
+        <translation type="unfinished">Remover elevação</translation>
     </message>
 </context>
 <context>
@@ -453,7 +455,7 @@
     <name>extension/ezfind/elevate</name>
     <message>
         <source>Error while generating the configuration XML</source>
-        <translation type="obsolete">Erro ao gerar o XML de configuração</translation>
+        <translation type="unfinished">Erro ao gerar o XML de configuração</translation>
     </message>
     <message>
         <source>Unable to open &apos;%1&apos;. Write access is required on this file in order to flush Solr&apos;s elevate configuration.</source>
@@ -715,6 +717,10 @@
         <source>for language:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>An unknown error occured in updating Solr&apos;s elevate configuration.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>extension/ezfind/facets</name>
@@ -724,6 +730,18 @@
     </message>
     <message>
         <source>Clear all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Content type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Author</source>
+        <translation type="unfinished">Autor</translation>
+    </message>
+    <message>
+        <source>Keywords</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -766,6 +784,10 @@
     </message>
     <message>
         <source>Search took: %1 msecs, using </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>eZ Find 2.3 search plugin &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 1.5-dev</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
