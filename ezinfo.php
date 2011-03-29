@@ -2,7 +2,7 @@
 //
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 // SOFTWARE NAME: eZ Find
-// SOFTWARE RELEASE: 1.0.x
+// SOFTWARE RELEASE: //autogentag//
 // COPYRIGHT NOTICE: Copyright (C) 1999-2011 eZ Systems AS
 // SOFTWARE LICENSE: GNU General Public License v2.0
 // NOTICE: >
@@ -42,7 +42,7 @@ class eZFindInfo
             'Version' => '//autogentag//',
             'Copyright' => "Copyright (C) 1999-2011 eZ Systems AS.",
             'Info_url' => "http://ez.no/ezfind",
-            'License' => "//EZP_LICENSE//",
+            'License' => "GNU General Public License v2.0",
             '3rdparty_software' =>
                             array ( 'name' => 'Solr',
                                     'Version' => '1.5-dev-rev 925669',
