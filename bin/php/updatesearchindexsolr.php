@@ -613,8 +613,10 @@ class ezfUpdateSearchIndexSolr
     protected function changeSiteAccessSetting( $siteaccess )
     {
         global $isQuiet;
+        $ini = eZINI::instance();
         $cli = eZCLI::instance();
-        if ( !file_exists( 'settings/siteaccess/' . $siteaccess ) )
+        $availableSiteAccessList = $ini->variable( 'SiteAccessSettings', 'AvailableSiteAccessList' );
+        if ( !in_array( $siteaccess, $availableSiteAccessList ) )
         {
             if ( !$isQuiet )
                 $cli->notice( "Siteaccess $siteaccess does not exist, using default siteaccess" );
