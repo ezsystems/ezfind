@@ -387,7 +387,7 @@
     </message>
     <message>
         <source>Elevation</source>
-        <translation>&Eacute;lévation</translation>
+        <translation>Élévation</translation>
     </message>
     <message>
         <source>Boost</source>
@@ -414,7 +414,7 @@
     </message>
     <message>
         <source>Elevation</source>
-        <translation>&Eacute;lévation</translation>
+        <translation>Élévation</translation>
     </message>
     <message>
         <source>Please enter a search query.</source>
@@ -668,7 +668,7 @@
     </message>
     <message>
         <source>Elevate</source>
-        <translation>&Eacute;lever</translation>
+        <translation>Élever</translation>
     </message>
     <message>
         <source>Elevation detail</source>
