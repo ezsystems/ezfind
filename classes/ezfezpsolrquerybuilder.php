@@ -1459,8 +1459,7 @@ class ezfeZPSolrQueryBuilder
         }
         else
         {
-            $currentUser = eZUser::currentUser();
-            $accessResult = $currentUser->hasAccessTo( 'content', 'read' );
+            $accessResult = eZUser::currentUser()->hasAccessTo( 'content', 'read' );
             if ( !in_array( $accessResult['accessWord'], array( 'yes', 'no' ) ) )
             {
                 $policies = $accessResult['policies'];
@@ -1532,7 +1531,7 @@ class ezfeZPSolrQueryBuilder
 
                     case 'Owner':
                     {
-                        $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $currentUser->attribute ( 'contentobject_id' );
+                        $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . eZUser::currentUser()->attribute ( 'contentobject_id' );
                     } break;
 
                     case 'Class':
