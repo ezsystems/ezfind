@@ -20,7 +20,7 @@
 
 {if $pagedata.is_edit|not()}
 
-{ezscript_require( array('ezjsc::jquery', 'ezjsc::yui3', 'ezajax_autocomplete.js') )}
+{ezscript_require( array('ezjsc::jquery', 'ezjsc::yui2', 'ezajax_autocomplete.js') )}
 <script type="text/javascript">
 
 jQuery('#ezautocompletecontainer').css('width', jQuery('input#searchtext').width() + 60);
