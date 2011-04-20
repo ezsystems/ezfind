@@ -34,7 +34,7 @@
 /**
  * Solr search plugin for eZ publish
  */
-class eZSolr
+class eZSolr implements ezpSearchEngine
 {
     /**
      * Constructor
@@ -360,14 +360,13 @@ class eZSolr
     }
 
     /**
-     * Adds a content object to the Solr search server.
+     * Adds object $contentObject to the search database.
      *
-     * @param eZContentObject $contentObject object to add to search engine.
-     * @param boolean $commit commit flag. Set if commit should be run after
-     *        adding object. If commit flag is set, run optimize() as well every
-     *        1000nd time this function is run.
-     * @param bool
-    */
+     * @param eZContentObject $contentObject Object to add to search engine
+     * @param bool $commit Whether to commit after adding the object.
+              If set, run optimize() as well every 1000nd time this function is run.
+     * @return bool True if the operation succeed.
+     */
     function addObject( $contentObject, $commit = true )
     {
         // Add all translations to the document list
@@ -696,12 +695,11 @@ class eZSolr
     }
 
     /**
-     * Removes an object from the Solr search server
+     * Removes object $contentObject from the search database.
      *
      * @param eZContentObject $contentObject the content object to remove
-     * @param bool $commit wether or not to commit after removing the object
-     *
-     * @return bool true if removal was successful
+     * @param bool $commit Whether to commit after removing the object
+     * @return bool True if the operation succeed.
      */
     function removeObject( $contentObject, $commit = null )
     {
