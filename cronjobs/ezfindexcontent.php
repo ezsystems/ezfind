@@ -29,6 +29,8 @@
 /*! \file ezfindexcontent.php
 */
 
+eZDebug::writeStrict( "This cronjob is deprecated in favor of the standard cronjobs/indexcontent.php provided by eZ Publish" );
+
 if ( !$isQuiet )
 {
     $cli->output( "Starting processing pending search engine modifications" );
