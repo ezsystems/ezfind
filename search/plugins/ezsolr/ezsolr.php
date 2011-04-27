@@ -909,6 +909,15 @@ class eZSolr
                     // Search result document is from current installation
 //                    var_dump( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' ), $doc, $nodeRowList );die();
                     $nodeID = $this->getNodeID( $doc );
+
+                    // Invalid $nodeID
+                    // This can happen if a content has been deleted while Solr was not running, provoking desynchronization
+                    if ( !isset( $nodeRowList[$nodeID] ) )
+                    {
+                        eZDebug::writeError( "Node #{$nodeID} (/{$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' )]}) returned by Solr cannot be found in the database. Please consider reindexing your content", __METHOD__ );
+                        continue;
+                    }
+
                     $resultTree = new eZFindResultNode( $nodeRowList[$nodeID] );
                     $resultTree->setContentObject( new eZContentObject( $nodeRowList[$nodeID] ) );
                     $resultTree->setAttribute( 'is_local_installation', true );
