@@ -72,6 +72,13 @@
     <!-- needed for the hardcoded meta fields -->
     <fieldType name="mstring" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
 
+    <fieldType name="mtext" class="solr.TextField" sortMissingLast="true" omitNorms="true">
+        <analyzer>
+            <tokenizer class="solr.KeywordTokenizerFactory"/>
+            <filter class="solr.LowerCaseFilterFactory" />
+        </analyzer>
+    </fieldType>
+
     <!-- boolean type: "true" or "false" -->
     <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true" omitNorms="true"/>
 
@@ -472,7 +479,7 @@
    <field name="meta_section_id_si" type="sint" indexed="true" stored="true"/>                     <!-- Section ID -->
    <field name="meta_published_dt" type="date" indexed="true" stored="true"/>              <!-- Object publish date -->
    <field name="meta_name_t" type="text" indexed="true" stored="true" termVectors="true"/>  <!-- Object name -->
-   <field name="meta_sort_name_ms" type="mstring" indexed="true" stored="true"/>  <!-- Object name for sorting (not tokenized) -->
+   <field name="meta_sort_name_ms" type="mtext" indexed="true" stored="true"/>  <!-- Object name for sorting (not tokenized) -->
    <field name="meta_main_node_id_ms" type="mstring" indexed="true" stored="true"/>           <!-- Main node ID -->
    <field name="meta_language_code_ms" type="mstring" indexed="true" stored="true"/>          <!-- Language code -->
    <field name="meta_available_language_codes_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- List of available language codes in the corresponding content object -->
