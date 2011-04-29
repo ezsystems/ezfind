@@ -78,7 +78,7 @@ class ezfSolrDocumentFieldBase
     {
         $contentClassAttribute = $this->ContentObjectAttribute->attribute( 'contentclass_attribute' );
         $fieldNameArray = array();
-        foreach( array_keys( eZSolr::$fieldTypeContexts ) as $context )
+        foreach ( array_keys( eZSolr::$fieldTypeContexts ) as $context )
         {
             $fieldNameArray[] = self::getFieldName( $contentClassAttribute, null, $context );
         }
@@ -91,7 +91,7 @@ class ezfSolrDocumentFieldBase
         if ( is_array( $metaData ) )
         {
             $processedMetaDataArray = array();
-            foreach ($metaData as $value)
+            foreach ( $metaData as $value )
             {
                 $processedMetaDataArray[] = $this->preProcessValue( $value,
                                             self::getClassAttributeType( $contentClassAttribute ) );
@@ -130,7 +130,7 @@ class ezfSolrDocumentFieldBase
         {
             return '';
         }
-        foreach( $array as $key => $value )
+        foreach ( $array as $key => $value )
         {
             if ( is_array( $value ) )
             {

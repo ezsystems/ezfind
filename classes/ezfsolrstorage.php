@@ -39,7 +39,7 @@ class ezfSolrStorage
      * @return array for further processing
      */
 
-    public static function getAttributeData (eZContentObjectAttribute $contentObjectAttribute)
+    public static function getAttributeData ( eZContentObjectAttribute $contentObjectAttribute )
     {
         $dataTypeIdentifier = $contentObjectAttribute->attribute( 'data_type_string' );
         $contentClassAttribute = eZContentClassAttribute::fetch( $contentObjectAttribute->attribute( 'contentclassattribute_id' ) );
@@ -52,11 +52,11 @@ class ezfSolrStorage
             'has_content' => $contentObjectAttribute->hasContent(),
 
             );
-        if ( class_exists ( $attributeHandler ) )
+        if ( class_exists( $attributeHandler ) )
         {
-            $attributeContent = call_user_func( array( $attributeHandler, 'getAttributeContent'),
+            $attributeContent = call_user_func( array( $attributeHandler, 'getAttributeContent' ),
                      $contentObjectAttribute, $contentClassAttribute );
-            return array_merge($target, $attributeContent, array('content_method' => self::CONTENT_METHOD_CUSTOM_HANDLER ));
+            return array_merge( $target, $attributeContent, array( 'content_method' => self::CONTENT_METHOD_CUSTOM_HANDLER ) );
 
         }
         else

@@ -29,7 +29,7 @@ class ezmatrixSolrStorage extends ezdatatypeSolrStorage
 
         $availableCells = array();
 
-        for( $i = 0; $i < count( $cellList ); $i++ )
+        for ( $i = 0; $i < count( $cellList ); $i++ )
         {
 
             $availableCells[] = array( $cellList[$i] => $cellList[++$i] );

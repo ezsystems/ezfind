@@ -43,7 +43,7 @@ class eZFindResultObject extends eZContentObject
         $this->LocalAttributeValueList = array();
         $this->LocalAttributeNameList = array( 'published' );
 
-        foreach( $rows as $name => $value )
+        foreach ( $rows as $name => $value )
         {
             $this->setAttribute( $name, $value );
         }

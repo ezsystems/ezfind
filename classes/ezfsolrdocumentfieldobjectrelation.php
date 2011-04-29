@@ -81,7 +81,7 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
             case 'ezobjectrelationlist':
             {
                 $content = $this->ContentObjectAttribute->content();
-                foreach( $content['relation_list'] as $relationItem )
+                foreach ( $content['relation_list'] as $relationItem )
                 {
                     $subObjectID = $relationItem['contentobject_id'];
                     if ( !$subObjectID )
@@ -214,10 +214,10 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
         {
             $metaDataArray = $contentObjectAttribute->metaData();
 
-            if( !is_array( $metaDataArray ) )
+            if ( !is_array( $metaDataArray ) )
                 $metaDataArray = array( $metaDataArray );
 
-            foreach( $metaDataArray as $item )
+            foreach ( $metaDataArray as $item )
             {
                 $metaData .= $item['text'] . ' ';
             }
@@ -268,7 +268,7 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                     // 1st, add content fields of the related object.
                     $baseList = $this->getBaseList( $relatedObject->attribute( 'current' ) );
 
-                    foreach( $baseList as $field )
+                    foreach ( $baseList as $field )
                     {
                         $tmpClassAttribute = $field->ContentObjectAttribute->attribute( 'contentclass_attribute' );
                         $fieldName = $field->ContentObjectAttribute->attribute( 'contentclass_attribute_identifier' );
@@ -317,7 +317,7 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                 $returnArray = array();
                 $content = $this->ContentObjectAttribute->content();
 
-                foreach( $content['relation_list'] as $relationItem )
+                foreach ( $content['relation_list'] as $relationItem )
                 {
                     $subObjectID = $relationItem['contentobject_id'];
                     if ( !$subObjectID )
@@ -367,7 +367,7 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
         // Get ezfSolrDocumentFieldBase instance for all attributes in related object
         if ( eZContentObject::recursionProtect( $this->ContentObjectAttribute->attribute( 'contentobject_id' ) ) )
         {
-            foreach( $objectVersion->contentObjectAttributes( $this->ContentObjectAttribute->attribute( 'language_code' ) ) as $attribute )
+            foreach ( $objectVersion->contentObjectAttributes( $this->ContentObjectAttribute->attribute( 'language_code' ) ) as $attribute )
             {
                 if ( $attribute->attribute( 'contentclass_attribute' )->attribute( 'is_searchable' ) )
                 {

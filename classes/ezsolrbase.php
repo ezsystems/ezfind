@@ -61,7 +61,7 @@ class eZSolrBase
         //$this->SearchServerURI = $baseURI;
         $this->SolrINI = eZINI::instance( 'solr.ini' );
         $iniSearchServerURI = $this->SolrINI->variable( 'SolrBase', 'SearchServerURI' );
-        if (! $baseURI === false )
+        if ( !$baseURI === false )
         {
             $this->SearchServerURI = $baseURI;
         }
@@ -180,7 +180,7 @@ class eZSolrBase
         }
 		$params['wt'] = $wt;
         $paramsAsString = $this->buildPostString( $params );
-        $data=$this->postQuery( $request, $paramsAsString );
+        $data = $this->postQuery( $request, $paramsAsString );
         $resultArray = array();
         if ( $data === false )
         {
@@ -288,7 +288,7 @@ class eZSolrBase
 
         foreach ( $intElements as $intNode )
         {
-            foreach ($intNode->attributes as $attribute)
+            foreach ( $intNode->attributes as $attribute )
             {
                 if ( ( $attribute->name === 'name' ) and ( $attribute->value === 'status' ) )
                 {
@@ -310,8 +310,7 @@ class eZSolrBase
      */
     function addDocs ( $docs = array(), $commit = true, $optimize = false, $commitWithin = 0  )
     {
-        //
-        if (! is_array( $docs ) )
+        if ( !is_array( $docs ) )
         {
             return false;
         }
@@ -434,7 +433,7 @@ class eZSolrBase
      */
     protected function sendHTTPRequestRetry( $url, $postData = false, $contentType = self::DEFAULT_REQUEST_CONTENTTYPE, $userAgent = self::DEFAULT_REQUEST_USERAGENT )
     {
-        $maxRetries = (int)$this->SolrINI->variable( 'SolrBase', 'ProcessMaxRetries');
+        $maxRetries = (int)$this->SolrINI->variable( 'SolrBase', 'ProcessMaxRetries' );
         if ( $maxRetries < 1 )
         {
             eZDebug::writeWarning( 'solr.ini : [SolrBase].ProcessMaxRetries cannot be < 1' );
@@ -496,12 +495,12 @@ class eZSolrBase
             curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
             curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, $connectionTimeout );
             curl_setopt( $ch, CURLOPT_TIMEOUT, $processTimeout );
-            if ($this->SolrINI->variable( 'SolrBase', 'SearchServerAuthentication' ) === 'enabled' )
+            if ( $this->SolrINI->variable( 'SolrBase', 'SearchServerAuthentication' ) === 'enabled' )
             {
-                if ($this->SolrINI->variable( 'SolrBase', 'SearchServerAuthenticationMethod' ) === 'basic')
+                if ( $this->SolrINI->variable( 'SolrBase', 'SearchServerAuthenticationMethod' ) === 'basic' )
                 {
                     curl_setopt( $ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC );
-                    curl_setopt( $ch, CURLOPT_USERPWD, $this->SolrINI->variable( 'SolrBase', 'SearchServerUserPass' ));
+                    curl_setopt( $ch, CURLOPT_USERPWD, $this->SolrINI->variable( 'SolrBase', 'SearchServerUserPass' ) );
                 }
             }
             //CURLOPT_TIMEOUT
@@ -616,9 +615,9 @@ class eZSolrBase
             {
                 $buf .= fgets( $fp, 128 );
             }
-            $info = stream_get_meta_data($fp);
+            $info = stream_get_meta_data( $fp );
 
-            fclose($fp);
+            fclose( $fp );
             if ( $info['timed_out'] )
             {
                 throw new ezfSolrException( __METHOD__ . ' - connection error: processing timed out', ezfSolrException::REQUEST_TIMEDOUT );

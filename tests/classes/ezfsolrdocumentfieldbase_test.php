@@ -317,7 +317,7 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
                                                              "contentclass_attribute" => $ezcca2 ) );
         $fieldList2 = ezfSolrDocumentFieldBase::getFieldNameList( $ezcca2 );
         $expectedData2 = array();
-        foreach( $fieldList2 as $fieldName )
+        foreach ( $fieldList2 as $fieldName )
         {
             $expectedData2[$fieldName] = 'DATA_FOR_' . $fieldName;
         }
@@ -382,7 +382,7 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
 
 
         // Let's perform the actual testing :
-        foreach( $providerArray as $input )
+        foreach ( $providerArray as $input )
         {
             $expected = $input[0];
             $contentObjectAttribute = $input[1];

@@ -140,7 +140,7 @@ $Result['path'] = array( array( 'url' => false,
 if ( $object instanceof eZContentObject )
 {
 	$Result['path'][] = array( 'url' => false,
-                                'text' => $object->attribute('name') );
+                                'text' => $object->attribute( 'name' ) );
 }
 
 $Result['left_menu'] = "design:ezfind/backoffice_left_menu.tpl";

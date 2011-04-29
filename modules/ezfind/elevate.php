@@ -53,7 +53,7 @@ if ( $http->hasPostVariable( 'ObjectIDFromMenu' ) and is_numeric( $http->postVar
 }
 
 // back from browse
-elseif(
+else if (
     $http->hasPostVariable( 'BrowseActionName' ) and
     ( $http->postVariable( 'BrowseActionName' ) == ( 'ezfind-elevate-browseforobject' ) or $http->postVariable( 'BrowseActionName' ) == ( 'ezfind-searchelevateconfigurations-browse' ) ) and
     $http->hasPostVariable( "SelectedNodeIDArray" )
@@ -97,7 +97,7 @@ elseif ( $http->hasPostVariable( 'ezfind-elevate-browseforobject' ) or
 }
 
 // Store the actual Elevate configuration
-elseif( $http->hasPostVariable( 'ezfind-elevate-do') )
+else if ( $http->hasPostVariable( 'ezfind-elevate-do' ) )
 {
     $doStorage = true;
 
@@ -166,7 +166,7 @@ elseif( $http->hasPostVariable( 'ezfind-elevate-do') )
 }
 
 // Searching for elevate configurations, directly from clicking the action button, or from previous results' pagination links ( Next, Previous, 1, 2, 3 ... )
-elseif( $http->hasPostVariable( 'ezfind-searchelevateconfigurations-do' ) or
+else if ( $http->hasPostVariable( 'ezfind-searchelevateconfigurations-do' ) or
         $Params['SearchQuery'] !== false )
 {
     // Check for search query first
@@ -177,7 +177,7 @@ elseif( $http->hasPostVariable( 'ezfind-searchelevateconfigurations-do' ) or
         // Pass the search query on to the template, search will occur there.
         $viewParameters = array_merge( $viewParameters, array( 'search_query' => $searchQuery ) );
     }
-    elseif( $Params['SearchQuery'] != '' )
+    else if ( $Params['SearchQuery'] != '' )
     {
         $searchQuery = htmlspecialchars( $Params['SearchQuery'], ENT_QUOTES );
         // Pass the search query on to the template, search will occur there.
@@ -215,7 +215,7 @@ elseif( $http->hasPostVariable( 'ezfind-searchelevateconfigurations-do' ) or
 }
 
 // Synchronise Elevate configuration with Solr :
-elseif( $http->hasPostVariable( 'ezfind-elevate-synchronise' ) )
+else if ( $http->hasPostVariable( 'ezfind-elevate-synchronise' ) )
 {
     $solr = new eZSolr();
     //if ( eZFindElevateConfiguration::synchronizeWithSolr() )

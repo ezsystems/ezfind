@@ -70,7 +70,7 @@ class ezfSearchResultInfo
                       // but a border case is present when "collation"
                       // is also a word searched for and not present in the
                       // spellcheck dictionary/index -- Solr php response writer "bug"
-                      'spellcheck_collation');
+                      'spellcheck_collation' );
     }
 
     /**
@@ -116,7 +116,7 @@ class ezfSearchResultInfo
                 }
 
                 $facetArray = array();
-                foreach( $this->ResultArray['facet_counts']['facet_queries'] as $query => $count )
+                foreach ( $this->ResultArray['facet_counts']['facet_queries'] as $query => $count )
                 {
                     list( $field, $fieldValue ) = explode( ':', $query );
                     $fieldInfo = array( 'field' => $field,
@@ -144,7 +144,7 @@ class ezfSearchResultInfo
                 }
 
                 $facetArray = array();
-                foreach( $this->ResultArray['facet_counts']['facet_fields'] as $field => $facetField )
+                foreach ( $this->ResultArray['facet_counts']['facet_fields'] as $field => $facetField )
                 {
                     switch( $field )
                     {
@@ -156,7 +156,7 @@ class ezfSearchResultInfo
                                                 'nameList' => array(),
                                                 'queryLimit' => array(),
                                                 'countList' => array() );
-                            foreach( $facetField as $contentClassID => $count )
+                            foreach ( $facetField as $contentClassID => $count )
                             {
                                 if ( $contentClass = eZContentClass::fetch( $contentClassID ) )
                                 {
@@ -182,7 +182,7 @@ class ezfSearchResultInfo
                                                 'nameList' => array(),
                                                 'queryLimit' => array(),
                                                 'countList' => array() );
-                            foreach( $facetField as $installationID => $count )
+                            foreach ( $facetField as $installationID => $count )
                             {
                                 $fieldInfo['nameList'][$installationID] = isset( $siteNameMapList[$installationID] ) ?
                                     $siteNameMapList[$installationID] : $installationID;
@@ -200,7 +200,7 @@ class ezfSearchResultInfo
                                                 'nameList' => array(),
                                                 'queryLimit' => array(),
                                                 'countList' => array() );
-                            foreach( $facetField as $ownerID => $count )
+                            foreach ( $facetField as $ownerID => $count )
                             {
                                 if ( $owner = eZContentObject::fetch( $ownerID ) )
                                 {
@@ -224,7 +224,7 @@ class ezfSearchResultInfo
                                                 'nameList' => array(),
                                                 'queryLimit' => array(),
                                                 'countList' => array() );
-                            foreach( $facetField as $languageCode => $count )
+                            foreach ( $facetField as $languageCode => $count )
                             {
                                 $fieldInfo['nameList'][$languageCode] = $languageCode;
                                 $fieldInfo['queryLimit'][$languageCode] = 'language_code:' . $languageCode;
@@ -240,7 +240,7 @@ class ezfSearchResultInfo
                                                 'queryLimit' => array(),
                                                 'nameList' => array(),
                                                 'countList' => array() );
-                            foreach( $facetField as $value => $count )
+                            foreach ( $facetField as $value => $count )
                             {
                                 $fieldInfo['nameList'][$value] = $value;
                                 $fieldInfo['queryLimit'][$value] = $field . ':' . $value;
@@ -280,7 +280,7 @@ class ezfSearchResultInfo
                 {
                     // work around border case if 'collation' is searched for but does not exist in the spell check index
                     // the collation string is the last element of the suggestions array
-                    return end($this->ResultArray['spellcheck']['suggestions']);
+                    return end( $this->ResultArray['spellcheck']['suggestions'] );
 
                 }
                 else

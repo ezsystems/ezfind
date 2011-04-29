@@ -29,7 +29,7 @@ class eZSolrRegression extends ezpDatabaseTestCase
     {
         parent::setUp();
 
-        ezpINIHelper::setINISetting( 'site.ini', 'SearchSettings', 'AllowEmptySearch', 'enabled');
+        ezpINIHelper::setINISetting( 'site.ini', 'SearchSettings', 'AllowEmptySearch', 'enabled' );
         ezpINIHelper::setINISetting( 'site.ini', 'RegionalSettings', 'SiteLanguageList', array( 'eng-GB' ) );
         $this->findINI = eZINI::instance( 'ezfind.ini' );
         $this->findINI->loadCache( true );

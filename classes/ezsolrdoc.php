@@ -73,7 +73,7 @@ class eZSolrDoc
         {
             $content = array( $content );
         }
-        foreach( $content as $value )
+        foreach ( $content as $value )
         {
             // $value should never be array. Log the value and the stack trace.
             if ( is_array( $value ) )
@@ -106,7 +106,7 @@ class eZSolrDoc
     {
         $rawXML = $this->Doc->saveXML( $this->RootElement );
         //make sure there are no control characters left
-        return preg_replace('@[\x00-\x08\x0B\x0C\x0E-\x1F]@', ' ', $rawXML);
+        return preg_replace( '@[\x00-\x08\x0B\x0C\x0E-\x1F]@', ' ', $rawXML );
     }
 
 

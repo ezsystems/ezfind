@@ -20,7 +20,7 @@ class ezobjectrelationlistSolrStorage extends ezdatatypeSolrStorage
     {
         $objectAttributeContent = $contentObjectAttribute->attribute( 'content' );
         $objectIDList = array();
-        foreach( $objectAttributeContent['relation_list'] as $objectInfo )
+        foreach ( $objectAttributeContent['relation_list'] as $objectInfo )
         {
             $objectIDList[] = $objectInfo['contentobject_id'];
         }

@@ -199,7 +199,7 @@ class eZFindElevateConfiguration extends eZPersistentObject
         else
         {
             $rows = parent::fetchObjectList( self::definition(), $fieldFilters, $conds, $sortClause, $limit, $asObject, false, $custom );
-            foreach( $rows as $row )
+            foreach ( $rows as $row )
             {
                 if ( $groupByLanguage )
                 {
@@ -268,7 +268,7 @@ class eZFindElevateConfiguration extends eZPersistentObject
         else
         {
             $rows = parent::fetchObjectList( self::definition(), $fieldFilters, $conds, $sortClause, $limit, false, false, $custom );
-            foreach( $rows as $row )
+            foreach ( $rows as $row )
             {
                 if ( ( $obj = eZContentObject::fetch( $row['contentobject_id'] ) ) !== null )
                 {
@@ -411,15 +411,15 @@ class eZFindElevateConfiguration extends eZPersistentObject
             //    <doc id="3" />
             // </query>
             $xml = new SimpleXMLElement( self::$configurationXML );
-            foreach( $rows as $row )
+            foreach ( $rows as $row )
             {
                 $searchQuery = $xml->addChild( 'query' );
                 $searchQuery->addAttribute( 'text', $row['search_query'] );
 
                 $results = self::fetchObjectsForQueryString( $row['search_query'] );
-                foreach( $results as $languageCode => $objects )
+                foreach ( $results as $languageCode => $objects )
                 {
-                    foreach( $objects as $object )
+                    foreach ( $objects as $object )
                     {
                         if ( $languageCode === self::WILDCARD )
                         {

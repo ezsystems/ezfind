@@ -53,7 +53,7 @@ class eZFindServerCallFunctions
             $param['facet'] = $defaultFacetFields;
         }
 
-        $solr= new eZSolr();
+        $solr = new eZSolr();
         $searchList = $solr->search( $searchStr, $param );
 
         $result = array();
@@ -75,7 +75,7 @@ class eZFindServerCallFunctions
 
             foreach ( $defaultFacetFields as $key => $defaultFacet )
             {
-                $facetData=$retrievedFacets[$key];
+                $facetData = $retrievedFacets[$key];
                 $facetInfo[$key] = array();
                 $facetInfo[$key][] = $defaultFacet['name'];
 
@@ -115,10 +115,10 @@ class eZFindServerCallFunctions
         {
            $solrINI = eZINI::instance( 'solr.ini' );
            $siteINI = eZINI::instance( 'site.ini' );
-           $currentLanguage = $siteINI->variable( 'RegionalSettings', 'Locale');
-           $languageMapping = $findINI->variable( 'LanguageSearch','LanguagesCoresMap');
-           $shardMapping = $solrINI->variable ('SolrBase', 'Shards');
-           $fullSolrURI=$shardMapping[$languageMapping[$currentLanguage]];
+           $currentLanguage = $siteINI->variable( 'RegionalSettings', 'Locale' );
+           $languageMapping = $findINI->variable( 'LanguageSearch','LanguagesCoresMap' );
+           $shardMapping = $solrINI->variable( 'SolrBase', 'Shards' );
+           $fullSolrURI = $shardMapping[$languageMapping[$currentLanguage]];
         }
 
         $input = isset( $args[0] ) ? mb_strtolower( $args[0], 'UTF-8' ) : null;

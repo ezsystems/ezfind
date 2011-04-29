@@ -51,7 +51,7 @@ class ezfModuleFunctionCollection
     public function getFacetParameters()
     {
         $facetArray = array();
-        foreach( $_GET as $name => $value )
+        foreach ( $_GET as $name => $value )
         {
             if ( strpos( $name, 'facet_' ) === 0 )
             {
@@ -77,7 +77,7 @@ class ezfModuleFunctionCollection
         $filterList = array();
         if ( $http->hasGetVariable( 'filter' ) )
         {
-            foreach( $http->getVariable( 'filter' ) as $filterCond )
+            foreach ( $http->getVariable( 'filter' ) as $filterCond )
             {
                 list( $name, $value ) = explode( ':', $filterCond );
                 $filterList[$name] = $value;
@@ -153,7 +153,7 @@ class ezfModuleFunctionCollection
      *       if $queryType 'url' is to be used
      * @todo consider adding limitation and visibility parameters
      *
-     * @param string $queryType string ('nid' | 'oid' | 'text' | 'url' )
+     * @param string $queryType string ( 'nid' | 'oid' | 'text' | 'url' )
      * @param string $query value for QueryType
      * @param int Offset
      * @param int Limit

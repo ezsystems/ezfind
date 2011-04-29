@@ -21,7 +21,7 @@ class ezurlSolrStorage extends ezdatatypeSolrStorage
         $url = eZURL::fetch( $contentObjectAttribute->attribute( 'data_int' ) );
         return array(
             'content' => array(
-                'url' => ($url instanceof eZURL) ? $url->attribute( 'url' ) : null,
+                'url' => ( $url instanceof eZURL ) ? $url->attribute( 'url' ) : null,
                 'text' => $contentObjectAttribute->attribute( 'data_text' ),
             ),
             'has_rendered_content' => false,

@@ -26,7 +26,7 @@ class eZFindFetchRegression extends ezpDatabaseTestCase
 
         eZINI::instance( 'ezfind.ini' )->loadCache( true );
         eZINI::instance( 'solr.ini' )->loadCache( true );
-        ezpINIHelper::setINISetting( 'site.ini', 'SearchSettings', 'AllowEmptySearch', 'enabled');
+        ezpINIHelper::setINISetting( 'site.ini', 'SearchSettings', 'AllowEmptySearch', 'enabled' );
         ezpINIHelper::setINISetting( 'site.ini', 'RegionalSettings', 'SiteLanguageList', array( 'eng-GB' ) );
         $this->solrSearch = new eZSolr();
         $this->testObj = eZContentObject::fetchByNodeID( 2 );

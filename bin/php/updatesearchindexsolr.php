@@ -180,7 +180,7 @@ class ezfUpdateSearchIndexSolr
     {
         $count = 0;
         $node = eZContentObjectTreeNode::fetch( $nodeID );
-        if ( !is_object($node) )
+        if ( !is_object( $node ) )
         {
             $this->CLI->error( "An error occured while trying fetching node $nodeID" );
             $this->Script->shutdown( 3 );
@@ -202,9 +202,9 @@ class ezfUpdateSearchIndexSolr
                 //pass false as we are going to do a commit at the end
                 //
                 $result = $searchEngine->addObject( $object, false );
-                if (! $result)
+                if ( !$result )
                 {
-                    $this->CLI->error(' Failed indexing object with ID ' . $object->attribute('id'));
+                    $this->CLI->error( ' Failed indexing object with ID ' . $object->attribute( 'id' ) );
                 }
                 ++$count;
             }
@@ -279,7 +279,7 @@ class ezfUpdateSearchIndexSolr
         $this->CLI->output( 'Using ' . $processLimit . ' concurent process(es)' );
 
         $processList = array();
-        for( $i = 0; $i < $processLimit; $i++ )
+        for ( $i = 0; $i < $processLimit; $i++ )
         {
             $processList[$i] = -1;
         }
@@ -402,7 +402,7 @@ class ezfUpdateSearchIndexSolr
             $count = $this->Limit;
         }
 
-        for( $iterateCount = 0; $iterateCount < $count; ++$iterateCount )
+        for ( $iterateCount = 0; $iterateCount < $count; ++$iterateCount )
         {
             if ( ++$this->IterateCount > $this->ObjectCount )
             {
@@ -435,9 +435,9 @@ class ezfUpdateSearchIndexSolr
         $db = null;
         eZDB::setInstance( $db );
         $this->initializeDB();
-        if ($pid == -1)
+        if ( $pid == -1 )
         {
-            die('could not fork');
+            die( 'could not fork' );
         }
         else if ( $pid )
         {
@@ -468,7 +468,7 @@ class ezfUpdateSearchIndexSolr
         // Create options string.
         $paramString = '';
         $paramList = array( 'db-host', 'db-user', 'db-password', 'db-type', 'db-driver', 'db-database' );
-        foreach( $paramList as $param )
+        foreach ( $paramList as $param )
         {
             if ( !empty( $this->Options[$param] ) )
             {
@@ -544,7 +544,7 @@ class ezfUpdateSearchIndexSolr
             $searchEngine = new eZSolr();
             $allInstallations = false;
             $optimize = false;
-            $searchEngine->cleanup($allInstallations, $optimize);
+            $searchEngine->cleanup( $allInstallations, $optimize );
         }
     }
     /**
@@ -561,7 +561,7 @@ class ezfUpdateSearchIndexSolr
             $allInstallations = true;
             // Optimize: sets all indexes to minimal file size too
             $optimize = true;
-            $searchEngine->cleanup($allInstallations, $optimize);
+            $searchEngine->cleanup( $allInstallations, $optimize );
         }
     }
 

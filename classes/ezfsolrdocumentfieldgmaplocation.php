@@ -15,7 +15,7 @@ class ezfSolrDocumentFieldGmapLocation extends ezfSolrDocumentFieldBase
                                                     'coordinates' => 'geopoint',
                                                     'geohash' => 'geohash',
                                                     'latitude' => 'float',
-                                                    'longitude' => 'float');
+                                                    'longitude' => 'float' );
 
 
     const DEFAULT_SUBATTRIBUTE = 'address';
