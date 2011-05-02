@@ -74,6 +74,29 @@ class eZSolrMultiCoreBaseTest extends ezpDatabaseTestCase
         );
     }
 
+    // see issue http://issues.ez.no/17727
+    public function testIssue17727()
+    {
+        $ini = eZINI::instance();
+        $defaultLanguageList = $ini->variable( 'RegionalSettings', 'SiteLanguageList' );
+        $ezfindINI = eZINI::instance( 'ezfind.ini' );
+        $defaultMultiCore = $ezfindINI->variable( 'LanguageSearch' , 'MultiCore' );
+        $defaultLanguageMapping = $ezfindINI->variable( 'LanguageSearch' , 'LanguagesCoresMap' );
+        $ini->setVariable( 'RegionalSettings', 'SiteLanguageList', array( 'chi-CN', 'nor-NO' ) );
+        $languageMapping = array( 'eng-GB' => 'eng-GB',
+                                  'nor-NO' => 'nor-NO',
+                                  'fre-FR' => 'fre-FR' );
+        $ezfindINI->setVariable( 'LanguageSearch', 'LanguagesCoresMap', $languageMapping  );
+        $solr = new eZSolr();
+        $solr->SolrLanguageShards;
+        $this->assertNotNull( $solr->SolrLanguageShards['eng-GB'] );
+        $this->assertNotNull( $solr->SolrLanguageShards['nor-NO'] );
+        $this->assertNotNull( $solr->SolrLanguageShards['fre-FR'] );
+        $ini->setVariable( 'RegionalSettings', 'SiteLanguageList', $defaultLanguageList );
+        $ezfindINI->setVariable( 'LanguageSearch', 'MultiCore', $defaultMultiCore );
+        $ezfindINI->setVariable( 'LanguageSearch', 'LanguagesCoresMap', $defaultLanguageMapping );
+    }
+
     // predefined INI settings for tests
     protected static $INIOverride = array(
         'MultiCoreEnabled' => array( 'ezfind.ini', 'LanguageSearch', 'MultiCore', 'enabled' ),
