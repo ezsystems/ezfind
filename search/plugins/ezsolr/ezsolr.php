@@ -1369,20 +1369,15 @@ class eZSolr
         $this->SolrLanguageShards = array();
         if ( $this->UseMultiLanguageCores == true )
         {
-
-            $languages = $this->SiteINI->variable( 'RegionalSettings', 'SiteLanguageList' );
-            $languageMapping = $this->FindINI->variable( 'LanguageSearch','LanguagesCoresMap');
+            $languageMappingList = $this->FindINI->variable( 'LanguageSearch','LanguagesCoresMap');
             $shardMapping = $this->SolrINI->variable ('SolrBase', 'Shards');
-            foreach ($languages as $language)
+            foreach( $languageMappingList as $language => $languageMapping )
             {
-                $fullURI=$shardMapping[$languageMapping[$language]];
-                $this->SolrLanguageShards[$language]=new eZSolrBase($shardMapping[$languageMapping[$language]]);
+                $fullURI = $shardMapping[$languageMapping];
+                $this->SolrLanguageShards[$language] = new eZSolrBase($shardMapping[$languageMapping]);
                 $parts = explode( '://', $fullURI );
-                $this->SolrLanguageShardURIs[$language]= $parts[1];
+                $this->SolrLanguageShardURIs[$language] = $parts[1];
             }
-
-
-
         }
         else
         //pre-2.2 behaviour
