@@ -18,34 +18,34 @@
  -->
 
 <project name="ezfind-solr-extension" default="help">
-	
+
   <property name="solr-path" value="../../solr" />
   <property name="ezfind-java-path" value="../.." />
   <property name="ezfind-src-path" value="./src/main/java/" />
   <property name="dest" value="${solr-path}/lib" />
   <property name="version" value="2.2" />
   <property name="fullnamever" value="ezsystems-${ant.project.name}-${version}"/>
-	
+
   <description>
     eZ Find Solr extension.
   </description>
 
   <path id="common.classpath">
       <!-- pathelement path="${classpath}"/ -->
-      <pathelement path="${java.class.path}"/>  	
+      <pathelement path="${java.class.path}"/>
       <pathelement path="${dest}/classes" />
-  	
-  	  <fileset dir="${dest}/">
+
+      <fileset dir="${dest}/">
          <include name="*.jar"/>
       </fileset>
-  	
-      <!-- fileset dir="${dest}/" includes="*.jar"/>  	
+
+      <!-- fileset dir="${dest}/" includes="*.jar"/>
       <dirset dir="${dest}/">
          <include name="*.jar"/>
       </dirset -->
   </path>
   <property name="common.classpath" refid="common.classpath" />
-	
+
   <!-- path id="test.classpath">
     <path refid="common.classpath" />
     <pathelement path="${dest}/classes" />
@@ -53,18 +53,18 @@
     <pathelement path="${java.class.path}"/>
   </path -->
 
-  <target name="help"> 
-  	<echo>Welcome to eZ Find's solr extension repository!</echo>
-  	<echo>Use 'ant compile' to compile the source code.</echo>
-  	<echo>Use 'ant build' to compile the source code AND place it in the suitable location.</echo>
+  <target name="help">
+    <echo>Welcome to eZ Find's solr extension repository!</echo>
+    <echo>Use 'ant compile' to compile the source code.</echo>
+    <echo>Use 'ant build' to compile the source code AND place it in the suitable location.</echo>
   </target>
-	
+
   <target name="clean">
     <delete failonerror="false" file="${dest}/${fullnamever}.jar"/>
   </target>
 
   <target name="init">
-  	<mkdir dir="${dest}"/>	
+    <mkdir dir="${dest}"/>
     <mkdir dir="${dest}/classes"/>
     <!-- mkdir dir="${build.javadoc}" / -->
     <!-- ant dir="../../" inheritall="false" target="compile" />
@@ -72,37 +72,37 @@
   </target>
 
   <target name="compile" depends="init">
-  	<!-- echo>
-  		| Source     : ${ezfind-src-path}  
-  		| Target     : ${dest}/classes/
-  		| Classpath  : ${common.classpath}
-  	</echo -->
-    <javac srcdir="${ezfind-src-path}" 
-    	   destdir="${dest}/classes/" 
-    	   debug="on">
+    <!-- echo>
+        | Source     : ${ezfind-src-path}
+        | Target     : ${dest}/classes/
+        | Classpath  : ${common.classpath}
+    </echo -->
+    <javac srcdir="${ezfind-src-path}"
+           destdir="${dest}/classes/"
+           debug="on">
       <classpath refid="common.classpath"/>
       <!-- include name="org/apache/solr/**" / -->
       <!-- include name="org/ezsystems/**" / -->
     </javac>
   </target>
 
-  <target name="build" depends="compile"> 
-  	<echo>Jarring from ${dest}/classes</echo>
-  	<jar jarfile="${dest}/${fullnamever}.jar" basedir="${dest}/classes">
-  	</jar>
+  <target name="build" depends="compile">
+    <echo>Jarring from ${dest}/classes</echo>
+    <jar jarfile="${dest}/${fullnamever}.jar" basedir="${dest}/classes">
+    </jar>
   </target>
 
   <!-- target name="compileTests" depends="compile">
-  	<solr-javac destdir="${dest}/test-classes"
-  	                classpathref="test.classpath">
-  	  <src path="src/test/java" />
-  	</solr-javac>
+    <solr-javac destdir="${dest}/test-classes"
+                classpathref="test.classpath">
+      <src path="src/test/java" />
+    </solr-javac>
   </target -->
 
   <!-- target name="test" depends="compileTests">
-  	<mkdir dir="${junit.output.dir}"/>
+    <mkdir dir="${junit.output.dir}"/>
 
-  	<junit printsummary="on"
+    <junit printsummary="on"
            haltonfailure="no"
            errorProperty="tests.failed"
            failureProperty="tests.failed"
@@ -152,7 +152,7 @@
   </target -->
 
   <!-- target name="javadoc">
-   	<sequential>
+    <sequential>
       <mkdir dir="${build.javadoc}/contrib-${name}"/>
 
       <path id="javadoc.classpath">
@@ -161,7 +161,7 @@
 
       <invoke-javadoc
         destdir="${build.javadoc}/contrib-${name}"
-      	title="${Name} ${version} contrib-${fullnamever} API">
+        title="${Name} ${version} contrib-${fullnamever} API">
         <sources>
           <packageset dir="src/main/java"/>
         </sources>
