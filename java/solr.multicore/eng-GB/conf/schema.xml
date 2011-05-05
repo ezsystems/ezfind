@@ -69,7 +69,6 @@
     -->
     <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
 
-    
     <!-- needed for the hardcoded meta fields -->
     <fieldType name="mstring" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
     
@@ -560,7 +559,6 @@
     <copyField source="*_s" dest="ezf_sp_words"/>
 
 
-	
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 
 	  destination field is to use the dynamic field syntax. 
