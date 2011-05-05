@@ -85,7 +85,7 @@
 
     <!-- The optional sortMissingLast and sortMissingFirst attributes are
          currently supported on types that are sorted internally as strings.
-	       This includes "string","boolean","sint","slong","sfloat","sdouble","pdate"
+           This includes "string","boolean","sint","slong","sfloat","sdouble","pdate"
        - If sortMissingLast="true", then a sort on this field will cause documents
          without the field to come after documents with the field,
          regardless of the requested sort order (asc or desc).
@@ -305,7 +305,7 @@
 
     <!-- A general unstemmed text field that indexes tokens normally and also
          reversed (via ReversedWildcardFilterFactory), to enable more efficient 
-	 leading wildcard queries. -->
+     leading wildcard queries. -->
     <fieldType name="text_rev" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="index">
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
@@ -359,13 +359,13 @@
     </fieldType>
 
  <!-- eZ Find: This field type is dedicated to Elevate.  -->
-	<fieldType name="elevate_string" stored="false" indexed="false" class="solr.TextField">
-	      <analyzer>
-	          <tokenizer class="solr.WhitespaceTokenizerFactory"/>	      
-		      <filter class="solr.LowerCaseFilterFactory"/>
-	      </analyzer>
-	</fieldType>
-	
+    <fieldType name="elevate_string" stored="false" indexed="false" class="solr.TextField">
+          <analyzer>
+              <tokenizer class="solr.WhitespaceTokenizerFactory"/>        
+              <filter class="solr.LowerCaseFilterFactory"/>
+          </analyzer>
+    </fieldType>
+    
 <!-- eZ Find: This field type is dedicated to ez publish keywords.  -->
     <fieldtype name="keyword" class="solr.TextField" positionIncrementGap="100">
          <analyzer type="index">
@@ -543,10 +543,11 @@
    <field name="meta_published_dt" type="date" indexed="true" stored="true"/>              <!-- Object publish date -->
    <field name="meta_name_t" type="text" indexed="true" stored="true" termVectors="true"/>  <!-- Object name -->
    <field name="meta_sort_name_ms" type="mtext" indexed="true" stored="true"/>  <!-- Object name for sorting (not tokenized) -->
-   <field name="meta_main_node_id_ms" type="mstring" indexed="true" stored="true"/>           <!-- Main node ID -->
-   <field name="meta_language_code_ms" type="mstring" indexed="true" stored="true"/>          <!-- Language code -->
-   <field name="meta_available_language_codes_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- List of available language codes in the corresponding content object -->
+   <field name="meta_main_node_id_si" type="sint" indexed="true" stored="true"/>           <!-- Main node ID -->
+   <field name="meta_language_code_ms" type="mstring" indexed="true" stored="true"/>          <!-- Language code --> 
+   <field name="meta_available_language_codes_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- List of available language codes in the corresponding content object -->    
    <field name="meta_anon_access_b" type="boolean" indexed="true" stored="false" />         <!-- Anonymous user access to object -->
+   <field name="meta_object_states_si" type="sint" indexed="true" stored="true" multiValued="true"/>                     <!-- Object states -->
 
    <!-- Location information ( may be multiple ) -->
    <field name="meta_main_url_alias_ms" type="mstring" indexed="true" stored="true"/>                <!-- Main location URL aliases -->
@@ -558,12 +559,13 @@
    <field name="meta_url_alias_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>   <!-- Location URL aliases -->
    <field name="meta_sort_field_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>  <!-- Location sort field -->
    <field name="meta_sort_order_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>  <!-- Location sort order -->
+   <field name="meta_view_count_si" type="sint" indexed="true" stored="true" multiValued="true"/>  <!-- View count -->
 
 
    <!-- Here, default is used to create a "timestamp" field indicating
         When each document was indexed.
    -->
-   <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
+   <field name="timestamp" type="date" indexed="true" stored="true" default="NOW"/>
    <field name="ezf_sp_words" type="spell" indexed="true" stored="true" multiValued="true"/>
 
    <!-- Dynamic field definitions.  If a field name is not found, dynamicFields
@@ -573,41 +575,104 @@
         EXAMPLE:  name="*_i" will match any field ending in _i (like myid_i, z_i)
         Longer patterns will be matched first.  if equal size patterns
         both match, the first appearing in the schema will be used.  -->
-       <dynamicField name="*_i"        type="int"     indexed="true"  stored="true" multiValued="true"/>
-       <dynamicField name="*_f"        type="float"   indexed="true"  stored="true" multiValued="true"/>
-       <dynamicField name="*_d"        type="double"  indexed="true"  stored="true" multiValued="true"/>
-       <dynamicField name="*_si"       type="sint"    indexed="true"  stored="true" multiValued="true"/>
-       <dynamicField name="*_sf"       type="sfloat"  indexed="true"  stored="true" multiValued="true"/>
-       <dynamicField name="*_sd"       type="sdouble" indexed="true"  stored="true" multiValued="true"/>
-       <dynamicField name="*_s"        type="string"  indexed="true"  stored="true" multiValued="true" termVectors="true"/>
 
+   <!-- eZ Find : Dynamic fields for content attributes, multiValued=false (default) to allow sorting in Solr 3.1  -->
+       <dynamicField name="*_i"        type="int"     indexed="true"  stored="true"/>
+       <dynamicField name="*_f"        type="float"   indexed="true"  stored="true"/>
+       <dynamicField name="*_d"        type="double"  indexed="true"  stored="true"/>
+       <dynamicField name="*_si"       type="sint"    indexed="true"  stored="true"/>
+       <dynamicField name="*_sf"       type="sfloat"  indexed="true"  stored="true"/>
+       <dynamicField name="*_sd"       type="sdouble" indexed="true"  stored="true"/>
+       <dynamicField name="*_s"        type="string"  indexed="true"  stored="true" termVectors="true"/>
+           <!-- for data that should be treated as a string, but that should not be part of the default text or spell check index" -->
+           <dynamicField name="*_ms"        type="mstring"  indexed="true"  stored="true" termVectors="true"/>
+       <dynamicField name="*_sl"       type="slong"   indexed="true"  stored="true"/>
+       <dynamicField name="*_l"        type="long"    indexed="true"  stored="true"/>
+       <dynamicField name="*_t"        type="text"    indexed="true"  stored="true" termVectors="true"/>
+       <dynamicField name="*_b"        type="boolean" indexed="true"  stored="true"/>
+       <dynamicField name="*_dt"       type="date"    indexed="true"  stored="true"/>
+       <dynamicField name="*_random"   type="random"  indexed="true"  stored="true"/>
+       <dynamicField name="*_k"        type="keyword" indexed="true"  stored="true"/>
+           <dynamicField name="*_lk"       type="lckeyword" indexed="true"  stored="true"/>
+              <!-- some trie-coded dynamic fields for faster range queries -->
+           <dynamicField name="*_ti" type="tint"    indexed="true"  stored="true"/>
+           <dynamicField name="*_tl" type="tlong"   indexed="true"  stored="true"/>
+           <dynamicField name="*_tf" type="tfloat"  indexed="true"  stored="true"/>
+           <dynamicField name="*_td" type="tdouble" indexed="true"  stored="true"/>
+           <dynamicField name="*_tdt" type="tdate"  indexed="true"  stored="true"/>
+             <!-- geopoint for geospatial/location searches, boosting, ... -->
+           <dynamicField name="*_gpt" type="geopoint"  indexed="true"  stored="true"/>
+             <!-- storage fields accepts base64 encoded strings -->
+           <dynamicField name="*_bst" type="binary"  indexed="false"  stored="true"/>
+
+   <!-- eZ Find : Dynamic fields for content attributes indexed in subfields, the name ends with ___<type>
+        to make a difference between dynamicFields for "regular" content and dynamic field for subattributes
+        see ezfSolrDocumentFieldBase::generateSubattributeFieldName() -->
+       <dynamicField name="*____i"        type="int"     indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____f"        type="float"   indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____d"        type="double"  indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____si"       type="sint"    indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____sf"       type="sfloat"  indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____sd"       type="sdouble" indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____s"        type="string"  indexed="true"  stored="true" termVectors="true" multiValued="true"/>
        <!-- for data that should be treated as a string, but that should not be part of the default text or spell check index" -->
-       <dynamicField name="*_ms"       type="mstring"  indexed="true"  stored="true" multiValued="true" termVectors="true"/>
-
-       <dynamicField name="*_sl"       type="slong"   indexed="true"  stored="true" multiValued="true"/>
-       <dynamicField name="*_l"        type="long"    indexed="true"  stored="true" multiValued="true"/>
-       <dynamicField name="*_t"        type="text"    indexed="true"  stored="true" multiValued="true" termVectors="true"/>
-       <dynamicField name="*_b"        type="boolean" indexed="true"  stored="true" multiValued="true"/>
-       <dynamicField name="*_dt"       type="date"    indexed="true"  stored="true" multiValued="true"/>
-       <dynamicField name="*_random"   type="random"  indexed="true"  stored="true" multiValued="true"/>
-       <dynamicField name="*_k"        type="keyword" indexed="true"  stored="true" multiValued="true"/>
-       <dynamicField name="*_lk"       type="lckeyword" indexed="true"  stored="true" multiValued="true"/>
-
+       <dynamicField name="*____ms"       type="mstring" indexed="true"  stored="true" termVectors="true" multiValued="true"/>
+       <dynamicField name="*____sl"       type="slong"   indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____l"        type="long"    indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____t"        type="text"    indexed="true"  stored="true" termVectors="true" multiValued="true"/>
+       <dynamicField name="*____b"        type="boolean" indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____dt"       type="date"    indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____random"   type="random"  indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____k"        type="keyword" indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____lk"       type="lckeyword" indexed="true"  stored="true" multiValued="true"/>
        <!-- some trie-coded dynamic fields for faster range queries -->
-       <dynamicField name="*_ti" type="tint"    indexed="true"  stored="true"/>
-       <dynamicField name="*_tl" type="tlong"   indexed="true"  stored="true"/>
-       <dynamicField name="*_tf" type="tfloat"  indexed="true"  stored="true"/>
-       <dynamicField name="*_td" type="tdouble" indexed="true"  stored="true"/>
-       <dynamicField name="*_tdt" type="tdate"  indexed="true"  stored="true"/>
+       <dynamicField name="*____ti" type="tint"    indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____tl" type="tlong"   indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____tf" type="tfloat"  indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____td" type="tdouble" indexed="true"  stored="true" multiValued="true"/>
+       <dynamicField name="*____tdt" type="tdate"  indexed="true"  stored="true" multiValued="true"/>
+       <!-- geopoint for geospatial/location searches, boosting, ... -->
+       <dynamicField name="*____gpt" type="geopoint"  indexed="true"  stored="true" multiValued="true"/>
+       <!-- storage fields accepts base64 encoded strings -->
+       <dynamicField name="*____bst" type="binary"  indexed="false"  stored="true" multiValued="true"/>
 
-         <!-- geopoint for geospatial/location searches, boosting, ... -->
-       <dynamicField name="*_gpt" type="geopoint"  indexed="true"  stored="true"/>
+   <!-- eZ Find : Dynamic field for meta attributes indexed in subfields mostly for ezobjectrelationlist datatype -->
+       <dynamicField name="*___guid_ms" type="mstring" indexed="true" stored="true"  multiValued="true"/> <!-- Global unique ID ( per installation per object per language ) -->
 
-         <!-- storage fields accepts base64 encoded strings -->
-       <dynamicField name="*_bst" type="binary"  indexed="false"  stored="true"/>
+       <!-- Object information -->
+       <dynamicField name="*___id_si" type="sint" indexed="true" stored="true" multiValued="true"/>                     <!-- Object ID -->
+       <dynamicField name="*___section_id_si" type="sint" indexed="true" stored="true" multiValued="true"/>                     <!-- Section ID -->
+       <dynamicField name="*___published_dt" type="date" indexed="true" stored="true" multiValued="true"/>              <!-- Object publish date -->
+       <dynamicField name="*___modified_dt" type="date" indexed="true" stored="true" multiValued="true"/>              <!-- Object modification date -->
+       <dynamicField name="*___name_t" type="text" indexed="true" stored="true" termVectors="true" multiValued="true"/>  <!-- Object name -->
+       <dynamicField name="*___sort_name_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>  <!-- Object name for sorting (not tokenized) -->
+       <dynamicField name="*___class_name_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- Class name of the object -->
+       <dynamicField name="*___class_identifier_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- Class identifier -->
+       <dynamicField name="*___main_node_id_si" type="sint" indexed="true" stored="true" multiValued="true"/>           <!-- Main node ID -->
+       <dynamicField name="*___language_code_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- Language code -->
+       <dynamicField name="*___available_language_codes_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- List of available language codes in the corresponding content object -->
+       <dynamicField name="*___remote_id_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- Remote ID -->
+       <dynamicField name="*___anon_access_b" type="boolean" indexed="true" stored="false"  multiValued="true"/>         <!-- Anonymous user access to object -->
+       <dynamicField name="*___object_states_si" type="sint" indexed="true" stored="true" multiValued="true"/>                     <!-- Object states -->
+       <dynamicField name="*___owner_id_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- owner ids -->
+       <dynamicField name="*___contentclass_id_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- content class ids -->
+       <dynamicField name="*___current_version_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- current version ids -->
+       <dynamicField name="*___main_parent_node_id_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- main parent node ids -->
+
+       <!-- Location information ( may be multiple ) -->
+       <dynamicField name="*___main_url_alias_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>                <!-- Main location URL aliases -->
+       <dynamicField name="*___node_id_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- Location node ID -->
+       <dynamicField name="*___path_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- Location path IDs -->
+       <dynamicField name="*___path_string_ms" type="mstring" indexed="true" stored="true" multiValued="true"/> <!-- Location path string -->
+       <dynamicField name="*___main_path_string_ms" type="mstring" indexed="true" stored="true" multiValued="true"/> <!-- Location main path string (not multi-valued, for sorting) -->
+       <dynamicField name="*___depth_si" type="sint" indexed="true" stored="true" multiValued="true"/>       <!-- Location depths -->
+       <dynamicField name="*___url_alias_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>   <!-- Location URL aliases -->
+       <dynamicField name="*___sort_field_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>  <!-- Location sort field -->
+       <dynamicField name="*___sort_order_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>  <!-- Location sort order -->
+       <dynamicField name="*___view_count_si" type="sint" indexed="true" stored="true" multiValued="true"/>  <!-- View count -->
 
 
-   <field name="ezf_df_text" type="text"    indexed="true"  stored="true" multiValued="true" termVectors="true"/>
+      <field name="ezf_df_text" type="text"    indexed="true"  stored="true" multiValued="true" termVectors="true"/>
 
    <!-- uncomment the following to ignore any fields that don't already match an existing 
         field name or dynamic field, rather than reporting them as an error. 

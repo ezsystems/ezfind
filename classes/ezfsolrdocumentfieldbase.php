@@ -423,7 +423,10 @@ class ezfSolrDocumentFieldBase
      */
     public static function generateSubattributeFieldName( eZContentClassAttribute $classAttribute, $subfieldName, $type )
     {
-        return self::$DocumentFieldName->lookupSchemaName( self::SUBATTR_FIELD_PREFIX . $classAttribute->attribute( 'identifier' ) . self::SUBATTR_FIELD_SEPARATOR . $subfieldName,
+        // base name of subfields ends with self::SUBATTR_FIELD_PREFIX so
+        // that it's possible to differentiate those fields in schema.xml
+        return self::$DocumentFieldName->lookupSchemaName( self::SUBATTR_FIELD_PREFIX . $classAttribute->attribute( 'identifier' )
+                                                            . self::SUBATTR_FIELD_SEPARATOR . $subfieldName . self::SUBATTR_FIELD_SEPARATOR,
                                                            $type );
     }
 

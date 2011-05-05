@@ -113,12 +113,12 @@ class eZSolr implements ezpSearchEngine
     static function nodeAttributes()
     {
         return array( 'node_id' => 'sint',
-                      'path_string' => 'string',
-                      'url_alias' => 'string',
+                      'path_string' => 'mstring',
+                      'url_alias' => 'mstring',
                       'is_hidden' => 'boolean',
                       'is_invisible' => 'boolean',
-                      'sort_field' => 'string',
-                      'sort_order' => 'string',
+                      'sort_field' => 'mstring',
+                      'sort_order' => 'mstring',
                       'depth' => 'sint',
                       'view_count' => 'sint' );
     }
@@ -148,7 +148,7 @@ class eZSolr implements ezpSearchEngine
                                              'owner_name' => 'text',
                                              'owner_group_id' => 'sint',
                                              'path' => 'sint',
-                                             'object_states' => 'mstring' ),
+                                             'object_states' => 'sint'),
                                       self::metaAttributes(),
                                       self::nodeAttributes() ),
                                 'facet' =>  array(
@@ -355,8 +355,7 @@ class eZSolr implements ezpSearchEngine
                 }
             }
         }
-
-        return (int) $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0];
+        return (int) $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )];
     }
 
     /**
@@ -912,7 +911,6 @@ class eZSolr implements ezpSearchEngine
                 if ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' )] == self::installationID() )
                 {
                     // Search result document is from current installation
-//                    var_dump( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' ), $doc, $nodeRowList );die();
                     $nodeID = $this->getNodeID( $doc );
 
                     // Invalid $nodeID
