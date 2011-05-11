@@ -93,7 +93,7 @@ class ezfSolrDocumentFieldGmapLocation extends ezfSolrDocumentFieldBase
         }
         return $subfields;
     }
-    static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null )
+    static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null, $context = 'search' )
     {
         if ( $subAttribute and
              $subAttribute !== '' and
