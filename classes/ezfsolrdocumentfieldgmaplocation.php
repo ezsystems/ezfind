@@ -32,13 +32,22 @@ class ezfSolrDocumentFieldGmapLocation extends ezfSolrDocumentFieldBase
         $contentClassAttribute = $this->ContentObjectAttribute->attribute( 'contentclass_attribute' );
         $data[self::getFieldName( $contentClassAttribute, self::DEFAULT_SUBATTRIBUTE )] = $this->ContentObjectAttribute->attribute( 'content' )->attribute( 'address' );
         $longitude = $this->ContentObjectAttribute->attribute( 'content' )->attribute( 'longitude' );
+        if ( !empty( $longitude) )
+        {
+            $data[self::getFieldName( $contentClassAttribute, 'longitude' )] = $longitude;
+        }
         $latitude = $this->ContentObjectAttribute->attribute( 'content' )->attribute( 'latitude' );
-        $data[self::getFieldName( $contentClassAttribute, 'longitude' )] = $longitude;
-        $data[self::getFieldName( $contentClassAttribute, 'latitude' )] = $latitude;
-        $data[self::getFieldName( $contentClassAttribute, 'coordinates' )] = $longitude . ',' . $latitude;
-        //almost the same input format, Solr will take care of the conversion to a geohash string
-        //disabled for now, need to update Solr.war first
-        //$data[self::getFieldName( $contentClassAttribute, 'geohash' )] = $longitude . ' ' . $latitude;
+        if ( !empty( $latitude) )
+        {
+            $data[self::getFieldName( $contentClassAttribute, 'latitude' )] = $latitude;
+        }
+        if ( !empty( $longitude ) && !empty( $latitude ) )
+        {
+            $data[self::getFieldName( $contentClassAttribute, 'coordinates' )] = $longitude . ',' . $latitude;
+            //almost the same input format, Solr will take care of the conversion to a geohash string
+            //disabled for now, need to update Solr.war first
+            //$data[self::getFieldName( $contentClassAttribute, 'geohash' )] = $longitude . ' ' . $latitude;
+        }
         return $data;
 
     }
