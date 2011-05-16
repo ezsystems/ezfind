@@ -158,6 +158,7 @@
          can perform merges in the background using separate threads.
          The SerialMergeScheduler (Lucene 2.2 default) does not.
      -->
+    <!--
        <mergeScheduler class="org.apache.lucene.index.ConcurrentMergeScheduler"/>
        -->
       
