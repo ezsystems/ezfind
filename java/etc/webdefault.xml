@@ -147,11 +147,11 @@
     </init-param>
     <init-param>
       <param-name>gzip</param-name>
-      <param-value>false</param-value><!-- TODO dp : à voir -->
+      <param-value>false</param-value>
     </init-param>
     <init-param>
       <param-name>useFileMappedBuffer</param-name>
-      <param-value>false</param-value><!-- TODO dp : à voir -->
+      <param-value>false</param-value>
     </init-param>  
     <!--
     <init-param>

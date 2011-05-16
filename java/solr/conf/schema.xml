@@ -479,7 +479,7 @@
     <fieldtype name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" />
     <!-- The geopoint type holds latitude / longitude information
       implictely it holds several subfields-->
-    <fieldType name="geopoint" class="solr.PointType" dimension="2" subFieldType="double"/><!-- TODO dp : voir avec ci-dessous -->
+    <fieldType name="geopoint" class="solr.PointType" dimension="2" subFieldType="double"/>
 
     <!-- This point type indexes the coordinates as separate fields (subFields)
       If subFieldType is defined, it references a type, and a dynamic field
