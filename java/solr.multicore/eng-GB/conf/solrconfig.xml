@@ -95,6 +95,7 @@
        replication is in use, this should match the replication
        configuration.
     -->
+  <!-- bd@ez.no the default value is okay here since it matches coreX/data -->
   <!-- <dataDir>${solr.data.dir:./solr/data}</dataDir> -->
 
 
