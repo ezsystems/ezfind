@@ -1,26 +1,26 @@
 <?php
 // This array contains the database schema
 $schema = array (
-  'ezfind_elevate_configuration' => 
+  'ezfind_elevate_configuration' =>
   array (
     'name' => 'ezfind_elevate_configuration',
-    'fields' => 
+    'fields' =>
     array (
-      'contentobject_id' => 
+      'contentobject_id' =>
       array (
         'length' => 11,
         'type' => 'int',
         'not_null' => '1',
         'default' => 0,
       ),
-      'language_code' => 
+      'language_code' =>
       array (
         'length' => 20,
         'type' => 'varchar',
         'not_null' => '1',
         'default' => '',
       ),
-      'search_query' => 
+      'search_query' =>
       array (
         'length' => 255,
         'type' => 'varchar',
@@ -28,24 +28,24 @@ $schema = array (
         'default' => '',
       ),
     ),
-    'indexes' => 
+    'indexes' =>
     array (
-      'PRIMARY' => 
+      'PRIMARY' =>
       array (
         'type' => 'primary',
-        'fields' => 
+        'fields' =>
         array (
           0 => 'search_query',
           1 => 'contentobject_id',
           2 => 'language_code',
         ),
       ),
-      'ezfind_elevate_configuration__search_query' => 
+      'ezfind_elevate_configuration__search_query' =>
       array (
         'type' => 'non-unique',
-        'fields' => 
+        'fields' =>
         array (
-          0 => 
+          0 =>
           array (
             'name' => 'search_query',
             'mysql:length' => 100,
@@ -54,14 +54,14 @@ $schema = array (
       ),
     ),
   ),
-  '_info' => 
+  '_info' =>
   array (
     'format' => 'generic',
   ),
 );
 // This array contains the database data
 $data = array (
-  '_info' => 
+  '_info' =>
   array (
     'format' => 'generic',
   ),

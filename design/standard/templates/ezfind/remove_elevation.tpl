@@ -5,9 +5,9 @@
 {if is_set( $feedback.removal_back_link )}
     {"Removal confirmed ( for %objectName ) :"|i18n( 'extension/ezfind/elevate', '', hash( '%objectName', concat( '<a href=', $elevatedObject.main_node.url_alias|ezurl, '>', $elevatedObject.name, '</a>' ) ) )}
 {else}
-   {"Confirm removal of the following Elevate configuration ( for %objectName ) :"|i18n( 'extension/ezfind/elevate', '', 
+   {"Confirm removal of the following Elevate configuration ( for %objectName ) :"|i18n( 'extension/ezfind/elevate', '',
                                                                                          hash( '%objectName', concat( '<a href=', $elevatedObject.main_node.url_alias|ezurl, '>', $elevatedObject.name, '</a>' ) ) )}
-{/if}                                                                                      
+{/if}
 </h1>
 {* DESIGN: Mainline *}<div class="header-mainline"></div>
 {* DESIGN: Header END *}</div></div></div></div></div></div>
@@ -32,7 +32,7 @@
                {$feedback.confirm_remove.language_code}
             {/if}
         </td>
-    </tr> 
+    </tr>
 </table>
 
 {* DESIGN: Content END *}</div></div></div>{* </div></div> *}</div>
@@ -44,7 +44,7 @@
     {else}
        <input class="button" type="submit" name="ezfind-removeelevation-do" value="{'Remove'|i18n( 'extension/ezfind/elevate' )}" title="{'Confirm removal of the elevate configuration'|i18n( 'extension/ezfind/elevate' )}"/>
        <input class="button" type="submit" name="ezfind-removeelevation-cancel" value="{'Cancel'|i18n( 'extension/ezfind/elevate' )}" title="{'Cancel removal of the elevate configuration'|i18n( 'extension/ezfind/elevate' )}"/>
-    {/if}    
+    {/if}
 </div>
 
 </form>

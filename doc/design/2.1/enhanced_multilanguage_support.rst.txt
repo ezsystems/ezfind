@@ -31,11 +31,11 @@ Solr's configuration is centralized in the two main files :
 containing, among other, the <fieldType> definitions, with, for each of them,
 the list of <analyzer>s and <filter>s. These 2 elements may contain semantic
 processing, which are currently not applied per-language, by design.
-Having the possibility to have per-language processing would let us : 
+Having the possibility to have per-language processing would let us :
 
 * increase the built-in Spellcheck's relevancy
 * use synonyms list per language
-* use stopwords list per language 
+* use stopwords list per language
 
 Any per-language customization shall increase the global relevancy of Solr as
 search engine for eZ Publish. This is made possible through having several
@@ -69,7 +69,7 @@ through one single, dedicated core.
 
 Updating and querying through language-cores
 ''''''''''''''''''''''''''''''''''''''''''''
-**Issue** : 
+**Issue** :
 
 How to search several cores simultaneously? This would happen when search results
 localization must match the site.ini[RegionalSettings].SiteLanguageList[] ( when

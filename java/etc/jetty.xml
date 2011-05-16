@@ -47,7 +47,7 @@
 
     <!-- Use this connector for many frequently idle connections
          and for threadless continuations.
-    -->    
+    -->
   <!--
     <Call name="addConnector">
       <Arg>
@@ -93,7 +93,7 @@
     <!--                                                                 -->
     <!-- See jetty-xinetd.xml for further instructions.                  -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    
+
     <!-- =========================================================== -->
     <!-- Set up global session ID manager                            -->
     <!-- =========================================================== -->

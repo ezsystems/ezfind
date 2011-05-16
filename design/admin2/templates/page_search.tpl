@@ -49,9 +49,9 @@ ezAutoHeader.init({ldelim}
 	if ( document.getElementById('searchbuttonfield') ) {
 
 		jQuery('#searchbuttonfield').click(function() {
-            if ( jQuery('#searchtext').val() === jQuery('#searchtext').attr('title') ) 
+            if ( jQuery('#searchtext').val() === jQuery('#searchtext').attr('title') )
                 return;
-            
+
         	jQuery('#searchbutton').click();
         });
     }

@@ -39,7 +39,7 @@ the target locale name::
 
     $ezroot: cd extension/ezfind/java/solr.multicore
     $solr.multicore: cp -rp eng-GB nor-NO
-    
+
 2) edit solr.multicore/solr.xml and add the newly created core here::
 
     <core name="eng-GB" instanceDir="eng-GB" />
@@ -50,7 +50,7 @@ it will handle, and will perform language specific analysis. To do so, edit
 the conf/schema.xml file located in this particular core::
 
     extension/ezfind/java/solr.multicore/nor-NO/conf/schema.xml
-    
+
 In this file, you will find multiple occurences of 'English' (if you've used
 eng-GB as the source). All of these will be attributes of a 'filter' XML element.
 Edit these, and replace 'English' with your language. The list of supported
@@ -63,6 +63,6 @@ Tips
 ====
 To access the solr backoffice, you must use the URI specified in solr.xml::
     http://localhost:8983/solr/admin/cores
-    
+
 This will give you an overview of the solr configuration, as well as a direct
 access to each core's admin.

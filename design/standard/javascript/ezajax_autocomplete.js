@@ -7,7 +7,7 @@ var eZAJAXAutoComplete = function() {
 
     /**
      * Initializes the widget
-     * 
+     *
      * @private
      */
     var initAutosuggest = function() {
@@ -32,11 +32,11 @@ var eZAJAXAutoComplete = function() {
     return {
         /**
          * The initialization of the module
-         * 
+         *
          * @param {Array}
-         *            url, 
-         *            inputid, 
-         *            containerid, 
+         *            url,
+         *            inputid,
+         *            containerid,
          *            minQueryLength,
          *            resultlimit
          */

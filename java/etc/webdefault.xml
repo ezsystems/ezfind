@@ -70,7 +70,7 @@
   <!--                    welcome file is found. Else 403 Forbidden.        -->
   <!--                                                                      -->
   <!--   welcomeServlets  If true, attempt to dispatch to welcome files     -->
-  <!--                    that are servlets, if no matching static          --> 
+  <!--                    that are servlets, if no matching static          -->
   <!--                    resources can be found.                           -->
   <!--                                                                      -->
   <!--   redirectWelcome  If true, redirect welcome file requests           -->
@@ -152,7 +152,7 @@
     <init-param>
       <param-name>useFileMappedBuffer</param-name>
       <param-value>false</param-value>
-    </init-param>  
+    </init-param>
     <!--
     <init-param>
       <param-name>cacheControl</param-name>
@@ -396,7 +396,7 @@
     <locale-encoding-mapping><locale>zh</locale><encoding>GB2312</encoding></locale-encoding-mapping>
     <locale-encoding-mapping><locale>zh_TW</locale><encoding>Big5</encoding></locale-encoding-mapping>
   </locale-encoding-mapping-list>
-  
+
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>Disable TRACE</web-resource-name>
@@ -405,6 +405,6 @@
     </web-resource-collection>
     <auth-constraint/>
   </security-constraint>
-  
+
 </web-app>
 

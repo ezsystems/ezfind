@@ -14,6 +14,6 @@ then
   exit
 fi
 
-# start solr 
+# start solr
 exec $JAVA -jar start.jar
 

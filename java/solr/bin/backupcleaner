@@ -112,7 +112,7 @@ then
     else
       unset maxdepth
     fi
-  
+
     logMessage cleaning up backups more than ${days} days old
     for i in `find ${data_dir} ${maxdepth} -name 'backup.*' -mtime +${days} -print`
     do

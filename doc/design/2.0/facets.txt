@@ -1,8 +1,8 @@
 eZ Find - Facets, Design
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 :Author:   Kåre Køhler Høvik
-:Revision: 
-:Date:     
+:Revision:
+:Date:
 
 
 Introduction
@@ -11,11 +11,11 @@ Introduction
 Description
 -----------
 
-The primary use for faceting is drilldown into a subset of hits resulting from 
-a query. The chosen facet value is used to construct a filter query which 
+The primary use for faceting is drilldown into a subset of hits resulting from
+a query. The chosen facet value is used to construct a filter query which
 literally matches that value in the index.
 
-This must be as easy as possible to set up for developers, meaning it should 
+This must be as easy as possible to set up for developers, meaning it should
 be controlled from the design templates. If no facets are defined, class will
 be used.
 
@@ -23,8 +23,8 @@ be used.
 Design
 ======
 
-An eZ Publish specific query builder should be buildt as part of this feature. 
-The query builder should be based on the code in 
+An eZ Publish specific query builder should be buildt as part of this feature.
+The query builder should be based on the code in
 extension/ezfind/search/plugins/ezsolr/ezsolr.php , but include a more general
 interface.
 
@@ -44,18 +44,18 @@ facet.field - Specifies a specific field which should work as a facet. This is
               - translation - Translation.
 facet.prefix - Limits the facet fields to only list facets where the field value
                starts with <facet.prefix>
-facet.sort - Sort by 'count' or 'alpha'. 'alpha' will sort the facet results by 
+facet.sort - Sort by 'count' or 'alpha'. 'alpha' will sort the facet results by
              field value, alpha-numerical.
 facet.limit - Maximum number of facets. Default value is 20.
 facet.offset - Offset, default value 0.
 facet.mincount - Return only facets with more results than <facet.mincount>.
                  Default value 0.
-facet.missing - If set to true, the facet count will include empty results. 
+facet.missing - If set to true, the facet count will include empty results.
                 Default value false.
-facet.date.start - Start date for facet.  
-facet.date.end - End date for facet.  
-facet.date.gap - Size of date range.  
-facet.date.hardend - See [1].  
+facet.date.start - Start date for facet.
+facet.date.end - End date for facet.
+facet.date.gap - Size of date range.
+facet.date.hardend - See [1].
 facet.date.other - See [1].
 
 One query may include multiple facets. This is supported by using nested arrays.

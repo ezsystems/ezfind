@@ -7,7 +7,7 @@ Upgrade instructions
 Because "integer" types was declared in schema.xml until alpha1,
 but "int" used in the code, the schema has been adapted to reflect this.
 
-Because of the schema change, re-indexing your site is required if you declared 
+Because of the schema change, re-indexing your site is required if you declared
 some datatypes as being "integer", it should be "int" instead
 
 

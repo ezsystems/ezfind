@@ -14,7 +14,7 @@ div#search_results
 
 ul#facet-list
 {
-	margin-left: 0;  
+	margin-left: 0;
 }
 
 ul#active-facets-list
@@ -48,7 +48,7 @@ div.ajax-search-facets
     margin-bottom: 5px;
     border: 1px solid #F0F0F0;
     font-size: 90%;
-    
+
     /* for IE */
     filter:'alpha(opacity=0)'; /* Will be faded in by the YUI animation */
     /* CSS3 standard */

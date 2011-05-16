@@ -37,7 +37,7 @@ test -x $DAEMON || exit 0
 #
 d_start() {
 	start-stop-daemon --start --pidfile $PIDFILE --chdir $SOLR_HOME --background --make-pidfile --exec $DAEMON -- $PARAMETERS
-} 
+}
 #
 #	Function that stops the daemon/service.
 #

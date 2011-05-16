@@ -36,10 +36,10 @@
 {* DESIGN: Mainline *}<div class="header-mainline"></div>
 {* DESIGN: Header END *}</div></div></div></div></div></div>
 {* DESIGN: Content START *}<div class="box-bc"><div class="box-ml"><div class="box-mr"><div class="box-bl"><div class="box-br"><div class="box-content" style="padding-top: 2px;">
-   {* 
-    Feedbacks. 
+   {*
+    Feedbacks.
    *}
-   
+
    {if or( is_set( $feedback.missing_searchquery ), is_set( $feedback.missing_object ) )}
        <div class="message-warning">
        <h2><span class="time">[{currentdate()|l10n( shortdatetime )}]</span>
@@ -52,7 +52,7 @@
        </h2>
        </div>
    {/if}
-   
+
    {if is_set( $feedback.missing_language )}
        <div class="message-warning">
        <h2><span class="time">[{currentdate()|l10n( shortdatetime )}]</span>
@@ -60,7 +60,7 @@
        </h2>
        </div>
    {/if}
-   
+
    {if is_set( $feedback.creation_ok )}
        <div class="message-feedback">
        <h2><span class="time">[{currentdate()|l10n( shortdatetime )}]</span>
@@ -85,7 +85,7 @@
         </h2>
         </div>
     {/if}
-        
+
     {* Synchronise configuration witih Solr *}
     <div class="block">
         {'Synchronise Elevate configuration with Solr'|i18n( 'extension/ezfind/elevate' )}
@@ -118,18 +118,18 @@
            <input type="text" id="ezfind-elevate-searchquery" name="ezfind-elevate-searchquery" size="15" value="" title="{'Search query to elevate the object for.'|i18n( 'extension/ezfind/elevate' )}"/>&nbsp;
            <input class="button" type="submit" name="ezfind-elevate-browseforobject" value="{'Elevate object'|i18n( 'extension/ezfind/elevate' )}" title="{'Browse for the object to associate elevation to.'|i18n( 'extension/ezfind/elevate' )}"/>
        {else}
-           {'Elevate %objectlink with &nbsp;  %searchquery &nbsp;  for language:'|i18n( 'extension/ezfind/elevate', '', 
+           {'Elevate %objectlink with &nbsp;  %searchquery &nbsp;  for language:'|i18n( 'extension/ezfind/elevate', '',
                                                                                         hash( '%objectlink',  concat( '<a href=', $elevatedObject.main_node.url_alias|ezurl, '>', $elevatedObject.main_node.name, '</a>' ),
                                                                                               '%searchquery', concat( '<input type="text" name="ezfind-elevate-searchquery" size="15" value="', $elevateSearchQuery|wash, '" title="', 'Search query to elevate the object for.'|i18n( 'extension/ezfind/elevate' ) , '"/>' ) ))}
-                                                                                                              
+
             <select name="ezfind-elevate-language">
                    <option value="{$language_wildcard}">{'All'|i18n( 'extension/ezfind/elevate' )}</option>
                    {foreach $elevatedObject.languages as $lang}
                        <option value="{$lang.locale}">{$lang.name}</option>
                    {/foreach}
-            </select>     
-            
-            <input type="hidden" name="elevateObjectID" value="{$elevatedObject.id}">            
+            </select>
+
+            <input type="hidden" name="elevateObjectID" value="{$elevatedObject.id}">
             <input class="button" type="submit" name="ezfind-elevate-do" value="{'Elevate'|i18n( 'extension/ezfind/elevate' )}" title="{'Store elevation'|i18n( 'extension/ezfind/elevate' )}"/>
             <input class="button" type="submit" name="ezfind-elevate-cancel" value="{'Cancel'|i18n( 'extension/ezfind/elevate' )}" title="{'Cancel elevation'|i18n( 'extension/ezfind/elevate' )}"/>
        {/if}
@@ -161,9 +161,9 @@
         <input type="text" id="ezfind-searchelevateconfigurations-searchquery" name="ezfind-searchelevateconfigurations-searchquery" size="15" value="{if is_set( $view_parameters.search_query )}{$view_parameters.search_query}{/if}" title="{'Search query to elevate the object for.'|i18n( 'extension/ezfind/elevate' )}" />
         </label>
     </div>
-    
+
     <div class="button-left">
-        <label style="display: inline; font-weight:normal;">{'Language'|i18n( 'extension/ezfind/elevate' )}:        
+        <label style="display: inline; font-weight:normal;">{'Language'|i18n( 'extension/ezfind/elevate' )}:
         <select name="ezfind-searchelevateconfigurations-language" title="{'Select a translation to narrow down the search.'|i18n( 'extension/ezfind/elevate' )}">
            <option value="{$language_wildcard}" {if is_set( $view_parameters.language )|not}selected="selected"{/if} >{'All'|i18n( 'extension/ezfind/elevate' )}</option>
            {foreach $available_translations as $translation}
@@ -172,13 +172,13 @@
         </select>
         </label>
     </div>
-    
+
     <div class="button-left">
         <label for="ezfind-searchelevateconfigurations-fuzzy" style="display: inline; font-weight:normal;">{'Fuzzy match'|i18n( 'extension/ezfind/elevate' )}:
         <input type="checkbox" id="ezfind-searchelevateconfigurations-fuzzy" name="ezfind-searchelevateconfigurations-fuzzy" {if is_set( $view_parameters.fuzzy_filter )}checked="checked"{/if} title="{'Fuzzy match on the search query.'|i18n( 'extension/ezfind/elevate' )}"/>
         </label>
     </div>
-    
+
     <div class="button-left">
        <input class="button" type="submit" name="ezfind-searchelevateconfigurations-do" value="{'Filter'|i18n( 'extension/ezfind/elevate' )}" title="{'Find elevate configurations matching the search query entered.'|i18n( 'extension/ezfind/elevate' )}"/>
     </div>
@@ -188,7 +188,7 @@
 </div>
 <div class="block">
     <fieldset>
-       <legend>{'By object'|i18n( 'extension/ezfind/elevate' )}</legend>       
+       <legend>{'By object'|i18n( 'extension/ezfind/elevate' )}</legend>
        <input class="button" type="submit" name="ezfind-searchelevateconfigurations-browse" value="{'Browse'|i18n( 'extension/ezfind/elevate' )}" title="{'Find elevate configurations matching the search query entered.'|i18n( 'extension/ezfind/elevate' )}"/>
    </fieldset>
 </div>
@@ -202,7 +202,7 @@
      $params = hash( 'offset', $view_parameters.offset,
                      'limit',  $limit )
      $paramsForCount = hash( 'countOnly', true() )}
-     
+
 {* Searching for elevate configurations for a given search query, alter the fetch parameters *}
 {if is_set( $view_parameters.search_query )}
 
@@ -210,7 +210,7 @@
     {if is_set( $view_parameters.fuzzy_filter )}
         {set $searchQueryHash = $searchQueryHash|merge( hash( 'fuzzy', true() ) )}
     {/if}
-    
+
     {set $params = $params|merge( hash( 'searchQuery', $searchQueryHash ) )}
     {set $paramsForCount = $paramsForCount|merge( hash( 'searchQuery', $searchQueryHash ) )}
 {/if}
@@ -233,11 +233,11 @@
         <span style="color: orange;">
         {'Objects elevated by "%search_query"'|i18n( 'extension/ezfind/elevate', '', hash( '%search_query', $view_parameters.search_query ) )}
         {if is_set( $view_parameters.fuzzy_filter )}
-            ({'fuzzy match'|i18n( 'extension/ezfind/elevate' )})        
+            ({'fuzzy match'|i18n( 'extension/ezfind/elevate' )})
         {/if}
         </span>
     {else}
-        {'Existing configurations'|i18n( 'extension/ezfind/elevate' )}    
+        {'Existing configurations'|i18n( 'extension/ezfind/elevate' )}
     {/if}
 </h2>
 
@@ -286,7 +286,7 @@
         <tr class="bgdark">
             <th>{'Content object'|i18n( 'extension/ezfind/elevate' )}</th>
             <th>{'Actions'|i18n( 'extension/ezfind/elevate' )}</th>
-        </tr>  
+        </tr>
         {foreach $configurations as $object sequence array( 'bglight', 'bgdark' ) as $tdClass }
            <tr class="{$tdClass}">
            <td>
@@ -295,14 +295,14 @@
            <td width="10%">
               {if is_set( $view_parameters.fuzzy_filter )}
                    <a href={concat( '/ezfind/elevation_detail/', $object.id, '/(search_query)/', $view_parameters.search_query, '/(fuzzy_filter)/', $view_parameters.fuzzy_filter )|ezurl} title="{'See elevate configuration details for \'%objectName\''|i18n( 'extension/ezfind/elevate', '', hash( '%objectName', $object.name ) )}"><img src={'edit.gif'|ezimage} /></a>
-                   <a href={concat( '/ezfind/elevation_detail/', $object.id, '/(search_query)/', $view_parameters.search_query, '/(fuzzy_filter)/', $view_parameters.fuzzy_filter )|ezurl} title="{'Remove elevation by \'%searchQuery\' for \'%objectName\'.'|i18n( 'extension/ezfind/elevate', '', hash( '%objectName', $object.name, '%searchQuery', $view_parameters.search_query ) )}"><img src={'trash-icon-16x16.gif'|ezimage} /></a>                   
+                   <a href={concat( '/ezfind/elevation_detail/', $object.id, '/(search_query)/', $view_parameters.search_query, '/(fuzzy_filter)/', $view_parameters.fuzzy_filter )|ezurl} title="{'Remove elevation by \'%searchQuery\' for \'%objectName\'.'|i18n( 'extension/ezfind/elevate', '', hash( '%objectName', $object.name, '%searchQuery', $view_parameters.search_query ) )}"><img src={'trash-icon-16x16.gif'|ezimage} /></a>
                {else}
                   <a href={concat( '/ezfind/elevation_detail/', $object.id, '/(search_query)/', $view_parameters.search_query )|ezurl} title="{'See elevate configuration details for \'%objectName\''|i18n( 'extension/ezfind/elevate', '', hash( '%objectName', $object.name ) )}"><img src={'edit.gif'|ezimage} /></a>
-                  <a href={concat( '/ezfind/remove_elevation/', $object.id, '/', $view_parameters.search_query )|ezurl} title="{'Remove elevation by \'%searchQuery\' for \'%objectName\'.'|i18n( 'extension/ezfind/elevate', '', hash( '%objectName', $object.name, '%searchQuery', $view_parameters.search_query ) )}"><img src={'trash-icon-16x16.gif'|ezimage} /></a>               
-               {/if}              
-           </td>           
+                  <a href={concat( '/ezfind/remove_elevation/', $object.id, '/', $view_parameters.search_query )|ezurl} title="{'Remove elevation by \'%searchQuery\' for \'%objectName\'.'|i18n( 'extension/ezfind/elevate', '', hash( '%objectName', $object.name, '%searchQuery', $view_parameters.search_query ) )}"><img src={'trash-icon-16x16.gif'|ezimage} /></a>
+               {/if}
+           </td>
            </tr>
-        {/foreach} 
+        {/foreach}
    {else}
        <tr class="bgdark">
            <th>{'Search query'|i18n( 'extension/ezfind/elevate' )}</th>
@@ -310,7 +310,7 @@
            <th>{'Language'|i18n( 'extension/ezfind/elevate' )}</th>
            <th>{'Actions'|i18n( 'extension/ezfind/elevate' )}</th>
        </tr>
-       
+
        {def $tmp_obj=false()}
        {foreach $configurations as $conf sequence array( 'bglight', 'bgdark' ) as $tdClass }
           {set $tmp_obj=fetch( 'content', 'object', hash( 'object_id', $conf.contentobject_id ) )}
@@ -328,12 +328,12 @@
                  <a href={concat( '/ezfind/elevation_detail/', $tmp_obj.id )|ezurl} title="{'See elevate configuration details for \'%objectName\''|i18n( 'extension/ezfind/elevate', '', hash( '%objectName', $tmp_obj.name ) )}"><img alt="{'Edit'|i18n( 'extension/ezfind/elevate' )}" src={'edit.gif'|ezimage} /></a>
                   <a href={concat( '/ezfind/remove_elevation/', $tmp_obj.id, '/', $conf.search_query, '/', $conf.language_code )|ezurl} title="{'Remove elevation by \'%searchQuery\' for \'%objectName\'.'|i18n( 'extension/ezfind/elevate', '', hash( '%objectName', $tmp_obj.name, '%searchQuery', $conf.search_query ) )}"><img alt="{'Trash'|i18n( 'extension/ezfind/elevate' )}" src={'trash-icon-16x16.gif'|ezimage} /></a>
               </td>
-          </tr>        
+          </tr>
        {/foreach}
    {/if}
     </table>
-        
-    
+
+
    <div class="context-toolbar">
    {include name=navigator
             uri='design:navigator/alphabetical.tpl'

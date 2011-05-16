@@ -115,7 +115,7 @@ then
 fi
 cat <<EOF > ${solr_root}/conf/rsyncd.conf
 #### rsyncd.conf file ####
- 
+
 uid = $(whoami)
 gid = $(whoami)
 use chroot = no

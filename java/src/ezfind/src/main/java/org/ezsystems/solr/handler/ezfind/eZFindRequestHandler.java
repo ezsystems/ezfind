@@ -57,39 +57,39 @@ import java.util.logging.Logger;
 import java.net.URL;
 
 /**
- * Multi purposer handler, extending Solr's features for <a href="http://ez.no/ezfind/">eZ Find</a>, technological bridge 
- * between the Enterprise Open Source CMS <a href="http://ez.no/ezpublish/">eZ Publish</a> and <a href="http://lucene.apache.org/solr/">Solr</a> 
+ * Multi purposer handler, extending Solr's features for <a href="http://ez.no/ezfind/">eZ Find</a>, technological bridge
+ * between the Enterprise Open Source CMS <a href="http://ez.no/ezpublish/">eZ Publish</a> and <a href="http://lucene.apache.org/solr/">Solr</a>
  * <p/>
  */
 
 public class eZFindRequestHandler extends RequestHandlerBase implements SolrCoreAware {
-  
+
   /**
    * Storing the current core.
    */
   private SolrCore core = null;
 
   /**
-   * Storing the core's first elevation Component encountered. 
+   * Storing the core's first elevation Component encountered.
    * Will be used to update the configuration dynamically.
-   */  
-  private QueryElevationComponent elevationComponent = null;  
-  
+   */
+  private QueryElevationComponent elevationComponent = null;
+
   /**
-   * Used to dynamically update the configuration file, usually named "elevate.xml". 
+   * Used to dynamically update the configuration file, usually named "elevate.xml".
    * Is populated once at initialization.
-   * 
+   *
    * @see init
-   */  
+   */
   private String elevateConfigurationFileName = null;
-  
+
   private transient static Logger log = Logger.getLogger( eZFindRequestHandler.class + "" );
 
   /**
-   * Constant storing the name of the POST/GET variable ( request parameter ) 
+   * Constant storing the name of the POST/GET variable ( request parameter )
    * containing the update configuration XML for the QueryElevation component.
-   */  
-  public static final String CONF_PARAM_NAME = "elevate-configuration"; 
+   */
+  public static final String CONF_PARAM_NAME = "elevate-configuration";
 
   /** <code>init</code> will be called just once, immediately after creation.
    * <p>The args are user-level initialization parameters that
@@ -101,8 +101,8 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
 
   /**
    * Returns the name of the QueryElevation component's configuration file.
-   * 
-   * Is assumed here that the QueryElevation component's configuration is correct ( hence the absence of sanity checks ). 
+   *
+   * Is assumed here that the QueryElevation component's configuration is correct ( hence the absence of sanity checks ).
    * It would have triggered exceptions at startup otherwise.
    */
   private String getElevateConfigurationFileName()
@@ -111,14 +111,14 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
 	  {
 		  // Issue accessing the initArgs property of a QueryElevationComponent object, it is private. Need to directly access the config.
 		  //  String f = this.elevationComponent.initArgs.get( QueryElevationComponent.CONFIG_FILE );
-		  
-		  // FIXME: the XML attribute name ( "config-file" ) is only visible from the package in QueryElevationComponent, 
+
+		  // FIXME: the XML attribute name ( "config-file" ) is only visible from the package in QueryElevationComponent,
 		  //         hence the impossibility to use QueryElevationComponent.CONFIG_FILE ( which would be way cleaner ). This issue appears again a few lines below.
-		  this.elevateConfigurationFileName = this.core.getSolrConfig().get( "searchComponent[@class=\"solr.QueryElevationComponent\"]/str[@name=\"" + "config-file" + "\"]", "elevate.xml" );		  
+		  this.elevateConfigurationFileName = this.core.getSolrConfig().get( "searchComponent[@class=\"solr.QueryElevationComponent\"]/str[@name=\"" + "config-file" + "\"]", "elevate.xml" );
 	  }
 	  return this.elevateConfigurationFileName;
   }
-  
+
   /**
    * Handles a query request, this method must be thread safe.
    * <p>
@@ -133,47 +133,47 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
   public void handleRequestBody(SolrQueryRequest req, SolrQueryResponse rsp)
   {
 	  String newElevateConfiguration = req.getParams().get( eZFindRequestHandler.CONF_PARAM_NAME );
-	  
+
 	  if ( newElevateConfiguration != null )
 	  {
 		  String f = this.getElevateConfigurationFileName();
-	
+
 	      File fC = new File( this.core.getResourceLoader().getConfigDir(), f );
 	      //File fD = new File( this.core.getDataDir(), f );
-	
-	      // updating files below. 
+
+	      // updating files below.
 	      // TODO : Need for concurrency management / thread safety
 	      // TODO : Need for XML validation here
 	      if( fC.exists() ) {
 	          // Update fC.
-              try 
+              try
               {
             	  this.log.info( "Updating " + fC );
                   FileWriter fw = new FileWriter( fC );
                   BufferedWriter out = new BufferedWriter( fw );
 	              out.write( newElevateConfiguration );
-	              out.close();                  
+	              out.close();
 	    	      // reinitialize the QueryElevation component. Is there another way to take the new configuration into account ?
-	    	      this.elevationComponent.inform( this.core );	              
-              } 
+	    	      this.elevationComponent.inform( this.core );
+              }
               catch (Exception e) {
-            	  this.log.info( "Exception when updating " + fC.getAbsolutePath() + " : " + e.getMessage() );            	  
+            	  this.log.info( "Exception when updating " + fC.getAbsolutePath() + " : " + e.getMessage() );
             	  rsp.add( "error", "Error when updating " + fC.getAbsolutePath() + " : " + e.getMessage() );
               }
 	      }
-	      
-	      
-	      /** 
+
+
+	      /**
 	       * Although the QueryElevationComponent supports having elevate.xml both in the dataDir and in the conf dir,
 	       * this requestHandler will not support having elevate.xml in the dataDir. In fact, the replication feature, being on his way at the moment
 	       * is not able to replicate configuration files placed in the dataDir.
 	       */
-	      
+
 	      /*
 		  else if( fD.exists() )
 	      {
 	          // Update fD.
-              try 
+              try
               {
             	  this.log.info( "Updating " + fD );
                   FileWriter fw = new FileWriter( fD );
@@ -181,30 +181,30 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
 	              out.write( newElevateConfiguration );
 	              out.close();
 	    	      // reinitialize the QueryElevation component. Is there another way to take the new configuration into account ?
-	    	      this.elevationComponent.inform( this.core );	              
-              } 
+	    	      this.elevationComponent.inform( this.core );
+              }
               catch (Exception e) {
-            	  this.log.info( "Exception when updating " + fD.getAbsolutePath() + " : " + e.getMessage());            	  
+            	  this.log.info( "Exception when updating " + fD.getAbsolutePath() + " : " + e.getMessage());
             	  rsp.add( "error", "Error when updating " + fD.getAbsolutePath() + " : " + e.getMessage() );
-              }    	  
+              }
 	      }
 	      */
 	  }
-  }  
-  
+  }
+
 
   //  SolrCoreAware interface implementation - Start
-  public void inform(SolrCore core)   
+  public void inform(SolrCore core)
   {
 	this.core = core;
-	
+
 	Map<String,SearchComponent> availableSearchComponents = core.getSearchComponents();
-	 
-	for ( Iterator i=availableSearchComponents.entrySet().iterator(); i.hasNext(); ) 
+
+	for ( Iterator i=availableSearchComponents.entrySet().iterator(); i.hasNext(); )
 	{
 		Map.Entry e = (Map.Entry) i.next();
 		// Ugly hard-coded fully-qualified class name. Any workaround ?
-		if ( e.getValue().getClass().getName() == "org.apache.solr.handler.component.QueryElevationComponent" ) 
+		if ( e.getValue().getClass().getName() == "org.apache.solr.handler.component.QueryElevationComponent" )
 		{
 			// Found the Query Elevation Component, store it as local property.
 		   	this.elevationComponent = (QueryElevationComponent) e.getValue();
@@ -213,10 +213,10 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
 	}
   }
   //  SolrCoreAware interface implementation - End
-      
-  
+
+
   // ////////////////////// SolrInfoMBeans methods //////////////////////
-  
+
   public String getDescription() {
     return "eZFind's dedicated request Handler.";
   }
@@ -234,7 +234,7 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
   public String getSource() {
     return "$URL:$";
   }
-  
+
   /**
    * Simple common usage name, e.g. BasicQueryHandler,
    * or fully qualified clas name.
@@ -243,13 +243,13 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
   {
 	  return "eZFindQueryHandler";
   }
-  
+
   /** Purpose of this Class */
   public Category getCategory()
   {
 	  return null;
   }
-  
+
   /**
    * Documentation URL list.
    *
@@ -258,11 +258,11 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
    * FAQ on class usage, Design doc for class, Wiki, bug reporting URL, etc...
    * </p>
    */
-  public URL[] getDocs() 
+  public URL[] getDocs()
   {
 	  return null;
   }
-  
+
   /**
    * Any statistics this instance would like to be publicly available via
    * the Solr Administration interface.

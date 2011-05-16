@@ -1,9 +1,9 @@
 #!/bin/bash
 #
 # eZ Find init script for RHEL and CENTOS.
-# 
+#
 # Usage:
-# 
+#
 # Set the correct SOLR_HOME value, and copy this file to /etc/init.d
 # Symlink to /etc/init.d/solr to /etc/rc3.d/S70solr and /etc/rc5.d/S70solr
 #

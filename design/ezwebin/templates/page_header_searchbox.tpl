@@ -13,7 +13,7 @@
     {if eq( $ui_context, 'browse' )}
      <input name="Mode" type="hidden" value="browse" />
     {/if}
-    
+
     {/if}
   </form>
 </div>
