@@ -356,7 +356,7 @@
 
     -->
   <!--
-<indexReaderFactory name="IndexReaderFactory" class="package.class">
+  <indexReaderFactory name="IndexReaderFactory" class="package.class">
     <str name="someArg">Some Value</str>
   </indexReaderFactory >
   -->
