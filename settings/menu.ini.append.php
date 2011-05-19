@@ -22,5 +22,6 @@ Shown[edit]=true
 Shown[navigation]=true
 # We don't show it in browse mode
 Shown[browse]=true
+PolicyList[]=ezfind/elevate
 
 */ ?>
