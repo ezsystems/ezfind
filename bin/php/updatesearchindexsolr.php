@@ -421,7 +421,7 @@ class ezfUpdateSearchIndexSolr
     }
 
     /**
-     * Fork and executre
+     * Fork and execute
      *
      * @param int Top node ID
      * @param int Offset
