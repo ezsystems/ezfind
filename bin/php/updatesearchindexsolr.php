@@ -421,7 +421,7 @@ class ezfUpdateSearchIndexSolr
     }
 
     /**
-     * Fork and executre
+     * Fork and execute
      *
      * @param int Top node ID
      * @param int Offset
@@ -566,7 +566,7 @@ class ezfUpdateSearchIndexSolr
     }
 
     /**
-     * Ccreate custom DB connection if DB options provided
+     * Create custom DB connection if DB options provided
      *
      * @param array Options
      */
@@ -606,7 +606,7 @@ class ezfUpdateSearchIndexSolr
     /**
      * Change siteaccess
      *
-     * @param string siteacceee name
+     * @param string siteaccess name
      */
     protected function changeSiteAccessSetting( $siteaccess )
     {
