@@ -31,10 +31,10 @@ require 'autoload.php';
 if ( !function_exists( 'readline' ) )
 {
     function readline( $prompt = '' )
-        {
-            echo $prompt . ' ';
-            return trim( fgets( STDIN ) );
-        }
+    {
+        echo $prompt . ' ';
+        return trim( fgets( STDIN ) );
+    }
 }
 
 function microtime_float()
@@ -47,10 +47,10 @@ set_time_limit( 0 );
 $cli = eZCLI::instance();
 $endl = $cli->endlineString();
 
-$script = eZScript::instance( array( 'description' => ( "eZ publish search index updater.\n\n" .
+$script = eZScript::instance( array( 'description' => ( "eZFind search index updater.\n\n" .
                                                         "Goes trough all objects and reindexes the meta data to the search engine" .
                                                         "\n" .
-                                                        "updatesearchindex.php"),
+                                                        "updatesearchindexsolr.php"),
                                      'use-session' => true,
                                      'use-modules' => true,
                                      'use-extensions' => true ) );
@@ -69,8 +69,8 @@ class ezfUpdateSearchIndexSolr
     /**
      * Constructor
      *
-     * @param eZScript Script instance
-     * @param eZCLI CLI instance
+     * @param eZScript $script
+     * @param eZCLI $cli
      */
     function ezfUpdateSearchIndexSolr( eZScript $script, eZCLI $cli )
     {
@@ -113,8 +113,6 @@ class ezfUpdateSearchIndexSolr
         }
         else
         {
-
-
             $this->CLI->warning( 'You did not specify a siteaccess. The admin siteaccess is a required option in most cases.' );
             $input = readline( 'Are you sure the default siteaccess has all available languages defined? ([y] or [q] to quit )' );
             if ( $input === 'q' )
@@ -132,9 +130,7 @@ class ezfUpdateSearchIndexSolr
 
         $this->initializeDB();
 
-        /*
-         * call clean up routines which will deal with the CLI arguments themselves
-         */
+        // call clean up routines which will deal with the CLI arguments themselves        
         $this->cleanUp();
         $this->cleanUpAll();
 
@@ -172,9 +168,9 @@ class ezfUpdateSearchIndexSolr
     /**
      * Run sub process.
      *
-     * @param int $topNodeID
-     * @param int Offset
-     * @param int Limit
+     * @param int $nodeID
+     * @param int $offset
+     * @param int $limit
      */
     protected function runSubProcess( $nodeID, $offset, $limit )
     {
@@ -198,9 +194,9 @@ class ezfUpdateSearchIndexSolr
                 {
                     continue;
                 }
+                
                 //eZSearch::removeObject( $object );
                 //pass false as we are going to do a commit at the end
-                //
                 $result = $searchEngine->addObject( $object, false );
                 if ( !$result )
                 {
@@ -327,7 +323,7 @@ class ezfUpdateSearchIndexSolr
                     }
                     else
                     {
-                        // Executre in same process
+                        // Execute in same process
                         $count = $this->execute( $nodeID, $offset, $this->Limit );
                         $this->iterate( $count );
                         $offset += $this->Limit;
@@ -393,7 +389,7 @@ class ezfUpdateSearchIndexSolr
     /**
      * Iterate index counter
      *
-     * @param int Iterate count ( optional )
+     * @param int $count
      */
     protected function iterate( $count = false )
     {
@@ -423,9 +419,9 @@ class ezfUpdateSearchIndexSolr
     /**
      * Fork and execute
      *
-     * @param int Top node ID
-     * @param int Offset
-     * @param int Limit
+     * @param int $nodeid
+     * @param int $offset
+     * @param int $limit
      */
     protected function forkAndExecute( $nodeID, $offset, $limit )
     {
@@ -455,10 +451,10 @@ class ezfUpdateSearchIndexSolr
     /**
      * Execute indexing of subtree
      *
-     * @param int Top node ID
-     * @param int Offset
-     * @param int Limit
-     * @param boolean Is sub process.
+     * @param int $nodeID
+     * @param int $offset
+     * @param int $limit
+     * @param bool $isSubProcess.
      *
      * @return int Number of objects indexed.
      */
@@ -547,6 +543,7 @@ class ezfUpdateSearchIndexSolr
             $searchEngine->cleanup( $allInstallations, $optimize );
         }
     }
+
     /**
      * Clean all indices in current Solr core, regardless of installation id's
      * Only clean-up if --clean-all is set
@@ -567,8 +564,6 @@ class ezfUpdateSearchIndexSolr
 
     /**
      * Create custom DB connection if DB options provided
-     *
-     * @param array Options
      */
     protected function initializeDB()
     {
@@ -606,7 +601,7 @@ class ezfUpdateSearchIndexSolr
     /**
      * Change siteaccess
      *
-     * @param string siteaccess name
+     * @param string $siteaccess
      */
     protected function changeSiteAccessSetting( $siteaccess )
     {
@@ -626,7 +621,7 @@ class ezfUpdateSearchIndexSolr
      * If $coreUrl is false, the default Solr Url from solr.ini is used
      *
      * @param mixed $coreUrl
-     * @return boolean
+     * @return bool
      */
     protected function isSolrRunning( $coreUrl = false )
     {
