@@ -46,13 +46,18 @@ set_time_limit( 0 );
 
 $cli = eZCLI::instance();
 
-$script = eZScript::instance( array( 'description' => ( "eZFind search index updater.\n\n" .
-                                                        "Goes trough all objects and reindexes the meta data to the search engine" .
-                                                        "\n" .
-                                                        "updatesearchindexsolr.php"),
-                                     'use-session' => true,
-                                     'use-modules' => true,
-                                     'use-extensions' => true ) );
+$script = eZScript::instance(
+    array(
+        'description' =>
+            "eZFind search index updater.\n\n" .
+            "Goes trough all objects and reindexes the meta data to the search engine" .
+            "\n" .
+            "updatesearchindexsolr.php",
+        'use-session' => true,
+        'use-modules' => true,
+        'use-extensions' => true
+    )
+);
 
 
 $solrUpdate = new ezfUpdateSearchIndexSolr( $script, $cli );
@@ -85,23 +90,26 @@ class ezfUpdateSearchIndexSolr
     {
         $this->Script->startup();
 
-        $this->Options = $this->Script->getOptions( "[db-host:][db-user:][db-password:][db-database:][db-type:|db-driver:][sql][clean][clean-all][conc:][offset:][limit:][topNodeID:][php-exec:]",
-                                                    "",
-                                                    array( 'db-host' => "Database host",
-                                                           'db-user' => "Database user",
-                                                           'db-password' => "Database password",
-                                                           'db-database' => "Database name",
-                                                           'db-driver' => "Database driver",
-                                                           'db-type' => "Database driver, alias for --db-driver",
-                                                           'sql' => "Display sql queries",
-                                                           'clean' =>  "Remove all search data of the current installation id before beginning indexing",
-                                                           'clean-all' => "Remove all search data for all installations",
-                                                           'conc' => 'Parallelization, number of concurent processes to use',
-                                                           'php-exec' => 'Full path to PHP executable',
-                                                           'offset' => '*For internal use only*',
-                                                           'limit' => '*For internal use only*',
-                                                           'topNodeID' => '*For internal use only*',
-                                                           ) );
+        $this->Options = $this->Script->getOptions(
+            "[db-host:][db-user:][db-password:][db-database:][db-type:|db-driver:][sql][clean][clean-all][conc:][offset:][limit:][topNodeID:][php-exec:]",
+            "",
+            array(
+                'db-host' => "Database host",
+                'db-user' => "Database user",
+                'db-password' => "Database password",
+                'db-database' => "Database name",
+                'db-driver' => "Database driver",
+                'db-type' => "Database driver, alias for --db-driver",
+                'sql' => "Display sql queries",
+                'clean' =>  "Remove all search data of the current installation id before beginning indexing",
+                'clean-all' => "Remove all search data for all installations",
+                'conc' => 'Parallelization, number of concurent processes to use',
+                'php-exec' => 'Full path to PHP executable',
+                'offset' => '*For internal use only*',
+                'limit' => '*For internal use only*',
+                'topNodeID' => '*For internal use only*',
+            )
+        );
         $this->Script->initialize();
 
         // Fix siteaccess
@@ -182,9 +190,16 @@ class ezfUpdateSearchIndexSolr
         }
         $searchEngine = new eZSolr();
 
-        if ( $subTree = $node->subTree( array( 'Offset' => $offset, 'Limit' => $limit,
-                                                  'Limitation' => array(),
-                                                  'MainNodeOnly' => true ) ) )
+        if (
+            $subTree = $node->subTree(
+                array(
+                    'Offset' => $offset,
+                    'Limit' => $limit,
+                    'Limitation' => array(),
+                    'MainNodeOnly' => true
+                )
+            )
+        )
         {
             foreach ( $subTree as $innerNode )
             {
@@ -221,8 +236,7 @@ class ezfUpdateSearchIndexSolr
             $exec = $this->Options['php-exec'];
             exec( $exec . ' -v', $output );
 
-            if ( count( $output ) &&
-                 strpos( $output[0], 'PHP' ) !== false )
+            if ( count( $output ) && strpos( $output[0], 'PHP' ) !== false )
             {
                 $validExecutable = true;
                 $this->Executable = $exec;
@@ -240,8 +254,7 @@ class ezfUpdateSearchIndexSolr
 
             exec( $input . ' -v', $output );
 
-            if ( count( $output ) &&
-                 strpos( $output[0], 'PHP' ) !== false )
+            if ( count( $output ) && strpos( $output[0], 'PHP' ) !== false )
             {
                 $validExecutable = true;
                 $this->Executable = $input;
@@ -283,10 +296,11 @@ class ezfUpdateSearchIndexSolr
         $this->CLI->output( 'Number of objects to index: ' . $this->ObjectCount );
         $this->Script->resetIteration( $this->ObjectCount, 0 );
 
-        $topNodeArray = eZPersistentObject::fetchObjectList( eZContentObjectTreeNode::definition(),
-                                                             null,
-                                                             array( 'parent_node_id' => 1,
-                                                                    'depth' => 1 ) );
+        $topNodeArray = eZPersistentObject::fetchObjectList(
+            eZContentObjectTreeNode::definition(),
+            null,
+            array( 'parent_node_id' => 1, 'depth' => 1 )
+        );
         // Loop through top nodes.
         foreach ( $topNodeArray as $node )
         {
@@ -303,8 +317,7 @@ class ezfUpdateSearchIndexSolr
                     $pid = $processList[$i];
                     if ( $useFork )
                     {
-                        if ( $pid === -1 ||
-                             !posix_kill( $pid, 0 ) )
+                        if ( $pid === -1 || !posix_kill( $pid, 0 ) )
                         {
                             $newPid = $this->forkAndExecute( $nodeID, $offset, $this->Limit );
                             $this->CLI->output( "\n" . 'Creating a new thread: ' . $newPid );
@@ -347,8 +360,7 @@ class ezfUpdateSearchIndexSolr
 
         // Wait for all processes to finish.
         $break = false;
-        while ( $useFork &&
-                !$break )
+        while ( $useFork && !$break )
         {
             $break = true;
             for ( $i = 0; $i < $processLimit; $i++ )
@@ -379,8 +391,10 @@ class ezfUpdateSearchIndexSolr
         $searchEngine->optimize( true );
         $endTS = microtime_float();
 
-        $this->CLI->output( 'Indexing took ' . ( $endTS - $startTS ) . ' secs ' .
-                            '( average: ' . ( $this->ObjectCount / ( $endTS - $startTS ) ) . ' objects/sec )' );
+        $this->CLI->output(
+            'Indexing took ' . ( $endTS - $startTS ) . ' secs ' .
+            '( average: ' . ( $this->ObjectCount / ( $endTS - $startTS ) ) . ' objects/sec )'
+        );
 
         $this->CLI->output( 'Finished updating the search index.' );
     }
@@ -476,7 +490,8 @@ class ezfUpdateSearchIndexSolr
             $paramString .= ' -s ' . escapeshellarg( $this->Options['siteaccess'] );
         }
 
-        $paramString .= ' --limit=' . $limit .
+        $paramString .=
+            ' --limit=' . $limit .
             ' --offset=' . $offset .
             ' --topNodeID=' . $nodeID;
 
@@ -514,10 +529,11 @@ class ezfUpdateSearchIndexSolr
      */
     protected function objectCount()
     {
-        $topNodeArray = eZPersistentObject::fetchObjectList( eZContentObjectTreeNode::definition(),
-                                                             null,
-                                                             array( 'parent_node_id' => 1,
-                                                                    'depth' => 1 ) );
+        $topNodeArray = eZPersistentObject::fetchObjectList(
+            eZContentObjectTreeNode::definition(),
+            null,
+            array( 'parent_node_id' => 1, 'depth' => 1 )
+        );
         $subTreeCount = 0;
         foreach ( array_keys ( $topNodeArray ) as $key  )
         {
