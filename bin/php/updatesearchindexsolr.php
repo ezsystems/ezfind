@@ -45,7 +45,6 @@ function microtime_float()
 set_time_limit( 0 );
 
 $cli = eZCLI::instance();
-$endl = $cli->endlineString();
 
 $script = eZScript::instance( array( 'description' => ( "eZFind search index updater.\n\n" .
                                                         "Goes trough all objects and reindexes the meta data to the search engine" .
