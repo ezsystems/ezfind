@@ -34,7 +34,7 @@
 /**
  * Solr search plugin for eZ publish
  */
-class eZSolr implements ezpSearchEngine
+class eZSolr
 {
     /**
      * Constructor
