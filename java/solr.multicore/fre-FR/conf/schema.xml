@@ -548,6 +548,7 @@
    <field name="meta_available_language_codes_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- List of available language codes in the corresponding content object -->
    <field name="meta_anon_access_b" type="boolean" indexed="true" stored="false" />         <!-- Anonymous user access to object -->
    <field name="meta_object_states_si" type="sint" indexed="true" stored="true" multiValued="true"/>                     <!-- Object states -->
+   <field name="meta_owner_group_id_si" type="sint" indexed="true" stored="true" multiValued="true"/> <!-- Owner groups -->
 
    <!-- Location information ( may be multiple ) -->
    <field name="meta_main_url_alias_ms" type="mstring" indexed="true" stored="true"/>                <!-- Main location URL aliases -->
