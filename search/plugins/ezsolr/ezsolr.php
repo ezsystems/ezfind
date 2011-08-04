@@ -1335,6 +1335,27 @@ class eZSolr
     }
 
     /**
+     * Update the section in the search engine
+     *
+     * @param array $objectID
+     * @param int $sectionID
+     * @return void
+     * @see eZSearch::updateObjectsSection()
+     */
+    public function updateObjectsSection( array $objectIDs, $sectionID )
+    {
+        foreach( $objectIDs as $id )
+        {
+            $object = eZContentObject::fetch( $id );
+            // we may be inside a DB transaction running update queries for the
+            // section id or the content object may come from the memory cache
+            // make sure the section_id is the right one
+            $object->setAttribute( 'section_id', $sectionID );
+            $this->addObject( $object );
+        }
+    }
+
+    /**
      * Called when a node's visibility is modified.
      * Simply re-index for now.
      *
