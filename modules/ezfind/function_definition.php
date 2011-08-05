@@ -211,7 +211,11 @@ $FunctionList['moreLikeThis'] = array( 'name' => 'moreLikeThis',
                                                         array( 'name' => 'as_objects',
                                                                'type' => 'boolean',
                                                                'required' => false,
-                                                               'default' => true ) ) );
+                                                               'default' => true ),
+                                                        array( 'name' => 'query_installation_id',
+                                                               'type' => 'string',
+                                                               'required' => false,
+                                                               'default' => null ) ) );
 
 $FunctionList['elevateConfiguration'] = array(   'name' => 'elevateConfiguration',
                                                  'operation_types' => 'read',
