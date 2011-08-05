@@ -163,12 +163,14 @@ class ezfModuleFunctionCollection
      * @param mixed Content class ID or list of content class IDs
      * @param array list of subtree limitation node IDs
      * @param boolean asObjects return regular eZPublish objects if true, stored Solr content if false
+     * @param string|null $queryInstallationID the eZ Find installation id to
+     *        use when looking for the reference document in Solr
      *
      * @return array result as a PHP array
      */
     public function moreLikeThis( $queryType, $query, $offset = 0, $limit = 10, $facets = null,
                                   $filters = null, $sortBy = null, $classID = null, $sectionID = null,
-                                  $subtreeArray = null, $asObjects = true )
+                                  $subtreeArray = null, $asObjects = true, $queryInstallationID = null )
 
     {
         $solrSearch = new eZSolr();
@@ -180,6 +182,7 @@ class ezfModuleFunctionCollection
                          'SearchContentClassID' => $classID,
                          'SearchSectionID' => $sectionID,
                          'SearchSubTreeArray' => $subtreeArray,
+                         'QueryInstallationID' => $queryInstallationID,
                          'AsObjects' => $asObjects);
         return array( 'result' => $solrSearch->moreLikeThis( $queryType, $query, $params ) );
 
