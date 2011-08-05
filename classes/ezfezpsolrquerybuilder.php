@@ -668,6 +668,7 @@ class ezfeZPSolrQueryBuilder
         eZDebug::writeDebug( $params, 'mlt params' );
         $searchCount = 0;
 
+        $queryInstallationID = ( isset( $params['QueryInstallationID'] ) && $params['QueryInstallationID'] ) ? $params['QueryInstallationID'] : eZSolr::installationID();
         $offset = ( isset( $params['SearchOffset'] ) && $params['SearchOffset'] ) ? $params['SearchOffset'] : 0;
         $limit = ( isset( $params['SearchLimit']  ) && $params['SearchLimit'] ) ? $params['SearchLimit'] : 10;
         $subtrees = isset( $params['SearchSubTreeArray'] ) ? $params['SearchSubTreeArray'] : array();
@@ -756,10 +757,12 @@ class ezfeZPSolrQueryBuilder
         switch ( strtolower ($queryType) )
         {
             case 'nid':
-                $mltQuery = eZSolr::getMetaFieldName( 'node_id') . ':' . $query;
+                $mltQuery = eZSolr::getMetaFieldName( 'node_id' ) . ':' . $query;
+                $mltQuery .= ' AND ' . eZSolr::getMetaFieldName( 'installation_id' ) . ':' . $queryInstallationID;
                 break;
             case 'oid':
-                $mltQuery = eZSolr::getMetaFieldName( 'id') . ':' . $query;
+                $mltQuery = eZSolr::getMetaFieldName( 'id' ) . ':' . $query;
+                $mltQuery .= ' AND ' . eZSolr::getMetaFieldName( 'installation_id' ) . ':' . $queryInstallationID;
                 break;
             case 'url':
                 $mltVariant = 'stream.url';
