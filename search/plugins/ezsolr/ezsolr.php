@@ -919,8 +919,9 @@ class eZSolr
                     $resultTree = new eZFindResultNode( $nodeRowList[$nodeID] );
                     $resultTree->setContentObject( new eZContentObject( $nodeRowList[$nodeID] ) );
                     $resultTree->setAttribute( 'is_local_installation', true );
-                    if ( !$resultTree->attribute( 'can_read' ) )
+                    if ( !$resultTree->attribute( 'object' )->attribute( 'can_read' ) )
                     {
+                        $searchCount--;
                         eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $nodeID,
                                               'eZSolr::search()' );
                         continue;
@@ -1079,8 +1080,9 @@ class eZSolr
                     $resultTree = new eZFindResultNode( $nodeRowList[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0]] );
                     $resultTree->setContentObject( new eZContentObject( $nodeRowList[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0]] ) );
                     $resultTree->setAttribute( 'is_local_installation', true );
-                    if ( !$resultTree->attribute( 'can_read' ) )
+                    if ( !$resultTree->attribute( 'object' )->attribute( 'can_read' ) )
                     {
+                        $searchCount--;
                         eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0],
                                               'eZSolr::search()' );
                         continue;
