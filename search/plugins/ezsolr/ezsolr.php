@@ -927,8 +927,9 @@ class eZSolr implements ezpSearchEngine
                     // can_read permission must be checked as they could be out of sync in Solr, however, when called from template with:
                     // limitation, hash( 'accessWord', ... ) this check should not be performed as it has precedence.
                     // See: http://issues.ez.no/15978
-                    if ( !isset( $params['Limitation'], $params['Limitation']['accessWord'] ) && !$resultTree->attribute( 'can_read' ) )
+                    if ( !isset( $params['Limitation'], $params['Limitation']['accessWord'] ) && !$resultTree->attribute( 'object' )->attribute( 'can_read' ) )
                     {
+                        $searchCount--;
                         eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $nodeID, __METHOD__ );
                         continue;
                     }
@@ -1089,8 +1090,9 @@ class eZSolr implements ezpSearchEngine
                     // can_read permission must be checked as they could be out of sync in Solr, however, when called from template with:
                     // limitation, hash( 'accessWord', ... ) this check should not be performed as it has precedence.
                     // See: http://issues.ez.no/15978
-                    if ( !isset( $params['Limitation'], $params['Limitation']['accessWord'] ) && !$resultTree->attribute( 'can_read' ) )
+                    if ( !isset( $params['Limitation'], $params['Limitation']['accessWord'] ) && !$resultTree->attribute( 'object' )->attribute( 'can_read' ) )
                     {
+                        $searchCount--;
                         eZDebug::writeNotice( 'Access denied for eZ Find result, node_id: ' . $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )], __METHOD__ );
                         continue;
                     }
