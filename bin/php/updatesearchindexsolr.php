@@ -214,7 +214,7 @@ class ezfUpdateSearchIndexSolr
                 $result = $searchEngine->addObject( $object, false );
                 if ( !$result )
                 {
-                    $this->CLI->error( ' Failed indexing object with ID ' . $object->attribute( 'id' ) );
+                    $this->CLI->error( ' Failed indexing ' . $object->attribute('class_identifier') .  ' object with ID ' . $object->attribute( 'id' ) );
                 }
                 ++$count;
             }
