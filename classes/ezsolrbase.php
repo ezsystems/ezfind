@@ -270,6 +270,10 @@ class eZSolrBase
      **/
     static function validateUpdateResult ( $updateResult )
     {
+        if ( empty( $updateResult ) )
+        {
+            return false;
+        }
         $dom = new DOMDocument( '1.0' );
         // Supresses error messages
         $status = $dom->loadXML( $updateResult, LIBXML_NOWARNING | LIBXML_NOERROR  );
