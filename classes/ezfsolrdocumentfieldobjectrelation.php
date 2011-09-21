@@ -263,7 +263,7 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                 $returnArray[$defaultFieldName] = $this->getPlainTextRepresentation();
                 $relatedObject = $this->ContentObjectAttribute->content();
 
-                if ( $relatedObject )
+                if ( $relatedObject && $relatedObject->attribute( 'status' ) == eZContentObject::STATUS_PUBLISHED )
                 {
                     // 1st, add content fields of the related object.
                     $baseList = $this->getBaseList( $relatedObject->attribute( 'current' ) );
@@ -323,7 +323,7 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                     if ( !$subObjectID )
                         continue;
                     $subObject = eZContentObjectVersion::fetchVersion( $relationItem['contentobject_version'], $subObjectID );
-                    if ( !$subObject )
+                    if ( !$subObject || $relationItem['in_trash'] )
                         continue;
 
                     // 1st create aggregated metadata fields
