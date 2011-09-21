@@ -263,7 +263,7 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                 $returnArray[$defaultFieldName] = $this->getPlainTextRepresentation();
                 $relatedObject = $this->ContentObjectAttribute->content();
 
-                if ( $relatedObject && $relatedObject->Status === 1 )
+                if ( $relatedObject && $relatedObject->attribute( 'status' ) == eZContentObject::STATUS_PUBLISHED )
                 {
                     // 1st, add content fields of the related object.
                     $baseList = $this->getBaseList( $relatedObject->attribute( 'current' ) );
