@@ -425,15 +425,6 @@ class ezfeZPSolrQueryBuilder
         // Handle boost functions :
         $boostFunctionsParamList = $this->buildBoostFunctions( $boostFunctions, $handlerParameters );
 
-        /**
-        * @since eZ Find 2.2
-        * @TODO: move highlighting part to its own function and enable customisation of
-        * all Solr side parameters
-        */
-
-        $highLightSnippets = self::$FindINI->variable( 'HighLighting', 'SnippetsPerField' );
-        $highLightFragmentSize = self::$FindINI->variable( 'HighLighting', 'FragmentSize' );
-
         // special handling of filters in the case of distributed search filters
         // incorporate distributed search filters if defined with an OR expression, and AND-ing all others
         // need to do this as multiple fq elements are otherwise AND-ed by the Solr backend
@@ -478,19 +469,20 @@ class ezfeZPSolrQueryBuilder
                 'bq' => $this->boostQuery(),
                 'fl' => $fieldsToReturnString,
                 'fq' => $filterQuery,
-                'hl' => 'true',
-                'hl.fl' => implode( ' ', $highLightFields),
-                'hl.snippets' => $highLightSnippets,
-                'hl.fragsize' => $highLightFragmentSize,
-                'hl.requireFieldMatch' => 'false',
-                'hl.simple.pre' => '<b>',
-                'hl.simple.post' => '</b>',
-                'wt' => 'php' ),
+                'hl' => self::$FindINI->variable( 'HighLighting', 'Enabled' ),
+                'hl.fl' => implode( ' ', $highLightFields ),
+                'hl.snippets' => self::$FindINI->variable( 'HighLighting', 'SnippetsPerField' ),
+                'hl.fragsize' => self::$FindINI->variable( 'HighLighting', 'FragmentSize' ),
+                'hl.requireFieldMatch' => self::$FindINI->variable( 'HighLighting', 'RequireFieldMatch' ),
+                'hl.simple.pre' => self::$FindINI->variable( 'HighLighting', 'SimplePre' ),
+                'hl.simple.post' => self::$FindINI->variable( 'HighLighting', 'SimplePost' ),
+                'wt' => 'php'
+            ),
             $facetQueryParamList,
             $spellCheckParamList,
             $boostFunctionsParamList,
-            $elevateParamList );
-        //eZDebug::writeDebug( $queryParams, 'Final query parameters sent to Solr backend' );
+            $elevateParamList
+        );
         return $queryParams;
     }
 
