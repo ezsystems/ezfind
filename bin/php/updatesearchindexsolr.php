@@ -86,23 +86,28 @@ class ezfUpdateSearchIndexSolr
     {
         $this->Script->startup();
 
-        $this->Options = $this->Script->getOptions( "[db-host:][db-user:][db-password:][db-database:][db-type:|db-driver:][sql][clean][clean-all][conc:][offset:][limit:][topNodeID:][php-exec:]",
-                                                    "",
-                                                    array( 'db-host' => "Database host",
-                                                           'db-user' => "Database user",
-                                                           'db-password' => "Database password",
-                                                           'db-database' => "Database name",
-                                                           'db-driver' => "Database driver",
-                                                           'db-type' => "Database driver, alias for --db-driver",
-                                                           'sql' => "Display sql queries",
-                                                           'clean' =>  "Remove all search data of the current installation id before beginning indexing",
-                                                           'clean-all' => "Remove all search data for all installations",
-                                                           'conc' => 'Parallelization, number of concurent processes to use',
-                                                           'php-exec' => 'Full path to PHP executable',
-                                                           'offset' => '*For internal use only*',
-                                                           'limit' => '*For internal use only*',
-                                                           'topNodeID' => '*For internal use only*',
-                                                           ) );
+        $this->Options = $this->Script->getOptions(
+            "[db-host:][db-user:][db-password:][db-database:][db-type:|db-driver:][sql][clean][clean-all][conc:][offset:][limit:][topNodeID:][php-exec:][commit-within:]",
+            "",
+            array(
+                'db-host' => "Database host",
+                'db-user' => "Database user",
+                'db-password' => "Database password",
+                'db-database' => "Database name",
+                'db-driver' => "Database driver",
+                'db-type' => "Database driver, alias for --db-driver",
+                'sql' => "Display sql queries",
+                'clean' =>  "Remove all search data of the current installation id before beginning indexing",
+                'clean-all' => "Remove all search data for all installations",
+                'conc' => 'Parallelization, number of concurent processes to use',
+                'php-exec' => 'Full path to PHP executable',
+                'commit-within' => 'Commit to Solr within this time in seconds (default '
+                    . self::DEFAULT_COMMIT_WITHIN . ' seconds)',
+                'offset' => '*For internal use only*',
+                'limit' => '*For internal use only*',
+                'topNodeID' => '*For internal use only*',
+            )
+        );
         $this->Script->initialize();
 
         // Fix siteaccess
@@ -139,6 +144,12 @@ class ezfUpdateSearchIndexSolr
          */
         $this->cleanUp();
         $this->cleanUpAll();
+
+        if ( isset( $this->Options['commit-within'] )
+                && is_numeric( $this->Options['commit-within'] ) )
+        {
+            $this->commitWithin = (int)$this->Options['commit-within'];
+        }
 
         // Check if current instance is main or sub process.
         // Main process can not have offset or limit set.
@@ -202,9 +213,8 @@ class ezfUpdateSearchIndexSolr
                 }
                 //eZSearch::removeObject( $object );
                 //pass false as we are going to do a commit at the end
-                //
-                $result = $searchEngine->addObject( $object, false );
-                if (! $result)
+                $result = $searchEngine->addObject( $object, false, $this->commitWithin * 1000 );
+                if ( !$result )
                 {
                     $this->CLI->error(' Failed indexing object with ID ' . $object->attribute('id'));
                 }
@@ -411,14 +421,6 @@ class ezfUpdateSearchIndexSolr
                 break;
             }
             $this->Script->iterate( $this->CLI, true );
-
-            if ( $this->IterateCount % 1000 === 0 )
-            {
-                $this->CLI->output( "\n" . 'Comitting and optimizing index ...' );
-                $searchEngine = new eZSolr();
-                $searchEngine->optimize();
-                eZContentObject::clearCache();
-            }
         }
     }
 
@@ -483,7 +485,9 @@ class ezfUpdateSearchIndexSolr
             $paramString .= ' -s ' . escapeshellarg( $this->Options['siteaccess'] );
         }
 
-        $paramString .= ' --limit=' . $limit .
+        $paramString .=
+            ' --commit-within=' . $this->commitWithin .
+            ' --limit=' . $limit .
             ' --offset=' . $offset .
             ' --topNodeID=' . $nodeID;
 
@@ -633,7 +637,9 @@ class ezfUpdateSearchIndexSolr
         return isset( $pingResult['status'] ) && $pingResult['status'] === 'OK';
     }
 
-    /// Vars
+    const DEFAULT_COMMIT_WITHIN = 30;
+
+    private $commitWithin = self::DEFAULT_COMMIT_WITHIN;
 
     var $CLI;
     var $Script;
