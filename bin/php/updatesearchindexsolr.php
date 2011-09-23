@@ -137,7 +137,7 @@ class ezfUpdateSearchIndexSolr
 
         $this->initializeDB();
 
-        // call clean up routines which will deal with the CLI arguments themselves        
+        // call clean up routines which will deal with the CLI arguments themselves
         $this->cleanUp();
         $this->cleanUpAll();
 
@@ -208,7 +208,7 @@ class ezfUpdateSearchIndexSolr
                 {
                     continue;
                 }
-                
+
                 //eZSearch::removeObject( $object );
                 //pass false as we are going to do a commit at the end
                 $result = $searchEngine->addObject( $object, false );
