@@ -363,10 +363,11 @@ class eZSolr implements ezpSearchEngine
      *
      * @param eZContentObject $contentObject Object to add to search engine
      * @param bool $commit Whether to commit after adding the object.
-              If set, run optimize() as well every 1000nd time this function is run.
+     *        If set, run optimize() as well every 1000nd time this function is run.
+     * @param $commitWithin Commit within delay (see Solr documentation)
      * @return bool True if the operation succeed.
      */
-    function addObject( $contentObject, $commit = true )
+    function addObject( $contentObject, $commit = true, $commitWithin = 0 )
     {
         // Add all translations to the document list
         $docList = array();
@@ -584,8 +585,7 @@ class eZSolr implements ezpSearchEngine
         {
             $commit = false;
         }
-        $commitWithin = 0;
-        if ( $this->FindINI->variable( 'IndexOptions', 'CommitWithin' ) > 0 )
+        if ( $commitWithin === 0 && $this->FindINI->variable( 'IndexOptions', 'CommitWithin' ) > 0 )
         {
             $commitWithin = $this->FindINI->variable( 'IndexOptions', 'CommitWithin' );
         }
