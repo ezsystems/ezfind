@@ -225,23 +225,24 @@ class ezfUpdateSearchIndexSolr
     }
 
     /**
-     * Get PHP executable from user input. Exit if no executable is entered.
+     * Get PHP executable from user input. Exit if php executable cannot be
+     * found and if no executable is entered.
      */
     protected function getPHPExecutable()
     {
         $validExecutable = false;
         $output = array();
+        $exec = 'php';
         if ( !empty( $this->Options['php-exec'] ) )
         {
             $exec = $this->Options['php-exec'];
-            exec( $exec . ' -v', $output );
+        }
+        exec( $exec . ' -v', $output );
 
-            if ( count( $output ) && strpos( $output[0], 'PHP' ) !== false )
-            {
-                $validExecutable = true;
-                $this->Executable = $exec;
-            }
-
+        if ( count( $output ) && strpos( $output[0], 'PHP' ) !== false )
+        {
+            $validExecutable = true;
+            $this->Executable = $exec;
         }
 
         while( !$validExecutable )
