@@ -113,12 +113,12 @@ class eZSolr
     static function nodeAttributes()
     {
         return array( 'node_id' => 'sint',
-                      'path_string' => 'string',
-                      'url_alias' => 'string',
+                      'path_string' => 'mstring',
+                      'url_alias' => 'mstring',
                       'is_hidden' => 'boolean',
                       'is_invisible' => 'boolean',
-                      'sort_field' => 'string',
-                      'sort_order' => 'string',
+                      'sort_field' => 'mstring',
+                      'sort_order' => 'mstring',
                       'depth' => 'sint',
                       'view_count' => 'sint');
     }
