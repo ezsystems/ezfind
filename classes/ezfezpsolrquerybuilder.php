@@ -165,7 +165,7 @@ class ezfeZPSolrQueryBuilder
         $distributedSearch = isset( $params['DistributedSearch'] ) ? $params['DistributedSearch'] : false;
         $fieldsToReturn = isset( $params['FieldsToReturn'] ) ? $params['FieldsToReturn'] : array();
         $highlightParams = isset( $params['HighLightParams'] ) ? $params['HighLightParams'] : array();
-
+        $customQueryParams = isset( $params['CustomQueryParams'] ) ? $params['CustomQueryParams'] : array();
 
         // distributed search option
         // @since ezfind 2.2
@@ -481,7 +481,8 @@ class ezfeZPSolrQueryBuilder
             $facetQueryParamList,
             $spellCheckParamList,
             $boostFunctionsParamList,
-            $elevateParamList
+            $elevateParamList,
+            $customQueryParams
         );
         return $queryParams;
     }
@@ -666,6 +667,7 @@ class ezfeZPSolrQueryBuilder
         $subtrees = isset( $params['SearchSubTreeArray'] ) ? $params['SearchSubTreeArray'] : array();
         $contentClassID = ( isset( $params['SearchContentClassID'] ) && $params['SearchContentClassID'] <> -1 ) ? $params['SearchContentClassID'] : false;
         $sectionID = isset( $params['SearchSectionID'] ) && $params['SearchSectionID'] > 0 ? $params['SearchSectionID'] : false;
+        $customQueryParams = isset( $params['CustomQueryParams'] ) ? $params['CustomQueryParams'] : array();
         $filterQuery = array();
 
 
@@ -803,7 +805,8 @@ class ezfeZPSolrQueryBuilder
                 ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ),
                 'fq' => $filterQuery,
                 'wt' => 'php' ),
-            $facetQueryParamList );
+            $facetQueryParamList,
+            $customQueryParams );
 
         return $queryParams;
     }
