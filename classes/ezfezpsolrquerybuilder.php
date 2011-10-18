@@ -1065,7 +1065,8 @@ class ezfeZPSolrQueryBuilder
                  empty( $facetDefinition['query'] ) and
                  empty( $facetDefinition['date'] ) )
             {
-                eZDebug::writeDebug( 'No facet field or query provided.', __METHOD__ );
+                eZDebug::writeDebug( 'No facet field or query provided.',
+                                     'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
                 continue;
             }
 
@@ -1101,7 +1102,7 @@ class ezfeZPSolrQueryBuilder
                         {
                             eZDebug::writeNotice( 'Facet field does not exist in local installation, but may still be valid: ' .
                                                   $facetDefinition['field'],
-                                                  __METHOD__ );
+                                                  'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
                             continue;
                         }
                         $queryPart['field'] = $fieldName;
@@ -1118,7 +1119,7 @@ class ezfeZPSolrQueryBuilder
                 if ( !$field )
                 {
                     eZDebug::writeNotice( 'Invalid query field provided: ' . $facetDefinition['query'],
-                                          __METHOD__ );
+                                          'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
                     continue;
                 }
 
@@ -1149,7 +1150,7 @@ class ezfeZPSolrQueryBuilder
                     default:
                     {
                         eZDebug::writeWarning( 'Invalid sort option provided: ' . $facetDefinition['sort'],
-                                               __METHOD__ );
+                                               'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
                     } break;
                 }
             }
@@ -1198,7 +1199,7 @@ class ezfeZPSolrQueryBuilder
                 {
                     eZDebug::writeNotice( 'Facet field does not exist in local installation, but may still be valid: ' .
                                           $facetDefinition['date'],
-                                          __METHOD__ );
+                                          'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
                     continue;
                 }
                 else
@@ -1249,7 +1250,7 @@ class ezfeZPSolrQueryBuilder
                     default:
                     {
                         eZDebug::writeWarning( 'Invalid option gived for date.other: ' . $facetDefinition['date.other'],
-                                               __METHOD__ );
+                                               'ezfeZPSolrQueryBuilder::buildFacetQueryParamList()' );
                     } break;
                 }
             }
@@ -1408,7 +1409,8 @@ class ezfeZPSolrQueryBuilder
             }
         }
 
-        eZDebug::writeError( 'No valid content class', __METHOD__ );
+        eZDebug::writeError( 'No valid content class',
+                             'ezfeZPSolrQueryBuilder::getContentClassFilterQuery()' );
 
         return null;
     }
@@ -1481,13 +1483,15 @@ class ezfeZPSolrQueryBuilder
         // policies are concatenated with OR
         foreach ( $policies as $limitationList )
         {
-            // policy limitations are concatenated with AND
+            // policy limitations are concatenated with AND except constraints on paths that need to use OR
             $filterQueryPolicyLimitations = array();
+            $filterQueryPolicyPathLimitations = array();
 
             foreach ( $limitationList as $limitationType => $limitationValues )
             {
                 // limitation values of one type in a policy are concatenated with OR
                 $filterQueryPolicyLimitationParts = array();
+                $isPathLimitation = false;
 
                 switch ( $limitationType )
                 {
@@ -1501,6 +1505,7 @@ class ezfeZPSolrQueryBuilder
                             // we only take the last node ID in the path identification string
                             $subtreeNodeID = array_pop( $pathArray );
                             $filterQueryPolicyLimitationParts[] = eZSolr::getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
+                            $isPathLimitation = true;
                         }
                     } break;
 
@@ -1513,6 +1518,7 @@ class ezfeZPSolrQueryBuilder
                             // we only take the last node ID in the path identification string
                             $nodeID = array_pop( $pathArray );
                             $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $nodeID;
+                            $isPathLimitation = false;
                         }
                     } break;
 
@@ -1554,19 +1560,28 @@ class ezfeZPSolrQueryBuilder
                         }
                         else
                         {
-                            eZDebug::writeDebug( $limitationType, __METHOD__ . ' unknown limitation type: ' . $limitationType );
+                            eZDebug::writeDebug( $limitationType,
+                                             'ezfeZPSolrQueryBuilder::policyLimitationFilterQuery unknown limitation type: ' . $limitationType );
                             continue;
                         }
                     }
                 }
 
-                $filterQueryPolicyLimitations[] = '( ' . implode( ' OR ', $filterQueryPolicyLimitationParts ) . ' )';
+                if($isPathLimitation)
+                {
+                	$filterQueryPolicyPathLimitations[] = '( ' . implode( ' OR ', $filterQueryPolicyLimitationParts ) . ' )';
+                }
+                else
+                {
+                	$filterQueryPolicyLimitations[] = '( ' . implode( ' OR ', $filterQueryPolicyLimitationParts ) . ' )';
+                }
             }
 
             if ( !empty( $filterQueryPolicyLimitations ) )
             {
-                $filterQueryPolicies[] = '( ' . implode( ' AND ', $filterQueryPolicyLimitations ) . ')';
-            }
+                $filterQueryPolicies[] = '( (' . implode( ' AND ', $filterQueryPolicyLimitations ) 
+                	. ') OR ('. implode( ' OR ', $filterQueryPolicyPathLimitations ) .') ) ';
+            }            
         }
 
         if ( !empty( $filterQueryPolicies ) )
@@ -1605,7 +1620,8 @@ class ezfeZPSolrQueryBuilder
             $filterQuery .= ' AND ' . eZSolr::getMetaFieldName( 'is_invisible' ) . ':false';
         }
 
-        eZDebug::writeDebug( $filterQuery, __METHOD__ );
+        eZDebug::writeDebug( $filterQuery,
+                             'ezfeZPSolrQueryBuilder::policyLimitationFilterQuery' );
 
         return $filterQuery;
     }
