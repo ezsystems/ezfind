@@ -309,26 +309,44 @@ class eZSolr
      *
      * @param array $doc The search result, directly received from Solr.
      * @return string The URL Alias corresponding the the search result
+     * @todo Refactor against getUrlId()
      */
     protected function getUrlAlias( $doc )
     {
-        if ( isset( $this->postSearchProcessingData['subtree_array'] ) and !empty( $this->postSearchProcessingData['subtree_array'] ) )
+        if ( isset( $this->postSearchProcessingData['subtree_array'] ) && !empty( $this->postSearchProcessingData['subtree_array'] ) )
         {
-            foreach ( $this->postSearchProcessingData['subtree_array'] as $subtree )
+            /*
+             * 1. Get a copy of all path_string for $doc returned by Solr as array in $validSubtrees
+             * 2. Loop against $doc available path_string attributes
+             * 3. Each path string that doesn't match the ones stored in $this->postSearchProcessingData['subtree_array']
+             *    will be removed from $validSubtrees (i.e. explicit subtree limitation in the ezfind query or policy limitation(s))
+             * 4. Return first element of $validSubtrees (all elements do match, but we have to return only one)
+             */
+            $validSubtrees = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )];
+            foreach ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )] as $pathString )
             {
-                foreach ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )] as $pathString )
+                foreach ( $this->postSearchProcessingData['subtree_array'] as $subtree )
                 {
-                    if ( substr_count( $pathString, '/' . $subtree . '/' ) > 0 )
+                    if ( substr_count( $pathString, "/$subtree/" ) == 0 )
                     {
-                        $nodeArray = explode( '/', rtrim( $pathString, '/' ));
-                        $nodeID = array_pop( $nodeArray );
-
-                        if ( ( $node = eZContentObjectTreeNode::fetch( $nodeID ) ) !== null )
-                            return $node->attribute( 'url_alias' );
+                        $invalidSubtreeKey = array_search( $pathString, $validSubtrees );
+                        if ( $invalidSubtreeKey !== false )
+                            unset( $validSubtrees[$invalidSubtreeKey] );
                     }
                 }
             }
+
+            // If we got anything left in $validSubtrees, we take the first element to get the corresponding node ID
+            if ( !empty( $validSubtrees ) )
+            {
+                $validSubtree = array_shift( $validSubtrees );
+                $nodeArray = explode( '/', rtrim( $validSubtree, '/' ) );
+                $node = eZContentObjectTreeNode::fetch( array_pop( $nodeArray ) );
+                if ( $node instanceof eZContentObjectTreeNode )
+                    return $node->attribute( 'url_alias' );
+            }
         }
+
         return $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' )];
     }
 
@@ -341,21 +359,39 @@ class eZSolr
      */
     protected function getNodeID( $doc )
     {
-        if ( isset( $this->postSearchProcessingData['subtree_array'] ) and !empty( $this->postSearchProcessingData['subtree_array'] ) )
+        if ( isset( $this->postSearchProcessingData['subtree_array'] ) && !empty( $this->postSearchProcessingData['subtree_array'] ) )
         {
-            foreach ( $this->postSearchProcessingData['subtree_array'] as $subtree )
+            /*
+             * 1. Get a copy of all path_string for $doc returned by Solr as array in $validSubtrees
+             * 2. Loop against $doc available path_string attributes
+             * 3. Each path string that doesn't match the ones stored in $this->postSearchProcessingData['subtree_array']
+             *    will be removed from $validSubtrees (i.e. explicit subtree limitation in the ezfind query or policy limitation(s))
+             * 4. Return first element of $validSubtrees (all elements do match, but we have to return only one)
+             */
+            $validSubtrees = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )];
+            foreach ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )] as $pathString )
             {
-                foreach ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )] as $pathString )
+                foreach ( $this->postSearchProcessingData['subtree_array'] as $subtree )
                 {
-                    if ( substr_count( $pathString, '/' . $subtree . '/' ) > 0 )
+                    if ( substr_count( $pathString, "/$subtree/" ) == 0 )
                     {
-                        $nodeArray = explode( '/', rtrim( $pathString, '/' ));
-                        return (int) array_pop( $nodeArray );
+                        $invalidSubtreeKey = array_search( $pathString, $validSubtrees );
+                        if ( $invalidSubtreeKey !== false )
+                            unset( $validSubtrees[$invalidSubtreeKey] );
                     }
                 }
             }
+
+            // If we got anything left in $validSubtrees, we take the first element to get the corresponding node ID
+            if ( !empty( $validSubtrees ) )
+            {
+                $validSubtree = array_shift( $validSubtrees );
+                $nodeArray = explode( '/', rtrim( $validSubtree, '/' ) );
+                return (int)array_pop( $nodeArray );
+            }
         }
-        return (int) $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )];
+
+        return (int)$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )];
     }
 
     /**
