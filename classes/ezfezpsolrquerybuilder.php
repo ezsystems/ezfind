@@ -973,7 +973,7 @@ class ezfeZPSolrQueryBuilder
                     if ( $baseName ==  'path' )
                     {
                         if ( isset( $this->searchPluginInstance->postSearchProcessingData['subtree_array'] ) )
-                            $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = array_merge( $this->searchPluginInstance->postSearchProcessingData['subtree_array'], array( $value ) );
+                            $this->searchPluginInstance->postSearchProcessingData['subtree_array'][] = $value;
                         else
                             $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = array( $value );
                     }
@@ -1482,7 +1482,9 @@ class ezfeZPSolrQueryBuilder
         foreach ( $policies as $limitationList )
         {
             // policy limitations are concatenated with AND
+            // except for locations policity limitations, concatenated with OR
             $filterQueryPolicyLimitations = array();
+            $policyLimitationsOnLocations = array();
 
             foreach ( $limitationList as $limitationType => $limitationValues )
             {
@@ -1500,7 +1502,11 @@ class ezfeZPSolrQueryBuilder
                             $pathArray = explode( '/', $pathString );
                             // we only take the last node ID in the path identification string
                             $subtreeNodeID = array_pop( $pathArray );
-                            $filterQueryPolicyLimitationParts[] = eZSolr::getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
+                            $policyLimitationsOnLocations[] = eZSolr::getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
+                            if ( isset( $this->searchPluginInstance->postSearchProcessingData['subtree_array'] ) )
+                                $this->searchPluginInstance->postSearchProcessingData['subtree_array'][] = $subtreeNodeID;
+                            else
+                                $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = array( $subtreeNodeID );
                         }
                     } break;
 
@@ -1512,7 +1518,11 @@ class ezfeZPSolrQueryBuilder
                             $pathArray = explode( '/', $pathString );
                             // we only take the last node ID in the path identification string
                             $nodeID = array_pop( $pathArray );
-                            $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $nodeID;
+                            $policyLimitationsOnLocations[] = $limitationHash[$limitationType] . ':' . $nodeID;
+                            if ( isset( $this->searchPluginInstance->postSearchProcessingData['subtree_array'] ) )
+                                $this->searchPluginInstance->postSearchProcessingData['subtree_array'][] = $nodeID;
+                            else
+                                $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = array( $nodeID );
                         }
                     } break;
 
@@ -1560,7 +1570,15 @@ class ezfeZPSolrQueryBuilder
                     }
                 }
 
-                $filterQueryPolicyLimitations[] = '( ' . implode( ' OR ', $filterQueryPolicyLimitationParts ) . ' )';
+                if ( !empty( $filterQueryPolicyLimitationParts ) )
+                    $filterQueryPolicyLimitations[] = '( ' . implode( ' OR ', $filterQueryPolicyLimitationParts ) . ' )';
+            }
+
+            // Policy limitations on locations (node and/or subtree) need to be concatenated with OR
+            // unlike the other types of limitation
+            if ( !empty( $policyLimitationsOnLocations ) )
+            {
+                $filterQueryPolicyLimitations[] = '( ' . implode( ' OR ', $policyLimitationsOnLocations ) . ')';
             }
 
             if ( !empty( $filterQueryPolicyLimitations ) )
