@@ -367,6 +367,21 @@
     </message>
 </context>
 <context>
+    <name>extension/ezfind</name>
+    <message>
+        <source>eZFind</source>
+        <translation type="unfinished">eZFind</translation>
+    </message>
+    <message>
+        <source>Elevation</source>
+        <translation type="unfinished">Elevatie</translation>
+    </message>
+    <message>
+        <source>Remove Elevation</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>extension/ezfind/ajax-search</name>
     <message>
         <source>No search results...</source>
@@ -650,6 +665,14 @@
         <source>Cancel removal of the elevate configuration</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Error while generating the configuration XML</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An unknown error occured in updating Solr&apos;s elevate configuration.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>extension/ezfind/facets</name>
@@ -660,6 +683,18 @@
     <message>
         <source>Clear all</source>
         <translation>Alles wissen</translation>
+    </message>
+    <message>
+        <source>Content type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Author</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keywords</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -690,6 +725,10 @@
     <message>
         <source>N/A</source>
         <translation>N/B</translation>
+    </message>
+    <message>
+        <source>eZ Find 2.5 search plugin &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 3.1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
