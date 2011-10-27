@@ -242,7 +242,7 @@
                     {foreach $facetData.nameList as $key2 => $facetName}
                         {if ne( $key2, '' )}
                         <li>
-                            <a href={concat( $baseURI, '&filter[]=', $facetData.queryLimit[$key2]|wash, '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName, $uriSuffix )|ezurl}>
+                            <a href={concat( $baseURI, '&filter[]=', $facetData.queryLimit[$key2]|urlencode, '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName, $uriSuffix )|ezurl}>
                             {$facetName}</a> ({$facetData.countList[$key2]})
                         </li>
                         {/if}
