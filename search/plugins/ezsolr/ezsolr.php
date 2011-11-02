@@ -312,85 +312,112 @@ class eZSolr
      */
     protected function getUrlAlias( $doc )
     {
-        if ( isset( $this->postSearchProcessingData['subtree_array'] ) && !empty( $this->postSearchProcessingData['subtree_array'] ) )
-        {
-            /*
-             * 1. Get a copy of all path_string for $doc returned by Solr as array in $validSubtrees
-             * 2. Loop against $doc available path_string attributes
-             * 3. Each path string that doesn't match the ones stored in $this->postSearchProcessingData['subtree_array']
-             *    will be removed from $validSubtrees (i.e. explicit subtree limitation in the ezfind query or policy limitation(s))
-             * 4. Return first element of $validSubtrees (all elements do match, but we have to return only one)
-             */
-            $validSubtrees = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )];
-            foreach ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )] as $pathString )
-            {
-                foreach ( $this->postSearchProcessingData['subtree_array'] as $subtree )
-                {
-                    if ( substr_count( $pathString, "/$subtree/" ) == 0 )
-                    {
-                        $invalidSubtreeKey = array_search( $pathString, $validSubtrees );
-                        if ( $invalidSubtreeKey !== false )
-                            unset( $validSubtrees[$invalidSubtreeKey] );
-                    }
-                }
-            }
+        $docPathStrings = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )];
+        $validSubtreeArray = $this->getValidPathStringsByLimitation(
+            $docPathStrings,
+            isset( $this->postSearchProcessingData['subtree_array'] ) ? $this->postSearchProcessingData['subtree_array'] : array()
+        );
+        $validSubtreeLimitations = $this->getValidPathStringsByLimitation(
+            $docPathStrings,
+            isset( $this->postSearchProcessingData['subtree_limitations'] ) ? $this->postSearchProcessingData['subtree_limitations'] : array()
+        );
 
-            // If we got anything left in $validSubtrees, we take the first element to get the corresponding node ID
-            if ( !empty( $validSubtrees ) )
-            {
-                $validSubtree = array_shift( $validSubtrees );
-                $nodeArray = explode( '/', rtrim( $validSubtree, '/' ) );
-                $node = eZContentObjectTreeNode::fetch( array_pop( $nodeArray ) );
-                if ( $node instanceof eZContentObjectTreeNode )
-                    return $node->attribute( 'url_alias' );
-            }
+        // Intersect between $validSubtreeArray (search location filter) and $validSubtreeLimitations (user policy limitations)
+        // indicates valid locations for $doc in current search query
+        // If this intersect is not empty, we take the first element to get the corresponding node ID
+        $validSubtrees = array_intersect( $validSubtreeArray, $validSubtreeLimitations );
+        if ( !empty( $validSubtrees ) )
+        {
+            $validSubtree = array_shift( $validSubtrees );
+            $nodeArray = explode( '/', rtrim( $validSubtree, '/' ) );
+            $node = eZContentObjectTreeNode::fetch( array_pop( $nodeArray ) );
+            if ( $node instanceof eZContentObjectTreeNode )
+                return $node->attribute( 'url_alias' );
         }
 
         return $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' )];
     }
 
     /**
-     * Returns the relative URL Alias for a given search result,
-     * depending on whether a subtree filter was applied or not.
+     * Returns the relative NodeID for a given search result,
+     * depending on whether a subtree filter was applied or not and limitations by user policy limitations.
+     *
+     * Policy limitations (subtree/node) are aggregated by a logic OR (same for subtree filters).
+     * Subtree filters and policy limitations are aggregated together with a logic AND,
+     * so that valid locations must comply subtree filters (if any) AND subtree/node policy limitations (if any)
      *
      * @param array $doc The search result, directly received from Solr.
      * @return int The NodeID corresponding the search result
      */
     protected function getNodeID( $doc )
     {
-        if ( isset( $this->postSearchProcessingData['subtree_array'] ) && !empty( $this->postSearchProcessingData['subtree_array'] ) )
+        $docPathStrings = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )];
+        $locationFilter = isset( $this->postSearchProcessingData['subtree_array'] ) ? $this->postSearchProcessingData['subtree_array'] : array();
+        $subtreeLimitations = isset( $this->postSearchProcessingData['subtree_limitations'] ) ? $this->postSearchProcessingData['subtree_limitations'] : array();
+        $validSubtreeArray = $this->getValidPathStringsByLimitation(
+            $docPathStrings,
+            $locationFilter
+        );
+        $validSubtreeLimitations = $this->getValidPathStringsByLimitation(
+            $docPathStrings,
+            $subtreeLimitations
+        );
+
+        // Intersect between $validSubtreeArray (search location filter) and $validSubtreeLimitations (user policy limitations)
+        // indicates valid locations for $doc in current search query
+        // If this intersect is not empty, we take the first element to get the corresponding node ID
+        $validSubtrees = array_intersect( $validSubtreeArray, $validSubtreeLimitations );
+        if ( !empty( $validSubtrees ) )
         {
-            /*
-             * 1. Get a copy of all path_string for $doc returned by Solr as array in $validSubtrees
-             * 2. Loop against $doc available path_string attributes
-             * 3. Each path string that doesn't match the ones stored in $this->postSearchProcessingData['subtree_array']
-             *    will be removed from $validSubtrees (i.e. explicit subtree limitation in the ezfind query or policy limitation(s))
-             * 4. Return first element of $validSubtrees (all elements do match, but we have to return only one)
-             */
-            $validSubtrees = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )];
-            foreach ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )] as $pathString )
+            $validSubtree = array_shift( $validSubtrees );
+            $nodeArray = explode( '/', rtrim( $validSubtree, '/' ) );
+            return (int)array_pop( $nodeArray );
+        }
+        else
+        {
+            $contentId = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'id' )];
+            eZDebug::writeError(
+                "Could not find valid/granted locations for content #$contentId. Broken sync between eZPublish and Solr ?\n\n" .
+                "Location filter : " . print_r( $locationFilter, true ) .
+                "Subtree limitations for user : " . print_r( $subtreeLimitations, true ),
+                __METHOD__
+            );
+        }
+
+        return (int)$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0];
+    }
+
+    /**
+     * Returns entries from $pathStrings that matches $subtreeLimitations
+     *
+     * @param array $pathStrings Array of path strings (i.e. locations for a content object)
+     * @param array $subtreeLimitations Array of NodeIds that are considered valid (i.e. policy limitations or location filters)
+     * @return array
+     */
+    private function getValidPathStringsByLimitation( array $pathStrings, array $subtreeLimitations )
+    {
+        $validPathStrings = array();
+        // If $subtreeLimitations is empty, then we consider all doc path strings as potentially valid
+        if ( !empty( $subtreeLimitations ) )
+        {
+            foreach ( $subtreeLimitations as $subtree )
             {
-                foreach ( $this->postSearchProcessingData['subtree_array'] as $subtree )
+                foreach ( $pathStrings as $pathString )
                 {
-                    if ( substr_count( $pathString, "/$subtree/" ) == 0 )
+                    if ( strpos( $pathString, "/$subtree/" ) !== false )
                     {
-                        $invalidSubtreeKey = array_search( $pathString, $validSubtrees );
-                        if ( $invalidSubtreeKey !== false )
-                            unset( $validSubtrees[$invalidSubtreeKey] );
+                        $validPathStrings[] = $pathString;
                     }
                 }
             }
 
-            // If we got anything left in $validSubtrees, we take the first element to get the corresponding node ID
-            if ( !empty( $validSubtrees ) )
-            {
-                $validSubtree = array_shift( $validSubtrees );
-                $nodeArray = explode( '/', rtrim( $validSubtree, '/' ) );
-                return (int)array_pop( $nodeArray );
-            }
+        }
+        else
+        {
+            $validPathStrings = $pathStrings;
         }
 
-        return (int) $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )][0];
+        return $validPathStrings;
     }
 
     /**
