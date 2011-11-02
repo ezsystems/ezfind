@@ -1503,10 +1503,10 @@ class ezfeZPSolrQueryBuilder
                             // we only take the last node ID in the path identification string
                             $subtreeNodeID = array_pop( $pathArray );
                             $policyLimitationsOnLocations[] = eZSolr::getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
-                            if ( isset( $this->searchPluginInstance->postSearchProcessingData['subtree_array'] ) )
-                                $this->searchPluginInstance->postSearchProcessingData['subtree_array'][] = $subtreeNodeID;
+                            if ( isset( $this->searchPluginInstance->postSearchProcessingData['subtree_limitations'] ) )
+                                $this->searchPluginInstance->postSearchProcessingData['subtree_limitations'][] = $subtreeNodeID;
                             else
-                                $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = array( $subtreeNodeID );
+                                $this->searchPluginInstance->postSearchProcessingData['subtree_limitations'] = array( $subtreeNodeID );
                         }
                     } break;
 
@@ -1519,10 +1519,10 @@ class ezfeZPSolrQueryBuilder
                             // we only take the last node ID in the path identification string
                             $nodeID = array_pop( $pathArray );
                             $policyLimitationsOnLocations[] = $limitationHash[$limitationType] . ':' . $nodeID;
-                            if ( isset( $this->searchPluginInstance->postSearchProcessingData['subtree_array'] ) )
-                                $this->searchPluginInstance->postSearchProcessingData['subtree_array'][] = $nodeID;
+                            if ( isset( $this->searchPluginInstance->postSearchProcessingData['subtree_limitations'] ) )
+                                $this->searchPluginInstance->postSearchProcessingData['subtree_limitations'][] = $nodeID;
                             else
-                                $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = array( $nodeID );
+                                $this->searchPluginInstance->postSearchProcessingData['subtree_limitations'] = array( $nodeID );
                         }
                     } break;
 
