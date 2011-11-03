@@ -309,32 +309,12 @@ class eZSolr implements ezpSearchEngine
      *
      * @param array $doc The search result, directly received from Solr.
      * @return string The URL Alias corresponding the the search result
-     * @todo Refactor against getUrlId()
      */
     protected function getUrlAlias( $doc )
     {
-        $docPathStrings = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )];
-        $validSubtreeArray = $this->getValidPathStringsByLimitation(
-            $docPathStrings,
-            isset( $this->postSearchProcessingData['subtree_array'] ) ? $this->postSearchProcessingData['subtree_array'] : array()
-        );
-        $validSubtreeLimitations = $this->getValidPathStringsByLimitation(
-            $docPathStrings,
-            isset( $this->postSearchProcessingData['subtree_limitations'] ) ? $this->postSearchProcessingData['subtree_limitations'] : array()
-        );
-
-        // Intersect between $validSubtreeArray (search location filter) and $validSubtreeLimitations (user policy limitations)
-        // indicates valid locations for $doc in current search query
-        // If this intersect is not empty, we take the first element to get the corresponding node ID
-        $validSubtrees = array_intersect( $validSubtreeArray, $validSubtreeLimitations );
-        if ( !empty( $validSubtrees ) )
-        {
-            $validSubtree = array_shift( $validSubtrees );
-            $nodeArray = explode( '/', rtrim( $validSubtree, '/' ) );
-            $node = eZContentObjectTreeNode::fetch( array_pop( $nodeArray ) );
-            if ( $node instanceof eZContentObjectTreeNode )
-                return $node->attribute( 'url_alias' );
-        }
+        $node = eZContentObjectTreeNode::fetch( $this->getNodeID( $doc ) );
+        if ( $node instanceof eZContentObjectTreeNode )
+            return $node->attribute( 'url_alias' );
 
         return $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' )];
     }
