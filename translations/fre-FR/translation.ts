@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0">
+<TS version="2.0" language="fr_FR">
 <context>
     <name>design/admin/content/search</name>
     <message>
@@ -370,15 +370,15 @@
     <name>extension/ezfind</name>
     <message>
         <source>eZFind</source>
-        <translation type="unfinished">eZFind</translation>
+        <translation>eZFind</translation>
     </message>
     <message>
         <source>Elevation</source>
-        <translation type="unfinished">Élévation</translation>
+        <translation>Élévation</translation>
     </message>
     <message>
         <source>Remove Elevation</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer l&apos;élévation</translation>
     </message>
 </context>
 <context>
@@ -439,11 +439,11 @@
     </message>
     <message>
         <source>Please choose a valid object.</source>
-        <translation>Veuillez choisir un objet valide</translation>
+        <translation>Veuillez choisir un objet valide.</translation>
     </message>
     <message>
         <source>Missing language information.</source>
-        <translation>Absence du paramètre de langue</translation>
+        <translation>Absence du paramètre de langue.</translation>
     </message>
     <message>
         <source>Successful creation of the following Elevate configuration</source>
@@ -483,7 +483,7 @@
     </message>
     <message>
         <source>Search query to elevate the object for.</source>
-        <translation>Requête de recherche pour promouvoir l&apos;objet</translation>
+        <translation>Requête de recherche pour promouvoir l&apos;objet.</translation>
     </message>
     <message>
         <source>Elevate object</source>
@@ -491,7 +491,7 @@
     </message>
     <message>
         <source>Browse for the object to associate elevation to.</source>
-        <translation>Parcourir afin de trouver l&apos;objet à promouvoir</translation>
+        <translation>Parcourir afin de trouver l&apos;objet à promouvoir.</translation>
     </message>
     <message>
         <source>Elevate %objectlink with &amp;nbsp;  %searchquery &amp;nbsp;  for language:</source>
@@ -571,7 +571,7 @@
     </message>
     <message>
         <source>No existing Elevate configuration.</source>
-        <translation>Pas de promotions existantes</translation>
+        <translation>Pas de promotions existantes.</translation>
     </message>
     <message>
         <source>Content object</source>
@@ -607,7 +607,7 @@
     </message>
     <message>
         <source>Missing content object.</source>
-        <translation>Objet de contenu manquant</translation>
+        <translation>Objet de contenu manquant.</translation>
     </message>
     <message>
         <source>Elevate %objectName</source>
@@ -667,11 +667,11 @@
     </message>
     <message>
         <source>Error while generating the configuration XML</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur pendant la génération du XML de configuration</translation>
     </message>
     <message>
         <source>An unknown error occured in updating Solr&apos;s elevate configuration.</source>
-        <translation type="unfinished"></translation>
+        <translation>Une erreur inconnue est survenue dans la mise à jour de la configuration de l&apos;élevation de Solr.</translation>
     </message>
 </context>
 <context>
@@ -686,15 +686,15 @@
     </message>
     <message>
         <source>Content type</source>
-        <translation type="unfinished"></translation>
+        <translation>Type de contenu</translation>
     </message>
     <message>
         <source>Author</source>
-        <translation type="unfinished"></translation>
+        <translation>Auteur</translation>
     </message>
     <message>
         <source>Keywords</source>
-        <translation type="unfinished"></translation>
+        <translation>Mots-clés</translation>
     </message>
 </context>
 <context>
@@ -728,7 +728,7 @@
     </message>
     <message>
         <source>eZ Find 2.5 search plugin &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 3.1</source>
-        <translation type="unfinished"></translation>
+        <translation>eZ Find 2.5 search plugin &amp;copy; 1999-2011 eZ Systems AS, propulsé par Apache Solr 3.1</translation>
     </message>
 </context>
 </TS>
