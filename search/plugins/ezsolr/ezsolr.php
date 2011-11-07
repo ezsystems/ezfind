@@ -1370,7 +1370,7 @@ class eZSolr implements ezpSearchEngine
      */
     static function engineText()
     {
-        return ezpI18n::tr( 'ezfind', 'eZ Find 2.5 search plugin &copy; 1999-2011 eZ Systems AS, powered by Apache Solr 3.1' );
+        return ezpI18n::tr( 'ezfind', 'eZ Find 2.6 search plugin &copy; 1999-2011 eZ Systems AS, powered by Apache Solr 3.1' );
     }
 
     /**
