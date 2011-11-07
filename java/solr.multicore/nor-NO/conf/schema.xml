@@ -75,6 +75,13 @@
         <analyzer>
             <tokenizer class="solr.KeywordTokenizerFactory"/>
             <filter class="solr.LowerCaseFilterFactory" />
+            <!--
+            This fieldtype is mainly used for meta_sort_name_ms. By default, we use a multiple language
+            configuration: language="".
+            If you want to customize if for one particular language, use a language 2 letters code as:
+            en, de, no, fr,...
+            -->
+            <filter class="solr.CollationKeyFilterFactory" language="no" strength="primary" />
         </analyzer>
     </fieldType>
 
