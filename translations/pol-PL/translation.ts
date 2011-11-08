@@ -727,8 +727,8 @@
         <translation>Nie dotyczy</translation>
     </message>
     <message>
-        <source>eZ Find 2.5 search plugin &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 3.1</source>
-        <translation>Rozszerzenie do wyszukiwania treści eZ Find 2.5 &amp;copy; 1999-2011 eZ Systems AS, oparte na Apache Solr 3.1</translation>
+        <source>eZ Find 2.6 search plugin &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 3.1</source>
+        <translation>Rozszerzenie do wyszukiwania treści eZ Find 2.6 &amp;copy; 1999-2011 eZ Systems AS, oparte na Apache Solr 3.1</translation>
     </message>
 </context>
 </TS>
