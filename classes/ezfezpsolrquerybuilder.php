@@ -82,7 +82,7 @@ class ezfeZPSolrQueryBuilder
         foreach ( $solrFields as $field )
         {
             //don't mind the last extra space, it's ignored by Solr
-            $multiFieldQuery .= $field . ':(' . $searchText . ')';
+            $multiFieldQuery .= $field . ':(' . $this->escapeQuery( $searchText ) . ')';
             // check if we need to apply a boost
             if ( array_key_exists( $field, $processedBoostFields ) )
             {
@@ -416,7 +416,7 @@ class ezfeZPSolrQueryBuilder
                 // if another value is specified, it is supposed to be a dismax like handler
                 // with possible other tuning variables then the stock provided 'ezpublish' in solrconfi.xml
                 // remark it should be lowercase in solrconfig.xml!
-                $handlerParameters = array ( 'q' => $searchText,
+                $handlerParameters = array ( 'q' => $this->escapeQuery( $searchText ),
                                              'qf' => implode( ' ', array_merge( $queryFields, $extraFieldsToSearch ) ),
                                              'qt' => $queryHandler );
 
@@ -973,7 +973,7 @@ class ezfeZPSolrQueryBuilder
                     if ( $baseName ==  'path' )
                     {
                         if ( isset( $this->searchPluginInstance->postSearchProcessingData['subtree_array'] ) )
-                            $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = array_merge( $this->searchPluginInstance->postSearchProcessingData['subtree_array'], array( $value ) );
+                            $this->searchPluginInstance->postSearchProcessingData['subtree_array'][] = $value;
                         else
                             $this->searchPluginInstance->postSearchProcessingData['subtree_array'] = array( $value );
                     }
@@ -986,7 +986,7 @@ class ezfeZPSolrQueryBuilder
                     }
                     else
                     {
-                        $filterQueryList[] = $baseNameInfo . ':' . $value;
+                        $filterQueryList[] = $baseNameInfo . ':' . $this->escapeQuery( $value );
                     }
                 }
             }
@@ -1122,7 +1122,7 @@ class ezfeZPSolrQueryBuilder
                     continue;
                 }
 
-                $queryPart['query'] = $field . ':' . $query;
+                $queryPart['query'] = $field . ':' . $this->escapeQuery( $query );
             }
 
             // Get prefix.
@@ -1482,7 +1482,9 @@ class ezfeZPSolrQueryBuilder
         foreach ( $policies as $limitationList )
         {
             // policy limitations are concatenated with AND
+            // except for locations policity limitations, concatenated with OR
             $filterQueryPolicyLimitations = array();
+            $policyLimitationsOnLocations = array();
 
             foreach ( $limitationList as $limitationType => $limitationValues )
             {
@@ -1500,7 +1502,11 @@ class ezfeZPSolrQueryBuilder
                             $pathArray = explode( '/', $pathString );
                             // we only take the last node ID in the path identification string
                             $subtreeNodeID = array_pop( $pathArray );
-                            $filterQueryPolicyLimitationParts[] = eZSolr::getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
+                            $policyLimitationsOnLocations[] = eZSolr::getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
+                            if ( isset( $this->searchPluginInstance->postSearchProcessingData['subtree_limitations'] ) )
+                                $this->searchPluginInstance->postSearchProcessingData['subtree_limitations'][] = $subtreeNodeID;
+                            else
+                                $this->searchPluginInstance->postSearchProcessingData['subtree_limitations'] = array( $subtreeNodeID );
                         }
                     } break;
 
@@ -1512,7 +1518,11 @@ class ezfeZPSolrQueryBuilder
                             $pathArray = explode( '/', $pathString );
                             // we only take the last node ID in the path identification string
                             $nodeID = array_pop( $pathArray );
-                            $filterQueryPolicyLimitationParts[] = $limitationHash[$limitationType] . ':' . $nodeID;
+                            $policyLimitationsOnLocations[] = $limitationHash[$limitationType] . ':' . $nodeID;
+                            if ( isset( $this->searchPluginInstance->postSearchProcessingData['subtree_limitations'] ) )
+                                $this->searchPluginInstance->postSearchProcessingData['subtree_limitations'][] = $nodeID;
+                            else
+                                $this->searchPluginInstance->postSearchProcessingData['subtree_limitations'] = array( $nodeID );
                         }
                     } break;
 
@@ -1560,7 +1570,15 @@ class ezfeZPSolrQueryBuilder
                     }
                 }
 
-                $filterQueryPolicyLimitations[] = '( ' . implode( ' OR ', $filterQueryPolicyLimitationParts ) . ' )';
+                if ( !empty( $filterQueryPolicyLimitationParts ) )
+                    $filterQueryPolicyLimitations[] = '( ' . implode( ' OR ', $filterQueryPolicyLimitationParts ) . ' )';
+            }
+
+            // Policy limitations on locations (node and/or subtree) need to be concatenated with OR
+            // unlike the other types of limitation
+            if ( !empty( $policyLimitationsOnLocations ) )
+            {
+                $filterQueryPolicyLimitations[] = '( ' . implode( ' OR ', $policyLimitationsOnLocations ) . ')';
             }
 
             if ( !empty( $filterQueryPolicyLimitations ) )
@@ -1711,6 +1729,18 @@ class ezfeZPSolrQueryBuilder
         return $fieldArray;
     }
 
+    /**
+     * Espaces special chars in $query so that they can be handled as part of it by Solr
+     *
+     * @param string $query
+     * @return string
+     * @see http://wiki.apache.org/solr/SolrQuerySyntax#Special_Characters_in_SOLR
+     */
+    private function escapeQuery( $query )
+    {
+        return addcslashes( $query, self::CHARS_TO_ESCAPE );
+    }
+
     /// Vars
     static $FindINI;
     static $SolrINI;
@@ -1745,6 +1775,14 @@ class ezfeZPSolrQueryBuilder
     const FACET_LIMIT = 20;
     const FACET_OFFSET = 0;
     const FACET_MINCOUNT = 1;
+
+    /**
+     * Characters that must be escaped if they are part of a query
+     * @see http://wiki.apache.org/solr/SolrQuerySyntax#Special_Characters_in_SOLR
+     * @see http://issues.ez.no/18701
+     * @var string
+     */
+    const CHARS_TO_ESCAPE = '+-&|!(){}[]^"~*?:\\';
 }
 
 ezfeZPSolrQueryBuilder::$FindINI = eZINI::instance( 'ezfind.ini' );

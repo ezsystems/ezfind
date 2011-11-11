@@ -79,7 +79,7 @@ class ezfModuleFunctionCollection
         {
             foreach ( $http->getVariable( 'filter' ) as $filterCond )
             {
-                list( $name, $value ) = explode( ':', $filterCond );
+                list( $name, $value ) = explode( ':', $filterCond, 2 );
                 $filterList[$name] = $value;
             }
         }

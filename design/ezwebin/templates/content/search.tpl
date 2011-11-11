@@ -206,13 +206,14 @@
 
                   {foreach $facetData.nameList as $key2 => $facetName}
                       {if eq( $activeFacetParameters[concat( $defaultFacet['field'], ':', $defaultFacet['name'] )], $facetName )}
-                          {def $activeFacetsCount=sum( $key, 1 )}
+                          {set $activeFacetsCount=sum( $key, 1 )}
                           {def $suffix=$uriSuffix|explode( concat( '&filter[]=', $facetData.queryLimit[$key2]|wash ) )|implode( '' )|explode( concat( '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName ) )|implode( '' )}
                           <li>
                               <a href={concat( $baseURI, $suffix )|ezurl}>[x]</a> <strong>{$defaultFacet['name']}</strong>: {$facetName}
                           </li>
                       {/if}
                   {/foreach}
+                  {undef $facetData}
               {/if}
           {/foreach}
 
@@ -242,12 +243,13 @@
                     {foreach $facetData.nameList as $key2 => $facetName}
                         {if ne( $key2, '' )}
                         <li>
-                            <a href={concat( $baseURI, '&filter[]=', $facetData.queryLimit[$key2]|wash, '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName, $uriSuffix )|ezurl}>
+                            <a href={concat( $baseURI, '&filter[]=', $facetData.queryLimit[$key2]|urlencode, '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName, $uriSuffix )|ezurl}>
                             {$facetName}</a> ({$facetData.countList[$key2]})
                         </li>
                         {/if}
                     {/foreach}
                   </ul>
+                  {undef $facetData}
               </li>
               {/if}
           {/foreach}

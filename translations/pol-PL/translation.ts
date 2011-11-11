@@ -1,399 +1,399 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="nl_NL">
+<TS version="2.0" language="pl_PL">
 <context>
     <name>design/admin/content/search</name>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation>Szukaj</translation>
     </message>
     <message>
         <source>All content</source>
-        <translation>Alle inhoud</translation>
+        <translation>Cała zawartość</translation>
     </message>
     <message>
         <source>The same location</source>
-        <translation>Dezelfde locatie</translation>
+        <translation>Ta sama lokalizacja</translation>
     </message>
     <message>
         <source>For more options try the %1Advanced search%2.</source>
         <comment>The parameters are link start and end tags.</comment>
-        <translation>Probeer %1Geavanceerd zoeken%2 voor meer opties.</translation>
+        <translation>Aby wybrać więcej opcji skorzystaj z %1wyszukiwarki zaawansowanej%2.</translation>
     </message>
     <message>
         <source>The following words were excluded from the search</source>
-        <translation>De volgende woorden zijn weggelaten uit de zoekopdracht</translation>
+        <translation>Poniższe słowa zostały wykluczone z wyszukiwania</translation>
     </message>
     <message>
         <source>No results were found while searching for &lt;%1&gt;</source>
-        <translation>Geen resultaten gevonden bij het zoeken naar &lt;%1&gt;</translation>
+        <translation>Nie znaleziono wyników wyszukiwania dla frazy &lt;%1&gt;</translation>
     </message>
     <message>
         <source>Search tips</source>
-        <translation>Zoektips</translation>
+        <translation>Podpowiedzi dla wyszukiwania</translation>
     </message>
     <message>
         <source>Check spelling of keywords.</source>
-        <translation>Controleer de spelling van de woorden.</translation>
+        <translation>Sprawdź poprawność słów kluczowych.</translation>
     </message>
     <message>
         <source>Try changing some keywords e.g. &amp;quot;car&amp;quot; instead of &amp;quot;cars&amp;quot;.</source>
-        <translation>Probeer woorden te veranderen, bijvoorbeeld &amp;quot;fiets&amp;quot; in plaats van &amp;quot;fietsen&amp;quot;.</translation>
+        <translation>Spróbuj zmienić niektóre słowa kluczowe, np. &amp;quot;dom&amp;quot; zamiast &amp;quot;domy&amp;quot;.</translation>
     </message>
     <message>
         <source>Try more general keywords.</source>
-        <translation>Probeer meer algemene woorden.</translation>
+        <translation>Spróbuj bardziej ogólnych słów kluczowych.</translation>
     </message>
     <message>
         <source>Fewer keywords result in more matches. Try reducing keywords until you get a result.</source>
-        <translation>Minder woorden leidt tot meer resultaten. Probeer het aantal woorden te verminderen tot u resultaat krijgt.</translation>
+        <translation>Wprowadzenie mniejszej ilości słów kluczowych wyszuka więcej wyników. Spróbuj redukować ilość słów kluczowych aż do uzyskania wyników..</translation>
     </message>
     <message>
         <source>Search for &lt;%1&gt; returned %2 matches</source>
-        <translation>Het zoeken naar &lt;%1&gt; leverde %2 resultaten op</translation>
+        <translation>Ilość odnalezionych wyników dla frazy &lt;%1&gt; : %2</translation>
     </message>
 </context>
 <context>
     <name>design/admin/node/view/full</name>
     <message>
         <source>Show 10 items per page.</source>
-        <translation>10 items per pagina tonen.</translation>
+        <translation>Pokaż 10 wyników na stronę.</translation>
     </message>
     <message>
         <source>Show 50 items per page.</source>
-        <translation>50 items per pagina tonen.</translation>
+        <translation>Pokaż 50 wyników na stronę.</translation>
     </message>
     <message>
         <source>Show 25 items per page.</source>
-        <translation>25 items per pagina tonen.</translation>
+        <translation>Pokaż 25 wyników na stronę.</translation>
     </message>
 </context>
 <context>
     <name>design/admin/pagelayout</name>
     <message>
         <source>Search in all content</source>
-        <translation>Alle inhoud doorzoeken</translation>
+        <translation>Wyszukaj w całej zawartości</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation>Szukaj</translation>
     </message>
     <message>
         <source>Advanced</source>
-        <translation>Geavanceerd</translation>
+        <translation>Zaawansowane</translation>
     </message>
     <message>
         <source>Search in &apos;%node&apos;</source>
-        <translation>Zoeken in &apos;%node&apos;</translation>
+        <translation>Wyszukaj w węźle &apos;%node&apos;</translation>
     </message>
     <message>
         <source>Advanced search.</source>
-        <translation>Geavanceerd zoeken.</translation>
+        <translation>Wyszukiwanie zaawansowane.</translation>
     </message>
 </context>
 <context>
     <name>design/base</name>
     <message>
         <source>The following words were excluded from the search</source>
-        <translation>De volgende woorden zijn weggelaten uit de zoekopdracht</translation>
+        <translation>Poniższe słowa zostały wykluczone z wyszukiwania</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation>Szukaj</translation>
     </message>
     <message>
         <source>For more options try the %1Advanced search%2</source>
         <comment>The parameters are link start and end tags.</comment>
-        <translation>Probeer %1Geavanceerd zoeken%2 voor meer opties</translation>
+        <translation>Aby wybrać więcej opcji skorzystaj z %1wyszukiwarki zaawansowanej%2.</translation>
     </message>
     <message>
         <source>No results were found when searching for &quot;%1&quot;</source>
-        <translation>Geen resultaten gevonden bij het zoeken naar &quot;&lt;%1&gt;&quot;</translation>
+        <translation>Nie znaleziono wyników dla frazy &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Search tips</source>
-        <translation>Zoektips</translation>
+        <translation>Podpowiedzi dla wyszukiwania</translation>
     </message>
     <message>
         <source>Check spelling of keywords.</source>
-        <translation>Controleer de spelling van de woorden.</translation>
+        <translation>Sprawdź poprawność słów kluczowych.</translation>
     </message>
     <message>
         <source>Try changing some keywords eg. car instead of cars.</source>
-        <translation>Probeer woorden te veranderen, bijvoorbeeld &amp;quot;fiets&amp;quot; in plaats van &amp;quot;fietsen&amp;quot;.</translation>
+        <translation>Spróbuj zmienić niektóre słowa kluczowe, np. &amp;quot;dom&amp;quot; zamiast &amp;quot;domy&amp;quot;.</translation>
     </message>
     <message>
         <source>Try more general keywords.</source>
-        <translation>Probeer meer algemene woorden.</translation>
+        <translation>Spróbuj bardziej ogólnych słów kluczowych.</translation>
     </message>
     <message>
         <source>Fewer keywords gives more results, try reducing keywords until you get a result.</source>
-        <translation>Minder woorden leidt tot meer resultaten. Probeer het aantal woorden te verminderen tot u resultaat krijgt.</translation>
+        <translation>Wprowadzenie mniejszej ilości słów kluczowych wyszuka więcej wyników. Spróbuj redukować ilość słów kluczowych aż do uzyskania wyników..</translation>
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>Het zoeken naar &quot;&lt;%1&gt;&quot; leverde %2 resultaten op</translation>
+        <translation>Ilość odnalezionych wyników dla frazy &lt;%1&gt; : %2</translation>
     </message>
 </context>
 <context>
     <name>design/ezfind/search</name>
     <message>
         <source>Spell check suggestion: did you mean</source>
-        <translation>Spellingssuggesties: bedoelde u</translation>
+        <translation>Sprawdzanie błędów: czy miałeś na myśli</translation>
     </message>
     <message>
         <source>The search is case insensitive. Upper and lower case characters may be used.</source>
-        <translation>Het zoeken is niet hoofdlettergevoelig. Zowel hoofdletters als kleine letters kunnen worden gebruikt.</translation>
+        <translation>Wyszukiwanie ignoruje wielkość liter. Wielkie i małe litery mogą być wykorzystane.</translation>
     </message>
     <message>
         <source>The search result contains all search terms.</source>
-        <translation>Het zoekresultaat bevat alle zoektermen.</translation>
+        <translation>Wyniki wyszukiwania zawierają wszystkie wprowadzone słowa kluczowe.</translation>
     </message>
     <message>
         <source>Phrase search can be achieved by using quotes, example: &quot;Quick brown fox jumps over the lazy dog&quot;</source>
-        <translation>Het zoeken op zinnen kan worden gedaan door aanhalingstekens te gebruiken, bijvoorbeeld: &quot;Blaffende honden bijten niet&quot;</translation>
+        <translation>Możesz wyszukać pełe frazy poprzez zastosowanie cudzysłowów, przykład &quot;szybki brązowy lis przeskoczył pzez leniwego psa&quot;</translation>
     </message>
     <message>
         <source>Words may be excluded by using a minus ( - ) character, example: lazy -dog</source>
-        <translation>Woorden kunnen worden uitgesloten door het minteken ( - ) te gebruiken, bijvoorbeeld: &quot;blaffende -honden&quot;</translation>
+        <translation>Słowa kluczowe mogą być wyłączane z wyszukiwania przy pomocy symbolu minus (-), przykład: leniwy -pies</translation>
     </message>
 </context>
 <context>
     <name>design/ezflow/block/search</name>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation>Szukaj</translation>
     </message>
 </context>
 <context>
     <name>design/ezwebin/content/search</name>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation>Szukaj</translation>
     </message>
     <message>
         <source>For more options try the %1Advanced search%2</source>
         <comment>The parameters are link start and end tags.</comment>
-        <translation>Probeer %1Geavanceerd zoeken%2 voor meer opties</translation>
+        <translation>Aby wybrać więcej opcji skorzystaj z %1wyszukiwarki zaawansowanek%2.</translation>
     </message>
     <message>
         <source>No results were found when searching for &quot;%1&quot;.</source>
-        <translation>Geen resultaten gevonden bij het zoeken naar &quot;&lt;%1&gt;&quot;.</translation>
+        <translation>Nie znaleziono wyników dla frazy &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Search tips</source>
-        <translation>Zoektips</translation>
+        <translation>Podpowiedzi dla wyszukiwania</translation>
     </message>
     <message>
         <source>Check spelling of keywords.</source>
-        <translation>Controleer de spelling van de woorden.</translation>
+        <translation>Sprawdź poprawność słów kluczowych.</translation>
     </message>
     <message>
         <source>Try changing some keywords (eg, &quot;car&quot; instead of &quot;cars&quot;).</source>
-        <translation>Probeer woorden te veranderen, bijvoorbeeld &amp;quot;fiets&amp;quot; in plaats van &amp;quot;fietsen&amp;quot;.</translation>
+        <translation>Spróbuj zmienić niektóre słowa kluczowe, np. &amp;quot;dom&amp;quot; zamiast &amp;quot;domy&amp;quot;.</translation>
     </message>
     <message>
         <source>Try searching with less specific keywords.</source>
-        <translation>Probeer te zoeken met minder specifieke woorden.</translation>
+        <translation>Spróbuj szukać przy pomocy mniejszej ilości słów kluczowych.</translation>
     </message>
     <message>
         <source>Reduce number of keywords to get more results.</source>
-        <translation>Verminder het aantal woorden om meer resultaten te krijgen.</translation>
+        <translation>Zredukuj ilość słów kluczowych, aby uzyskać więcej wyników.</translation>
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>Het zoeken naar &quot;&lt;%1&gt;&quot; leverde %2 resultaten op</translation>
+        <translation>Ilość odnalezionych wyników dla frazy &lt;%1&gt; : %2</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Help</translation>
+        <translation>Pomoc</translation>
     </message>
     <message>
         <source>Refine your search</source>
-        <translation>Resultaat verfijnen</translation>
+        <translation>Wyszukaj ponownie</translation>
     </message>
 </context>
 <context>
     <name>design/ezwebin/full/article</name>
     <message>
         <source>Comments</source>
-        <translation>Reacties</translation>
+        <translation>Komentarze</translation>
     </message>
     <message>
         <source>New comment</source>
-        <translation>Nieuwe reactie</translation>
+        <translation>Nowy komentarz</translation>
     </message>
     <message>
         <source>%login_link_startLog in%login_link_end or %create_link_startcreate a user account%create_link_end to comment.</source>
-        <translation>%login_link_startLog in%login_link_end of %create_link_startmaak een gebruikersaccount aan%create_link_end om te reageren.</translation>
+        <translation>%login_link_startZaloguj się%login_link_end lub %create_link_startzarejestruj się%create_link_end aby skomentować.</translation>
     </message>
     <message>
         <source>Tip a friend</source>
-        <translation>Tip doorsturen</translation>
+        <translation>Wyślij znajomemu</translation>
     </message>
     <message>
         <source>Related content</source>
-        <translation>Gerelateerde inhoud</translation>
+        <translation>Podobne treści</translation>
     </message>
 </context>
 <context>
     <name>design/ezwebin/pagelayout</name>
     <message>
         <source>Search text:</source>
-        <translation>Zoekterm:</translation>
+        <translation>Szukaj w tekstach:</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation>Szukaj</translation>
     </message>
 </context>
 <context>
     <name>design/standard/content/search</name>
     <message>
         <source>Last day</source>
-        <translation>Afgelopen dag</translation>
+        <translation>Ostatni dzień</translation>
     </message>
     <message>
         <source>Last week</source>
-        <translation>Afgelopen week</translation>
+        <translation>Ostatni tydzień</translation>
     </message>
     <message>
         <source>Last month</source>
-        <translation>Afgelopen maand</translation>
+        <translation>Ostatni miesiąc</translation>
     </message>
     <message>
         <source>Last three months</source>
-        <translation>Afgelopen drie maanden</translation>
+        <translation>Ostatnie trzy miesiące</translation>
     </message>
     <message>
         <source>Last year</source>
-        <translation>Afgelopen jaar</translation>
+        <translation>Ostatni rok</translation>
     </message>
     <message>
         <source>Advanced search</source>
-        <translation>Geavanceerd zoeken</translation>
+        <translation>Wyszukiwanie zaawansowane</translation>
     </message>
     <message>
         <source>Search all the words</source>
-        <translation>Zoeken naar alle woorden</translation>
+        <translation>Wyszukaj wszystkie słowa kluczowe</translation>
     </message>
     <message>
         <source>Search the exact phrase</source>
-        <translation>Zoeken naar de exacte zin</translation>
+        <translation>Wyszukaj dokładnie takiej samej frazy</translation>
     </message>
     <message>
         <source>Search with at least one of the words</source>
-        <translation>Zoeken met tenminste één van de woorden</translation>
+        <translation>Wyszukaj przynajmniej jednego ze słów kluczowych</translation>
     </message>
     <message>
         <source>Class</source>
-        <translation>Type</translation>
+        <translation>Klasa</translation>
     </message>
     <message>
         <source>Any class</source>
-        <translation>Alle typen</translation>
+        <translation>Dowolna klasa</translation>
     </message>
     <message>
         <source>Class attribute</source>
-        <translation>Type-attribuut</translation>
+        <translation>Atrybut klasy</translation>
     </message>
     <message>
         <source>Any attribute</source>
-        <translation>Alle attributen</translation>
+        <translation>Dowolny atrybut</translation>
     </message>
     <message>
         <source>Update attributes</source>
-        <translation>Attributen actualiseren</translation>
+        <translation>Zaktualizuj atrybuty</translation>
     </message>
     <message>
         <source>In</source>
-        <translation>In</translation>
+        <translation>W</translation>
     </message>
     <message>
         <source>Any section</source>
-        <translation>Alle secties</translation>
+        <translation>Dowolna sekcja</translation>
     </message>
     <message>
         <source>Published</source>
-        <translation>Gepubliceerd</translation>
+        <translation>Opublikowane</translation>
     </message>
     <message>
         <source>Any time</source>
-        <translation>Op elk gewenst moment</translation>
+        <translation>Dowolny czas</translation>
     </message>
     <message>
         <source>Display per page</source>
-        <translation>Per pagina tonen</translation>
+        <translation>Ilość wyników na stronę</translation>
     </message>
     <message>
         <source>5 items</source>
-        <translation>5 items</translation>
+        <translation>5 elementów</translation>
     </message>
     <message>
         <source>10 items</source>
-        <translation>10 items</translation>
+        <translation>10 elementów</translation>
     </message>
     <message>
         <source>20 items</source>
-        <translation>20 items</translation>
+        <translation>20 elementów</translation>
     </message>
     <message>
         <source>30 items</source>
-        <translation>30 items</translation>
+        <translation>30 elementów</translation>
     </message>
     <message>
         <source>50 items</source>
-        <translation>50 items</translation>
+        <translation>50 elementów</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Zoeken</translation>
+        <translation>Szukaj</translation>
     </message>
     <message>
         <source>No results were found when searching for &quot;%1&quot;</source>
-        <translation>Geen resultaten gevonden bij het zoeken naar &quot;&lt;%1&gt;&quot;</translation>
+        <translation>Nie znaleziono wyników dla frazy &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>Het zoeken naar &quot;&lt;%1&gt;&quot; leverde %2 resultaten op</translation>
+        <translation>Ilość odnalezionych wyników dla frazy &lt;%1&gt; : %2</translation>
     </message>
     <message>
         <source>Score</source>
-        <translation>Relevantie</translation>
+        <translation>Trafność</translation>
     </message>
     <message>
         <source>Name</source>
-        <translation>Naam</translation>
+        <translation>Nazwa</translation>
     </message>
 </context>
 <context>
     <name>extension/ezfind</name>
     <message>
         <source>eZFind</source>
-        <translation type="unfinished">eZFind</translation>
+        <translation>eZFind</translation>
     </message>
     <message>
         <source>Elevation</source>
-        <translation type="unfinished">Elevatie</translation>
+        <translation>Podbijanie</translation>
     </message>
     <message>
         <source>Remove Elevation</source>
-        <translation type="unfinished"></translation>
+        <translation>Usuń podbijanie</translation>
     </message>
 </context>
 <context>
     <name>extension/ezfind/ajax-search</name>
     <message>
         <source>No search results...</source>
-        <translation>Geen zoekresultaten...</translation>
+        <translation>Brak wyników wyszukiwania...</translation>
     </message>
     <message>
         <source>Did you mean</source>
-        <translation>Bedoelde u</translation>
+        <translation>Czy miałeś(aś) na myśli</translation>
     </message>
     <message>
         <source>Refine with facets</source>
-        <translation>Met facetten verfijnen</translation>
+        <translation>Zastosuj filtry</translation>
     </message>
 </context>
 <context>
@@ -404,297 +404,297 @@
     </message>
     <message>
         <source>Elevation</source>
-        <translation>Elevatie</translation>
+        <translation>Podbijanie</translation>
     </message>
     <message>
         <source>Boost</source>
-        <translation>Boosten</translation>
+        <translation>Boostowanie</translation>
     </message>
     <message>
         <source>Facets</source>
-        <translation>Facetten</translation>
+        <translation>Filtry</translation>
     </message>
 </context>
 <context>
     <name>extension/ezfind/elevate</name>
     <message>
         <source>Hide preview of existing elevate configurations.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukryj podgląd obecnej konfiguracji podbijania</translation>
     </message>
     <message>
         <source>Preview existing configurations</source>
-        <translation type="unfinished"></translation>
+        <translation>Podgląd obecnej konfiguracji</translation>
     </message>
     <message>
         <source>Show preview of existing elevate configurations.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokaż podgląd obecnej konfiguracji podbijania.</translation>
     </message>
     <message>
         <source>Elevation</source>
-        <translation type="unfinished">Elevatie</translation>
+        <translation>Podbijanie</translation>
     </message>
     <message>
         <source>Please enter a search query.</source>
-        <translation type="unfinished"></translation>
+        <translation>Proszę wpisać frazę do wyszukania.</translation>
     </message>
     <message>
         <source>Please choose a valid object.</source>
-        <translation type="unfinished"></translation>
+        <translation>Proszę wybrać prawidłowy obiekt.</translation>
     </message>
     <message>
         <source>Missing language information.</source>
-        <translation type="unfinished"></translation>
+        <translation>Brakujące informacje na temat języka.</translation>
     </message>
     <message>
         <source>Successful creation of the following Elevate configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Konfiguracja podbijania zostałą pomyślnie zapisana</translation>
     </message>
     <message>
         <source>Details</source>
-        <translation type="unfinished"></translation>
+        <translation>Szczegóły</translation>
     </message>
     <message>
         <source>Successful synchronization of the local Elevate configuration with Solr&apos;s.</source>
-        <translation type="unfinished"></translation>
+        <translation>Synchronizacja lokalnej konfiguracji podbijania została pomyślnie zsynchronizowana.</translation>
     </message>
     <message>
         <source>Synchronise Elevate configuration with Solr</source>
-        <translation type="unfinished"></translation>
+        <translation>Synchronizuj lokalną konfigurację podbijania.</translation>
     </message>
     <message>
         <source>Synchronise</source>
-        <translation type="unfinished"></translation>
+        <translation>Synchronizuj</translation>
     </message>
     <message>
         <source>Synchronise the Elevate configuration with Solr.</source>
-        <translation type="unfinished"></translation>
+        <translation>Synchronizuj lokalną konfigurację podbijania.</translation>
     </message>
     <message>
         <source>Elevate an object</source>
-        <translation type="unfinished"></translation>
+        <translation>Podbij obiekt</translation>
     </message>
     <message>
         <source>&quot;Elevating an object&quot; for a given search query means that this object will be returned among the very first search results when a search is triggered using this search query.</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;Podbijanie obiektu&quot; dla danej frazy spowoduje, że ten obiekt znajdzie się w pierwszych wynikach wyszukiwania dla tej właśnie frazy.</translation>
     </message>
     <message>
         <source>Search query</source>
-        <translation type="unfinished"></translation>
+        <translation>Fraza</translation>
     </message>
     <message>
         <source>Search query to elevate the object for.</source>
-        <translation type="unfinished"></translation>
+        <translation>Fraza do wykorzystania podbicia</translation>
     </message>
     <message>
         <source>Elevate object</source>
-        <translation type="unfinished"></translation>
+        <translation>Podbij obiekt</translation>
     </message>
     <message>
         <source>Browse for the object to associate elevation to.</source>
-        <translation type="unfinished"></translation>
+        <translation>Przeglądaj obiekty dla odpowiedniego podbijania.</translation>
     </message>
     <message>
         <source>Elevate %objectlink with &amp;nbsp;  %searchquery &amp;nbsp;  for language:</source>
-        <translation type="unfinished"></translation>
+        <translation>Podbij %objectlink przy frazie &amp;nbsp; %searchquery &amp;nbsp; dla języka:</translation>
     </message>
     <message>
         <source>All</source>
-        <translation type="unfinished"></translation>
+        <translation>Wszystkie</translation>
     </message>
     <message>
         <source>Elevate</source>
-        <translation type="unfinished">Eleveren</translation>
+        <translation>Podbicie</translation>
     </message>
     <message>
         <source>Store elevation</source>
-        <translation type="unfinished"></translation>
+        <translation>Zachowaj podbicie</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <source>Cancel elevation</source>
-        <translation type="unfinished"></translation>
+        <translation>Anuluj podbicie</translation>
     </message>
     <message>
         <source>Search for elevated objects</source>
-        <translation type="unfinished"></translation>
+        <translation>Wyszukaj podbite obiekty</translation>
     </message>
     <message>
         <source>By search query</source>
-        <translation type="unfinished"></translation>
+        <translation>Według frazy</translation>
     </message>
     <message>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Język</translation>
     </message>
     <message>
         <source>Select a translation to narrow down the search.</source>
-        <translation type="unfinished"></translation>
+        <translation>Wybierz język aby ograniczyć wyszukiwanie.</translation>
     </message>
     <message>
         <source>Fuzzy match</source>
-        <translation type="unfinished"></translation>
+        <translation>Podobne elementy</translation>
     </message>
     <message>
         <source>Fuzzy match on the search query.</source>
-        <translation type="unfinished"></translation>
+        <translation>Elementy podobne dla podanej frazy.</translation>
     </message>
     <message>
         <source>Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtry</translation>
     </message>
     <message>
         <source>Find elevate configurations matching the search query entered.</source>
-        <translation type="unfinished"></translation>
+        <translation>Wyszukaj konfigurację podbijania dla podanej fraazy.</translation>
     </message>
     <message>
         <source>By object</source>
-        <translation type="unfinished"></translation>
+        <translation>Według obiektów</translation>
     </message>
     <message>
         <source>Browse</source>
-        <translation type="unfinished"></translation>
+        <translation>Przeglądaj</translation>
     </message>
     <message>
         <source>Objects elevated by &quot;%search_query&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Obiekty podbite dla &quot;%search_query&quot;</translation>
     </message>
     <message>
         <source>fuzzy match</source>
-        <translation type="unfinished"></translation>
+        <translation>wyniki zbliżone</translation>
     </message>
     <message>
         <source>Existing configurations</source>
-        <translation type="unfinished"></translation>
+        <translation>Obecna konfiguracja</translation>
     </message>
     <message>
         <source>No existing Elevate configuration.</source>
-        <translation type="unfinished"></translation>
+        <translation>Brak konfiguracji dla podbijania.</translation>
     </message>
     <message>
         <source>Content object</source>
-        <translation type="unfinished"></translation>
+        <translation>Zawartość obiektu</translation>
     </message>
     <message>
         <source>Actions</source>
-        <translation type="unfinished"></translation>
+        <translation>Akcje</translation>
     </message>
     <message>
         <source>See elevate configuration details for &apos;%objectName&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokaż konfigurację podbijania dla &apos;%objectName&apos;</translation>
     </message>
     <message>
         <source>Remove elevation by &apos;%searchQuery&apos; for &apos;%objectName&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Usuń podbicie dla frazy &apos;*searchQuery&apos; dla obiektu &apos;%objectName&apos;.</translation>
     </message>
     <message>
         <source>See all objects elevated by &apos;%searchQuery&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokaż wszystkie podbite elementy dla &apos;%searchQuery&apos;</translation>
     </message>
     <message>
         <source>Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Edytuj</translation>
     </message>
     <message>
         <source>Trash</source>
-        <translation type="unfinished"></translation>
+        <translation>Kosz</translation>
     </message>
     <message>
         <source>Elevation detail for object %objectName</source>
-        <translation type="unfinished"></translation>
+        <translation>Szczegóły podbijania dla %objectName</translation>
     </message>
     <message>
         <source>Missing content object.</source>
-        <translation type="unfinished"></translation>
+        <translation>Brak obiektu.</translation>
     </message>
     <message>
         <source>Elevate %objectName</source>
-        <translation type="unfinished"></translation>
+        <translation>Podbij %objectName</translation>
     </message>
     <message>
         <source>Elevate %objectlink with:</source>
-        <translation type="unfinished"></translation>
+        <translation>Podbij %objectlink z:</translation>
     </message>
     <message>
         <source>for language:</source>
-        <translation type="unfinished"></translation>
+        <translation>dla języka:</translation>
     </message>
     <message>
         <source>Existing configurations for %objectName</source>
-        <translation type="unfinished"></translation>
+        <translation>Istniejąca konfiguracja dla %objectName</translation>
     </message>
     <message>
         <source>in %selectedLanguage</source>
-        <translation type="unfinished"></translation>
+        <translation>w %selectedLanguage</translation>
     </message>
     <message>
         <source>containing &apos;%searchQuery&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>zawierającą &apos;%searchQuery&apos;</translation>
     </message>
     <message>
         <source>Search query to filter the result set on.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokaż wyniki wyszukiwania aby włączyć filtry.</translation>
     </message>
     <message>
         <source>Filter configurations by language</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtruj konfigurację według języków</translation>
     </message>
     <message>
         <source>Removal confirmed ( for %objectName ) :</source>
-        <translation type="unfinished"></translation>
+        <translation>Usunięcie potwierdzone (dla %objectName) :</translation>
     </message>
     <message>
         <source>Confirm removal of the following Elevate configuration ( for %objectName ) :</source>
-        <translation type="unfinished"></translation>
+        <translation>Potwierdź usunięcie konfiguracji podbijania (dla %objectName) :</translation>
     </message>
     <message>
         <source>Back</source>
-        <translation type="unfinished"></translation>
+        <translation>Cofnij</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Usuń</translation>
     </message>
     <message>
         <source>Confirm removal of the elevate configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Potwierdź usunięcie konfiguracji podbijania</translation>
     </message>
     <message>
         <source>Cancel removal of the elevate configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Anuluj usuwanie konfiruacji podbijania</translation>
     </message>
     <message>
         <source>Error while generating the configuration XML</source>
-        <translation type="unfinished"></translation>
+        <translation>Błąd podczas generowania konfiguracji XML</translation>
     </message>
     <message>
         <source>An unknown error occured in updating Solr&apos;s elevate configuration.</source>
-        <translation type="unfinished"></translation>
+        <translation>Wystąpił nieznany błąd przy aktualizacji konfiguracji podbijania Solr.</translation>
     </message>
 </context>
 <context>
     <name>extension/ezfind/facets</name>
     <message>
         <source>Creation time</source>
-        <translation>Aangemaakt</translation>
+        <translation>Data utworzenia</translation>
     </message>
     <message>
         <source>Clear all</source>
-        <translation>Alles wissen</translation>
+        <translation>Wyczyść</translation>
     </message>
     <message>
         <source>Content type</source>
-        <translation type="unfinished"></translation>
+        <translation>Typ zawartości</translation>
     </message>
     <message>
         <source>Author</source>
-        <translation type="unfinished"></translation>
+        <translation>Autor</translation>
     </message>
     <message>
         <source>Keywords</source>
-        <translation type="unfinished"></translation>
+        <translation>Słowa kluczowe</translation>
     </message>
 </context>
 <context>
@@ -705,30 +705,31 @@
     </message>
     <message>
         <source>Elevate</source>
-        <translation>Eleveren</translation>
+        <translation>Podbij</translation>
     </message>
     <message>
         <source>Elevation detail</source>
-        <translation>Elevatiedetails</translation>
+        <translation>Szczegóły podbijania</translation>
     </message>
 </context>
 <context>
     <name>ezfind</name>
     <message>
         <source>Search took: %1 msecs, using </source>
-        <translation>Zoeken duurde %1 milliseconden met</translation>
+        <translation>Wyszukiwanie zajeło : %1 milisekund, zużywając </translation>
     </message>
     <message>
         <source>Core search time: %1 msecs</source>
-        <translation>Core zoektijd: %1 milliseconden</translation>
+        <translation>Czas wyszukiwania %1 milisekund</translation>
     </message>
     <message>
         <source>N/A</source>
-        <translation>N/B</translation>
+        <translation>Nie dotyczy</translation>
     </message>
     <message>
         <source>eZ Find 2.6 search plugin &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 3.1</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozszerzenie do wyszukiwania treści eZ Find 2.6 &amp;copy; 1999-2011 eZ Systems AS, oparte na Apache Solr 3.1</translation>
     </message>
 </context>
 </TS>
+

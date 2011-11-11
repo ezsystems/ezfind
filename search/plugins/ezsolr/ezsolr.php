@@ -312,50 +312,93 @@ class eZSolr implements ezpSearchEngine
      */
     protected function getUrlAlias( $doc )
     {
-        if ( isset( $this->postSearchProcessingData['subtree_array'] ) and !empty( $this->postSearchProcessingData['subtree_array'] ) )
-        {
-            foreach ( $this->postSearchProcessingData['subtree_array'] as $subtree )
-            {
-                foreach ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )] as $pathString )
-                {
-                    if ( substr_count( $pathString, '/' . $subtree . '/' ) > 0 )
-                    {
-                        $nodeArray = explode( '/', rtrim( $pathString, '/' ));
-                        $nodeID = array_pop( $nodeArray );
+        $node = eZContentObjectTreeNode::fetch( $this->getNodeID( $doc ) );
+        if ( $node instanceof eZContentObjectTreeNode )
+            return $node->attribute( 'url_alias' );
 
-                        if ( ( $node = eZContentObjectTreeNode::fetch( $nodeID ) ) !== null )
-                            return $node->attribute( 'url_alias' );
-                    }
-                }
-            }
-        }
         return $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' )];
     }
 
     /**
-     * Returns the relative URL Alias for a given search result,
-     * depending on whether a subtree filter was applied or not.
+     * Returns the relative NodeID for a given search result,
+     * depending on whether a subtree filter was applied or not and limitations by user policy limitations.
+     *
+     * Policy limitations (subtree/node) are aggregated by a logic OR (same for subtree filters).
+     * Subtree filters and policy limitations are aggregated together with a logic AND,
+     * so that valid locations must comply subtree filters (if any) AND subtree/node policy limitations (if any)
      *
      * @param array $doc The search result, directly received from Solr.
      * @return int The NodeID corresponding the search result
      */
     protected function getNodeID( $doc )
     {
-        if ( isset( $this->postSearchProcessingData['subtree_array'] ) and !empty( $this->postSearchProcessingData['subtree_array'] ) )
+        $docPathStrings = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )];
+        $locationFilter = isset( $this->postSearchProcessingData['subtree_array'] ) ? $this->postSearchProcessingData['subtree_array'] : array();
+        $subtreeLimitations = isset( $this->postSearchProcessingData['subtree_limitations'] ) ? $this->postSearchProcessingData['subtree_limitations'] : array();
+        $validSubtreeArray = $this->getValidPathStringsByLimitation(
+            $docPathStrings,
+            $locationFilter
+        );
+        $validSubtreeLimitations = $this->getValidPathStringsByLimitation(
+            $docPathStrings,
+            $subtreeLimitations
+        );
+
+        // Intersect between $validSubtreeArray (search location filter) and $validSubtreeLimitations (user policy limitations)
+        // indicates valid locations for $doc in current search query
+        // If this intersect is not empty, we take the first element to get the corresponding node ID
+        $validSubtrees = array_intersect( $validSubtreeArray, $validSubtreeLimitations );
+        if ( !empty( $validSubtrees ) )
         {
-            foreach ( $this->postSearchProcessingData['subtree_array'] as $subtree )
+            $validSubtree = array_shift( $validSubtrees );
+            $nodeArray = explode( '/', rtrim( $validSubtree, '/' ) );
+            return (int)array_pop( $nodeArray );
+        }
+        else
+        {
+            $contentId = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'id' )];
+            eZDebug::writeError(
+                "Could not find valid/granted locations for content #$contentId. Broken sync between eZPublish and Solr ?\n\n" .
+                "Location filter : " . print_r( $locationFilter, true ) .
+                "Subtree limitations for user : " . print_r( $subtreeLimitations, true ),
+                __METHOD__
+            );
+        }
+
+        return (int)$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )];
+    }
+
+    /**
+     * Returns entries from $pathStrings that matches $subtreeLimitations
+     *
+     * @param array $pathStrings Array of path strings (i.e. locations for a content object)
+     * @param array $subtreeLimitations Array of NodeIds that are considered valid (i.e. policy limitations or location filters)
+     * @return array
+     */
+    private function getValidPathStringsByLimitation( array $pathStrings, array $subtreeLimitations )
+    {
+        $validPathStrings = array();
+        // If $subtreeLimitations is empty, then we consider all doc path strings as potentially valid
+        if ( !empty( $subtreeLimitations ) )
+        {
+            foreach ( $subtreeLimitations as $subtree )
             {
-                foreach ( $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )] as $pathString )
+                foreach ( $pathStrings as $pathString )
                 {
-                    if ( substr_count( $pathString, '/' . $subtree . '/' ) > 0 )
+                    if ( strpos( $pathString, "/$subtree/" ) !== false )
                     {
-                        $nodeArray = explode( '/', rtrim( $pathString, '/' ));
-                        return (int) array_pop( $nodeArray );
+                        $validPathStrings[] = $pathString;
                     }
                 }
             }
+
         }
-        return (int) $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )];
+        else
+        {
+            $validPathStrings = $pathStrings;
+        }
+
+        return $validPathStrings;
     }
 
     /**
@@ -1307,7 +1350,13 @@ class eZSolr implements ezpSearchEngine
      */
     static function engineText()
     {
-        return ezpI18n::tr( 'ezfind', 'eZ Find 2.5 search plugin &copy; 1999-2011 eZ Systems AS, powered by Apache Solr 3.1' );
+        $extensionInfo = ezpExtension::getInstance( 'ezfind' )->getInfo();
+        return ezpI18n::tr(
+            'ezfind',
+            'eZ Find %version search plugin &copy; 1999-2011 eZ Systems AS, powered by Apache Solr 3.1',
+            null,
+            array( '%version' => $extensionInfo['version'] )
+        );
     }
 
     /**
@@ -1367,9 +1416,9 @@ class eZSolr implements ezpSearchEngine
 
     /**
      * Called when a node's visibility is modified.
-     * Simply re-index for now.
+     * Will re-index content identified by $nodeID.
+     * If the node has children, they will be also re-indexed, but this action is deferred to ezfindexsubtree cronjob.
      *
-     * @todo: defer to cron if there are children involved and re-index these too
      * @todo when Solr supports it: update fields only
      *
      * @param $nodeID
@@ -1379,8 +1428,19 @@ class eZSolr implements ezpSearchEngine
      */
     public function updateNodeVisibility( $nodeID, $action )
     {
-        $contentObject = eZContentObject::fetchByNodeID( $nodeID );
-        $this->addObject( $contentObject );
+        $node = eZContentObjectTreeNode::fetch( $nodeID );
+        $this->addObject( $node->attribute( 'object' ) );
+        if ( $node->childrenCount( false ) )
+        {
+            $pendingAction = new eZPendingActions(
+                array(
+                    'action' => self::PENDING_ACTION_INDEX_SUBTREE,
+                    'created' => time(),
+                    'param' => $nodeID
+                )
+            );
+            $pendingAction->store();
+        }
     }
 
     /**
@@ -1547,6 +1607,7 @@ class eZSolr implements ezpSearchEngine
     // @since ezfind 2.2, information
     public static $fieldTypeContexts = array( 'search' => 'DatatypeMap', 'facet' => 'DatatypeMapFacet', 'sort' => 'DatatypeMapSort', 'filter' => 'DatatypeMapFilter' );
 
+    const PENDING_ACTION_INDEX_SUBTREE = 'index_subtree';
 }
 
 eZSolr::$SolrDocumentFieldName = new ezfSolrDocumentFieldName();

@@ -767,7 +767,7 @@
         <translation type="obsolete">Extensió de cerca eZ Find 2.2 &amp;copy; 2009 eZ Systems AS, powered by Apache Solr 1.4</translation>
     </message>
     <message>
-        <source>eZ Find 2.3 search plugin &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 1.5-dev</source>
+        <source>eZ Find 2.6 search plugin &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 3.1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

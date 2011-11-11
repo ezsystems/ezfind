@@ -1,4 +1,6 @@
-<!DOCTYPE TS><TS>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0" language="fr_FR">
 <context>
     <name>design/admin/content/search</name>
     <message>
@@ -44,7 +46,7 @@
     </message>
     <message>
         <source>Fewer keywords result in more matches. Try reducing keywords until you get a result.</source>
-        <translation>Moins de mots-clés donnent plus de résultats. Essayez de réduire le nombre de mots clés jusqu'à obtenir un résultat.</translation>
+        <translation>Moins de mots-clés donnent plus de résultats. Essayez de réduire le nombre de mots clés jusqu&apos;à obtenir un résultat.</translation>
     </message>
     <message>
         <source>Search for &lt;%1&gt; returned %2 matches</source>
@@ -126,11 +128,11 @@
     </message>
     <message>
         <source>Fewer keywords gives more results, try reducing keywords until you get a result.</source>
-        <translation>Moins de mots clés donnent plus de résultats. Essayez de réduire le nombre de mots clés jusqu'à obtenir un résultat.</translation>
+        <translation>Moins de mots clés donnent plus de résultats. Essayez de réduire le nombre de mots clés jusqu&apos;à obtenir un résultat.</translation>
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>La recherche de "%1" retourne %2 résultat(s)</translation>
+        <translation>La recherche de &quot;%1&quot; retourne %2 résultat(s)</translation>
     </message>
 </context>
 <context>
@@ -317,7 +319,7 @@
     </message>
     <message>
         <source>Any time</source>
-        <translation>N'importe quelle date</translation>
+        <translation>N&apos;importe quelle date</translation>
     </message>
     <message>
         <source>Display per page</source>
@@ -362,6 +364,21 @@
     <message>
         <source>Name</source>
         <translation>Nom</translation>
+    </message>
+</context>
+<context>
+    <name>extension/ezfind</name>
+    <message>
+        <source>eZFind</source>
+        <translation>eZFind</translation>
+    </message>
+    <message>
+        <source>Elevation</source>
+        <translation>Élévation</translation>
+    </message>
+    <message>
+        <source>Remove Elevation</source>
+        <translation>Supprimer l&apos;élévation</translation>
     </message>
 </context>
 <context>
@@ -422,11 +439,11 @@
     </message>
     <message>
         <source>Please choose a valid object.</source>
-        <translation>Veuillez choisir un objet valide</translation>
+        <translation>Veuillez choisir un objet valide.</translation>
     </message>
     <message>
         <source>Missing language information.</source>
-        <translation>Absence du paramètre de langue</translation>
+        <translation>Absence du paramètre de langue.</translation>
     </message>
     <message>
         <source>Successful creation of the following Elevate configuration</source>
@@ -466,7 +483,7 @@
     </message>
     <message>
         <source>Search query to elevate the object for.</source>
-        <translation>Requête de recherche pour promouvoir l&apos;objet</translation>
+        <translation>Requête de recherche pour promouvoir l&apos;objet.</translation>
     </message>
     <message>
         <source>Elevate object</source>
@@ -474,7 +491,7 @@
     </message>
     <message>
         <source>Browse for the object to associate elevation to.</source>
-        <translation>Parcourir afin de trouver l&apos;objet à promouvoir</translation>
+        <translation>Parcourir afin de trouver l&apos;objet à promouvoir.</translation>
     </message>
     <message>
         <source>Elevate %objectlink with &amp;nbsp;  %searchquery &amp;nbsp;  for language:</source>
@@ -554,7 +571,7 @@
     </message>
     <message>
         <source>No existing Elevate configuration.</source>
-        <translation>Pas de promotions existantes</translation>
+        <translation>Pas de promotions existantes.</translation>
     </message>
     <message>
         <source>Content object</source>
@@ -590,7 +607,7 @@
     </message>
     <message>
         <source>Missing content object.</source>
-        <translation>Objet de contenu manquant</translation>
+        <translation>Objet de contenu manquant.</translation>
     </message>
     <message>
         <source>Elevate %objectName</source>
@@ -648,6 +665,14 @@
         <source>Cancel removal of the elevate configuration</source>
         <translation>Annuler la suppression de la promotion</translation>
     </message>
+    <message>
+        <source>Error while generating the configuration XML</source>
+        <translation>Erreur pendant la génération du XML de configuration</translation>
+    </message>
+    <message>
+        <source>An unknown error occured in updating Solr&apos;s elevate configuration.</source>
+        <translation>Une erreur inconnue est survenue dans la mise à jour de la configuration de l&apos;élevation de Solr.</translation>
+    </message>
 </context>
 <context>
     <name>extension/ezfind/facets</name>
@@ -658,6 +683,18 @@
     <message>
         <source>Clear all</source>
         <translation>Tout effacer</translation>
+    </message>
+    <message>
+        <source>Content type</source>
+        <translation>Type de contenu</translation>
+    </message>
+    <message>
+        <source>Author</source>
+        <translation>Auteur</translation>
+    </message>
+    <message>
+        <source>Keywords</source>
+        <translation>Mots-clés</translation>
     </message>
 </context>
 <context>
@@ -688,6 +725,10 @@
     <message>
         <source>N/A</source>
         <translation>N/A</translation>
+    </message>
+    <message>
+        <source>eZ Find 2.6 search plugin &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 3.1</source>
+        <translation>eZ Find 2.6 search plugin &amp;copy; 1999-2011 eZ Systems AS, propulsé par Apache Solr 3.1</translation>
     </message>
 </context>
 </TS>
