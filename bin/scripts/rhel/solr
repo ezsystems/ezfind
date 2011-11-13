@@ -43,7 +43,7 @@ d_start() {
     daemon --check $NAME --pidfile /var/run/solr.pid nohup $JAVA -jar start.jar > /dev/null 2>&1 &
     RETVAL=$?
     sleep 1 # Sleep 1 second, to make sure java is registered.
-    pid=`pidof java`
+    pid=`pidof $JAVA`
     echo $pid > /var/run/solr.pid
     cd $CURRENT_DIR
     [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$NAME
