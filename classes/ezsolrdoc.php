@@ -1,48 +1,56 @@
 <?php
-//
-// ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
-// SOFTWARE NAME: eZ Find
-// SOFTWARE RELEASE: 1.0.x
-// COPYRIGHT NOTICE: Copyright (C) 1999-2011 eZ Systems AS
-// SOFTWARE LICENSE: GNU General Public License v2.0
-// NOTICE: >
-//   This program is free software; you can redistribute it and/or
-//   modify it under the terms of version 2.0  of the GNU General
-//   Public License as published by the Free Software Foundation.
-//
-//   This program is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU General Public License for more details.
-//
-//   You should have received a copy of version 2.0 of the GNU General
-//   Public License along with this program; if not, write to the Free
-//   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-//   MA 02110-1301, USA.
-//
-//
-// ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
-//
 
-/*!
- Solr Document class. Converts an associative array to Solr acceptacle XML.
-*/
+/**
+ * @author Paul Borgermans
+ * @license GPL
+ */
+
+
+/**
+ *
+ * Solr Document class. Converts an associative array to Solr XML.
+ */
 class eZSolrDoc
 {
+    /**
+     *
+     * @var array
+     */
+    public  $Doc   = array();
+
+    /**
+     *
+     * @var numeric
+     */
+    private $DocBoost = null;
+
+    /*
+     * @var \Dom
+     */
+    private $DomDoc;
+
+    /*
+     * @var
+     */
+    private $DomRootElement;
+
+    /**
+     * The document's language code
+     * @var string
+     * @since eZ Find 2.2
+     */
+    public $LanguageCode;
+
     /**
      * @constructor
      *
      * @param int Document boost, optional
      */
-    function eZSolrDoc( $boost = false )
+    function __construct( $boost = null )
     {
-        $this->Doc = new DOMDocument( '1.0', 'utf-8' );
-        $this->RootElement = $this->Doc->createElement( 'doc' );
-        $this->Doc->appendChild( $this->RootElement );
-
-        if ( $boost && is_numeric( $boost ) )
+        if ( $boost !== null && is_numeric( $boost ))
         {
-            $this->RootElement->setAttribute( 'boost', $boost );
+            $this->docBoost = $boost;
         }
     }
 
@@ -51,11 +59,11 @@ class eZSolrDoc
      *
      * @param float Document boost
      */
-    public function setBoost ( $boost = false )
+    public function setBoost ( $boost = null )
     {
-        if ( $boost && is_numeric( $boost ) )
+        if ( $boost !== null && is_numeric( $boost ))
         {
-            $this->RootElement->setAttribute( 'boost', $boost );
+            $this->docBoost = $boost;
         }
     }
 
@@ -67,33 +75,29 @@ class eZSolrDoc
      *     if the the array has more than one element, the schema declaration must be multi-valued too
      * @param float Field boost ( optional ).
      */
-    public function addField ( $name, $content, $boost = false )
+    public function addField ( $name, $content, $boost = null )
     {
         if ( !is_array( $content ) )
         {
             $content = array( $content );
         }
-        foreach ( $content as $value )
+
+        if (array_key_exists($name, $this->Doc))
         {
-            // $value should never be array. Log the value and the stack trace.
-            if ( is_array( $value ) )
-            {
-                $backtrace = debug_backtrace();
-                $dump = array( $backtrace[0], $backtrace[1] );
-                eZDebug::writeError( 'Tried to index array value: ' . $name . "\nValue: " . var_export( $value, 1 ) .
-                                     "\nStack trace: " . var_export( $dump, 1 ) );
-                continue;
-            }
-            $fieldElement = $this->Doc->createElement( 'field' );
-            $fieldElement->appendChild( $this->Doc->createTextNode( $value ) );
-            $fieldElement->setAttribute( 'name', $name );
+            $this->Doc[$name]['content'] = array_merge($this->Doc[$name]['content'], $content);
+        }
+        else
+        {
+            $this->Doc[$name]['content'] =  $content;
+        }
+        $this->Doc[$name]['boost'] = $boost;
+    }
 
-            if ( $boost && is_numeric( $boost ) )
-            {
-                $fieldElement->setAttribute( 'boost', $boost );
-            }
-
-            $this->RootElement->appendChild( $fieldElement );
+    public function setFieldBoost ($name, $boost)
+    {
+        if ( $boost !== null && is_numeric($boost) && array_key_exists($name, $this->Doc))
+        {
+            $this->Doc[$name]['boost'] = $boost;
         }
     }
 
@@ -104,23 +108,46 @@ class eZSolrDoc
      */
     function docToXML()
     {
-        $rawXML = $this->Doc->saveXML( $this->RootElement );
-        //make sure there are no control characters left
-        return preg_replace( '@[\x00-\x08\x0B\x0C\x0E-\x1F]@', ' ', $rawXML );
+        $this->DomDoc = new DOMDocument( '1.0', 'utf-8' );
+        $this->DomRootElement = $this->DomDoc->createElement( 'doc' );
+        $this->DomDoc->appendChild( $this->DomRootElement );
+
+        if ($this->DocBoost !== null && is_numeric( $this->DocBoost ) )
+        {
+            $this->DomRootElement->setAttribute( 'boost', $this->DocBoost );
+        }
+
+        foreach ($this->Doc as $name => $field) {
+            foreach( $field['content'] as $value )
+            {
+                // $value should never be array. Log the value and the stack trace.
+                if ( is_array( $value ) )
+                {
+                    $backtrace = debug_backtrace();
+                    $dump = array( $backtrace[0], $backtrace[1] );
+                    eZDebug::writeError( 'Tried to index array value: ' . $name . "\nValue: " . var_export( $value, 1 ) .
+                                         "\nStack trace: " . var_export( $dump, 1 ) );
+                    continue;
+                }
+                $fieldElement = $this->DomDoc->createElement( 'field' );
+                $fieldElement->appendChild( $this->DomDoc->createTextNode( $value ) );
+                $fieldElement->setAttribute( 'name', $name );
+
+                if ( $field['boost'] !== null && is_numeric( $field['boost'] ) )
+                {
+                    $fieldElement->setAttribute( 'boost', $field['boost'] );
+                }
+
+                $this->DomRootElement->appendChild( $fieldElement );
+            }
+        }
+
+
+        $rawXML = $this->DomDoc->saveXML( $this->DomRootElement );
+        //make sure there are no control characters left that could currupt the XML string
+        return preg_replace('@[\x00-\x08\x0B\x0C\x0E-\x1F]@', ' ', $rawXML);
     }
 
-
-    /// Vars
-
-    var $Doc;
-    var $RootElement;
-
-    /**
-     * The document's language code
-     * @var string
-     * @since eZ Find 2.2
-     */
-    var $LanguageCode;
 }
 
 
