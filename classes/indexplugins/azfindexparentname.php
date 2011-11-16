@@ -9,7 +9,7 @@
  *
  * @author paul
  */
-class azfIndexParentName
+class azfIndexParentName implements azfIndexPlugin
 {
     /**
      * The modify method gets the current content object AND the list of

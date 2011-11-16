@@ -633,14 +633,18 @@ class eZSolr implements ezpSearchEngine
         {
             foreach ($generalPlugins as $pluginClassString) {
                 $plugin = new $pluginClassString;
-                $plugin->modify($contentObject, $docList);
+                if ($plugin instanceof azfIndexPlugin) {
+                    $plugin->modify($contentObject, $docList);
+                }
             }
         }
 
         if (array_key_exists($contentObject->attribute('class_identifier'), $classPlugins))
         {
             $plugin = new $classPlugins[$contentObject->attribute('class_identifier')];
-            $plugin->modify($contentObject, $docList);
+            if ($plugin instanceof azfIndexPlugin) {
+                    $plugin->modify($contentObject, $docList);
+            }
         }
 
         $optimize = false;
