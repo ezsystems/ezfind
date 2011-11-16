@@ -626,6 +626,23 @@ class eZSolr implements ezpSearchEngine
             $docList[$languageCode] = $doc;
         }
 
+        // Since eZFindCE 3.4: indexhooks
+        $generalPlugins = $this->FindINI->variable( 'IndexPlugins', 'General' );
+        $classPlugins   = $this->FindINI->variable( 'IndexPlugins', 'Class' );
+        if (!empty($generalPlugins))
+        {
+            foreach ($generalPlugins as $pluginClassString) {
+                $plugin = new $pluginClassString;
+                $plugin->modify($contentObject, $docList);
+            }
+        }
+
+        if (array_key_exists($contentObject->attribute('class_identifier'), $classPlugins))
+        {
+            $plugin = new $classPlugins[$contentObject->attribute('class_identifier')];
+            $plugin->modify($contentObject, $docList);
+        }
+
         $optimize = false;
         if ( $this->FindINI->variable( 'IndexOptions', 'DisableDirectCommits' ) === 'true' )
         {
