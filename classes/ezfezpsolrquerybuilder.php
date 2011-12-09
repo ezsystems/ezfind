@@ -982,7 +982,7 @@ class ezfeZPSolrQueryBuilder
                     $baseNameInfo = eZSolr::getFieldName( $baseName, true, 'filter' );
                     if ( is_array( $baseNameInfo ) and isset( $baseNameInfo['contentClassId'] ) )
                     {
-                        $filterQueryList[] = '( ' . eZSolr::getMetaFieldName( 'contentclass_id' ) . ':' . $baseNameInfo['contentClassId'] . ' AND ' . $baseNameInfo['fieldName'] . ':' . $value . ' )' ;
+                        $filterQueryList[] = '( ' . eZSolr::getMetaFieldName( 'contentclass_id' ) . ':' . $baseNameInfo['contentClassId'] . ' AND ' . $baseNameInfo['fieldName'] . ':' . $this->escapeQuery( $value ) . ' )' ;
                     }
                     else
                     {
