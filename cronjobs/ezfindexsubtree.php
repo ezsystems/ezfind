@@ -56,7 +56,8 @@ if ( !empty( $entries ) )
                 array(
                     'IgnoreVisibility' => true,
                     'Offset' => $offset,
-                    'Limit' => $limit
+                    'Limit' => $limit,
+                    'Limitation' => array(),
                 ),
                 $parentNodeID
             );
