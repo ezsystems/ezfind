@@ -1472,8 +1472,7 @@ class eZSolr implements ezpSearchEngine
      */
     public function addNodeAssignment( $mainNodeID, $objectID, $nodeAssignmentIDList )
     {
-        $contentObject = eZContentObject::fetch( $objectID );
-        $this->addObject( $contentObject );
+        eZContentOperationCollection::registerSearchObject( $objectID );
     }
 
     /**
