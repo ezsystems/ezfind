@@ -1473,8 +1473,7 @@ class eZSolr
      */
     public function addNodeAssignment( $mainNodeID, $objectID, $nodeAssignmentIDList )
     {
-        $contentObject = eZContentObject::fetch( $objectID );
-        $this->addObject( $contentObject );
+        eZContentOperationCollection::registerSearchObject( $objectID );
     }
 
     /**
