@@ -960,6 +960,7 @@ class eZSolr implements ezpSearchEngine
                     // This can happen if a content has been deleted while Solr was not running, provoking desynchronization
                     if ( !isset( $nodeRowList[$nodeID] ) )
                     {
+                        $searchCount--;
                         eZDebug::writeError( "Node #{$nodeID} (/{$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' )]}) returned by Solr cannot be found in the database. Please consider reindexing your content", __METHOD__ );
                         continue;
                     }
