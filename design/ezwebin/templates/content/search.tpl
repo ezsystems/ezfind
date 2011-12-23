@@ -66,8 +66,8 @@
     {set $uriSuffix = concat( $uriSuffix, '&dateFilter=', $dateFilter )}
 {/if}
 
-<script language="JavaScript" type="text/javascript">
-<!--{literal}
+<script type="text/javascript">
+{literal}
     // toggle block
     function ezfToggleBlock( id )
     {
@@ -119,7 +119,8 @@
 
         document.cookie = cookieName + "=" + value + "; expires=" + expires + ";";
     }
-{/literal}--></script>
+{/literal}
+</script>
 
 <div class="border-box">
 <div class="border-tl"><div class="border-tr"><div class="border-tc"></div></div></div>
@@ -317,7 +318,7 @@
 </div>
 
 
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 jQuery('#ezautocompletecontainer').css('width', jQuery('input#Search').width());
 var ezAutoHeader = eZAJAXAutoComplete();
 ezAutoHeader.init({ldelim}
@@ -330,7 +331,8 @@ ezAutoHeader.init({ldelim}
 
 {rdelim});
 
-<!--{literal}
+{literal}
 ezfSetBlock( 'ezfFacets', ezfGetCookie( 'ezfFacets' ) );
 ezfSetBlock( 'ezfHelp', ezfGetCookie( 'ezfHelp' ) );
-{/literal}--></script>
+{/literal}
+</script>
