@@ -22,7 +22,6 @@
 
 {ezscript_require( array('ezjsc::jquery', 'ezjsc::yui2', 'ezajax_autocomplete.js') )}
 <script type="text/javascript">
-
 jQuery('#ezautocompletecontainer').css('width', jQuery('input#searchtext').width() + 60);
 
 var ezAutoHeader = eZAJAXAutoComplete();
