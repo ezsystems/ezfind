@@ -43,7 +43,6 @@ ezAutoHeader.init({ldelim}
 
 {rdelim});
 
-<!--
 {literal}
 (function($) {
 	if ( document.getElementById('searchbuttonfield') ) {
@@ -57,6 +56,5 @@ ezAutoHeader.init({ldelim}
     }
 })( jQuery );
 {/literal}
-// -->
 </script>
 {undef $search_node_id}
