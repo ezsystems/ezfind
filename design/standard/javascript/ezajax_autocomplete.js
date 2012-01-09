@@ -1,53 +1,38 @@
 /**
- * Using YUI AutocomComplete to provide suggested terms from ezFind
+ * Using YUI AutoComplete to provide suggested terms from eZ Find
  */
-var eZAJAXAutoComplete = function() {
 
-    var _cfg = {};
+/**
+ * Constructor for the AJAX based autocomplete component
+ *
+ * @param conf Component configuration object
+ * @param Y YUI global object
+ */
+function eZAJAXAutoComplete( conf, Y ) {
+    this.conf = conf;
+    this.Y = Y;
 
-    /**
-     * Initializes the widget
-     *
-     * @private
-     */
-    var initAutosuggest = function() {
-        var dsJSON = new YAHOO.util.DataSource(_cfg.url);
-        dsJSON.responseType = YAHOO.util.DataSource.TYPE_JSON;
-        dsJSON.connXhrMode = "cancelStaleRequests";
-        dsJSON.responseSchema = {
-                resultsList: "content",
-                fields: ["facet", "count"],
-                metaFields: { errorMessage: "error_text" }
+    this.init();
+}
+
+/**
+ * Initializes YUI2 DataSource and AutoComplete components
+ */
+eZAJAXAutoComplete.prototype.init = function() {
+        var YAHOO = this.Y.YUI2;
+        var that = this;
+
+        var datasource = new YAHOO.util.DataSource( this.conf.url, { responseType: YAHOO.util.DataSource.TYPE_JSON,
+                                                                     connXhrMode: "cancelStaleRequests",
+                                                                     responseSchema: { resultsList: "content",
+                                                                                       fields: ["facet", "count"],
+                                                                                       metaFields: { errorMessage: "error_text" } } } );
+
+        var autocomplete = new YAHOO.widget.AutoComplete( this.conf.inputid, this.conf.containerid, datasource );
+        autocomplete.useShadow = true;
+        autocomplete.minQueryLength = this.conf.minquerylength;
+        autocomplete.allowBrowserAutocomplete = false;
+        autocomplete.generateRequest = function(q) {
+            return "::" + q + "::" + that.conf.resultlimit + "?ContentType=json";
         };
-
-        var autoComplete = new YAHOO.widget.AutoComplete(_cfg.inputid, _cfg.containerid, dsJSON);
-        autoComplete.useShadow = true;
-        autoComplete.minQueryLength = _cfg.minquerylength;
-        autoComplete.allowBrowserAutocomplete = false;
-        autoComplete.generateRequest = function(q) {
-            return "::" + q + "::" + _cfg.resultlimit + "?ContentType=json";
-        };
-    }
-
-    return {
-        /**
-         * The initialization of the module
-         *
-         * @param {Array}
-         *            url,
-         *            inputid,
-         *            containerid,
-         *            minQueryLength,
-         *            resultlimit
-         */
-        init : function(configuration) {
-            _cfg = configuration;
-            var loader = new YAHOO.util.YUILoader(YUI2_config);
-            loader.require(['connection', 'autocomplete']);
-            loader.onSuccess = function() {
-                initAutosuggest();
-            };
-            loader.insert({}, 'js' );
-        }
-    }
-};
+}
