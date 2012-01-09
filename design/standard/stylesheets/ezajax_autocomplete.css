@@ -36,7 +36,7 @@ div#ezautocomplete .yui-ac-content {
     overflow:auto;
     overflow-y:hidden;
     z-index: 9050;
-    ^padding-bottom: 15px;
+    padding-bottom: 15px;
 }
 
 div#ezautocomplete .yui-ac-shadow {
