@@ -20,18 +20,16 @@
 
 {if $pagedata.is_edit|not()}
 
-{ezscript_require( array('ezjsc::jquery', 'ezjsc::yui3', 'ezajax_autocomplete.js') )}
+{ezscript_require( array('ezjsc::jquery', 'ezjsc::yui2', 'ezajax_autocomplete.js') )}
 <script type="text/javascript">
 jQuery('#header-autocomplete-rs').css('width', jQuery('input#searchtext').width() + 60);
-YUI(YUI3_config).use( 'yui2-connection', 'yui2-autocomplete', function( Y ) {ldelim}
-    var autocomplete = new eZAJAXAutoComplete({ldelim}
-        url: '{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}',
-        inputid: 'searchtext',
-        containerid: 'header-autocomplete-rs',
-        minquerylength: {ezini( 'AutoCompleteSettings', 'MinQueryLength', 'ezfind.ini' )},
-        resultlimit: {ezini( 'AutoCompleteSettings', 'Limit', 'ezfind.ini' )}
-    {rdelim}, Y);
-{rdelim} );
+var autocomplete = new eZAJAXAutoComplete({ldelim}
+    url: '{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}',
+    inputid: 'searchtext',
+    containerid: 'header-autocomplete-rs',
+    minquerylength: {ezini( 'AutoCompleteSettings', 'MinQueryLength', 'ezfind.ini' )},
+    resultlimit: {ezini( 'AutoCompleteSettings', 'Limit', 'ezfind.ini' )}
+{rdelim});
 </script>
 
 {/if}
