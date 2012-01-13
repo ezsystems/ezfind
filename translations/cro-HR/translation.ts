@@ -307,11 +307,11 @@
     </message>
     <message>
         <source>Last week</source>
-        <translation>Prošli tjedan</translation>
+        <translation>Zadnjih tjedan dana</translation>
     </message>
     <message>
         <source>Last month</source>
-        <translation>Prošli mjesec</translation>
+        <translation>Zadnjih mjesec dana</translation>
     </message>
     <message>
         <source>Last three months</source>
@@ -319,7 +319,7 @@
     </message>
     <message>
         <source>Last year</source>
-        <translation>Prošle godine</translation>
+        <translation>Zadnjih godinu dana</translation>
     </message>
     <message>
         <source>Display per page</source>
