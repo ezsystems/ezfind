@@ -377,12 +377,16 @@ class eZSolr implements ezpSearchEngine
         else
         {
             $contentId = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'id' )];
-            eZDebug::writeError(
-                "Could not find valid/granted locations for content #$contentId. Broken sync between eZPublish and Solr ?\n\n" .
-                "Location filter : " . print_r( $locationFilter, true ) .
-                "Subtree limitations for user : " . print_r( $subtreeLimitations, true ),
-                __METHOD__
-            );
+            $content = eZContentObject::fetch( $contentId );
+            if ( $content instanceof eZContentObject && !$content->canRead() )
+            {
+                eZDebug::writeError(
+                    "Could not find valid/granted locations for content #$contentId. Broken sync between eZPublish and Solr ?\n\n" .
+                    "Location filter : " . print_r( $locationFilter, true ) .
+                    "Subtree limitations for user : " . print_r( $subtreeLimitations, true ),
+                    __METHOD__
+                );
+            }
         }
 
         return (int)$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )];
