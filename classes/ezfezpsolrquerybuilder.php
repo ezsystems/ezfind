@@ -1258,17 +1258,20 @@ class ezfeZPSolrQueryBuilder
             {
                 foreach ( $queryPart as $key => $value )
                 {
-                    /*if ( !empty( $queryParamList['facet.' . $key] ) and
-                         isset( $queryPart['field'] ) )
+                    if (
+                        $key !== 'field'
+                        && !empty( $queryParamList['facet.' . $key] )
+                        && isset( $queryPart['field'] )
+                       )
                     {
                         // local override for one given facet
                         $queryParamList['f.' . $queryPart['field'] . '.facet.' . $key][] = $value;
                     }
                     else
-                    {*/
+                    {
                         // global value
                         $queryParamList['facet.' . $key][] = $value;
-                    /*}*/
+                    }
                 }
             }
         }
