@@ -208,9 +208,9 @@
                   {foreach $facetData.nameList as $key2 => $facetName}
                       {if eq( $activeFacetParameters[concat( $defaultFacet['field'], ':', $defaultFacet['name'] )], $facetName )}
                           {set $activeFacetsCount=sum( $key, 1 )}
-                          {def $suffix=$uriSuffix|explode( concat( '&filter[]=', $facetData.queryLimit[$key2]|wash ) )|implode( '' )|explode( concat( '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName ) )|implode( '' )}
+                          {def $suffix=$uriSuffix|explode( concat( '&filter[]=', $facetData.queryLimit[$key2] ) )|implode( '' )|explode( concat( '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName ) )|implode( '' )}
                           <li>
-                              <a href={concat( $baseURI, $suffix )|ezurl}>[x]</a> <strong>{$defaultFacet['name']}</strong>: {$facetName}
+                              <a href={concat( $baseURI, $suffix )|ezurl}>[x]</a> <strong>{$defaultFacet['name']}</strong>: {$facetName|trim('"')|wash}
                           </li>
                       {/if}
                   {/foreach}
@@ -244,8 +244,12 @@
                     {foreach $facetData.nameList as $key2 => $facetName}
                         {if ne( $key2, '' )}
                         <li>
-                            <a href={concat( $baseURI, '&filter[]=', $facetData.queryLimit[$key2]|urlencode, '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName, $uriSuffix )|ezurl}>
-                            {$facetName}</a> ({$facetData.countList[$key2]})
+                            <a href={concat(
+                                $baseURI, '&filter[]=', $facetData.queryLimit[$key2]|rawurlencode,
+                                '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=',
+                                $facetName|rawurlencode,
+                                $uriSuffix )|ezurl}>
+                            {$facetName|trim('"')|wash}</a> ({$facetData.countList[$key2]})
                         </li>
                         {/if}
                     {/foreach}

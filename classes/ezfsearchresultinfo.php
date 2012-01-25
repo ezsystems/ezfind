@@ -242,8 +242,8 @@ class ezfSearchResultInfo
                                                 'countList' => array() );
                             foreach ( $facetField as $value => $count )
                             {
-                                $fieldInfo['nameList'][$value] = $value;
-                                $fieldInfo['queryLimit'][$value] = $field . ':' . $value;
+                                $fieldInfo['nameList'][$value] = '"' . $value . '"';
+                                $fieldInfo['queryLimit'][$value] = $field . ':"' . $value . '"';
                                 $fieldInfo['countList'][$value] = $count;
                             }
                             $facetArray[] = $fieldInfo;
