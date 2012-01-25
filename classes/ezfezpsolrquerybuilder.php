@@ -986,7 +986,7 @@ class ezfeZPSolrQueryBuilder
                     }
                     else
                     {
-                        $filterQueryList[] = $baseNameInfo . ':' . $this->escapeQuery( $value );
+                        $filterQueryList[] = $baseNameInfo . ':' . $this->escapeQuery( $value, true );
                     }
                 }
             }
@@ -1733,15 +1733,26 @@ class ezfeZPSolrQueryBuilder
     }
 
     /**
-     * Espaces special chars in $query so that they can be handled as part of it by Solr
+     * Escapes special chars in $query so that they can be handled as part of it by Solr
      *
      * @param string $query
+     * @param boolean $leaveEdgeQuotes whether to escape the enclosing quotes
      * @return string
      * @see http://wiki.apache.org/solr/SolrQuerySyntax#Special_Characters_in_SOLR
      */
-    private function escapeQuery( $query )
+    private function escapeQuery( $query, $leaveEdgeQuotes = false )
     {
-        return addcslashes( $query, self::CHARS_TO_ESCAPE );
+        if ( $leaveEdgeQuotes && $query[0] === '"' && $query[strlen( $query ) -1] === '"' )
+        {
+            return '"' . addcslashes(
+                substr( $query, 1, -1 ),
+                self::CHARS_TO_ESCAPE
+            ) . '"';
+        }
+        else
+        {
+            return addcslashes( $query, self::CHARS_TO_ESCAPE );
+        }
     }
 
     /// Vars
