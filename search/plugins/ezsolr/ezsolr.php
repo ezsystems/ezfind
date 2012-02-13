@@ -937,14 +937,13 @@ class eZSolr implements ezpSearchEngine
                     foreach ( $doc as $fieldName => $fieldValue )
                     {
                         list( $prefix, $rest ) = explode( '_', $fieldName, 2 );
-                        if ( $prefix === 'meta' )
+                        if ( $prefix === 'as' )
                         {
-                            $emit[$rest] = $fieldValue;
-                        }
-                        elseif ( $prefix === 'as' )
-                        {
-
                             $emit['data_map'][substr( $rest,0, -4 )] = ezfSolrStorage::unserializeData( $fieldValue );
+                        }
+                        else
+                        {
+                            $emit[$fieldName] = $fieldValue;
                         }
 
                     }
