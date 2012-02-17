@@ -203,11 +203,11 @@ class eZSolr implements ezpSearchEngine
             {
                 if ( count( $fieldDef ) == 1 )
                 {
-                    $contectClassAttributeID = $fieldDef[0];
+                    $contentClassAttributeID = $fieldDef[0];
                 }
                 else if ( count( $fieldDef ) == 2 )
                 {
-                    list( $contectClassAttributeID, $subattribute ) = $fieldDef;
+                    list( $contentClassAttributeID, $subattribute ) = $fieldDef;
                 }
             }
             else
@@ -232,20 +232,20 @@ class eZSolr implements ezpSearchEngine
                         list( $classIdentifier, $attributeIdentifier, $subattribute ) = $fieldDef;
                     } break;
                 }
-                $contectClassAttributeID = eZContentObjectTreeNode::classAttributeIDByIdentifier( $classIdentifier . '/' . $attributeIdentifier );
+                $contentClassAttributeID = eZContentObjectTreeNode::classAttributeIDByIdentifier( $classIdentifier . '/' . $attributeIdentifier );
             }
-            if ( !$contectClassAttributeID )
+            if ( !$contentClassAttributeID )
             {
                 eZDebug::writeNotice( 'Could not get content class from base name: ' . $baseName, __METHOD__ );
                 return null;
             }
-            $contectClassAttribute = eZContentClassAttribute::fetch( $contectClassAttributeID );
-            $fieldName = ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $subattribute, $context );
+            $contentClassAttribute = eZContentClassAttribute::fetch( $contentClassAttributeID );
+            $fieldName = ezfSolrDocumentFieldBase::getFieldName( $contentClassAttribute, $subattribute, $context );
 
             if ( $includingClassID )
             {
                 return array( 'fieldName'      => $fieldName,
-                              'contentClassId' => $contectClassAttribute->attribute( 'contentclass_id' ) );
+                              'contentClassId' => $contentClassAttribute->attribute( 'contentclass_id' ) );
             }
             else
                 return $fieldName;
