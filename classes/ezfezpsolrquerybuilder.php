@@ -157,7 +157,10 @@ class ezfeZPSolrQueryBuilder
         // eZFInd 2.3: check ini setting and take it as a default instead of false
         $visibilityDefaultSetting = self::$SiteINI->variable( 'SiteAccessSettings', 'ShowHiddenNodes' );
         $visibilityDefault = ( $visibilityDefaultSetting === 'true' ) ? true : false;
+        eZDebug::writeDebug( intval( $visibilityDefault ), 'visibilityDefault' );
+        //eZDebug::writeDebug( $params['IgnoreVisibility'], 'params[IgnoreVisibility]' );
         $ignoreVisibility = isset( $params['IgnoreVisibility'] )  ?  $params['IgnoreVisibility'] : $visibilityDefault;
+        eZDebug::writeDebug( intval( $ignoreVisibility ), 'ignoreVisibility' );
         $limitation = isset( $params['Limitation'] )  ?  $params['Limitation'] : null;
         $boostFunctions = isset( $params['BoostFunctions'] )  ?  $params['BoostFunctions'] : null;
         $forceElevation = isset( $params['ForceElevation'] )  ?  $params['ForceElevation'] : false;
@@ -1621,11 +1624,13 @@ class ezfeZPSolrQueryBuilder
         }
 
         // Add visibility condition
-        if ( !eZContentObjectTreeNode::showInvisibleNodes() || !$ignoreVisibility )
+        if ( !$ignoreVisibility )
         {
             $filterQuery .= ' AND ' . eZSolr::getMetaFieldName( 'is_invisible' ) . ':false';
         }
 
+        eZDebug::writeDebug( intval( eZContentObjectTreeNode::showInvisibleNodes() ), 'show invisible nodes' );
+        eZDebug::writeDebug( intval( $ignoreVisibility ), 'ignore visibility' );
         eZDebug::writeDebug( $filterQuery, __METHOD__ );
 
         return $filterQuery;
