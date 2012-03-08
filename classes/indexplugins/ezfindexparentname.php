@@ -5,11 +5,11 @@
  */
 
 /**
- * Description of azfindexparentname
+ * Description of ezfindexparentname
  *
  * @author paul
  */
-class azfIndexParentName implements azfIndexPlugin
+class ezfIndexParentName implements ezfIndexPlugin
 {
     /**
      * The modify method gets the current content object AND the list of

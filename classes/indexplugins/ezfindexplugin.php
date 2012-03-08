@@ -1,17 +1,17 @@
 <?php
 
 /**
- * File containing Index PLugin Interface
+ * File containing Index Plugin Interface
  */
 
 /**
- * Description of azfIndexPlugin.
+ * Description of ezfIndexPlugin.
  * Interface that Index PLugins should implement.
  * The plugin code checks for the correct implementation.
  *
  * @author paul
  */
-interface azfIndexPlugin
+interface ezfIndexPlugin
 {
     /**
      * @var eZContentObject $contentObject

@@ -626,14 +626,14 @@ class eZSolr implements ezpSearchEngine
             $docList[$languageCode] = $doc;
         }
 
-        // Since eZFindCE 3.4: indexhooks
+        // Since eZFind 2.7: indexhooks
         $generalPlugins = $this->FindINI->variable( 'IndexPlugins', 'General' );
         $classPlugins   = $this->FindINI->variable( 'IndexPlugins', 'Class' );
         if (!empty($generalPlugins))
         {
             foreach ($generalPlugins as $pluginClassString) {
                 $plugin = new $pluginClassString;
-                if ($plugin instanceof azfIndexPlugin) {
+                if ($plugin instanceof ezfIndexPlugin) {
                     $plugin->modify($contentObject, $docList);
                 }
             }
@@ -642,7 +642,7 @@ class eZSolr implements ezpSearchEngine
         if (array_key_exists($contentObject->attribute('class_identifier'), $classPlugins))
         {
             $plugin = new $classPlugins[$contentObject->attribute('class_identifier')];
-            if ($plugin instanceof azfIndexPlugin) {
+            if ($plugin instanceof ezfIndexPlugin) {
                     $plugin->modify($contentObject, $docList);
             }
         }
