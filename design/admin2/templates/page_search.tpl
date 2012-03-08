@@ -15,7 +15,7 @@
             <input id="searchtext" name="SearchText" type="text" size="20" value="{if is_set( $search_text )}{$search_text|wash}{/if}" title="{$search_title|wash}" />
             <input type="hidden" name="SubTreeArray" value="{$search_node_id}" />
             <input id="searchbutton" class="button hide" name="SearchButton" type="submit" value="{'Search'|i18n( 'design/admin/pagelayout' )}" />
-            <div id="ezautocompletecontainer"></div>
+            <div id="header-autocomplete-rs"></div>
         {if eq( $ui_context, 'browse' ) }
             <input name="Mode" type="hidden" value="browse" />
             <input name="BrowsePageLimit" type="hidden" value="{min( ezpreference( 'admin_list_limit' ), 3)|choose( 10, 10, 25, 50 )}" />
@@ -31,19 +31,15 @@
 
 {ezscript_require( array('ezjsc::jquery', 'ezjsc::yui2', 'ezajax_autocomplete.js') )}
 <script type="text/javascript">
-jQuery('#ezautocompletecontainer').css('width', jQuery('input#searchtext').width() + 25);
-var ezAutoHeader = eZAJAXAutoComplete();
-ezAutoHeader.init({ldelim}
-
-    url: "{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}",
+jQuery('#header-autocomplete-rs').css('width', jQuery('input#searchtext').width() + 25);
+var autocomplete = new eZAJAXAutoComplete({ldelim}
+    url: '{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}',
     inputid: 'searchtext',
-    containerid: 'ezautocompletecontainer',
+    containerid: 'header-autocomplete-rs',
     minquerylength: {ezini( 'AutoCompleteSettings', 'MinQueryLength', 'ezfind.ini' )},
     resultlimit: {ezini( 'AutoCompleteSettings', 'Limit', 'ezfind.ini' )}
-
 {rdelim});
 
-<!--
 {literal}
 (function($) {
 	if ( document.getElementById('searchbuttonfield') ) {
@@ -57,6 +53,5 @@ ezAutoHeader.init({ldelim}
     }
 })( jQuery );
 {/literal}
-// -->
 </script>
 {undef $search_node_id}

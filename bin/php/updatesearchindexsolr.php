@@ -195,6 +195,7 @@ class ezfUpdateSearchIndexSolr
                 array(
                     'Offset' => $offset,
                     'Limit' => $limit,
+                    'SortBy' => array(),
                     'Limitation' => array(),
                     'MainNodeOnly' => true
                 )

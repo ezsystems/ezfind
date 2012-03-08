@@ -203,11 +203,11 @@ class eZSolr implements ezpSearchEngine
             {
                 if ( count( $fieldDef ) == 1 )
                 {
-                    $contectClassAttributeID = $fieldDef[0];
+                    $contentClassAttributeID = $fieldDef[0];
                 }
                 else if ( count( $fieldDef ) == 2 )
                 {
-                    list( $contectClassAttributeID, $subattribute ) = $fieldDef;
+                    list( $contentClassAttributeID, $subattribute ) = $fieldDef;
                 }
             }
             else
@@ -232,20 +232,20 @@ class eZSolr implements ezpSearchEngine
                         list( $classIdentifier, $attributeIdentifier, $subattribute ) = $fieldDef;
                     } break;
                 }
-                $contectClassAttributeID = eZContentObjectTreeNode::classAttributeIDByIdentifier( $classIdentifier . '/' . $attributeIdentifier );
+                $contentClassAttributeID = eZContentObjectTreeNode::classAttributeIDByIdentifier( $classIdentifier . '/' . $attributeIdentifier );
             }
-            if ( !$contectClassAttributeID )
+            if ( !$contentClassAttributeID )
             {
                 eZDebug::writeNotice( 'Could not get content class from base name: ' . $baseName, __METHOD__ );
                 return null;
             }
-            $contectClassAttribute = eZContentClassAttribute::fetch( $contectClassAttributeID );
-            $fieldName = ezfSolrDocumentFieldBase::getFieldName( $contectClassAttribute, $subattribute, $context );
+            $contentClassAttribute = eZContentClassAttribute::fetch( $contentClassAttributeID );
+            $fieldName = ezfSolrDocumentFieldBase::getFieldName( $contentClassAttribute, $subattribute, $context );
 
             if ( $includingClassID )
             {
                 return array( 'fieldName'      => $fieldName,
-                              'contentClassId' => $contectClassAttribute->attribute( 'contentclass_id' ) );
+                              'contentClassId' => $contentClassAttribute->attribute( 'contentclass_id' ) );
             }
             else
                 return $fieldName;
@@ -357,12 +357,16 @@ class eZSolr implements ezpSearchEngine
         else
         {
             $contentId = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'id' )];
-            eZDebug::writeError(
-                "Could not find valid/granted locations for content #$contentId. Broken sync between eZPublish and Solr ?\n\n" .
-                "Location filter : " . print_r( $locationFilter, true ) .
-                "Subtree limitations for user : " . print_r( $subtreeLimitations, true ),
-                __METHOD__
-            );
+            $content = eZContentObject::fetch( $contentId );
+            if ( $content instanceof eZContentObject && !$content->canRead() )
+            {
+                eZDebug::writeError(
+                    "Could not find valid/granted locations for content #$contentId. Broken sync between eZPublish and Solr ?\n\n" .
+                    "Location filter : " . print_r( $locationFilter, true ) .
+                    "Subtree limitations for user : " . print_r( $subtreeLimitations, true ),
+                    __METHOD__
+                );
+            }
         }
 
         return (int)$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_node_id' )];
@@ -960,6 +964,7 @@ class eZSolr implements ezpSearchEngine
                     // This can happen if a content has been deleted while Solr was not running, provoking desynchronization
                     if ( !isset( $nodeRowList[$nodeID] ) )
                     {
+                        $searchCount--;
                         eZDebug::writeError( "Node #{$nodeID} (/{$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' )]}) returned by Solr cannot be found in the database. Please consider reindexing your content", __METHOD__ );
                         continue;
                     }
@@ -1458,8 +1463,7 @@ class eZSolr implements ezpSearchEngine
      */
     public function addNodeAssignment( $mainNodeID, $objectID, $nodeAssignmentIDList )
     {
-        $contentObject = eZContentObject::fetch( $objectID );
-        $this->addObject( $contentObject );
+        eZContentOperationCollection::registerSearchObject( $objectID );
     }
 
     /**

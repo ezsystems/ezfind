@@ -157,7 +157,10 @@ class ezfeZPSolrQueryBuilder
         // eZFInd 2.3: check ini setting and take it as a default instead of false
         $visibilityDefaultSetting = self::$SiteINI->variable( 'SiteAccessSettings', 'ShowHiddenNodes' );
         $visibilityDefault = ( $visibilityDefaultSetting === 'true' ) ? true : false;
+        eZDebug::writeDebug( intval( $visibilityDefault ), 'visibilityDefault' );
+        //eZDebug::writeDebug( $params['IgnoreVisibility'], 'params[IgnoreVisibility]' );
         $ignoreVisibility = isset( $params['IgnoreVisibility'] )  ?  $params['IgnoreVisibility'] : $visibilityDefault;
+        eZDebug::writeDebug( intval( $ignoreVisibility ), 'ignoreVisibility' );
         $limitation = isset( $params['Limitation'] )  ?  $params['Limitation'] : null;
         $boostFunctions = isset( $params['BoostFunctions'] )  ?  $params['BoostFunctions'] : null;
         $forceElevation = isset( $params['ForceElevation'] )  ?  $params['ForceElevation'] : false;
@@ -986,7 +989,7 @@ class ezfeZPSolrQueryBuilder
                     }
                     else
                     {
-                        $filterQueryList[] = $baseNameInfo . ':' . $this->escapeQuery( $value );
+                        $filterQueryList[] = $baseNameInfo . ':' . $this->escapeQuery( $value, true );
                     }
                 }
             }
@@ -1258,17 +1261,20 @@ class ezfeZPSolrQueryBuilder
             {
                 foreach ( $queryPart as $key => $value )
                 {
-                    /*if ( !empty( $queryParamList['facet.' . $key] ) and
-                         isset( $queryPart['field'] ) )
+                    if (
+                        $key !== 'field'
+                        && !empty( $queryParamList['facet.' . $key] )
+                        && isset( $queryPart['field'] )
+                       )
                     {
                         // local override for one given facet
                         $queryParamList['f.' . $queryPart['field'] . '.facet.' . $key][] = $value;
                     }
                     else
-                    {*/
+                    {
                         // global value
                         $queryParamList['facet.' . $key][] = $value;
-                    /*}*/
+                    }
                 }
             }
         }
@@ -1618,11 +1624,13 @@ class ezfeZPSolrQueryBuilder
         }
 
         // Add visibility condition
-        if ( !eZContentObjectTreeNode::showInvisibleNodes() || !$ignoreVisibility )
+        if ( !$ignoreVisibility )
         {
             $filterQuery .= ' AND ' . eZSolr::getMetaFieldName( 'is_invisible' ) . ':false';
         }
 
+        eZDebug::writeDebug( intval( eZContentObjectTreeNode::showInvisibleNodes() ), 'show invisible nodes' );
+        eZDebug::writeDebug( intval( $ignoreVisibility ), 'ignore visibility' );
         eZDebug::writeDebug( $filterQuery, __METHOD__ );
 
         return $filterQuery;
@@ -1730,15 +1738,26 @@ class ezfeZPSolrQueryBuilder
     }
 
     /**
-     * Espaces special chars in $query so that they can be handled as part of it by Solr
+     * Escapes special chars in $query so that they can be handled as part of it by Solr
      *
      * @param string $query
+     * @param boolean $leaveEdgeQuotes whether to escape the enclosing quotes
      * @return string
      * @see http://wiki.apache.org/solr/SolrQuerySyntax#Special_Characters_in_SOLR
      */
-    private function escapeQuery( $query )
+    private function escapeQuery( $query, $leaveEdgeQuotes = false )
     {
-        return addcslashes( $query, self::CHARS_TO_ESCAPE );
+        if ( $leaveEdgeQuotes && $query[0] === '"' && $query[strlen( $query ) -1] === '"' )
+        {
+            return '"' . addcslashes(
+                substr( $query, 1, -1 ),
+                self::CHARS_TO_ESCAPE
+            ) . '"';
+        }
+        else
+        {
+            return addcslashes( $query, self::CHARS_TO_ESCAPE );
+        }
     }
 
     /// Vars
