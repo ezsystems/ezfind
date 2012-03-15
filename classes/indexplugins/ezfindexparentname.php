@@ -2,6 +2,11 @@
 
 /*
  * File containing example index plugin class
+ *
+ * @copyright Copyright (C) 2012 eZ Systems AS. All rights reserved.
+ * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
+ * @version //autogentag//
+ * @package ezfind
  */
 
 /**
@@ -19,16 +24,20 @@ class ezfIndexParentName implements ezfIndexPlugin
      * @param eZContentObject $contentObect
      * @param array $docList
      */
-    public function modify(eZContentObject $contentObect, &$docList)
+    public function modify( eZContentObject $contentObject, &$docList )
     {
-        $contentNode = $contentObect->attribute('main_node');
-        $parentNode = $contentNode->attribute('parent');
-        if ($parentNode instanceof eZContentObjectTreeNode)
+        $contentNode = $contentObject->attribute( 'main_node' );
+        $parentNode = $contentNode->attribute( 'parent' );
+        if ( $parentNode instanceof eZContentObjectTreeNode )
         {
-            $parentObject       = $parentNode->attribute('object');
+            $parentObject       = $parentNode->attribute( 'object' );
             $parentVersion      = $parentObject->currentVersion();
+            if( $parentVersion === false )
+            {
+                return;
+            }
             $availableLanguages = $parentVersion->translationList( false, false );
-            foreach ($availableLanguages as $languageCode)
+            foreach ( $availableLanguages as $languageCode )
             {
                 $docList[$languageCode]->addField('extra_parent_node_name_t', $parentObject->name( false, $languageCode ) );
             }
