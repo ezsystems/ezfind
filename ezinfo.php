@@ -45,7 +45,7 @@ class eZFindInfo
             'License' => "GNU General Public License v2.0",
             '3rdparty_software' =>
                             array ( 'name' => 'Solr',
-                                    'Version' => '3.1',
+                                    'Version' => '3.5',
                                     'copyright' => 'The Apache Software Foundation.',
                                     'license' => 'Apache License, Version 2.0',
                                     'info_url' => 'http://lucene.apache.org/solr/' ) );
