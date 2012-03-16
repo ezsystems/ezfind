@@ -10,9 +10,8 @@
  */
 
 /**
- * Description of ezfindexparentname
+ * This class adds the name of the parent of the main node as de dedicated field.
  *
- * @author paul
  */
 class ezfIndexParentName implements ezfIndexPlugin
 {

@@ -40,7 +40,7 @@ class eZFindInfo
         return array(
             'Name' => "eZ Find",
             'Version' => '//autogentag//',
-            'Copyright' => "Copyright (C) 1999-2011 eZ Systems AS.",
+            'Copyright' => "Copyright (C) 1999-2012 eZ Systems AS.",
             'Info_url' => "http://ez.no/ezfind",
             'License' => "GNU General Public License v2.0",
             '3rdparty_software' =>
