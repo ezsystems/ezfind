@@ -119,6 +119,7 @@ class eZSolr implements ezpSearchEngine
                       'is_invisible' => 'boolean',
                       'sort_field' => 'mstring',
                       'sort_order' => 'mstring',
+                      'priority' => 'sint',
                       'depth' => 'sint',
                       'view_count' => 'sint' );
     }
