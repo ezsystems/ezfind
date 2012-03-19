@@ -62,6 +62,7 @@ class ezfSearchResultInfo
         return array( 'facet_fields',
                       'facet_queries',
                       'facet_dates',
+                      'facet_ranges',
                       'engine',
                       'hasError',
                       'error',
@@ -304,11 +305,23 @@ class ezfSearchResultInfo
                     return false;
                 }
             } break;
-            case 'fields':
+            case 'facet_dates':
             {
-                if ( isset( $this->ResultArray['interestingTerms'] ) )
+                if ( isset( $this->ResultArray['facet_dates'] ) )
                 {
-                    return $this->ResultArray['interestingTerms'];
+                    return $this->ResultArray['facet_dates'];
+                }
+                else
+                {
+                    return false;
+                }
+            } break;
+
+            case 'facet_ranges':
+            {
+                if ( isset( $this->ResultArray['facet_ranges'] ) )
+                {
+                    return $this->ResultArray['facet_ranges'];
                 }
                 else
                 {

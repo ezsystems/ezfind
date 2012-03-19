@@ -1063,7 +1063,9 @@ class ezfeZPSolrQueryBuilder
         {
             if ( empty( $facetDefinition['field'] ) and
                  empty( $facetDefinition['query'] ) and
-                 empty( $facetDefinition['date'] ) )
+                 empty( $facetDefinition['date'] ) and
+                 empty( $facetDefinition['range'] ) and
+                 empty( $facetDefinition['prefix'] ) )
             {
                 eZDebug::writeDebug( 'No facet field or query provided.', __METHOD__ );
                 continue;
@@ -1126,9 +1128,38 @@ class ezfeZPSolrQueryBuilder
             }
 
             // Get prefix.
+            // TODO: make this per mandatory per field in order to construct f.<fieldname>.facet.prefix queries
             if ( !empty( $facetDefinition['prefix'] ) )
             {
                 $queryPart['prefix'] = $facetDefinition['prefix'];
+            }
+
+            if ( !empty( $facetDefinition['range'])
+                    && !empty( $facetDefinition['range']['field'] )
+                    && !empty( $facetDefinition['range']['start'] )
+                    && !empty( $facetDefinition['range']['end']) )
+            {
+                $perFieldRangePrefix = 'f.' . $facetDefinition['range']['field'] . '.range';
+
+
+                $queryPart[$perFieldRangePrefix . '.start'] = $facetDefinition['range']['start'];
+                $queryPart[$perFieldRangePrefix . '.end'] = $facetDefinition['range']['end'];
+                if( !empty( $facetDefinition['range']['gap']))
+                {
+                    $queryPart[$perFieldRangePrefix . '.gap'] = $facetDefinition['range']['gap'];
+                }
+                if( !empty( $facetDefinition['range']['hardend']))
+                {
+                    $queryPart[$perFieldRangePrefix . '.hardend'] = $facetDefinition['range']['hardend'];
+                }
+                if( !empty( $facetDefinition['range']['include']))
+                {
+                    $queryPart[$perFieldRangePrefix . '.include'] = $facetDefinition['range']['include'];
+                }
+                if( !empty( $facetDefinition['range']['other']))
+                {
+                    $queryPart[$perFieldRangePrefix . '.other'] = $facetDefinition['range']['other'];
+                }
             }
 
             // Get sort option.
