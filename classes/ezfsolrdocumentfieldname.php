@@ -155,7 +155,9 @@ class ezfSolrDocumentFieldName
                                   'tdate' => 'tdt',
                                   'geopoint' => 'gpt',
                                   'geohash' => 'gh',
-                                  'mstring' => 'ms' );
+                                  'mstring' => 'ms',
+                                  'mtext' => 'mt',
+                                  'gentext' => 'gt');
 
     static $DefaultType = 'string';
     static $PHPCreator = null;
