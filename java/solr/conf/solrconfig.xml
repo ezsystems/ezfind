@@ -1666,7 +1666,7 @@
   <lst name="slave">
     <str name="enable">${enable.slave:false}</str>
     <str name="masterUrl">http://${master.core.url:localhost\:8983}/${solr.core.name}/replication</str>
-    <str name="pollInterval">${poll.time}</str>
+    <str name="pollInterval">${poll.time:'00:00:10'}</str>
   </lst>
 
   </requestHandler>
