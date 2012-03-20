@@ -277,15 +277,20 @@ class ezfModuleFunctionCollection
         $facets[] = array( 'field' => 'author',
                            'name'  => ezpI18n::tr( 'extension/ezfind/facets', 'Author' ),
                            'limit' => $limit );
-        /*$facets[] = array( 'field' => 'published',
-                           'name'  => ezpI18n::tr( 'extension/ezfind/facets', 'Creation time' ),
-                           'limit' => $limit );
-        $facets[] = array( 'field' => 'modified',
+
+        /*$facets[] = array( 'field' => 'modified',
                            'name'  => ezpI18n::tr( 'extension/ezfind/facets', 'Last modified' ),
                            'limit' => $limit );*/
         $facets[] = array( 'field' => 'article/tags',
                            'name'  => ezpI18n::tr( 'extension/ezfind/facets', 'Keywords' ),
                            'limit' => $limit );
+
+        $facets[] = array( 'range' => array( 'field' => 'published',
+                                             'start' => 'NOW/YEAR-3YEARS',
+                                             'end'   => 'NOW/YEAR+1YEAR',
+                                             'gap'   => '+1YEAR',
+                                             'other' => 'all'));
+
 
         // Date facets
         /*$facets[] = array( 'field' => 'published',

@@ -319,9 +319,9 @@ class ezfSearchResultInfo
 
             case 'facet_ranges':
             {
-                if ( isset( $this->ResultArray['facet_ranges'] ) )
+                if ( isset( $this->ResultArray['facet_counts']['facet_ranges'] ) )
                 {
-                    return $this->ResultArray['facet_ranges'];
+                    return $this->ResultArray['facet_counts']['facet_ranges'];
                 }
                 else
                 {

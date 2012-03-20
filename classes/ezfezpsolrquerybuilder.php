@@ -1134,31 +1134,55 @@ class ezfeZPSolrQueryBuilder
                 $queryPart['prefix'] = $facetDefinition['prefix'];
             }
 
+            // range facets: fill the $queryParamList array directly
             if ( !empty( $facetDefinition['range'])
                     && !empty( $facetDefinition['range']['field'] )
                     && !empty( $facetDefinition['range']['start'] )
-                    && !empty( $facetDefinition['range']['end']) )
+                    && !empty( $facetDefinition['range']['end'])
+                    && !empty( $facetDefinition['range']['gap']))
             {
-                $perFieldRangePrefix = 'f.' . $facetDefinition['range']['field'] . '.range';
+                $fieldName = '';
 
 
-                $queryPart[$perFieldRangePrefix . '.start'] = $facetDefinition['range']['start'];
-                $queryPart[$perFieldRangePrefix . '.end'] = $facetDefinition['range']['end'];
-                if( !empty( $facetDefinition['range']['gap']))
+                switch( $facetDefinition['range']['field'] )
                 {
-                    $queryPart[$perFieldRangePrefix . '.gap'] = $facetDefinition['range']['gap'];
+                    case 'published':
+                    {
+                        $fieldName = eZSolr::getMetaFieldName( 'published', 'facet' );
+                    } break;
+
+                    case 'modified':
+                    {
+                        $fieldName = eZSolr::getMetaFieldName( 'modified', 'facet' );
+                    } break;
+
+                    default:
+                    {
+                        $fieldName = eZSolr::getFieldName( $facetDefinition['field'], false, 'facet' );
+                    }
                 }
+
+                $perFieldRangePrefix = 'f.' . $fieldName . '.facet.range';
+
+                $queryParamList['facet.range'] = $fieldName;
+
+                $queryParamList[$perFieldRangePrefix . '.start'] = $facetDefinition['range']['start'];
+                $queryParamList[$perFieldRangePrefix . '.end']   = $facetDefinition['range']['end'];
+                $queryParamList[$perFieldRangePrefix . '.gap']   = $facetDefinition['range']['gap'];
+
                 if( !empty( $facetDefinition['range']['hardend']))
                 {
-                    $queryPart[$perFieldRangePrefix . '.hardend'] = $facetDefinition['range']['hardend'];
+                    $queryParamList[$perFieldRangePrefix . '.hardend'] = $facetDefinition['range']['hardend'];
                 }
+
                 if( !empty( $facetDefinition['range']['include']))
                 {
-                    $queryPart[$perFieldRangePrefix . '.include'] = $facetDefinition['range']['include'];
+                    $queryParamList[$perFieldRangePrefix . '.include'] = $facetDefinition['range']['include'];
                 }
+
                 if( !empty( $facetDefinition['range']['other']))
                 {
-                    $queryPart[$perFieldRangePrefix . '.other'] = $facetDefinition['range']['other'];
+                    $queryParamList[$perFieldRangePrefix . '.other']   = $facetDefinition['range']['other'];
                 }
             }
 
@@ -1289,7 +1313,12 @@ class ezfeZPSolrQueryBuilder
             {
                 foreach ( $queryPart as $key => $value )
                 {
-                    if (
+                    // check for fully prepared parameter names, like the per field options
+                    if ( strpos( $key, 'f.' ) === 0 )
+                    {
+                        $queryParamList[$key] = $value;
+                    }
+                    elseif (
                         $key !== 'field'
                         && !empty( $queryParamList['facet.' . $key] )
                         && isset( $queryPart['field'] )

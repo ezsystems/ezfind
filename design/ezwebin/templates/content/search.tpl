@@ -259,6 +259,21 @@
               {/if}
           {/foreach}
 
+          {*$search_extras.facet_ranges.meta_published_dt|attribute(show,2)*}
+
+          {* ranges *}
+
+            <li><span><strong>{'Publication Year'|i18n( 'extension/ezfind/facets' )}</strong></span>
+            {def $publishedRanges = $search_extras.facet_ranges.meta_published_dt.counts}
+            <ul>
+            {* TODO add filters (when range filtering is fixed *}
+            {foreach $publishedRanges as $year => $count}
+                <li>{$year|extract_left(4)} ({$count})</li>
+            {/foreach}
+            </ul>
+            </li>
+
+
           {* date filtering here. Using a simple filter for now. Should use the date facets later on *}
           {if eq( $dateFilter, 0 )}
               <li>
