@@ -115,6 +115,10 @@ $FunctionList['search'] = array( 'name' => 'search',
                                                         array ( 'name'  => 'fields_to_return',
                                                                 'type' => 'array',
                                                                 'required' => false,
+                                                                'default' => null ),
+                                                        array ( 'name'  => 'custom_query_params',
+                                                                'type' => 'array',
+                                                                'required' => false,
                                                                 'default' => null )) );
 
 
@@ -215,7 +219,11 @@ $FunctionList['moreLikeThis'] = array( 'name' => 'moreLikeThis',
                                                         array( 'name' => 'query_installation_id',
                                                                'type' => 'string',
                                                                'required' => false,
-                                                               'default' => null ) ) );
+                                                               'default' => null ),
+                                                        array ( 'name'  => 'custom_query_params',
+                                                                'type' => 'array',
+                                                                'required' => false,
+                                                                'default' => null ) ) );
 
 $FunctionList['elevateConfiguration'] = array(   'name' => 'elevateConfiguration',
                                                  'operation_types' => 'read',
