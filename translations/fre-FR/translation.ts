@@ -698,11 +698,7 @@
     </message>
     <message>
         <source>Publication Year</source>
-<<<<<<< HEAD
         <translation>Année de publication</translation>
-=======
-        <translation type="unfinished"></translation>
->>>>>>> 35d64989b58558d63e50349b9b3d14a2f71e1e1c
     </message>
 </context>
 <context>
