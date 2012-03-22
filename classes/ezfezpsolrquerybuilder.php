@@ -1825,9 +1825,26 @@ class ezfeZPSolrQueryBuilder
     private function buildSearchResultClusterQuery( $parameterList = array() )
     {
         $result = array( 'clustering' => 'false');
-        if ( !empty( $parameterList ) )
+        if ( !empty( $parameterList ) && $parameterList['clustering'] === true)
         {
             $result['clustering'] = 'true';
+
+            unset($parameterList['clustering']);
+
+            $allowedParameters = array( 'carrot.algorithm',
+                                        'carrot.title',
+                                        'carrot.snippet',
+                                        'carrot.produceSummary',
+                                        'carrot.fragSize',
+                                        'carrot.numDescriptions' );
+
+            foreach ($allowedParameters as $parameter)
+            {
+                if (isset($parameterList[$parameter]))
+                {
+                    $result[$parameter] = $parameterList[$parameter];
+                }
+            }
         }
         return $result;
     }
