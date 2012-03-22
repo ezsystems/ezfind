@@ -724,6 +724,10 @@
         <source>Clear all</source>
         <translation>Limpiar todo</translation>
     </message>
+    <message>
+        <source>Publication Year</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>extension/ezfind/popupmenu</name>
@@ -771,7 +775,7 @@
         <translation type="obsolete">Extensión de búsqueda eZ Find 2.3 &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 1.5-dev</translation>
     </message>
     <message>
-        <source>eZ Find 2.6 search plugin &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 3.1</source>
+        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

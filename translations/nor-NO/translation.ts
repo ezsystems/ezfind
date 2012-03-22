@@ -696,6 +696,10 @@
         <source>Keywords</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Publication Year</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>extension/ezfind/popupmenu</name>
@@ -739,7 +743,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>eZ Find 2.6 search plugin &amp;copy; 1999-2011 eZ Systems AS, powered by Apache Solr 3.1</source>
+        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
