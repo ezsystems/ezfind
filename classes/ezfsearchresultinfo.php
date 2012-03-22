@@ -73,7 +73,8 @@ class ezfSearchResultInfo
                       // is also a word searched for and not present in the
                       // spellcheck dictionary/index -- Solr php response writer "bug"
                       'spellcheck_collation',
-                      'interestingTerms'
+                      'interestingTerms',
+                      'clusters'
             );
     }
 
@@ -322,6 +323,17 @@ class ezfSearchResultInfo
                 if ( isset( $this->ResultArray['facet_counts']['facet_ranges'] ) )
                 {
                     return $this->ResultArray['facet_counts']['facet_ranges'];
+                }
+                else
+                {
+                    return false;
+                }
+            } break;
+            case 'clusters':
+            {
+                if ( isset( $this->ResultArray['clusters'] ) )
+                {
+                    return $this->ResultArray['clusters'];
                 }
                 else
                 {

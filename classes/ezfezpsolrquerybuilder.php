@@ -165,6 +165,7 @@ class ezfeZPSolrQueryBuilder
         $distributedSearch = isset( $params['DistributedSearch'] ) ? $params['DistributedSearch'] : false;
         $fieldsToReturn = isset( $params['FieldsToReturn'] ) ? $params['FieldsToReturn'] : array();
         $highlightParams = isset( $params['HighLightParams'] ) ? $params['HighLightParams'] : array();
+        $searchResultClusterParams = isset( $params['SearchResultClustering'] ) ? $params['SearchResultClustering'] : array();
 
 
         // distributed search option
@@ -457,6 +458,10 @@ class ezfeZPSolrQueryBuilder
 
         }
 
+        $searchResultClusterParamList = array( 'clustering' => 'true');
+        $searchResultClusterParamList = $this->buildSearchResultClusterQuery($searchResultClusterParams);
+        eZDebug::writeDebug( $searchResultClusterParamList, 'Cluster params' );
+
 
         $queryParams =  array_merge(
             $handlerParameters,
@@ -481,7 +486,8 @@ class ezfeZPSolrQueryBuilder
             $facetQueryParamList,
             $spellCheckParamList,
             $boostFunctionsParamList,
-            $elevateParamList
+            $elevateParamList,
+            $searchResultClusterParamList
         );
         return $queryParams;
     }
@@ -1813,6 +1819,17 @@ class ezfeZPSolrQueryBuilder
         {
             return addcslashes( $query, self::CHARS_TO_ESCAPE );
         }
+    }
+
+
+    private function buildSearchResultClusterQuery( $parameterList = array() )
+    {
+        $result = array( 'clustering' => 'false');
+        if ( !empty( $parameterList ) )
+        {
+            $result['clustering'] = 'true';
+        }
+        return $result;
     }
 
     /// Vars

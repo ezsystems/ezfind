@@ -707,10 +707,27 @@
        <str name="fl">*</str>
        <str name="version">2.1</str>
         -->
+
+      <!-- clustering defaults -->
+      <bool name="clustering">false</bool>
+      <str name="clustering.engine">default</str>
+      <bool name="clustering.results">true</bool>
+      <!-- The title field -->
+      <str name="carrot.title">meta_name_t</str>
+      <str name="carrot.url">meta_url_alias_ms</str>
+      <!-- The field to cluster on -->
+       <str name="carrot.snippet">ezf_df_text</str>
+       <!-- produce summaries, so highlighting text is used instead-->
+       <bool name="carrot.produceSummary">true</bool>
+       <!-- the maximum number of labels per cluster -->
+       <!--<int name="carrot.numDescriptions">5</int>-->
+       <!-- produce sub clusters -->
+       <bool name="carrot.outputSubClusters">false</bool>
      </lst>
      <arr name="last-components">
        <str>spellcheck</str>
        <str>elevator</str>
+       <str>clustering</str>
      </arr>
   </requestHandler>
 
@@ -1134,10 +1151,27 @@
         </str>
         <int name="ps">100</int>
         <str name="q.alt">*:*</str>
+
+        <!-- clustering defaults -->
+        <bool name="clustering">false</bool>
+        <str name="clustering.engine">default</str>
+        <bool name="clustering.results">true</bool>
+        <!-- The title field -->
+        <str name="carrot.title">meta_name_t</str>
+        <str name="carrot.url">meta_url_alias_ms</str>
+        <!-- The field to cluster on -->
+        <str name="carrot.snippet">ezf_df_text</str>
+        <!-- produce summaries, so highlighting text is used instead-->
+        <bool name="carrot.produceSummary">true</bool>
+        <!-- the maximum number of labels per cluster -->
+        <!--<int name="carrot.numDescriptions">5</int>-->
+        <!-- produce sub clusters -->
+        <bool name="carrot.outputSubClusters">false</bool>
       </lst>
       <arr name="last-components">
          <str>spellcheck</str>
          <str>elevator</str>
+         <str>clustering</str>
       </arr>
   </requestHandler>
   <requestHandler name="ezfind" class="org.ezsystems.solr.handler.ezfind.eZFindRequestHandler" />
@@ -1327,16 +1361,8 @@
 
        http://wiki.apache.org/solr/ClusteringComponent
 
-       This relies on third party jars which are notincluded in the
-       release.  To use this component (and the "/clustering" handler)
-       Those jars will need to be downloaded, and you'll need to set
-       the solr.cluster.enabled system property when running solr...
-
-          java -Dsolr.clustering.enabled=true -jar start.jar
     -->
-  <searchComponent name="clustering"
-                   enable="${solr.clustering.enabled:false}"
-                   class="solr.clustering.ClusteringComponent" >
+  <searchComponent name="clustering" class="solr.clustering.ClusteringComponent" >
     <!-- Declare an engine -->
     <lst name="engine">
       <!-- The name, only one can be named "default" -->

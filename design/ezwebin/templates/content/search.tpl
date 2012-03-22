@@ -41,8 +41,9 @@
                               'facet', $defaultSearchFacets,
                               'filter', $filterParameters,
                               'publish_date', $dateFilter,
-                              'spell_check', array( true() )
-                             ))}
+                              'spell_check', array( true() ),
+                              'search_result_clustering', hash( 'clustering', 'true') )
+                             )}
     {set $search_result=$search['SearchResult']}
     {set $search_count=$search['SearchCount']}
     {def $search_extras=$search['SearchExtras']}
@@ -259,7 +260,7 @@
               {/if}
           {/foreach}
 
-          {*$search_extras.facet_ranges.meta_published_dt|attribute(show,2)*}
+          {*$search_extras|attribute(show,2)*}
 
           {* ranges *}
 

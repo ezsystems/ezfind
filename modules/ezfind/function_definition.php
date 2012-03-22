@@ -115,6 +115,10 @@ $FunctionList['search'] = array( 'name' => 'search',
                                                         array ( 'name'  => 'fields_to_return',
                                                                 'type' => 'array',
                                                                 'required' => false,
+                                                                'default' => null ),
+                                                        array ( 'name'  => 'search_result_clustering',
+                                                                'type' => 'array',
+                                                                'required' => false,
                                                                 'default' => null )) );
 
 
