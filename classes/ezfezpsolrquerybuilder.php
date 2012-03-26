@@ -82,7 +82,7 @@ class ezfeZPSolrQueryBuilder
         foreach ( $solrFields as $field )
         {
             //don't mind the last extra space, it's ignored by Solr
-            $multiFieldQuery .= $field . ':(' . $this->escapeQuery( $searchText ) . ')';
+            $multiFieldQuery .= $field . ':(' . $searchText . ')';
             // check if we need to apply a boost
             if ( array_key_exists( $field, $processedBoostFields ) )
             {
@@ -417,7 +417,7 @@ class ezfeZPSolrQueryBuilder
                 // if another value is specified, it is supposed to be a dismax like handler
                 // with possible other tuning variables then the stock provided 'ezpublish' in solrconfi.xml
                 // remark it should be lowercase in solrconfig.xml!
-                $handlerParameters = array ( 'q' => $this->escapeQuery( $searchText ),
+                $handlerParameters = array ( 'q' => $searchText,
                                              'qf' => implode( ' ', array_merge( $queryFields, $extraFieldsToSearch ) ),
                                              'qt' => $queryHandler );
 
@@ -988,11 +988,12 @@ class ezfeZPSolrQueryBuilder
                     $baseNameInfo = eZSolr::getFieldName( $baseName, true, 'filter' );
                     if ( is_array( $baseNameInfo ) and isset( $baseNameInfo['contentClassId'] ) )
                     {
-                        $filterQueryList[] = '( ' . eZSolr::getMetaFieldName( 'contentclass_id' ) . ':' . $baseNameInfo['contentClassId'] . ' AND ' . $baseNameInfo['fieldName'] . ':' . $this->escapeQuery( $value ) . ' )' ;
+                        $filterQueryList[] = '( ' . eZSolr::getMetaFieldName( 'contentclass_id' ) . ':' . $baseNameInfo['contentClassId'] . ' AND ' . $baseNameInfo['fieldName'] . ':' . $value . ' )' ;
                     }
                     else
                     {
-                        $filterQueryList[] = $baseNameInfo . ':' . $this->escapeQuery( $value, true );
+                        // Note that $value needs to be escaped if it unintentionally contains Solr reserved characters
+                        $filterQueryList[] = $baseNameInfo . ':' . $value;
                     }
                 }
             }
@@ -1130,7 +1131,7 @@ class ezfeZPSolrQueryBuilder
                     continue;
                 }
 
-                $queryPart['query'] = $field . ':' . $this->escapeQuery( $query );
+                $queryPart['query'] = $field . ':' . $query;
             }
 
             // Get prefix.
@@ -1798,30 +1799,6 @@ class ezfeZPSolrQueryBuilder
         return $fieldArray;
     }
 
-    /**
-     * Escapes special chars in $query so that they can be handled as part of it by Solr
-     *
-     * @param string $query
-     * @param boolean $leaveEdgeQuotes whether to escape the enclosing quotes
-     * @return string
-     * @see http://wiki.apache.org/solr/SolrQuerySyntax#Special_Characters_in_SOLR
-     */
-    private function escapeQuery( $query, $leaveEdgeQuotes = false )
-    {
-        if ( $leaveEdgeQuotes && $query[0] === '"' && $query[strlen( $query ) -1] === '"' )
-        {
-            return '"' . addcslashes(
-                substr( $query, 1, -1 ),
-                self::CHARS_TO_ESCAPE
-            ) . '"';
-        }
-        else
-        {
-            return addcslashes( $query, self::CHARS_TO_ESCAPE );
-        }
-    }
-
-
     private function buildSearchResultClusterQuery( $parameterList = array() )
     {
         $result = array( 'clustering' => 'false');
@@ -1883,14 +1860,6 @@ class ezfeZPSolrQueryBuilder
     const FACET_LIMIT = 20;
     const FACET_OFFSET = 0;
     const FACET_MINCOUNT = 1;
-
-    /**
-     * Characters that must be escaped if they are part of a query
-     * @see http://wiki.apache.org/solr/SolrQuerySyntax#Special_Characters_in_SOLR
-     * @see http://issues.ez.no/18701
-     * @var string
-     */
-    const CHARS_TO_ESCAPE = '+-&|!(){}[]^"~*?:\\';
 }
 
 ezfeZPSolrQueryBuilder::$FindINI = eZINI::instance( 'ezfind.ini' );

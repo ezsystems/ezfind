@@ -209,7 +209,7 @@
                   {foreach $facetData.nameList as $key2 => $facetName}
                       {if eq( $activeFacetParameters[concat( $defaultFacet['field'], ':', $defaultFacet['name'] )], $facetName )}
                           {set $activeFacetsCount=sum( $key, 1 )}
-                          {def $suffix=$uriSuffix|explode( concat( '&filter[]=', $facetData.queryLimit[$key2] ) )|implode( '' )|explode( concat( '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName ) )|implode( '' )}
+                          {def $suffix=$uriSuffix|explode( concat( '&filter[]=', $facetData.queryLimit[$key2]|solr_quotes_escape ) )|implode( '' )|explode( concat( '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName ) )|implode( '' )}
                           <li>
                               <a href={concat( $baseURI, $suffix )|ezurl}>[x]</a> <strong>{$defaultFacet['name']}</strong>: {$facetName|trim('"')|wash}
                           </li>
@@ -246,11 +246,11 @@
                         {if ne( $key2, '' )}
                         <li>
                             <a href={concat(
-                                $baseURI, '&filter[]=', $facetData.queryLimit[$key2]|rawurlencode,
+                                $baseURI, '&filter[]=', $facetData.queryLimit[$key2]|solr_quotes_escape|rawurlencode,
                                 '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=',
                                 $facetName|rawurlencode,
                                 $uriSuffix )|ezurl}>
-                            {$facetName|trim('"')|wash}</a> ({$facetData.countList[$key2]})
+                            {$facetName|wash}</a> ({$facetData.countList[$key2]})
                         </li>
                         {/if}
                     {/foreach}
