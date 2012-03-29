@@ -1,369 +1,317 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="hr_HR">
-<context>
-    <name>design/admin/content/search</name>
-    <message>
-        <source>Search</source>
-        <translation>Pretraživanje</translation>
-    </message>
-    <message>
-        <source>All content</source>
-        <translation>Cijeli sadržaj</translation>
-    </message>
-    <message>
-        <source>The same location</source>
-        <translation>Ista lokacija</translation>
-    </message>
-    <message>
-        <source>For more options try the %1Advanced search%2.</source>
-        <comment>The parameters are link start and end tags.</comment>
-        <translation>Za više opcija probajte %1Napredno pretraživanje%2.</translation>
-    </message>
-    <message>
-        <source>The following words were excluded from the search</source>
-        <translation>Sljedeće riječi su isključene iz pretraživanja</translation>
-    </message>
-    <message>
-        <source>No results were found while searching for &lt;%1&gt;</source>
-        <translation>Nema rezultata pretraživanja za &lt;%1&gt;</translation>
-    </message>
-    <message>
-        <source>Search tips</source>
-        <translation>Savjeti za pretraživanje</translation>
-    </message>
-    <message>
-        <source>Check spelling of keywords.</source>
-        <translation>Provjerite jesu li ključne riječi ispravno napisane.</translation>
-    </message>
-    <message>
-        <source>Try changing some keywords e.g. &amp;quot;car&amp;quot; instead of &amp;quot;cars&amp;quot;.</source>
-        <translation>Pokušajte promijeniti neke ključne riječi, npr. &amp;quot;automobil&amp;quot; umjesto &amp;quot;automobili&amp;quot;.</translation>
-    </message>
-    <message>
-        <source>Try more general keywords.</source>
-        <translation>Pokušajte pretraživati s općenitijim ključnim riječima.</translation>
-    </message>
-    <message>
-        <source>Fewer keywords result in more matches. Try reducing keywords until you get a result.</source>
-        <translation>Manje ključnih riječi daje više rezultata. Pokušajte smanjivati broj ključnih riječi dok ne dobijete rezultat.</translation>
-    </message>
-    <message>
-        <source>Search for &lt;%1&gt; returned %2 matches</source>
-        <translation>Pretraživanje za &lt;%1&gt; je vratilo %2 rezultata</translation>
-    </message>
-</context>
+<TS version="2.0" language="sv_SE" sourcelanguage="en">
 <context>
     <name>design/admin/node/view/full</name>
     <message>
         <source>Show 10 items per page.</source>
-        <translation>Prikaži 10 stavki po stranici.</translation>
+        <translation>Visa 10 träffar per sida.</translation>
     </message>
     <message>
         <source>Show 50 items per page.</source>
-        <translation>Prikaži 50 stavki po stranici.</translation>
+        <translation>Visa 50 träffar per sida.</translation>
     </message>
     <message>
         <source>Show 25 items per page.</source>
-        <translation>Prikaži 25 stavki po stranici.</translation>
+        <translation>Visa 25 träffar per sida.</translation>
     </message>
 </context>
 <context>
     <name>design/admin/pagelayout</name>
     <message>
         <source>Search in all content</source>
-        <translation>Pretražuj u cijelom sadržaju</translation>
+        <translation>Sök i alla kontexter</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Pretraži</translation>
+        <translation>Sök</translation>
     </message>
     <message>
         <source>Advanced</source>
-        <translation>Napredno</translation>
+        <translation>Avancerad</translation>
     </message>
     <message>
         <source>Search in &apos;%node&apos;</source>
-        <translation>Pretraži u &apos;%node&apos;</translation>
+        <translation>Sök i &apos;%node&apos;</translation>
     </message>
     <message>
         <source>Advanced search.</source>
-        <translation>Napredno pretraživanje.</translation>
+        <translation>Avancerad sökning.</translation>
     </message>
 </context>
 <context>
     <name>design/base</name>
     <message>
         <source>The following words were excluded from the search</source>
-        <translation>Sljedeće riječi su isključene iz pretraživanja</translation>
+        <translation>Följande ord ingick ej i sökningen</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Pretraživanje</translation>
+        <translation>Sök</translation>
     </message>
     <message>
         <source>For more options try the %1Advanced search%2</source>
         <comment>The parameters are link start and end tags.</comment>
-        <translation>Za više opcija probajte %1Napredno pretraživanje%2</translation>
+        <translation>Fler alternativ hittar du under %1Avancerad sökning%2</translation>
     </message>
     <message>
         <source>No results were found when searching for &quot;%1&quot;</source>
-        <translation>Nema rezultata pretraživanja za &quot;%1&quot;</translation>
+        <translation>Inga träffar för sökuttrycket &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Search tips</source>
-        <translation>Savjeti za pretraživanje</translation>
+        <translation>Hjälp med sökningsstrategi</translation>
     </message>
     <message>
         <source>Check spelling of keywords.</source>
-        <translation>Provjerite jesu li ključne riječi ispravno napisane.</translation>
+        <translation>Jämför stavning av sökorden med ord på sajten.</translation>
     </message>
     <message>
         <source>Try changing some keywords eg. car instead of cars.</source>
-        <translation>Pokušajte promijeniti neke ključne riječi, npr. automobil umjesto automobili.</translation>
+        <translation>Ändra några sökord, skriv t ex sektion istf sektionen.</translation>
     </message>
     <message>
         <source>Try more general keywords.</source>
-        <translation>Pokušajte pretraživati s općenitijim ključnim riječima.</translation>
+        <translation>Försök med mindre specifika sökord.</translation>
     </message>
     <message>
         <source>Fewer keywords gives more results, try reducing keywords until you get a result.</source>
-        <translation>Manje ključnih riječi daje više rezultata. Pokušajte smanjivati broj ključnih riječi dok ne dobijete rezultat.</translation>
+        <translation>Färre sökord ger troligen fler resultat. Försök att ta bort ett i taget tills du får någon träff.</translation>
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>Pretraživanje za &quot;%1&quot; je vratilo %2 rezultata</translation>
+        <translation>Sökningen &quot;%1&quot; gav %2 träffar</translation>
     </message>
 </context>
 <context>
     <name>design/ezfind/search</name>
     <message>
         <source>The search is case insensitive. Upper and lower case characters may be used.</source>
-        <translation>Pretraživanje nije osjetljivo na velika i mala slova. Obje varijante slova mogu biti korištene.</translation>
+        <translation>Sökningen skiljer ej på stora och små bokstäver.</translation>
     </message>
     <message>
         <source>The search result contains all search terms.</source>
-        <translation>Rezultat pretraživanja sadrži sve upisane riječi.</translation>
+        <translation>Träffarna innehåller alla angivna sökord.</translation>
     </message>
     <message>
         <source>Spell check suggestion: did you mean</source>
-        <translation>Provjera pravopisa: jeste li mislili</translation>
+        <translation>Stavningskontrollförslag: menade du</translation>
     </message>
     <message>
         <source>Phrase search can be achieved by using quotes, example: &quot;Quick brown fox jumps over the lazy dog&quot;</source>
-        <translation>Pretraživanje fraze možete postići koristeći navodnike, npr: &quot;Brza smeđa lisica skače preko lijenog psa&quot;</translation>
+        <translation>För att söka efter en fras anger du citationstecken omkring, t ex &quot;söka på hemsidan&quot;</translation>
     </message>
     <message>
-        <source>Words may be excluded by using a minus ( - ) character, example: lazy -dog</source>
-        <translation>Riječi mogu isključene koristeći minus ( - ), npr: lijeni -pas</translation>
+        <source>Words may be excluded by using a minus ( - ) character, example: free -beer</source>
+        <translation>Ska inte ett ord förekomma i det du söker efter anger du det med minustecken (-) innan, t ex sektion -stockholm</translation>
     </message>
 </context>
 <context>
     <name>design/ezflow/block/search</name>
     <message>
         <source>Search</source>
-        <translation>Pretraživanje</translation>
+        <translation>Sök</translation>
     </message>
 </context>
 <context>
     <name>design/ezwebin/content/search</name>
     <message>
         <source>Search</source>
-        <translation>Pretraživanje</translation>
+        <translation>Sök</translation>
     </message>
     <message>
         <source>For more options try the %1Advanced search%2</source>
         <comment>The parameters are link start and end tags.</comment>
-        <translation>Za više opcija probajte %1Napredno pretraživanje%2</translation>
+        <translation>Fler alternativ hittar du under %1Avancerad sökning%2</translation>
     </message>
     <message>
         <source>No results were found when searching for &quot;%1&quot;.</source>
-        <translation>Nema rezultata pretraživanja za &quot;%1&quot;.</translation>
+        <translation>Inga träffar för sökuttrycket &quot;%1&quot;.</translation>
     </message>
     <message>
         <source>Search tips</source>
-        <translation>Savjeti za pretraživanje</translation>
+        <translation>Hjälp med sökningsstrategi</translation>
     </message>
     <message>
         <source>Check spelling of keywords.</source>
-        <translation>Provjerite jesu li ključne riječi ispravno napisane.</translation>
+        <translation>Jämför stavning av sökorden med ord på sajten.</translation>
     </message>
     <message>
         <source>Try changing some keywords (eg, &quot;car&quot; instead of &quot;cars&quot;).</source>
-        <translation>Pokušajte promijeniti neke ključne riječi (npr. &quot;automobil&quot; umjesto &quot;automobili&quot;).</translation>
+        <translation>Ändra några sökord, skriv t ex sektion istf sektionen.</translation>
     </message>
     <message>
         <source>Try searching with less specific keywords.</source>
-        <translation>Pokušajte pretraživati s manje specifičnih ključnih riječi.</translation>
+        <translation>Försök ange mindre specifika sökord.</translation>
     </message>
     <message>
         <source>Reduce number of keywords to get more results.</source>
-        <translation>Smanjite broj ključnih riječi da biste dobili više rezultata.</translation>
+        <translation>Färre sökord ger troligen fler resultat. Försök att ta bort ett i taget tills du får någon träff.</translation>
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>Pretraživanje za &quot;%1&quot; je vratilo %2 rezultata</translation>
+        <translation>Sökningen &quot;%1&quot; gav %2 träffar</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Pomoć</translation>
+        <translation>Hjälp</translation>
     </message>
     <message>
         <source>Refine your search</source>
-        <translation>Uredite vašu pretragu</translation>
+        <translation>Förfina din sökning</translation>
     </message>
 </context>
 <context>
     <name>design/ezwebin/full/article</name>
     <message>
         <source>Comments</source>
-        <translation>Komentari</translation>
+        <translation>Kommentarer</translation>
     </message>
     <message>
         <source>New comment</source>
-        <translation>Novi komentar</translation>
+        <translation>Ny kommentar</translation>
     </message>
     <message>
         <source>%login_link_startLog in%login_link_end or %create_link_startcreate a user account%create_link_end to comment.</source>
-        <translation>%login_link_startPrijavite se%login_link_end ili %create_link_startse registrirajte%create_link_end da biste mogli komentirati.</translation>
+        <translation>%login_link_startLogga in%login_link_end eller %create_link_startskapa ett nytt användarkonto%create_link_end för att kunna kommentera.</translation>
     </message>
     <message>
         <source>Tip a friend</source>
-        <translation>Preporuči prijatelju</translation>
+        <translation>Skicka sidlänk till en kompis</translation>
     </message>
     <message>
         <source>Related content</source>
-        <translation>Povezani sadržaj</translation>
+        <translation>Relaterat innehåll</translation>
     </message>
 </context>
 <context>
     <name>design/ezwebin/pagelayout</name>
     <message>
         <source>Search text:</source>
-        <translation>Tekst za pretraživanje:</translation>
+        <translation>Sökuttryck:</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Pretraživanje</translation>
+        <translation>Sök</translation>
     </message>
 </context>
 <context>
     <name>design/standard/content/search</name>
     <message>
         <source>Advanced search</source>
-        <translation>Napredno pretraživanje</translation>
+        <translation>Avancerad sökning</translation>
     </message>
     <message>
         <source>Search all the words</source>
-        <translation>Pretraži sve riječi</translation>
+        <translation>Sök efter flera ord i samma text</translation>
     </message>
     <message>
         <source>Search the exact phrase</source>
-        <translation>Pretraži točnu frazu</translation>
+        <translation>Sök efter frasen</translation>
     </message>
     <message>
         <source>Search with at least one of the words</source>
-        <translation>Pretraži s barem jednom riječju</translation>
+        <translation>Sök efter flera ord där åtminstone ett av dem finns i varje text</translation>
     </message>
     <message>
         <source>Class</source>
-        <translation>Klasa</translation>
+        <translation>Klass</translation>
     </message>
     <message>
         <source>Any class</source>
-        <translation>Bilo koja klasa</translation>
+        <translation>Alla klasser</translation>
     </message>
     <message>
         <source>Class attribute</source>
-        <translation>Atribut klase</translation>
+        <translation>Klassattribut</translation>
     </message>
     <message>
         <source>Any attribute</source>
-        <translation>Bilo koji atribut</translation>
+        <translation>Alla attribut</translation>
     </message>
     <message>
         <source>Update attributes</source>
-        <translation>Osvježi atribute</translation>
+        <translation>Ändra valda attribut</translation>
     </message>
     <message>
         <source>In</source>
-        <translation>U</translation>
+        <translation>i</translation>
     </message>
     <message>
         <source>Any section</source>
-        <translation>Bilo kojoj sekciji</translation>
+        <translation>alla sektioner</translation>
     </message>
     <message>
         <source>Published</source>
-        <translation>Objavljeno</translation>
+        <translation>Publicerad</translation>
     </message>
     <message>
         <source>Any time</source>
-        <translation>Bilo kad</translation>
+        <translation>När som helst</translation>
     </message>
     <message>
         <source>Last day</source>
-        <translation>Prethodni dan</translation>
+        <translation>Senaste dygnet</translation>
     </message>
     <message>
         <source>Last week</source>
-        <translation>Zadnjih tjedan dana</translation>
+        <translation>Senaste veckan</translation>
     </message>
     <message>
         <source>Last month</source>
-        <translation>Zadnjih mjesec dana</translation>
+        <translation>Senaste månaden</translation>
     </message>
     <message>
         <source>Last three months</source>
-        <translation>Zadnja tri mjeseca</translation>
+        <translation>Senaste tre månaderna</translation>
     </message>
     <message>
         <source>Last year</source>
-        <translation>Zadnjih godinu dana</translation>
+        <translation>Senaste året</translation>
     </message>
     <message>
         <source>Display per page</source>
-        <translation>Rezultata po stranici</translation>
+        <translation>Antal per sida</translation>
     </message>
     <message>
         <source>5 items</source>
-        <translation>5 stavki</translation>
+        <translation>5 träffar</translation>
     </message>
     <message>
         <source>10 items</source>
-        <translation>10 stavki</translation>
+        <translation>10 träffar</translation>
     </message>
     <message>
         <source>20 items</source>
-        <translation>20 stavki</translation>
+        <translation>20 träffar</translation>
     </message>
     <message>
         <source>30 items</source>
-        <translation>30 stavki</translation>
+        <translation>30 träffar</translation>
     </message>
     <message>
         <source>50 items</source>
-        <translation>50 stavki</translation>
+        <translation>50 träffar</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Pretraživanje</translation>
+        <translation>Sök</translation>
     </message>
     <message>
         <source>No results were found when searching for &quot;%1&quot;</source>
-        <translation>Nema rezultata pretraživanja za &quot;%1&quot;</translation>
+        <translation>Inga träffar för sökuttrycket &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>Pretraživanje za &quot;%1&quot; je vratilo %2 rezultata</translation>
+        <translation>Sökningen &quot;%1&quot; gav %2 träffar</translation>
     </message>
     <message>
         <source>Score</source>
-        <translation>Rezultat</translation>
+        <translation>Viktning</translation>
     </message>
     <message>
         <source>Name</source>
-        <translation>Naziv</translation>
+        <translation>Namn</translation>
     </message>
 </context>
 <context>
@@ -374,26 +322,26 @@
     </message>
     <message>
         <source>Elevation</source>
-        <translation>Podizanje rezultata</translation>
+        <translation>Gynna träff</translation>
     </message>
     <message>
         <source>Remove Elevation</source>
-        <translation>Ukloni podizanje</translation>
+        <translation>Ta bort gynnande av träff</translation>
     </message>
 </context>
 <context>
     <name>extension/ezfind/ajax-search</name>
     <message>
         <source>No search results...</source>
-        <translation>Nema rezultata pretraživanja...</translation>
+        <translation>Inga sökresultat ...</translation>
     </message>
     <message>
         <source>Did you mean</source>
-        <translation>Jeste li mislili</translation>
+        <translation>Menade du</translation>
     </message>
     <message>
         <source>Refine with facets</source>
-        <translation>Uredi s facetima</translation>
+        <translation>Förfina med fasetter</translation>
     </message>
 </context>
 <context>
@@ -404,218 +352,218 @@
     </message>
     <message>
         <source>Elevation</source>
-        <translation>Podizanje rezultata</translation>
+        <translation>Gynna träff</translation>
     </message>
     <message>
         <source>Boost</source>
-        <translation>Pojačanje</translation>
+        <translation>Ge större vikt</translation>
     </message>
     <message>
         <source>Facets</source>
-        <translation>Faceti</translation>
+        <translation>Fasetter</translation>
     </message>
 </context>
 <context>
     <name>extension/ezfind/elevate</name>
     <message>
         <source>Hide preview of existing elevate configurations.</source>
-        <translation>Sakrij postojeće konfiguracije podizanja.</translation>
+        <translation>Göm förhandsgranskningen av gynningskonfigurationen.</translation>
     </message>
     <message>
         <source>Preview existing configurations</source>
-        <translation>Prikaži postojeće konfiguracije</translation>
+        <translation>Förhandsgranska nuvarande konfigurationer</translation>
     </message>
     <message>
         <source>Show preview of existing elevate configurations.</source>
-        <translation>Prikaži postojeće konfiguracije podizanja.</translation>
+        <translation>Förhandsgranska nuvarande gynningskonfigurationer.</translation>
     </message>
     <message>
         <source>Elevation</source>
-        <translation>Podizanje</translation>
+        <translation>Gynna objekt</translation>
     </message>
     <message>
         <source>Please enter a search query.</source>
-        <translation>Unesite upit za pretraživanje.</translation>
+        <translation>Skriv en sökfråga.</translation>
     </message>
     <message>
         <source>Please choose a valid object.</source>
-        <translation>Odaberite ispravan objekt.</translation>
+        <translation>Välj ett giltigt objekt.</translation>
     </message>
     <message>
         <source>Missing language information.</source>
-        <translation>Nedostaju informacije o jeziku.</translation>
+        <translation>Språkinformation saknas.</translation>
     </message>
     <message>
         <source>Successful creation of the following Elevate configuration</source>
-        <translation>Uspješno su dodane sljedeće konfiguracije podizanja</translation>
+        <translation>Följande gynningskonfiguration kunde skapas utan problem</translation>
     </message>
     <message>
         <source>Details</source>
-        <translation>Detalji</translation>
+        <translation>Detaljer</translation>
     </message>
     <message>
         <source>Successful synchronization of the local Elevate configuration with Solr&apos;s.</source>
-        <translation>Sinkronizacija lokalnih konfiguracija podizanja sa Solrovom konfiguracijom je uspješno obavljena.</translation>
+        <translation>Den lokala gynningskonfigurationen synkades med Solr utan problem.</translation>
     </message>
     <message>
         <source>Synchronise Elevate configuration with Solr</source>
-        <translation>Sinkroniziraj konfiguraciju podizanja sa Solrom</translation>
+        <translation>Synka gynningskonfigurationen med Solr</translation>
     </message>
     <message>
         <source>Synchronise</source>
-        <translation>Sinkroniziraj</translation>
+        <translation>Synka</translation>
     </message>
     <message>
         <source>Synchronise the Elevate configuration with Solr.</source>
-        <translation>Sinkroniziraj konfiguraciju podizanja sa Solrom.</translation>
+        <translation>Synka gynningskonfigurationen med Solr.</translation>
     </message>
     <message>
         <source>Elevate an object</source>
-        <translation>Podigni objekt</translation>
+        <translation>Gynna ett objekt</translation>
     </message>
     <message>
         <source>&quot;Elevating an object&quot; for a given search query means that this object will be returned among the very first search results when a search is triggered using this search query.</source>
-        <translation>&quot;Podizanje objekta&quot; za upisani upit znaži da će objekt biti na samom vrhu rezultata pretraživanja koristeći odabrani upit.</translation>
+        <translation>&quot;Gynna ett objekt&quot; för en given sökfråga innebär att objektet kommer att lyftas fram bland de första träffarna för sökfrågan.</translation>
     </message>
     <message>
         <source>Search query</source>
-        <translation>Upit za pretraživanje</translation>
+        <translation>Sökfråga</translation>
     </message>
     <message>
         <source>Search query to elevate the object for.</source>
-        <translation>Upit za pretraživanje za koji će objekt biti podignut.</translation>
+        <translation>Sökfråga att gynna objektet med.</translation>
     </message>
     <message>
         <source>Elevate object</source>
-        <translation>Podigni objekt</translation>
+        <translation>Gynna objekt</translation>
     </message>
     <message>
         <source>Browse for the object to associate elevation to.</source>
-        <translation>Pronađite objekt da biste ga povezali s konfiguracijom.</translation>
+        <translation>Bläddra efter objektet att gynna.</translation>
     </message>
     <message>
         <source>Elevate %objectlink with &amp;nbsp;  %searchquery &amp;nbsp;  for language:</source>
-        <translation>Podigni %objectlink s &amp;nbsp;  %searchquery &amp;nbsp;  za jezik:</translation>
+        <translation>Gynna %objectlink med &amp;nbsp;  %searchquery &amp;nbsp;  för språk:</translation>
     </message>
     <message>
         <source>All</source>
-        <translation>Sve</translation>
+        <translation>Alla</translation>
     </message>
     <message>
         <source>Elevate</source>
-        <translation>Podigni</translation>
+        <translation>Gynna</translation>
     </message>
     <message>
         <source>Store elevation</source>
-        <translation>Pohrani konfiguraciju</translation>
+        <translation>Spara gynningsinformationen</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Odustani</translation>
+        <translation>Avbryt</translation>
     </message>
     <message>
         <source>Cancel elevation</source>
-        <translation>Odustani od podizanja</translation>
+        <translation>Avbryt gynning</translation>
     </message>
     <message>
         <source>Search for elevated objects</source>
-        <translation>Pretraži podignute objekte</translation>
+        <translation>Leta efter gynnade objekt</translation>
     </message>
     <message>
         <source>By search query</source>
-        <translation>Po upitu</translation>
+        <translation>För sökfråga</translation>
     </message>
     <message>
         <source>Language</source>
-        <translation>Jezik</translation>
+        <translation>Språk</translation>
     </message>
     <message>
         <source>Select a translation to narrow down the search.</source>
-        <translation>Odaberite prijevod za specifičnije pretraživanje.</translation>
+        <translation>Välj en översättning för att minska sökrymden.</translation>
     </message>
     <message>
         <source>Fuzzy match</source>
-        <translation>Fuzzy pretraga</translation>
+        <translation>Träffar kan vara icke-exakta</translation>
     </message>
     <message>
         <source>Fuzzy match on the search query.</source>
-        <translation>Fuzzy pretraga na upitu za pretraživanje.</translation>
+        <translation>Gör en icke-exakt matchning mot sökfrågan.</translation>
     </message>
     <message>
         <source>Find elevate configurations matching the search query entered.</source>
-        <translation>Pronađi konfiguracije podizanja koje odgovaraju unesenom upitu.</translation>
+        <translation>Hitta gynningskonfigurationer som matchar sökfrågan.</translation>
     </message>
     <message>
         <source>By object</source>
-        <translation>Po objektu</translation>
+        <translation>Efter objekt</translation>
     </message>
     <message>
         <source>Browse</source>
-        <translation>Traži</translation>
+        <translation>Bläddra</translation>
     </message>
     <message>
         <source>Objects elevated by &quot;%search_query&quot;</source>
-        <translation>Objekti podignuti s &quot;%search_query&quot;</translation>
+        <translation>Objekt gynnade av &quot;%search_query&quot;</translation>
     </message>
     <message>
         <source>fuzzy match</source>
-        <translation>fuzzy pretraga</translation>
+        <translation>Icke-exakt matchning</translation>
     </message>
     <message>
         <source>Existing configurations</source>
-        <translation>Postojeće konfiguracije</translation>
+        <translation>Nuvarande konfigurationer</translation>
     </message>
     <message>
         <source>No existing Elevate configuration.</source>
-        <translation>Nema konfiguracija podizanja.</translation>
+        <translation>Inga gynningskonfigurationer hittade.</translation>
     </message>
     <message>
         <source>Content object</source>
-        <translation>Objekt sadržaja</translation>
+        <translation>Innehållsobjekt</translation>
     </message>
     <message>
         <source>Actions</source>
-        <translation>Akcije</translation>
+        <translation>Åtgärder</translation>
     </message>
     <message>
         <source>See elevate configuration details for &apos;%objectName&apos;</source>
-        <translation>Pregledaj detalje konfiguracije podizanja za &apos;%objectName&apos;</translation>
+        <translation>Detaljer för gynningskonfiguration för &apos;%objectName&apos;</translation>
     </message>
     <message>
         <source>Remove elevation by &apos;%searchQuery&apos; for &apos;%objectName&apos;.</source>
-        <translation>Ukloni podizanje po &apos;%searchQuery&apos; za &apos;%objectName&apos;.</translation>
+        <translation>Ta bort gynnande av &apos;%searchQuery&apos; för &apos;%objectName&apos;.</translation>
     </message>
     <message>
         <source>See all objects elevated by &apos;%searchQuery&apos;</source>
-        <translation>Prikaži sve objekte podignute s &apos;%searchQuery&apos;</translation>
+        <translation>Visa alla objekt gynnade av &apos;%searchQuery&apos;</translation>
     </message>
     <message>
         <source>Elevation detail for object %objectName</source>
-        <translation>Detalji podizanja za objekt %objectName</translation>
+        <translation>Gynningsinformation för objektet %objectName</translation>
     </message>
     <message>
         <source>Missing content object.</source>
-        <translation>Nedostaje objekt.</translation>
+        <translation>Innehållsobjekt saknas.</translation>
     </message>
     <message>
         <source>Elevate %objectName</source>
-        <translation>Podigni %objectName</translation>
+        <translation>Gynna %objectName</translation>
     </message>
     <message>
         <source>Existing configurations for %objectName</source>
-        <translation>Postojeće konfiguracije za %objectName</translation>
+        <translation>Nuvarande konfigurationer för %objectName</translation>
     </message>
     <message>
         <source>in %selectedLanguage</source>
-        <translation>u %selectedLanguage</translation>
+        <translation>på %selectedLanguage</translation>
     </message>
     <message>
         <source>containing &apos;%searchQuery&apos;</source>
-        <translation>sadržavajući &apos;%searchQuery&apos;</translation>
+        <translation>som innehåller &apos;%searchQuery&apos;</translation>
     </message>
     <message>
         <source>Search query to filter the result set on.</source>
-        <translation>Upit po kojem će se filtrirati rezultati.</translation>
+        <translation>Sökfråga att filtrera träfflistan med.</translation>
     </message>
     <message>
         <source>Filter</source>
@@ -623,116 +571,120 @@
     </message>
     <message>
         <source>Filter configurations by language</source>
-        <translation>Filtriraj konfiguracije po jeziku</translation>
+        <translation>Filterkonfigurationer efter språk</translation>
     </message>
     <message>
         <source>Removal confirmed ( for %objectName ) :</source>
-        <translation>Uklanjanje potvrđeno ( za %objectName ) :</translation>
+        <translation>Borttagning bekräftad (för %objectName):</translation>
     </message>
     <message>
         <source>Confirm removal of the following Elevate configuration ( for %objectName ) :</source>
-        <translation>Potvrdite uklanjanje sljedeće konfiguracije podizanja ( za %objectName ) :</translation>
+        <translation>Bekräfta borttagning av gynningskonfigurationen (för %objectName):</translation>
     </message>
     <message>
         <source>Back</source>
-        <translation>Natrag</translation>
+        <translation>Gå tillbaka</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation>Ukloni</translation>
+        <translation>Ta bort</translation>
     </message>
     <message>
         <source>Confirm removal of the elevate configuration</source>
-        <translation>Potvrdite uklanjanje konfiguracije podizanja</translation>
+        <translation>Bekräfta borttagning av gynningskonfigurationen</translation>
     </message>
     <message>
         <source>Cancel removal of the elevate configuration</source>
-        <translation>Odustanite od uklanjanja konfiguracije podizanja</translation>
+        <translation>Avbryt borttagning av gynningskonfigurationen</translation>
     </message>
     <message>
         <source>Edit</source>
-        <translation>Uredi</translation>
+        <translation>Redigera</translation>
     </message>
     <message>
         <source>Trash</source>
-        <translation>Smeće</translation>
+        <translation>Kasta</translation>
     </message>
     <message>
         <source>Elevate %objectlink with:</source>
-        <translation>Podigni %objectlink s:</translation>
+        <translation>Gynna %objectlink med:</translation>
     </message>
     <message>
         <source>for language:</source>
-        <translation>za jezik:</translation>
+        <translation>för språk:</translation>
     </message>
     <message>
         <source>Error while generating the configuration XML</source>
-        <translation>Greška prilikom generiranja XML datoteke za konfiguraciju</translation>
+        <translation>Kunde inte generera konfigurations-xml</translation>
     </message>
     <message>
         <source>An unknown error occured in updating Solr&apos;s elevate configuration.</source>
-        <translation>Dogodila se nepoznata greška prilikom osvježavanja Solrove konfiguracije podizanja.</translation>
+        <translation>Ett okänt fel uppstod vid uppdateringen av Solrs gynnakonfiguration.</translation>
     </message>
 </context>
 <context>
     <name>extension/ezfind/facets</name>
     <message>
         <source>Creation time</source>
-        <translation>Datum objave</translation>
+        <translation>Skapad</translation>
     </message>
     <message>
         <source>Clear all</source>
-        <translation>Očisti sve</translation>
+        <translation>Rensa alla</translation>
     </message>
     <message>
         <source>Content type</source>
-        <translation>Vrsta sadržaja</translation>
+        <translation>Innehållstyp</translation>
     </message>
     <message>
         <source>Author</source>
-        <translation>Autor</translation>
+        <translation>Författare</translation>
     </message>
     <message>
         <source>Keywords</source>
-        <translation>Ključne riječi</translation>
+        <translation>Nyckelord</translation>
     </message>
     <message>
         <source>Publication Year</source>
-        <translation>Godina objave</translation>
+        <translation>Publiceringsår</translation>
     </message>
 </context>
 <context>
     <name>extension/ezfind/popupmenu</name>
     <message>
         <source>eZ Find</source>
-        <translation>eZ Find</translation>
+        <translation>eZFind</translation>
     </message>
     <message>
         <source>Elevate</source>
-        <translation>Podigni</translation>
+        <translation>Gynna träff</translation>
     </message>
     <message>
         <source>Elevation detail</source>
-        <translation>Detalji podizanja</translation>
+        <translation>Detaljer om gynna träff</translation>
     </message>
 </context>
 <context>
     <name>ezfind</name>
     <message>
         <source>Core search time: %1 msecs</source>
-        <translation>Trajanje pretraživanja jezgre: %1 msek</translation>
+        <translation>Kärnsöktid: %1 millisekunder</translation>
     </message>
     <message>
         <source>N/A</source>
-        <translation>N/A</translation>
+        <translation>Inte tillgänglig</translation>
     </message>
     <message>
         <source>Search took: %1 msecs, using </source>
-        <translation>Pretraživanje je trajalo: %1 msek, koristeći </translation>
+        <translation>Sökningen tog %1 millisekunder, med</translation>
+    </message>
+    <message>
+        <source>Server not running</source>
+        <translation>Sökmaskinen svara inte. Troligen är den inte igång.</translation>
     </message>
     <message>
         <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.1</source>
-        <translation>eZ Find %version ekstenzija za pretraživanje &amp;copy; 1999-2012 eZ Systems AS, upogonjeno koristeći Apache Solr 3.1</translation>
+        <translation>eZFind-sökutökningen %version &amp;copy; 1999–2012 eZ Systems AS, med Apache Solr 3.1</translation>
     </message>
 </context>
 </TS>
