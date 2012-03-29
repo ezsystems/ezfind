@@ -270,7 +270,7 @@
       </analyzer>
     </fieldType>
 
-      <fieldType name="text_icu" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
+    <fieldType name="text_icu" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
       <analyzer type="index">
         <tokenizer class="solr.ICUTokenizerFactory"/>
         <!-- in this example, we will only use synonyms at query time
