@@ -632,30 +632,31 @@
        <dynamicField name="*_sf"       type="sfloat"  indexed="true"  stored="true"/>
        <dynamicField name="*_sd"       type="sdouble" indexed="true"  stored="true"/>
        <dynamicField name="*_s"        type="string"  indexed="true"  stored="true" termVectors="true"/>
-           <!-- for data that should be treated as a string, but that should not be part of the default text or spell check index" -->
-           <dynamicField name="*_ms"        type="mstring"  indexed="true"  stored="true" termVectors="true"/>
+       <!-- for data that should be treated as a string, but that should not be part of the default text or spell check index" -->
+       <dynamicField name="*_ms"        type="mstring"  indexed="true"  stored="true" termVectors="true"/>
        <dynamicField name="*_sl"       type="slong"   indexed="true"  stored="true"/>
        <dynamicField name="*_l"        type="long"    indexed="true"  stored="true"/>
        <dynamicField name="*_t"        type="text"    indexed="true"  stored="true" termVectors="true"/>
        <dynamicField name="*_mt"        type="text"    indexed="true"  stored="true" termVectors="true"/>
-       <dynamicField name="*_gt"        type="textgen"    indexed="true"  stored="true" termVectors="true"/>
+       <dynamicField name="*_tg"        type="textgen"    indexed="true"  stored="true" termVectors="true"/>
+       <dynamicField name="*_tu"        type="text_icu"    indexed="true"  stored="true" termVectors="true"/>
        <dynamicField name="*_b"        type="boolean" indexed="true"  stored="true"/>
        <dynamicField name="*_dt"       type="date"    indexed="true"  stored="true"/>
        <dynamicField name="*_random"   type="random"  indexed="true"  stored="true"/>
        <dynamicField name="*_k"        type="keyword" indexed="true"  stored="true"/>
-           <dynamicField name="*_lk"       type="lckeyword" indexed="true"  stored="true"/>
-              <!-- some trie-coded dynamic fields for faster range queries -->
-           <dynamicField name="*_ti" type="tint"    indexed="true"  stored="true"/>
-           <dynamicField name="*_tl" type="tlong"   indexed="true"  stored="true"/>
-           <dynamicField name="*_tf" type="tfloat"  indexed="true"  stored="true"/>
-           <dynamicField name="*_td" type="tdouble" indexed="true"  stored="true"/>
-           <dynamicField name="*_tdt" type="tdate"  indexed="true"  stored="true"/>
-             <!-- geopoint for geospatial/location searches, boosting, ... -->
-           <dynamicField name="*_gpt" type="geopoint"  indexed="true"  stored="true"/>
-             <!-- storage fields accepts base64 encoded strings -->
-           <dynamicField name="*_bst" type="binary"  indexed="false"  stored="true"/>
+       <dynamicField name="*_lk"       type="lckeyword" indexed="true"  stored="true"/>
+       <!-- some trie-coded dynamic fields for faster range queries -->
+       <dynamicField name="*_ti" type="tint"    indexed="true"  stored="true"/>
+       <dynamicField name="*_tl" type="tlong"   indexed="true"  stored="true"/>
+       <dynamicField name="*_tf" type="tfloat"  indexed="true"  stored="true"/>
+       <dynamicField name="*_td" type="tdouble" indexed="true"  stored="true"/>
+       <dynamicField name="*_tdt" type="tdate"  indexed="true"  stored="true"/>
+       <!-- geopoint for geospatial/location searches, boosting, ... -->
+       <dynamicField name="*_gpt" type="geopoint"  indexed="true"  stored="true"/>
+       <!-- storage fields accepts base64 encoded strings -->
+       <dynamicField name="*_bst" type="binary"  indexed="false"  stored="true"/>
 
-   <!-- eZ Find : Dynamic fields for content attributes indexed in subfields, the name ends with ___<type>
+       <!-- eZ Find : Dynamic fields for content attributes indexed in subfields, the name ends with ___<type>
         to make a difference between dynamicFields for "regular" content and dynamic field for subattributes
         see ezfSolrDocumentFieldBase::generateSubattributeFieldName() -->
        <dynamicField name="*____i"        type="int"     indexed="true"  stored="true" multiValued="true"/>
