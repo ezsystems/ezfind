@@ -735,12 +735,8 @@
         <translation type="obsolete">eZ Find 2.6 search plugin &amp;copy; 1999-2012 eZ Systems AS, propulsé par Apache Solr 3.1</translation>
     </message>
     <message>
-        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.1</source>
-<<<<<<< HEAD
-        <translation>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, propulsé par Apache Solr 3.1</translation>
-=======
-        <translation type="unfinished"></translation>
->>>>>>> 35d64989b58558d63e50349b9b3d14a2f71e1e1c
+        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.5</source>
+        <translation>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, propulsé par Apache Solr 3.5</translation>
     </message>
 </context>
 </TS>
