@@ -464,10 +464,10 @@ class eZSolr implements ezpSearchEngine
         {
             $anonymousUserID = $this->SiteINI->variable( 'UserSettings', 'AnonymousUserID' );
             $currentUserID = eZUser::currentUserID();
-            $user = eZUser::instance( $anonymousUserID );
+            $user = eZUser::fetch( $anonymousUserID );
             eZUser::setCurrentlyLoggedInUser( $user, $anonymousUserID );
             $anonymousAccess = $contentObject->attribute( 'can_read' );
-            $user = eZUser::instance( $currentUserID );
+            $user = eZUser::fetch( $currentUserID );
             eZUser::setCurrentlyLoggedInUser( $user, $currentUserID );
             $anonymousAccess = $anonymousAccess ? 'true' : 'false';
         }
