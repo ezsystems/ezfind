@@ -160,7 +160,7 @@
     </p>
 {/if}
 
-{switch name=Sw match=$search_count}
+{switch match=$search_count}
   {case match=0}
   <div class="warning">
   <h2>{'No results were found when searching for "%1".'|i18n("design/ezwebin/content/search",,array($search_text|wash))}</h2>
