@@ -609,6 +609,7 @@
    <field name="meta_view_count_si" type="sint" indexed="true" stored="true" multiValued="true"/>  <!-- View count -->
    <field name="meta_is_hidden_b" type="boolean" indexed="true" stored="true" multiValued="true"/>
    <field name="meta_is_invisible_b" type="boolean" indexed="true" stored="true" multiValued="true"/>
+   <field name="meta_priority_si" type="sint" indexed="true" stored="true" multiValued="true"/>
 
 
    <!-- Here, default is used to create a "timestamp" field indicating
