@@ -164,6 +164,7 @@ class ezfeZPSolrQueryBuilder
         $enableElevation = isset( $params['EnableElevation'] )  ?  $params['EnableElevation'] : true;
         $distributedSearch = isset( $params['DistributedSearch'] ) ? $params['DistributedSearch'] : false;
         $fieldsToReturn = isset( $params['FieldsToReturn'] ) ? $params['FieldsToReturn'] : array();
+        $disableSiteBoost = isset( $params['DisableSiteBoost'] ) ? $params['DisableSiteBoost'] : false;
         $highlightParams = isset( $params['HighLightParams'] ) ? $params['HighLightParams'] : array();
         $searchResultClusterParams = isset( $params['SearchResultClustering'] ) ? $params['SearchResultClustering'] : array();
 
@@ -471,7 +472,7 @@ class ezfeZPSolrQueryBuilder
                 'sort' => $sortParameter,
                 'indent' => 'on',
                 'version' => '2.2',
-                'bq' => $this->boostQuery(),
+                'bq' => $this->boostQuery( $disableSiteBoost ),
                 'fl' => $fieldsToReturnString,
                 'fq' => $filterQuery,
                 'hl' => self::$FindINI->variable( 'HighLighting', 'Enabled' ),
@@ -1401,10 +1402,14 @@ class ezfeZPSolrQueryBuilder
      *
      * @return boostQuery
      */
-    protected function boostQuery()
+    protected function boostQuery( $disableSiteBoost )
     {
+        $boostQuery = '';
+
         // Local installation boost
-        $boostQuery = eZSolr::getMetaFieldName( 'installation_id' ) . ':' . eZSolr::installationID() . '^1.5';
+        if ( false === $disableSiteBoost )
+            $boostQuery .= eZSolr::getMetaFieldName( 'installation_id' ) . ':' . eZSolr::installationID() . '^1.5';
+
         $ini = eZINI::instance();
 
         // Language boost. Only boost 3 first languages.
