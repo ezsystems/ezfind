@@ -735,8 +735,8 @@
         <translation type="obsolete">eZ Find 2.6 search plugin &amp;copy; 1999-2012 eZ Systems AS, propulsé par Apache Solr 3.1</translation>
     </message>
     <message>
-        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.5</source>
-        <translation>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, propulsé par Apache Solr 3.5</translation>
+        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.1</source>
+        <translation>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, propulsé par Apache Solr 3.1</translation>
     </message>
 </context>
 </TS>
