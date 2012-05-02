@@ -231,12 +231,10 @@ var eZAJAXSearch = function()
 
         var handleKeyPress = function(e)
         {
-            var key = e.which || e.keyCode;
-            if (key === 13)
+            if (e.keyCode == 13)
             {
                 performSearch();
-                e.halt();
-                return false;
+                e.preventDefault();
             }
         }
 
