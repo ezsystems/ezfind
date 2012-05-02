@@ -156,6 +156,7 @@ class ezfModuleFunctionCollection
      *
      * @param string $queryType string ( 'nid' | 'oid' | 'text' | 'url' )
      * @param string $query value for QueryType
+     * @param string $queryInstallationID value for QueryType
      * @param int Offset
      * @param int Limit
      * @param array Facet definition
@@ -169,13 +170,14 @@ class ezfModuleFunctionCollection
      *
      * @return array result as a PHP array
      */
-    public function moreLikeThis( $queryType, $query, $offset = 0, $limit = 10, $facets = null,
+    public function moreLikeThis( $queryType, $query, $queryInstallationID = null, $offset = 0, $limit = 10, $facets = null,
                                   $filters = null, $sortBy = null, $classID = null, $sectionID = null,
                                   $subtreeArray = null, $asObjects = true, $queryInstallationID = null )
 
     {
         $solrSearch = new eZSolr();
-        $params = array( 'SearchOffset' => $offset,
+        $params = array( 'QueryInstallationID' => $queryInstallationID,
+                         'SearchOffset' => $offset,
                          'SearchLimit' => $limit,
                          'Facet' => $facets,
                          'SortBy' => $sortBy,
