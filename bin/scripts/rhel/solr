@@ -4,8 +4,9 @@
 #
 # Usage:
 #
-# Set the correct SOLR_HOME value, and copy this file to /etc/init.d
-# Symlink to /etc/init.d/solr to /etc/rc3.d/S70solr and /etc/rc5.d/S70solr
+# Set the correct SOLR_HOME value, and copy this file to /etc/init.d, then
+# - either run chkconfig --add solr, or
+# - symlink to /etc/init.d/solr to /etc/rc3.<n>/S70solr and /etc/rc5.<n>/k70solr
 #
 # Example:
 # cp solr /etc/init.d/solr
@@ -14,6 +15,12 @@
 # cd /etc/rc5.d && ln -s ../init.d/solr S70solr
 # cd /etc/rc3.d && ln -s ../init.d/solr K70solr
 # cd /etc/rc5.d && ln -s ../init.d/solr K70solr
+#
+#
+# chkconfig: 2345 64 36
+# description: SOLR indexing server
+# processname: solr
+# pidfile: /var/run/solr.pid
 
 DESC="Solr indexing server"
 NAME=solr
