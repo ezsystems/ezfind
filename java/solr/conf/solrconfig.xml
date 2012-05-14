@@ -1187,19 +1187,48 @@
        this is just a slave and remove  the <lst name="slave"> section
        if this is just a master.
     -->
-  <!--
+
      <requestHandler name="/replication" class="solr.ReplicationHandler" >
        <lst name="master">
+         <!--When the master is started, pass in -Denable.master=true and in the slave pass in -Denable.slave=true. Alternately, these values can be stored in a solrcore.properties -->
+         <str name="enable">${enable.master:false}</str>
+
          <str name="replicateAfter">commit</str>
          <str name="replicateAfter">startup</str>
-         <str name="confFiles">schema.xml,stopwords.txt</str>
+
+         <!--If configuration files need to be replicated give the names here, separated by comma -->
+         <str name="confFiles">elevate.xml,schema.xml,mapping-FoldToASCII.txt,mapping-ISOLatin1Accent.txt,protwords.txt,spellings.txt,stopwords.txt,synonims.txt,solrconfig.xml</str>
+
+         <!--Create a backup after 'optimize'. Other values can be 'commit', 'startup'. It is possible to have multiple entries of this config string.  Note that this is just for backup, replication does not require this. -->
+         <!-- <str name="backupAfter">optimize</str> -->
+
+         <!--The default value of reservation is 10 secs.See the documentation below . Normally , you should not need to specify this -->
+         <!-- <str name="commitReserveDuration">00:00:10</str> -->
        </lst>
+
        <lst name="slave">
-         <str name="masterUrl">http://localhost:8983/solr/replication</str>
+         <str name="enable">${enable.slave:false}</str>
+
+         <!--fully qualified url for the replication handler of master . It is possible to pass on this as a request param for the fetchindex command -->
+         <str name="masterUrl">http://${master.ip:localhost}:${master.port:8983}/solr/replication</str>
+         <!--Interval in which the slave should poll master .Format is HH:mm:ss . If this is absent slave does not poll automatically.
+             But a fetchindex can be triggered from the admin or the http API -->
          <str name="pollInterval">00:00:60</str>
+         <!-- THE FOLLOWING PARAMETERS ARE USUALLY NOT REQUIRED -->
+         <!--to use compression while transferring the index files. The possible values are internal|external
+             if the value is 'external' make sure that your master Solr has the settings to honour the accept-encoding header.
+             see here for details http://wiki.apache.org/solr/SolrHttpCompression
+             If it is 'internal' everything will be taken care of automatically.
+             USE THIS ONLY IF YOUR BANDWIDTH IS LOW . THIS CAN ACTUALLY SLOWDOWN REPLICATION IN A LAN -->
+         <!-- <str name="compression">internal</str> -->
+         <!--The following values are used when the slave connects to the master to download the index files.
+             Default values implicitly set as 5000ms and 10000ms respectively. The user DOES NOT need to specify
+             these unless the bandwidth is extremely low or if there is an extremely high latency -->
+         <!-- <str name="httpConnTimeout">5000</str> -->
+         <!-- <str name="httpReadTimeout">10000</str> -->
        </lst>
+
      </requestHandler>
-    -->
 
   <!-- Search Components
 
