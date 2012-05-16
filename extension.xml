@@ -25,6 +25,7 @@
         </requires>
         <extends>
             <extension name="ezwebin" />
+            <extension name="ezdemo" />
             <extension name="ezflow" />
         </extends>
     </dependencies>
