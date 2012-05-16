@@ -1,3 +1,19 @@
+div.content-search.ezdemo-design h2.results-displayed, 
+div.content-search.ezdemo-design a.results-displayed
+{
+    display: inline-block;    	
+}
+
+div.content-search.ezdemo-design fieldset div.well
+{
+	width: 65%;
+}
+
+div.content-search.ezdemo-design div.feedback
+{
+	margin-bottom: 20px;
+}
+
 div#search_controls
 {
     float:left;
@@ -28,6 +44,31 @@ ul#active-facets-list li
     list-style: none;
     background-image: none;
 }
+
+div.content-search.ezdemo-design ul#active-facets-list li a span.remover
+{
+    font-size: 1.2em; 
+    padding-right: 3px; 
+    font-weight: bold;
+}
+
+div.content-search.ezdemo-design ul#active-facets-list li a.clear-all
+{
+	margin-top: 15px;
+}
+
+div.content-search.ezdemo-design ul#facet-list li ul span.facet-name,
+div.content-search.ezdemo-design ul#facet-list li ul span.facet-count
+{
+    color: inherit;
+}
+
+div.content-search.ezdemo-design ul#facet-list li ul span.facet-name
+{
+    font-weight: inherit;
+    text-shadow: none;
+}
+
 
 div.ajax-search-spellcheck
 {
