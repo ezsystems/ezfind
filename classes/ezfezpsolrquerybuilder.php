@@ -554,6 +554,7 @@ class ezfeZPSolrQueryBuilder
 
                 $languageExcludeString .= " AND -$availableLanguageCodesMetaName:$language";
             }
+            $languageFilterString .= " OR ( " . eZSolr::getMetaFieldName( 'always_available' ) . ':true ' . $languageExcludeString . ')';
         }
         return $languageFilterString;
     }
@@ -1677,14 +1678,6 @@ class ezfeZPSolrQueryBuilder
         else
         {
             $filterQuery = '(' . eZSolr::getMetaFieldName( 'installation_id' ) . ':' . eZSolr::installationID() . $anonymousPart . ')';
-        }
-
-        // Add limitations based on allowed languages.
-        $ini = eZINI::instance();
-        if ( $ini->variable( 'RegionalSettings', 'SiteLanguageList' ) )
-        {
-            $filterQuery = '( ' . $filterQuery . ' AND ( ' . eZSolr::getMetaFieldName( 'language_code' ) . ':' .
-                implode( ' OR ' . eZSolr::getMetaFieldName( 'language_code' ) . ':', $ini->variable( 'RegionalSettings', 'SiteLanguageList' ) ) . ' ) )';
         }
 
         // Add visibility condition
