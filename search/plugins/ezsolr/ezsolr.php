@@ -71,6 +71,7 @@ class eZSolr
             'remote_id' => 'mstring',
             'class_identifier' => 'mstring',
             'main_node_id' => 'sint',
+            'always_available' => 'boolean',
             'modified' => 'date',
             'published' => 'date',
             'main_parent_node_id' => 'sint' );
