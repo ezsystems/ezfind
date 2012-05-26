@@ -599,6 +599,7 @@
    <field name="meta_main_url_alias_ms" type="mstring" indexed="true" stored="true"/>                <!-- Main location URL aliases -->
    <field name="meta_node_id_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- Location node ID -->
    <field name="meta_path_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- Location path IDs -->
+   <field name="meta_priority_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- Priority -->
    <field name="meta_path_string_ms" type="mstring" indexed="true" stored="true" multiValued="true"/> <!-- Location path string -->
    <field name="meta_main_path_string_ms" type="mstring" indexed="true" stored="true"/> <!-- Location main path string (not multi-valued, for sorting) -->
    <field name="meta_depth_si" type="sint" indexed="true" stored="true" multiValued="true"/>       <!-- Location depths -->
