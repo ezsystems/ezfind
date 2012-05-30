@@ -953,10 +953,33 @@ class eZSolr implements ezpSearchEngine
         }
         if ( !empty( $resultArray ) )
         {
-            $result = $resultArray['response'];
-            $searchCount = $result['numFound'];
-            $maxScore = $result['maxScore'];
-            $docs = $result['docs'];
+            if ( ! empty( $params['groupBy'] ) ) {
+
+                if ( isset( $params['groupBy']['main'] ) && 'true' === $params['groupBy']['main'] ) {
+                    $result = $resultArray['response'];
+                    $searchCount = $result['numFound'];
+                    $maxCore = 0;
+                    $docs = $result['docs'];
+                } else {
+                    $count = 0;
+
+                    foreach ($resultArray['grouped'] as $group)
+                        $count += $group['matches'];
+
+                    return array(
+                        'SearchResult'  => $resultArray['grouped'],
+                        'SearchCount'   => $count,
+                        'StopWordArray' => array(),
+                        'SearchExtras'  => new ezfSearchResultInfo( $resultArray ) );
+                }
+
+                $maxScore = null;
+            } else {
+                $result = $resultArray['response'];
+                $searchCount = $result['numFound'];
+                $maxScore = $result['maxScore'];
+                $docs = $result['docs'];
+            }
             $localNodeIDList = array();
             $objectRes = array();
             $nodeRowList = array();
