@@ -155,6 +155,7 @@ class ezfSearchResultInfo
                                                 'count' => count( $facetField ),
                                                 'nameList' => array(),
                                                 'queryLimit' => array(),
+                                                'fieldList' => array(),
                                                 'countList' => array() );
                             foreach ( $facetField as $contentClassID => $count )
                             {
@@ -163,6 +164,7 @@ class ezfSearchResultInfo
                                     $fieldInfo['nameList'][$contentClassID] = $contentClass->attribute( 'name' );
                                     $fieldInfo['queryLimit'][$contentClassID] = 'contentclass_id:' . $contentClassID;
                                     $fieldInfo['countList'][$contentClassID] = $count;
+                                    $fieldInfo['fieldList'][$contentClassID] = 'contentclass_id';
                                 }
                                 else
                                 {
@@ -181,6 +183,7 @@ class ezfSearchResultInfo
                                                 'count' => count( $facetField ),
                                                 'nameList' => array(),
                                                 'queryLimit' => array(),
+                                                'fieldList' => array(),
                                                 'countList' => array() );
                             foreach ( $facetField as $installationID => $count )
                             {
@@ -188,6 +191,7 @@ class ezfSearchResultInfo
                                     $siteNameMapList[$installationID] : $installationID;
                                 $fieldInfo['queryLimit'][$installationID] = 'installation_id:' . $installationID;
                                 $fieldInfo['countList'][$installationID] = $count;
+                                $fieldInfo['fieldList'][$installationID] = 'installation_id';
                             }
                             $facetArray[] = $fieldInfo;
                         } break;
@@ -199,6 +203,7 @@ class ezfSearchResultInfo
                                                 'count' => count( $facetField ),
                                                 'nameList' => array(),
                                                 'queryLimit' => array(),
+                                                'fieldList' => array(),
                                                 'countList' => array() );
                             foreach ( $facetField as $ownerID => $count )
                             {
@@ -207,6 +212,7 @@ class ezfSearchResultInfo
                                     $fieldInfo['nameList'][$ownerID] = $owner->attribute( 'name' );
                                     $fieldInfo['queryLimit'][$ownerID] = 'owner_id:' . $ownerID;
                                     $fieldInfo['countList'][$ownerID] = $count;
+                                    $fieldInfo['fieldList'][$ownerID] = 'owner_id';
                                 }
                                 else
                                 {
@@ -223,11 +229,13 @@ class ezfSearchResultInfo
                                                 'count' => count( $facetField ),
                                                 'nameList' => array(),
                                                 'queryLimit' => array(),
+                                                'fieldList' => array(),
                                                 'countList' => array() );
                             foreach ( $facetField as $languageCode => $count )
                             {
                                 $fieldInfo['nameList'][$languageCode] = $languageCode;
                                 $fieldInfo['queryLimit'][$languageCode] = 'language_code:' . $languageCode;
+                                $fieldInfo['fieldList'][$languageCode] = 'language_code';
                                 $fieldInfo['countList'][$languageCode] = $count;
                             }
                             $facetArray[] = $fieldInfo;
@@ -238,11 +246,13 @@ class ezfSearchResultInfo
                             $fieldInfo = array( 'field' => $attr,
                                                 'count' => count( $facetField ),
                                                 'queryLimit' => array(),
+                                                'fieldList' => array(),
                                                 'nameList' => array(),
                                                 'countList' => array() );
                             foreach ( $facetField as $value => $count )
                             {
                                 $fieldInfo['nameList'][$value] = $value;
+                                $fieldInfo['fieldList'][$value] = $field;
                                 $fieldInfo['queryLimit'][$value] = $field . ':' . $value;
                                 $fieldInfo['countList'][$value] = $count;
                             }
