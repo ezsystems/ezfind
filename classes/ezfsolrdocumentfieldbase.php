@@ -326,6 +326,21 @@ class ezfSolrDocumentFieldBase
         }
         else
         {
+            $attributeMapList       = self::$FindINI->variable('SolrFieldMapSettings', 'CustomAttributeMap');
+
+            if ( ! empty( $attributeMapList ) ) {
+                $contentClassId      = $objectAttribute->attribute('contentclass_attribute')->attribute('contentclass_id');
+                $contentClass        = eZContentClass::fetch( $contentClassId );
+                $identifierComposite = sprintf( '%s/%s', $contentClass->attribute('identifier'),
+                                                         $objectAttribute->attribute('contentclass_attribute_identifier') );
+
+                if ( array_key_exists( $identifierComposite, $attributeMapList ) ) {
+                    return self::$singletons[$objectAttribute->attribute( 'id' )] = new $attributeMapList[$identifierComposite]( $objectAttribute );
+                }
+
+                unset( $identifierComposite, $contentClass );
+            }
+
             $datatypeString = $objectAttribute->attribute( 'data_type_string' );
 
             // Check if using custom handler.
