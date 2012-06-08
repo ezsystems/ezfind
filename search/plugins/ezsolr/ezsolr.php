@@ -190,6 +190,12 @@ class eZSolr implements ezpSearchEngine
      */
     static function getFieldName( $baseName, $includingClassID = false, $context = 'search' )
     {
+        $localVars = "";
+        if (preg_match('/^(\{[^}]+\})(.+)$/', $baseName, $matches)) {
+            $baseName  = array_pop($matches);
+            $localVars = array_pop($matches);
+        }
+        
         // If the base name is a meta field, get the correct field name.
         if ( eZSolr::hasMetaAttributeType( $baseName, $context ) )
         {
@@ -247,10 +253,11 @@ class eZSolr implements ezpSearchEngine
             if ( $includingClassID )
             {
                 return array( 'fieldName'      => $fieldName,
-                              'contentClassId' => $contentClassAttribute->attribute( 'contentclass_id' ) );
+                              'contentClassId' => $contentClassAttribute->attribute( 'contentclass_id' ),
+                              'localVars'      => $localVars );
             }
             else
-                return $fieldName;
+                return $localVars . $fieldName;
         }
     }
 
