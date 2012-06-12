@@ -80,7 +80,7 @@ class ezfSolrDocumentFieldXML extends ezfSolrDocumentFieldBase
             $text );
         $text = strip_tags( $text );
 
-        return html_entity_decode( $text, ENT_QUOTES|ENT_HTML401, 'UTF-8' );
+        return html_entity_decode( $text, ENT_QUOTES, 'UTF-8' );
     }
 
 
