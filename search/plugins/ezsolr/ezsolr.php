@@ -958,7 +958,7 @@ class eZSolr implements ezpSearchEngine
                 if ( isset( $params['groupBy']['main'] ) && 'true' === $params['groupBy']['main'] ) {
                     $result = $resultArray['response'];
                     $searchCount = $result['numFound'];
-                    $maxCore = 0;
+                    $maxScore = 0;
                     $docs = $result['docs'];
                 } else {
                     $count = 0;
