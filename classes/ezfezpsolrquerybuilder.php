@@ -166,7 +166,7 @@ class ezfeZPSolrQueryBuilder
         $fieldsToReturn = isset( $params['FieldsToReturn'] ) ? $params['FieldsToReturn'] : array();
         $highlightParams = isset( $params['HighLightParams'] ) ? $params['HighLightParams'] : array();
         $searchResultClusterParams = isset( $params['SearchResultClustering'] ) ? $params['SearchResultClustering'] : array();
-
+        $groupBy = isset( $params['groupBy'] ) ? $params['groupBy'] : array();
 
         // distributed search option
         // @since ezfind 2.2
@@ -462,6 +462,25 @@ class ezfeZPSolrQueryBuilder
         $searchResultClusterParamList = $this->buildSearchResultClusterQuery($searchResultClusterParams);
         eZDebug::writeDebug( $searchResultClusterParamList, 'Cluster params' );
 
+        $groupByParamList = array();
+
+        if ( ! empty( $groupBy ) )
+        {
+            $groupByParamList['group'] = 'true';
+
+            if ( isset ( $groupBy['field'] ) )
+            {
+                $groupBy['field'] = eZSolr::getFieldName( $groupBy['field'] );
+            }
+
+            $k = array_keys($groupBy);
+            for ( $i = 0, $c = count($groupBy); $i < $c; $i++ )
+            {
+                $groupByParamList['group.' . $k[$i]] = $groupBy[$k[$i]];
+            }
+
+            unset($k, $i, $c);
+        }
 
         $queryParams =  array_merge(
             $handlerParameters,
@@ -487,7 +506,8 @@ class ezfeZPSolrQueryBuilder
             $spellCheckParamList,
             $boostFunctionsParamList,
             $elevateParamList,
-            $searchResultClusterParamList
+            $searchResultClusterParamList,
+            $groupByParamList
         );
         return $queryParams;
     }
