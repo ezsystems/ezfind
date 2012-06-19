@@ -703,6 +703,7 @@
        <dynamicField name="*___class_identifier_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- Class identifier -->
        <dynamicField name="*___main_node_id_si" type="sint" indexed="true" stored="true" multiValued="true"/>           <!-- Main node ID -->
        <dynamicField name="*___language_code_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- Language code -->
+       <dynamicField name="*___always_available_b" type="boolean" indexed="true" stored="true" multiValued="true" />         <!-- always available flag -->
        <dynamicField name="*___available_language_codes_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- List of available language codes in the corresponding content object -->
        <dynamicField name="*___remote_id_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- Remote ID -->
        <dynamicField name="*___anon_access_b" type="boolean" indexed="true" stored="false"  multiValued="true"/>         <!-- Anonymous user access to object -->
