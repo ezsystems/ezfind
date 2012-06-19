@@ -78,7 +78,9 @@ class ezfSolrDocumentFieldXML extends ezfSolrDocumentFieldBase
             "\n\$0", "\n\$0", "\n"
             ),
             $text );
-        return strip_tags( $text );
+        $text = strip_tags( $text );
+
+        return html_entity_decode( $text, ENT_QUOTES, 'UTF-8' );
     }
 
 
