@@ -49,7 +49,6 @@
     {def $search_extras=$search['SearchExtras']}
     {set $stop_word_array=$search['StopWordArray']}
     {set $search_data=$search}
-    {debug-log var=$search_extras.facet_fields msg='$search_extras.facet_fields'}
 {/if}
 {def $baseURI=concat( '/content/search?SearchText=', $search_text )}
 
@@ -123,11 +122,7 @@
 {/literal}
 </script>
 
-<div class="border-box">
-<div class="border-tl"><div class="border-tr"><div class="border-tc"></div></div></div>
-<div class="border-ml"><div class="border-mr"><div class="border-mc float-break">
-
-<div class="content-search">
+<div class="content-search ezdemo-design">
 
 <form action={"/content/search/"|ezurl} method="get">
 
@@ -135,13 +130,11 @@
     <h1 class="long">{"Search"|i18n("design/ezwebin/content/search")}</h1>
 </div>
 
-<p>
-<div id="ezautocomplete">
+<div id="ezautocomplete" class="block">
     <input class="halfbox" type="text" size="20" name="SearchText" id="Search" value="{$search_text|wash}" />
     <input class="button" name="SearchButton" type="submit" value="{'Search'|i18n('design/ezwebin/content/search')}" />
     <div id="mainarea-autocomplete-rs"></div>
 </div>
-</p>
 {if $search_extras.spellcheck_collation}
      {def $spell_url=concat('/content/search/',$search_text|count_chars()|gt(0)|choose('',concat('?SearchText=',$search_extras.spellcheck_collation|urlencode)))|ezurl}
      <p>{'Spell check suggestion: did you mean'|i18n('design/ezfind/search')} <b>{concat("<a href=",$spell_url,">")}{$search_extras.spellcheck_collation}</a></b> ?</p>
@@ -181,11 +174,15 @@
   {/case}
   {case}
   <div class="feedback">
-  <h2>{'Search for "%1" returned %2 matches'|i18n("design/ezwebin/content/search",,array($search_text|wash,$search_count))}</h2>
-
+  <h2 class="results-displayed">{'Search for "%1" returned %2 matches'|i18n("design/ezwebin/content/search",,array($search_text|wash,$search_count))}</h2>
+  <a class="results-displayed" onclick="ezfToggleBlock( 'ezfHelp' );"><em>({'tips'|i18n( 'design/ezwebin/content/search' )})</em></a>
       <fieldset>
-          <legend onclick="ezfToggleBlock( 'ezfHelp' );">{'Help'|i18n( 'design/ezwebin/content/search' )} [+/-]</legend>
-          <div id="ezfHelp" style="display: none;">
+          {* <legend onclick="ezfToggleBlock( 'ezfHelp' );">{'Help'|i18n( 'design/ezwebin/content/search' )} [+/-]</legend> *}
+          
+          {* <a class="btn btn-mini" onclick="ezfToggleBlock( 'ezfHelp' );">{'Help'|i18n( 'design/ezwebin/content/search' )}</a> *}
+                    
+          <div id="ezfHelp" class="well" style="display: none;">
+              <span class="close"><a onclick="ezfToggleBlock( 'ezfHelp' );">&times;</a></span>
               <ul>
                   <li>{'The search is case insensitive. Upper and lower case characters may be used.'|i18n( 'design/ezfind/search' )}</li>
                   <li>{'The search result contains all search terms.'|i18n( 'design/ezfind/search' )}</li>
@@ -195,6 +192,7 @@
           </div>
       </fieldset>
   </div>
+  
 
   <div {*class="feedback"*} id="search_controls">
       <fieldset>
@@ -208,10 +206,13 @@
 
                   {foreach $facetData.nameList as $key2 => $facetName}
                       {if eq( $activeFacetParameters[concat( $defaultFacet['field'], ':', $defaultFacet['name'] )], $facetName )}
-                          {set $activeFacetsCount=sum( $key, 1 )}
+                          {def $activeFacetsCount=sum( $key, 1 )}
                           {def $suffix=$uriSuffix|explode( concat( '&filter[]=', $facetData.fieldList[$key2], ':"', $key2|solr_quotes_escape, '"' ) )|implode( '' )|explode( concat( '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=', $facetName ) )|implode( '' )}
                           <li>
-                              <a href={concat( $baseURI, $suffix )|ezurl}>[x]</a> <strong>{$defaultFacet['name']}</strong>: {$facetName|trim('"')|wash}
+	                          <a class="btn btn-mini" href={concat( $baseURI, $suffix )|ezurl} title="{'Remove filter on '|i18n( 'design/ezwebin/content/search' )}'{$facetName|trim('"')|wash}'">
+	                            <span class="remover">&times</span> 
+	                            <span><strong>{$defaultFacet['name']}</strong>&nbsp;{$facetName|trim('"')|wash}</span>
+	                          </a>
                           </li>
                       {/if}
                   {/foreach}
@@ -222,15 +223,21 @@
           {* handle date filter here, manually for now. Should be a facet later on *}
           {if gt( $dateFilter, 0 )}
               <li>
-                 {set $activeFacetsCount=$activeFacetsCount|inc}
+                 {def $activeFacetsCount=$activeFacetsCount|inc}
                  {def $suffix=$uriSuffix|explode( concat( '&dateFilter=', $dateFilter ) )|implode( '' )}
-                  <a href={concat( $baseURI, $suffix )|ezurl}>[x]</a> <strong>{'Creation time'|i18n( 'extension/ezfind/facets' )}</strong>: {$dateFilterLabel}
+                  <a class="btn btn-mini" href={concat( $baseURI, $suffix )|ezurl} title="{'Remove filter on '|i18n( 'design/ezwebin/content/search' )}'{$dateFilterLabel}'">
+                  <span class="remover">&times</span>
+                  <span><strong>{'Creation time'|i18n( 'extension/ezfind/facets' )}</strong>&nbsp;{$dateFilterLabel}</span>
+                  </a> 
               </li>
           {/if}
 
           {if ge( $activeFacetsCount, 2 )}
               <li>
-                  <a href={$baseURI|ezurl}>[x]</a> <em>{'Clear all'|i18n( 'extension/ezfind/facets' )}</em>
+                  <a class="btn btn-mini btn-info clear-all" href={$baseURI|ezurl} title="{'Clear all'|i18n( 'extension/ezfind/facets' )}">
+                  <span class="remover">&times</span>
+                  <span><strong>{'Clear all filters'|i18n( 'extension/ezfind/facets' )}</strong></span>                  
+                  </a>
               </li>
           {/if}
           </ul>
@@ -245,12 +252,14 @@
                     {foreach $facetData.nameList as $key2 => $facetName}
                         {if ne( $key2, '' )}
                         <li>
+                            <span class="label facet-count">{$facetData.countList[$key2]}</span>
                             <a href={concat(
                                 $baseURI, '&filter[]=', $facetData.fieldList[$key2], ':"', $key2|solr_quotes_escape|rawurlencode, '"',
                                 '&activeFacets[', $defaultFacet['field'], ':', $defaultFacet['name'], ']=',
                                 $facetName|rawurlencode,
                                 $uriSuffix )|ezurl}>
-                            {$facetName|wash}</a> ({$facetData.countList[$key2]})
+                                <span class="label facet-name">{$facetName|wash}</span>
+                            </a> 
                         </li>
                         {/if}
                     {/foreach}
@@ -280,19 +289,19 @@
                   <span {*style="background-color: #F2F1ED"*}><strong>{'Creation time'|i18n( 'extension/ezfind/facets' )}</strong></span>
                   <ul>
                     <li>
-                        <a href={concat( $baseURI, '&dateFilter=1', $uriSuffix )|ezurl}>{"Last day"|i18n("design/standard/content/search")}</a>
+                        <a href={concat( $baseURI, '&dateFilter=1', $uriSuffix )|ezurl}><span class="label facet-name">{"Last day"|i18n("design/standard/content/search")}</span></a>
                     </li>
                     <li>
-                        <a href={concat( $baseURI, '&dateFilter=2', $uriSuffix )|ezurl}>{"Last week"|i18n("design/standard/content/search")}</a>
+                        <a href={concat( $baseURI, '&dateFilter=2', $uriSuffix )|ezurl}><span class="label facet-name">{"Last week"|i18n("design/standard/content/search")}</span></a>
                     </li>
                     <li>
-                        <a href={concat( $baseURI, '&dateFilter=3', $uriSuffix )|ezurl}>{"Last month"|i18n("design/standard/content/search")}</a>
+                        <a href={concat( $baseURI, '&dateFilter=3', $uriSuffix )|ezurl}><span class="label facet-name">{"Last month"|i18n("design/standard/content/search")}</span></a>
                     </li>
                     <li>
-                        <a href={concat( $baseURI, '&dateFilter=4', $uriSuffix )|ezurl}>{"Last three months"|i18n("design/standard/content/search")}</a>
+                        <a href={concat( $baseURI, '&dateFilter=4', $uriSuffix )|ezurl}><span class="label facet-name">{"Last three months"|i18n("design/standard/content/search")}</span></a>
                     </li>
                     <li>
-                        <a href={concat( $baseURI, '&dateFilter=5', $uriSuffix )|ezurl}>{"Last year"|i18n("design/standard/content/search")}</a>
+                        <a href={concat( $baseURI, '&dateFilter=5', $uriSuffix )|ezurl}><span class="label facet-name">{"Last year"|i18n("design/standard/content/search")}</span></a>
                     </li>
                   </ul>
               </li>
@@ -315,7 +324,7 @@
 
     {foreach $search_result as $result
              sequence array(bglight,bgdark) as $bgColor}
-       {node_view_gui view=ezfind_line sequence=$bgColor use_url_translation=$use_url_translation content_node=$result}
+       {node_view_gui view='line' sequence=$bgColor use_url_translation=$use_url_translation content_node=$result}
     {/foreach}
 
     {include name=Navigator
@@ -331,10 +340,8 @@
 </div>
 
 <p class="small"><em>{'Search took: %1 msecs, using '|i18n('ezfind',,array($search_extras.responseHeader.QTime|wash))}{$search_extras.engine}</em></p>
-{*$search|attribute(show,2)*}
-</div></div></div>
-<div class="border-bl"><div class="border-br"><div class="border-bc"></div></div></div>
-</div>
+
+
 
 {ezscript_require( array('ezjsc::jquery', 'ezjsc::yui2', 'ezajax_autocomplete.js') )}
 <script language="JavaScript" type="text/javascript">
