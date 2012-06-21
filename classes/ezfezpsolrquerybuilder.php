@@ -137,7 +137,6 @@ class ezfeZPSolrQueryBuilder
      * @return array Solr query results.
      *
      * @see ezfeZPSolrQueryBuilder::buildBoostFunctions()
-
      */
     public function buildSearch( $searchText, $params = array(), $searchTypes = array() )
     {
@@ -329,7 +328,19 @@ class ezfeZPSolrQueryBuilder
         //partly true as it is mostly composed of one or more attributes.
         //maybe we should add meta data to the index to filter them out.
 
-        $highLightFields = $queryFields;
+        // Give the direct query the highest priority for adding highlight fields
+        if ( isset( $highlightParams['highlight_fields'] ) )
+        {
+            $highLightFields = $highlightParams['highlight_fields'];
+        }
+        elseif ( count( self::$FindINI->variable( 'HighLighting', 'HighLightField' ) ) )
+        {
+            $highLightFields = self::$FindINI->variable( 'HighLighting', 'HighLightField' );
+        }
+        else
+        {
+            $highLightFields = $queryFields;
+        }
 
         //@since eZ Find 2.3
         //when dedicated attributes are searched for, don't add meta-fields to the $queryfields list
