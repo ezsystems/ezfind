@@ -119,7 +119,12 @@ $FunctionList['search'] = array( 'name' => 'search',
                                                         array ( 'name'  => 'search_result_clustering',
                                                                 'type' => 'array',
                                                                 'required' => false,
-                                                                'default' => null )) );
+                                                                'default' => null ),
+                                                        array ( 'name'  => 'highlight_params',
+                                                                'type' => 'array',
+                                                                'required' => false,
+                                                                'default' => null )
+                                                        ) );
 
 
 $FunctionList['getDefaultSearchFacets'] = array( 'name' => 'getDefaultSearchFacets',
