@@ -129,10 +129,8 @@ class ezfUpdateSearchIndexSolr
         }
 
         // Check that Solr server is up and running
-        if ( !$this->isSolrRunning() )
+        if ( !$this->checkSolrRunning() )
         {
-            $this->CLI->error( "The Solr server couldn't be reached." );
-            $this->CLI->error( 'Please, ensure the server is started and the configuration of eZFind correct.' );
             $this->Script->shutdown( 1 );
             exit();
         }
@@ -634,15 +632,60 @@ class ezfUpdateSearchIndexSolr
     }
 
     /**
-     * Tells whether Solr is running by replying to ping request
+     * Tells whether $coreUrl allows to reach a running Solr.
+     * If $coreUrl is false, the default Solr Url from solr.ini is used
+     *
+     * @param mixed $coreUrl
+     * @return boolean
+     */
+    protected function isSolrRunning( $coreUrl = false )
+    {
+        $solrBase = new eZSolrBase( $coreUrl );
+        $pingResult = $solrBase->ping();
+        return isset( $pingResult['status'] ) && $pingResult['status'] === 'OK';
+    }
+
+    /**
+     * Tells whether Solr is running by replying to ping request.
+     * In a multicore setup, all cores used to index content are checked.
      *
      * @return bool
      */
-    protected function isSolrRunning()
+    protected function checkSolrRunning()
     {
-        $solrBase = new eZSolrBase();
-        $pingResult = $solrBase->ping();
-        return isset( $pingResult['status'] ) && $pingResult['status'] === 'OK';
+        $eZFindINI = eZINI::instance( 'ezfind.ini' );
+        if ( $eZFindINI->variable( 'LanguageSearch', 'MultiCore' ) === 'enabled' )
+        {
+            $shards = eZINI::instance( 'solr.ini' )->variable( 'SolrBase', 'Shards' );
+            foreach ( $eZFindINI->variable( 'LanguageSearch', 'LanguagesCoresMap' ) as $locale => $coreName )
+            {
+                if ( isset( $shards[$coreName] ) )
+                {
+                    if ( !$this->isSolrRunning( $shards[$coreName] ) )
+                    {
+                        $this->CLI->error( "The '$coreName' Solr core is not running." );
+                        $this->CLI->error( 'Please, ensure the server is started and the configurations of eZ Find and Solr are correct.' );
+                        return false;
+                    }
+                }
+                else
+                {
+                    $this->CLI->error( "Locale '$locale' is mapped to a core that is not listed in solr.ini/[SolrBase]/Shards." );
+                    return false;
+                }
+            }
+            return true;
+        }
+        else
+        {
+            $ret = $this->isSolrRunning();
+            if ( !$ret )
+            {
+                $this->CLI->error( "The Solr server couldn't be reached." );
+                $this->CLI->error( 'Please, ensure the server is started and the configuration of eZ Find is correct.' );
+            }
+            return $ret;
+        }
     }
 
     const DEFAULT_COMMIT_WITHIN = 30;
