@@ -761,7 +761,7 @@ class eZSolr implements ezpSearchEngine
         {
             foreach ( $this->SolrLanguageShards as $shard )
             {
-                $shard->Solr->commit();
+                $shard->commit();
             }
         }
         else
