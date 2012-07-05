@@ -188,9 +188,12 @@
           <div id="ezfHelp" style="display: none;">
               <ul>
                   <li>{'The search is case insensitive. Upper and lower case characters may be used.'|i18n( 'design/ezfind/search' )}</li>
-                  <li>{'The search result contains all search terms.'|i18n( 'design/ezfind/search' )}</li>
                   <li>{'Phrase search can be achieved by using quotes, example: "Quick brown fox jumps over the lazy dog"'|i18n( 'design/ezfind/search' )}</li>
-                  <li>{'Words may be excluded by using a minus ( - ) character, example: lazy -dog'|i18n( 'design/ezfind/search' )}</li>
+                  <li>{'Words may be excluded by using a minus ( - ) prefix character, example: lazy -dog'|i18n( 'design/ezfind/search' )}</li>
+                  <li>{'Words may be required by using a plus ( + ) prefix character, example: +yellow coat'|i18n( 'design/ezfind/search' )}</li>
+                  <li>{'Wildcard characters * and ? can be used for partial string matching, example: syst* may expand to systems'|i18n( 'design/ezfind/search' )}</li>
+                  <li>{'Fuzzy searches can also be used appending a ~ character, example: like suster~ may match sister'|i18n( 'design/ezfind/search' )}</li>
+                  <li>{'Proximity searches can be established using double quotes and a maximum distance (in words) after a ~ character, example: "conference publish"~5 will match text where conference and publish are separated by a maximum of 5 words'|i18n( 'design/ezfind/search' )}</li>
               </ul>
           </div>
       </fieldset>
