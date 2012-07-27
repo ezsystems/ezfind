@@ -2,17 +2,17 @@
 <?php
 //
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
-// SOFTWARE NAME: eZ Find
-// SOFTWARE RELEASE: 1.0.x
-// COPYRIGHT NOTICE: Copyright (C) 1999-2012 eZ Systems AS
-// SOFTWARE LICENSE: GNU General Public License v2.0
+// SOFTWARE NAME: eZ Publish Community Project
+// SOFTWARE RELEASE:  2011.12
+// COPYRIGHT NOTICE: Copyright (C) 1999-2011 eZ Systems AS
+// SOFTWARE LICENSE: GNU General Public License v2
 // NOTICE: >
 //   This program is free software; you can redistribute it and/or
 //   modify it under the terms of version 2.0  of the GNU General
 //   Public License as published by the Free Software Foundation.
 //
 //   This program is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //   GNU General Public License for more details.
 //
@@ -20,8 +20,6 @@
 //   Public License along with this program; if not, write to the Free
 //   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 //   MA 02110-1301, USA.
-//
-//
 // ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 //
 //
@@ -91,7 +89,7 @@ class ezfUpdateSearchIndexSolr
         $this->Script->startup();
 
         $this->Options = $this->Script->getOptions(
-            "[db-host:][db-user:][db-password:][db-database:][db-type:|db-driver:][sql][clean][clean-all][conc:][offset:][limit:][topNodeID:][php-exec:][commit-within:]",
+            "[db-host:][db-user:][db-password:][db-database:][db-type:|db-driver:][sql][clean][clean-all][conc:][offset:][limit:][topNodeID:][php-exec:][commit-within:][forceindex]",
             "",
             array(
                 'db-host' => "Database host",
@@ -110,6 +108,7 @@ class ezfUpdateSearchIndexSolr
                 'offset' => '*For internal use only*',
                 'limit' => '*For internal use only*',
                 'topNodeID' => '*For internal use only*',
+                'forceindex' => '*new parameter For avoiding full indexing*',
             )
         );
         $this->Script->initialize();
@@ -208,24 +207,42 @@ class ezfUpdateSearchIndexSolr
                     'MainNodeOnly' => true
                 )
             )
-        )
+        )              
         {
             foreach ( $subTree as $innerNode )
-            {
-                $object = $innerNode->attribute( 'object' );
-                if ( !$object )
-                {
-                    continue;
-                }
+            {                          
+                                                       
+                $object                 = $innerNode->attribute( 'object' );                   
+                                $id                             = $innerNode->NodeID;
+                                $modifie_date   = $object->attribute( 'modified' );                            
+                                $bReindex               = FALSE;                               
+                               
+                                if ($this->Options["forceindex"] == 1) {                                       
+                                        $bReindex = TRUE;
+                                }
+                                else {                                 
+                                        $diff_modified  = time() - $modifie_date;
+                                        if ($diff_modified < 21600 ) {
+                                                $bReindex = TRUE;
+                                        }
+                                }
+                               
+                                if ( $bReindex ) {                                                                     
+                                        $this->CLI->error( "Indexing ID: $id" );
+                                        if ( !$object )
+                                        {
+                                                continue;
+                                        }
 
-                //eZSearch::removeObject( $object );
-                //pass false as we are going to do a commit at the end
-                $result = $searchEngine->addObject( $object, false, $this->commitWithin * 1000 );
-                if ( !$result )
-                {
-                    $this->CLI->error( ' Failed indexing ' . $object->attribute('class_identifier') .  ' object with ID ' . $object->attribute( 'id' ) );
-                }
-                ++$count;
+                                        //eZSearch::removeObject( $object );
+                                        //pass false as we are going to do a commit at the end
+                                        $result = $searchEngine->addObject( $object, false, $this->commitWithin * 1000 );
+                                        if ( !$result )
+                                        {
+                                                $this->CLI->error( ' Failed indexing ' . $object->attribute('class_identifier') .  ' object with ID ' . $object->attribute( 'id' ) );
+                                        }
+                                        ++$count;
+                                }
             }
         }
 
@@ -492,6 +509,16 @@ class ezfUpdateSearchIndexSolr
             $paramString .= ' -s ' . escapeshellarg( $this->Options['siteaccess'] );
         }
 
+                if ( $this->Options['clean-all'] )
+        {
+            $paramString .= ' --forceindex ';
+        }
+               
+                if ( $this->Options['clean'] )
+        {
+            $paramString .= ' --forceindex ';
+        }
+               
         $paramString .=
             ' --commit-within=' . $this->commitWithin .
             ' --limit=' . $limit .
