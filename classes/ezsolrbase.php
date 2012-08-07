@@ -365,7 +365,15 @@ class eZSolrBase
      **/
     function deleteDocs ( $docIDs = array(), $query = false, $commit = true,  $optimize = false )
     {
-        $postString = '<delete>';
+        if ( is_numeric( $commitWithin ) && $commitWithin > 0 )
+        {
+            $postString = '<delete commitWithin="' . $commitWithin . '">';
+        }
+        else
+        {
+            $postString = '<delete>';
+        }
+        
         if ( empty( $query ) )
         {
             foreach ( $docIDs as $docID )
