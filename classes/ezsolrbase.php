@@ -363,7 +363,7 @@ class eZSolrBase
      * @param bool $optimize set to true to perform a solr optimize after delete
      * @return bool
      **/
-    function deleteDocs ( $docIDs = array(), $query = false, $commit = true,  $optimize = false )
+    function deleteDocs ( $docIDs = array(), $query = false, $commit = true,  $optimize = false, $commitWithin = 0 )
     {
         if ( is_numeric( $commitWithin ) && $commitWithin > 0 )
         {
