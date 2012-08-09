@@ -1422,7 +1422,7 @@ class ezfeZPSolrQueryBuilder
      * @param boolean $ignoreVisibility Set to true for the visibility to be ignored
      * @return string Lucene/Solr query string which can be used as filter query for Solr
      */
-    protected function policyLimitationFilterQuery( $limitation = null, $ignoreVisibility = false )
+    protected function policyLimitationFilterQuery( $limitation = null, $ignoreVisibility = null )
     {
         $filterQuery = false;
         $policies = array();
@@ -1611,8 +1611,9 @@ class ezfeZPSolrQueryBuilder
             $filterQuery = '(' . eZSolr::getMetaFieldName( 'installation_id' ) . ':' . eZSolr::installationID() . $anonymousPart . ')';
         }
 
-        // Add visibility condition
-        if ( !eZContentObjectTreeNode::showInvisibleNodes() || !$ignoreVisibility )
+
+        // Add ignore visibility condition, either explicitely set to boolean false or not specified
+        if ( $ignoreVisibility === false || $ignoreVisibility === null || !eZContentObjectTreeNode::showInvisibleNodes() )
         {
             $filterQuery .= ' AND ' . eZSolr::getMetaFieldName( 'is_invisible' ) . ':false';
         }
