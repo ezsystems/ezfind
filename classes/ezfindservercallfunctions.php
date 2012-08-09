@@ -112,7 +112,7 @@ class eZFindServerCallFunctions
         $findINI = eZINI::instance( 'ezfind.ini' );
 
         // Only make calls if explicitely enabled
-        if ($findINI->variable('AutoCompleteSettings', 'AutoComplete') === 'enabled')
+        if ( $findINI->variable( 'AutoCompleteSettings', 'AutoComplete' ) === 'enabled' )
         {
 
             $solrINI = eZINI::instance( 'solr.ini' );
