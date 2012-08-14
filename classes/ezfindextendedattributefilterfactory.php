@@ -1,27 +1,17 @@
 <?php
 /**
- * Extended attribute filters factory and base class
- * Extend this class and override filterQueryParams() method to get a working extended attribute filter
+ * Extended attribute filters factory
+ * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @author bchoquet
+ * @license http://ez.no/licenses/gnu_gpl GNU GPL v2
+ * @version //autogentag//
+ * @package ezfind
  */
-class eZFindExtendedAttributeFilter
+class eZFindExtendedAttributeFilterFactory
 {
 
     /**
-     * Modifies SolR query params according to filter parameters
-     * Override this method in child class
-     * @param array $queryParams
-     * @param array $filterParams
-     * @return array $queryParams
-     */
-    public function filterQueryParams( array $queryParams, array $filterParams )
-    {
-        return $queryParams;
-    }
-
-
-    /**
-     * Singletons for child filters
+     * Filters singletons
      * key = filter id
      * val = instance
      * @var array
@@ -37,7 +27,7 @@ class eZFindExtendedAttributeFilter
     /**
      * Get singleton instance for filter
      * @param string $filterID
-     * @return eZFindExtendedAttributeFilter|false
+     * @return eZFindExtendedAttributeFilterInterface|false
      */
     public static function getInstance( $filterID )
     {
@@ -63,9 +53,9 @@ class eZFindExtendedAttributeFilter
                 }
 
                 $instance = new $className();
-                if( !is_a($instance, __CLASS__ ) )
+                if( !$instance instanceof eZFindExtendedAttributeFilterInterface )
                 {
-                    throw new Exception( $className . ' is not a valid ' . __CLASS__ );
+                    throw new Exception( $className . ' is not a valid eZFindExtendedAttributeFilterInterface' );
                 }
 
                 self::$instances[$filterID] = $instance;

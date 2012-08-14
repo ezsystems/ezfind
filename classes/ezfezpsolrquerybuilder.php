@@ -502,7 +502,7 @@ class ezfeZPSolrQueryBuilder
         {
             if( isset( $filterDefinition['id'] ) )
             {
-                $filter = eZFindExtendedAttributeFilter::getInstance( $filterDefinition['id'] );
+                $filter = eZFindExtendedAttributeFilterFactory::getInstance( $filterDefinition['id'] );
                 if( $filter )
                 {
                     $filterParams = isset( $filterDefinition['params'] ) ? $filterDefinition['params'] : array();
