@@ -25,7 +25,7 @@
  * @author bchoquet
  *
  */
-class eZFindGeoDistExtendedAttributeFilter extends eZFindExtendedAttributeFilter
+class eZFindGeoDistExtendedAttributeFilter implements eZFindExtendedAttributeFilterInterface
 {
 
     /**
