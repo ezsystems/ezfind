@@ -166,6 +166,7 @@ class ezfeZPSolrQueryBuilder
         $fieldsToReturn = isset( $params['FieldsToReturn'] ) ? $params['FieldsToReturn'] : array();
         $highlightParams = isset( $params['HighLightParams'] ) ? $params['HighLightParams'] : array();
         $searchResultClusterParams = isset( $params['SearchResultClustering'] ) ? $params['SearchResultClustering'] : array();
+        $extendedAttributeFilter = isset( $params['ExtendedAttributeFilter'] ) ? $params['ExtendedAttributeFilter'] : array();
 
 
         // distributed search option
@@ -489,6 +490,27 @@ class ezfeZPSolrQueryBuilder
             $elevateParamList,
             $searchResultClusterParamList
         );
+
+
+        if( isset( $extendedAttributeFilter['id'] ) && isset( $extendedAttributeFilter['params'] ) )
+        {
+            //single filter
+            $extendedAttributeFilter = array( $extendedAttributeFilter );
+        }
+
+        foreach( $extendedAttributeFilter as $filterDefinition )
+        {
+            if( isset( $filterDefinition['id'] ) )
+            {
+                $filter = eZFindExtendedAttributeFilterFactory::getInstance( $filterDefinition['id'] );
+                if( $filter )
+                {
+                    $filterParams = isset( $filterDefinition['params'] ) ? $filterDefinition['params'] : array();
+                    $queryParams = $filter->filterQueryParams( $queryParams, $filterParams );
+                }
+            }
+        }
+
         return $queryParams;
     }
 
