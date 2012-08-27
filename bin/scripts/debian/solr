@@ -5,7 +5,7 @@
 # Usage:
 #
 # Set the correct SOLR_HOME value, and copy (or symlink) this file to
-# /etc/init.d, then run "update-rc-d solr defaults" as root
+# /etc/init.d, then run "update-rc.d solr defaults" as root
 
 ### BEGIN INIT INFO
 # Provides:          solr
