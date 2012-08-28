@@ -380,49 +380,70 @@ class ezfeZPSolrQueryBuilder
 
         $queryHandler = strtolower( $queryHandler );
 
-        switch ( $queryHandler )
-        {
-            case 'standard':
-                // @todo: this is more complicated
-                // build the query against all "text" like fields
-                // should take into account all the filter fields and class filters to shorten the query
-                // need to build: Solr q
-                if ( array_key_exists( 'fields', $boostFunctions ) )
-                {
-
-                    $handlerParameters = array ( 'q' => $this->buildMultiFieldQuery( $searchText, array_merge( $queryFields, $extraFieldsToSearch ), $boostFunctions['fields'] ),
-                                             'qt' => 'standard' );
-                }
-                else
-                {
-                    $handlerParameters = array ( 'q' => $this->buildMultiFieldQuery( $searchText, array_merge( $queryFields, $extraFieldsToSearch ) ),
-                                             'qt' => 'standard' );
-                }
-                break;
-
-            case 'simplestandard':
-                // not to do much, searching is against the default aggregated field
-                // only highlightfields
-                $highLightFields = array ( 'ezf_df_text' );
-                $handlerParameters = array ( 'q' => $searchText,
-                                             'qt' => 'standard',
-                                             'hl.usePhraseHighlighter' => 'true',
-                                             'hl.highlightMultiTerm' => 'true' );
-                break;
-            case 'ezpublish':
-                // the dismax based handler, just keywordss input, most useful for ordinary queries by users
-                // need to build: Solr q, qf, dismax specific parameters
-
-            default:
-                // ezpublish of course, this to not break BC and is the most "general"
-                // if another value is specified, it is supposed to be a dismax like handler
-                // with possible other tuning variables then the stock provided 'ezpublish' in solrconfi.xml
-                // remark it should be lowercase in solrconfig.xml!
-                $handlerParameters = array ( 'q' => $searchText,
-                                             'qf' => implode( ' ', array_merge( $queryFields, $extraFieldsToSearch ) ),
-                                             'qt' => $queryHandler );
-
-        }
+		switch ( $queryHandler )
+		{
+		    case 'standard':
+		        // @todo: this is more complicated
+		        // build the query against all "text" like fields
+		        // should take into account all the filter fields and class filters to shorten the query
+		        // need to build: Solr q
+		        if ( array_key_exists( 'fields', $boostFunctions ) )
+		        {
+		            if (false != $shardQuery) {
+		            $handlerParameters = array ( 'q' => $this->buildMultiFieldQuery( $searchText, array_merge( $queryFields, $extraFieldsToSearch ), $boostFunctions['fields'] ),
+		                                     'qt' => 'standard',
+		                                     'shards' => $shardQuery);
+		            }
+		            else {
+		            $handlerParameters = array ( 'q' => $this->buildMultiFieldQuery( $searchText, array_merge( $queryFields, $extraFieldsToSearch ), $boostFunctions['fields'] ),
+		                                     'qt' => 'standard', );
+		            }
+		
+		        }
+		        else
+		        {
+		            if (false != $shardQuery) {
+		            $handlerParameters = array ( 'q' => $this->buildMultiFieldQuery( $searchText, array_merge( $queryFields, $extraFieldsToSearch ) ),
+		                                     'qt' => 'standard',
+		                                     'shards' => $shardQuery);
+		            }
+		            else{
+		                $handlerParameters = array ( 'q' => $this->buildMultiFieldQuery( $searchText, array_merge( $queryFields, $extraFieldsToSearch ) ),
+		                                     'qt' => 'standard' );
+		            }
+		        }
+		        break;
+		
+		    case 'simplestandard':
+		        // not to do much, searching is against the default aggregated field
+		        // only highlightfields
+		        $highLightFields = array ( 'ezf_df_text' );
+		        $handlerParameters = array ( 'q' => $searchText,
+		                                     'qt' => 'standard',
+		                                     'hl.usePhraseHighlighter' => 'true',
+		                                     'hl.highlightMultiTerm' => 'true' );
+		        break;
+		    case 'ezpublish':
+		        // the dismax based handler, just keywordss input, most useful for ordinary queries by users
+		        // need to build: Solr q, qf, dismax specific parameters
+		
+		    default:
+		        // ezpublish of course, this to not break BC and is the most "general"
+		        // if another value is specified, it is supposed to be a dismax like handler
+		        // with possible other tuning variables then the stock provided 'ezpublish' in solrconfi.xml
+		        // remark it should be lowercase in solrconfig.xml!
+		        if (false != $shardQuery) {
+		            $handlerParameters = array ( 'q' => $searchText,
+		                                         'qf' => implode( ' ', array_merge( $queryFields, $extraFieldsToSearch ) ),
+		                                         'qt' => $queryHandler,
+		                                         'shards' => $shardQuery );
+		        } else {
+		            $handlerParameters = array ( 'q' => $searchText,
+		                                         'qf' => implode( ' ', array_merge( $queryFields, $extraFieldsToSearch ) ),
+		                                         'qt' => $queryHandler );
+		
+		        }
+		}
 
         // Handle boost functions :
         $boostFunctionsParamList = $this->buildBoostFunctions( $boostFunctions, $handlerParameters );
