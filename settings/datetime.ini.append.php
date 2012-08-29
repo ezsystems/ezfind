@@ -2,7 +2,7 @@
 
 [ClassSettings]
 # Solr date format for date filters
-Formats[solr]=%Y-%m-%dT%H:%i:%s.000Z
+Formats[solr]=%Y-%m-%dT%H:%i:%sZ
 
 */
 ?>
