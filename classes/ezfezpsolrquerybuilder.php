@@ -418,7 +418,15 @@ class ezfeZPSolrQueryBuilder
                 // if another value is specified, it is supposed to be a dismax like handler
                 // with possible other tuning variables then the stock provided 'ezpublish' in solrconfi.xml
                 // remark it should be lowercase in solrconfig.xml!
+
+                $boostQueryString = $this->boostQuery();
+                $rawBoostQueries = self::$FindINI->variable( 'QueryBoost', 'RawBoostQueries');
+                if (is_array($rawBoostQueries) && !empty($rawBoostQueries))
+                {
+                    $boostQueryString .= ' ' . implode(' ', $rawBoostQueries);
+                }
                 $handlerParameters = array ( 'q' => $searchText,
+                                             'bq' => $boostQueryString,
                                              'qf' => implode( ' ', array_merge( $queryFields, $extraFieldsToSearch ) ),
                                              'qt' => $queryHandler );
 
@@ -472,7 +480,6 @@ class ezfeZPSolrQueryBuilder
                 'sort' => $sortParameter,
                 'indent' => 'on',
                 'version' => '2.2',
-                'bq' => $this->boostQuery(),
                 'fl' => $fieldsToReturnString,
                 'fq' => $filterQuery,
                 'hl' => self::$FindINI->variable( 'HighLighting', 'Enabled' ),
@@ -653,11 +660,53 @@ class ezfeZPSolrQueryBuilder
         {
         	case 'ezpublish' :
         	{
-        	    // The dismax based handler
+        	// The edismax based handler which takes its own boost parameters
                 // Push the boost expression in the 'bf' parameter, if it is not empty.
-                $boostString = implode( ' ', $processedBoostFunctions['functions'] );
-                $boostString .= ' ' . implode( ' ', $processedBoostFunctions['fields'] );
-                return ( $boostString == '' ) ? array() : array( 'bf' => trim( $boostString ) );
+                //
+                // for the fields to boost, modify the qf parameter for edismax
+                // this is set before in the buildSearch method
+                $queryFields = explode(' ', $handlerParameters['qf']);
+                foreach ($processedBoostFunctions['fields'] as $fieldToBoost => $boostString)
+                {
+                    $key = array_search($fieldToBoost, $queryFields);
+                    if (false !== $key)
+                    {
+                        $queryFields[$key] = $boostString;
+                    }
+                    else // might be a custom created field, lets add it implicitely with its boost specification
+
+                    {
+                        $queryFields[] = $boostString;
+                    }
+                }
+                $handlerParameters['qf'] = implode(' ', $queryFields);
+
+                //$boostString .= ' ' . implode( ' ', $processedBoostFunctions['fields'] );
+                // Return
+                $boostReturnArray = array();
+
+
+                //return ( $boostString == '' ) ? array() : array( 'bf' => trim( $boostString ) );
+
+                //additive boost functions
+                if ( array_key_exists(  'functions', $boostFunctions ) )
+                {
+                    $boostReturnArray['bf'] = $boostFunctions['functions'];
+                }
+
+                // multiplicative boost functions
+                if ( array_key_exists(  'mfunctions', $boostFunctions ) )
+                {
+                    $boostReturnArray['boost'] = $boostFunctions['mfunctions'];
+                }
+
+                //add the queries to the existing bq edismax parameter
+                if ( array_key_exists(  'queries', $boostFunctions ) )
+                {
+                    $handlerParameters['bq'] .= ' ' . implode(' ', $boostFunctions['queries']);
+                }
+
+                return $boostReturnArray;
         	} break;
 
         	default:
