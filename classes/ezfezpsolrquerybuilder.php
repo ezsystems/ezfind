@@ -420,12 +420,12 @@ class ezfeZPSolrQueryBuilder
                 // remark it should be lowercase in solrconfig.xml!
 
                 $boostQueryString = $this->boostQuery();
-                $rawBoostQueries = self::$FindINI->variable( 'QueryBoost', 'RawBoostQueries');
-                if (is_array($rawBoostQueries) && !empty($rawBoostQueries))
+                $rawBoostQueries = self::$FindINI->variable( 'QueryBoost', 'RawBoostQueries' );
+                if ( is_array( $rawBoostQueries ) && !empty( $rawBoostQueries ) )
                 {
-                    $boostQueryString .= ' ' . implode(' ', $rawBoostQueries);
+                    $boostQueryString .= ' ' . implode( ' ', $rawBoostQueries );
                 }
-                $handlerParameters = array ( 'q' => $searchText,
+                $handlerParameters = array ( 'q'  => $searchText,
                                              'bq' => $boostQueryString,
                                              'qf' => implode( ' ', array_merge( $queryFields, $extraFieldsToSearch ) ),
                                              'qt' => $queryHandler );
@@ -607,7 +607,7 @@ class ezfeZPSolrQueryBuilder
      * @param array &$handlerParameters The inclusion of boost functions in the final search parameter array depends on which queryHandler is used.
      *                                  This parameter shall be modified in one of the cases.
      *
-     * @return array In one of the cases, an array shall be returned, containing the boost expression under the 'bf' key.
+     * @return array containing the boost expressions for the various request handler boost parameters
      */
     protected function buildBoostFunctions( $boostFunctions = null, &$handlerParameters )
     {
@@ -666,27 +666,22 @@ class ezfeZPSolrQueryBuilder
                 // for the fields to boost, modify the qf parameter for edismax
                 // this is set before in the buildSearch method
                 $queryFields = explode(' ', $handlerParameters['qf']);
-                foreach ($processedBoostFunctions['fields'] as $fieldToBoost => $boostString)
+                foreach ( $processedBoostFunctions['fields'] as $fieldToBoost => $boostString )
                 {
                     $key = array_search($fieldToBoost, $queryFields);
                     if (false !== $key)
                     {
                         $queryFields[$key] = $boostString;
                     }
-                    else // might be a custom created field, lets add it implicitely with its boost specification
-
+                    // might be a custom created field, lets add it implicitely with its boost specification
+                    else 
                     {
                         $queryFields[] = $boostString;
                     }
                 }
-                $handlerParameters['qf'] = implode(' ', $queryFields);
+                $handlerParameters['qf'] = implode( ' ', $queryFields );
 
-                //$boostString .= ' ' . implode( ' ', $processedBoostFunctions['fields'] );
-                // Return
                 $boostReturnArray = array();
-
-
-                //return ( $boostString == '' ) ? array() : array( 'bf' => trim( $boostString ) );
 
                 //additive boost functions
                 if ( array_key_exists(  'functions', $boostFunctions ) )
