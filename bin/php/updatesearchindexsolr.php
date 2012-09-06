@@ -285,6 +285,13 @@ class ezfUpdateSearchIndexSolr
                              10 ); // Maximum 10 processes
         $useFork = ( function_exists( 'pcntl_fork' ) &&
                      function_exists( 'posix_kill' ) );
+
+        $db = eZDB::instance();
+        if ($db->databaseName() === 'postgresql') {
+            // Postgresql drive is single threaded
+            $useFork = false;
+        }
+
         if ( $useFork )
         {
             $this->CLI->output( 'Using fork.' );
