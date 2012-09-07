@@ -141,7 +141,7 @@ class ezfeZPSolrQueryBuilder
      */
     public function buildSearch( $searchText, $params = array(), $searchTypes = array() )
     {
-        eZDebug::writeDebug( $params, 'search params' );
+        eZDebugSetting::writeDebug( 'extension-ezfind-query', $params, 'search params' );
         $searchCount = 0;
 
         $offset = ( isset( $params['SearchOffset'] ) && $params['SearchOffset'] ) ? $params['SearchOffset'] : 0;
@@ -469,7 +469,7 @@ class ezfeZPSolrQueryBuilder
 
         $searchResultClusterParamList = array( 'clustering' => 'true');
         $searchResultClusterParamList = $this->buildSearchResultClusterQuery($searchResultClusterParams);
-        eZDebug::writeDebug( $searchResultClusterParamList, 'Cluster params' );
+        eZDebugSetting::writeDebug( 'extension-ezfind-query', $searchResultClusterParamList, 'Cluster params' );
 
 
         $queryParams =  array_merge(
@@ -728,9 +728,9 @@ class ezfeZPSolrQueryBuilder
      */
     public function buildMoreLikeThis( $queryType, $query, $params = array() )
     {
-        eZDebug::writeDebug( $queryType, 'mlt querytype' );
-        eZDebug::writeDebug( $query, 'mlt query' );
-        eZDebug::writeDebug( $params, 'mlt params' );
+        eZDebugSetting::writeDebug( 'extension-ezfind-query-mlt', $queryType, 'mlt querytype' );
+        eZDebugSetting::writeDebug( 'extension-ezfind-query-mlt', $query, 'mlt query' );
+        eZDebugSetting::writeDebug( 'extension-ezfind-query-mlt', $params, 'mlt params' );
         $searchCount = 0;
 
         $queryInstallationID = ( isset( $params['QueryInstallationID'] ) && $params['QueryInstallationID'] ) ? $params['QueryInstallationID'] : eZSolr::installationID();
@@ -1752,7 +1752,7 @@ class ezfeZPSolrQueryBuilder
             $filterQuery .= ' AND ' . eZSolr::getMetaFieldName( 'is_invisible' ) . ':false';
         }
 
-        eZDebug::writeDebug( $filterQuery, __METHOD__ );
+        eZDebugSetting::writeDebug( 'extension-ezfind-query', $filterQuery, __METHOD__ );
 
         return $filterQuery;
     }
