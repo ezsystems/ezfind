@@ -917,7 +917,7 @@ class eZSolr implements ezpSearchEngine
                 $queryParams = array_merge( $shardQueryPart, $queryParams );
             }
             eZDebug::accumulatorStop( 'Query build' );
-            eZDebug::writeDebug( $queryParams, 'Final query parameters sent to Solr backend' );
+            eZDebugSetting::writeDebug( 'extension-ezfind-query', 'Final query parameters sent to Solr backend' );
 
             eZDebug::createAccumulator( 'Engine time', 'eZ Find' );
             eZDebug::accumulatorStart( 'Engine time' );
@@ -1240,7 +1240,7 @@ class eZSolr implements ezpSearchEngine
         $stopWordArray = array();
 
         eZDebug::accumulatorStop( 'Search' );
-        eZDebug::writeDebug( $resultArray['interestingTerms'], 'MoreLikeThis terms' );
+        eZDebugSetting::writeDebug( 'extension-ezfind-query-mlt', $resultArray['interestingTerms'], 'MoreLikeThis terms' );
         return array(
             'SearchResult' => $objectRes,
             'SearchCount' => $searchCount,
