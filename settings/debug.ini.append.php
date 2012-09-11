@@ -4,9 +4,9 @@
 # Note that [DebugSettings]ConditionDebug in debug.ini is a master setting for all debug message conditions
 [GeneralCondition]
 # Run on every query
-extension-ezfind-query=enabled
+extension-ezfind-query=disabled
 # Run on every MoreLikeThis query
-extension-ezfind-query-mlt=enabled
+extension-ezfind-query-mlt=disabled
 
 */
 ?>
