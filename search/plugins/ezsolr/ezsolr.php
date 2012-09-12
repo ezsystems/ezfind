@@ -917,7 +917,7 @@ class eZSolr implements ezpSearchEngine
                 $queryParams = array_merge( $shardQueryPart, $queryParams );
             }
             eZDebug::accumulatorStop( 'Query build' );
-            eZDebugSetting::writeDebug( 'extension-ezfind-query', 'Final query parameters sent to Solr backend' );
+            eZDebugSetting::writeDebug( 'extension-ezfind-query', $queryParams, 'Final query parameters sent to Solr backend' );
 
             eZDebug::createAccumulator( 'Engine time', 'eZ Find' );
             eZDebug::accumulatorStart( 'Engine time' );
