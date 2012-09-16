@@ -1423,7 +1423,9 @@ class eZSolr implements ezpSearchEngine
     }
 
     /*
-     * used by search and morelikethis
+     * Translates a solr response into result objects or a slightly modified array.
+     * The $asObjects parameter controls which of the 2 return formats get send back. 
+     * Used by the functions search and moreLikeThis
     */
     protected function buildResultObjects( $resultArray, &$searchCount, $asObjects = true )
     {
