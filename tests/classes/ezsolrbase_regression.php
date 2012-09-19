@@ -51,14 +51,14 @@ class eZSolrBaseRegression extends ezpDatabaseTestCase
 
         $postString = $solrBase->buildPostString( $this->postParams );
         $res = $refMethod->invoke( $solrBase, $solrBase->SearchServerURI.$this->testURI, $postString );
-        self::assertType( PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $res );
+        self::assertInternalType( PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $res );
         self::assertTrue( strpos( $res, '<?xml' ) !== false );
 
         // Now test with postQuery(), that calls sendHTTPRequestRetry() and check result is the same
         $refMethod2 = $refObj->getMethod( 'postQuery' );
         $refMethod2->setAccessible( true );
         $res2 = $refMethod2->invoke( $solrBase, $this->testURI, $postString );
-        self::assertType( PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $res2 );
+        self::assertInternalType( PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $res2 );
         self::assertTrue( strpos( $res2, '<?xml' ) !== false );
     }
 

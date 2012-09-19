@@ -2,7 +2,7 @@
 /**
  * Test suite for eZFindElevateConfiguration
  **/
-class eZFindElevateConfigurationTest extends ezpDatabaseTestCase
+class eZFindElevateConfigurationTest extends ezFindTestCase
 {
     protected $backupGlobals = false;
 
@@ -11,7 +11,7 @@ class eZFindElevateConfigurationTest extends ezpDatabaseTestCase
     public function setUp()
     {
         parent::setUp();
-        ezpTestDatabaseHelper::insertSqlData( $this->sharedFixture, $this->sqlFiles );
+        ezpTestDatabaseHelper::insertSqlData( $this->getSharedFixture(), $this->sqlFiles );
     }
 
     /**
