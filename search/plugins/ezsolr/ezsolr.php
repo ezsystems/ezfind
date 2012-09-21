@@ -861,7 +861,6 @@ class eZSolr implements ezpSearchEngine
         eZDebug::createAccumulator( 'Search', 'eZ Find' );
         eZDebug::accumulatorStart( 'Search' );
         $error = 'Server not running';
-        $searchCount = 0;
 
         $asObjects = isset( $params['AsObjects'] ) ? $params['AsObjects'] : true;
 
@@ -927,7 +926,7 @@ class eZSolr implements ezpSearchEngine
 
         if ( $resultArray )
         {
-            $searchCount = $result['numFound'];
+            $searchCount = $resultArray[ 'response' ][ 'numFound' ];
             $objectRes = $this->buildResultObjects(
                 $resultArray, $searchCount, $asObjects
             );
@@ -970,7 +969,6 @@ class eZSolr implements ezpSearchEngine
         eZDebug::createAccumulator( 'MoreLikeThis', 'eZ Find' );
         eZDebug::accumulatorStart( 'MoreLikeThis' );
         $error = 'Server not running';
-        $searchCount = 0;
 
         $asObjects = isset( $params['AsObjects'] ) ? $params['AsObjects'] : true;
 
@@ -1013,7 +1011,7 @@ class eZSolr implements ezpSearchEngine
 
         if ( $resultArray )
         {
-            $searchCount = $result['numFound'];
+            $searchCount = $resultArray[ 'response' ][ 'numFound' ];
             $objectRes = $this->buildResultObjects(
                 $resultArray, $searchCount, $asObjects
             );
