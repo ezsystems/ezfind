@@ -6,7 +6,7 @@
  * @license http://ez.no/licenses/gnu_gpl GNU GPLv2
  * @package ezfind
  */
-class eZFindFetch extends ezpDatabaseTestCase
+class eZFindFetch extends ezFindTestCase
 {
 	protected $fetchParams;
 
@@ -70,6 +70,7 @@ class eZFindFetch extends ezpDatabaseTestCase
 
 		self::assertInternalType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
 		self::assertCount( 1, $res[ 'SearchResult' ] );
+		self::assertEquals( 1, $res[ 'SearchCount' ] );
 		
 		$rootNode = $res['SearchResult'][0];
 		
@@ -83,6 +84,7 @@ class eZFindFetch extends ezpDatabaseTestCase
 	
 		self::assertInternalType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
 		self::assertCount( 1, $res[ 'SearchResult' ] );
+		self::assertEquals( 1, $res[ 'SearchCount' ] );
 		self::assertTrue( $res['SearchResult'][0][ 'main_node_id' ] == 2 );
 	}
 
@@ -92,7 +94,8 @@ class eZFindFetch extends ezpDatabaseTestCase
 	
 		self::assertInternalType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
 		self::assertCount( 1, $res[ 'SearchResult' ] );
-
+		self::assertEquals( 1, $res[ 'SearchCount' ] );
+		
 		$rootNode = $res['SearchResult'][0];
 		
 		self::assertTrue( $rootNode instanceof eZFindResultNode );
@@ -104,6 +107,8 @@ class eZFindFetch extends ezpDatabaseTestCase
 	
 		self::assertInternalType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
 		self::assertCount( 1, $res[ 'SearchResult' ] );
+		self::assertEquals( 1, $res[ 'SearchCount' ] );
+		
 		self::assertTrue( $res['SearchResult'][0][ 'main_node_id' ] == 2 );
 	}
 	
