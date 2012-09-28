@@ -591,6 +591,7 @@
    <field name="meta_sort_name_ms" type="mtext" indexed="true" stored="true"/>  <!-- Object name for sorting (not tokenized) -->
    <field name="meta_main_node_id_si" type="sint" indexed="true" stored="true"/>           <!-- Main node ID -->
    <field name="meta_language_code_ms" type="mstring" indexed="true" stored="true"/>          <!-- Language code -->
+   <field name="meta_always_available_b" type="boolean" indexed="true" stored="true" />         <!-- always available flag -->
    <field name="meta_available_language_codes_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- List of available language codes in the corresponding content object -->
    <field name="meta_anon_access_b" type="boolean" indexed="true" stored="false" />         <!-- Anonymous user access to object -->
    <field name="meta_object_states_si" type="sint" indexed="true" stored="true" multiValued="true"/>                     <!-- Object states -->
@@ -703,6 +704,7 @@
        <dynamicField name="*___class_identifier_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- Class identifier -->
        <dynamicField name="*___main_node_id_si" type="sint" indexed="true" stored="true" multiValued="true"/>           <!-- Main node ID -->
        <dynamicField name="*___language_code_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- Language code -->
+       <dynamicField name="*___always_available_b" type="boolean" indexed="true" stored="true" multiValued="true" />         <!-- always available flag -->
        <dynamicField name="*___available_language_codes_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- List of available language codes in the corresponding content object -->
        <dynamicField name="*___remote_id_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>          <!-- Remote ID -->
        <dynamicField name="*___anon_access_b" type="boolean" indexed="true" stored="false"  multiValued="true"/>         <!-- Anonymous user access to object -->

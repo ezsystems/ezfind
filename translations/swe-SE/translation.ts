@@ -2,6 +2,58 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="sv_SE" sourcelanguage="en">
 <context>
+    <name>design/admin/content/search</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Sök</translation>
+    </message>
+    <message>
+        <source>All content</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The same location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>For more options try the %1Advanced search%2.</source>
+        <comment>The parameters are link start and end tags.</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following words were excluded from the search</source>
+        <translation type="unfinished">Följande ord ingick ej i sökningen</translation>
+    </message>
+    <message>
+        <source>No results were found while searching for &lt;%1&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search tips</source>
+        <translation type="unfinished">Hjälp med sökningsstrategi</translation>
+    </message>
+    <message>
+        <source>Check spelling of keywords.</source>
+        <translation type="unfinished">Jämför stavning av sökorden med ord på sajten.</translation>
+    </message>
+    <message>
+        <source>Try changing some keywords e.g. &amp;quot;car&amp;quot; instead of &amp;quot;cars&amp;quot;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Try more general keywords.</source>
+        <translation type="unfinished">Försök med mindre specifika sökord.</translation>
+    </message>
+    <message>
+        <source>Fewer keywords result in more matches. Try reducing keywords until you get a result.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search for &lt;%1&gt; returned %2 matches</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>design/admin/node/view/full</name>
     <message>
         <source>Show 10 items per page.</source>
@@ -37,6 +89,30 @@
     <message>
         <source>Advanced search.</source>
         <translation>Avancerad sökning.</translation>
+    </message>
+    <message>
+        <source>Search scope</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Section</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation type="unfinished">Alla</translation>
+    </message>
+    <message>
+        <source>Search only from the current location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The same location</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -103,7 +179,31 @@
     </message>
     <message>
         <source>Words may be excluded by using a minus ( - ) character, example: free -beer</source>
-        <translation>Ska inte ett ord förekomma i det du söker efter anger du det med minustecken (-) innan, t ex sektion -stockholm</translation>
+        <translation type="obsolete">Ska inte ett ord förekomma i det du söker efter anger du det med minustecken (-) innan, t ex sektion -stockholm</translation>
+    </message>
+    <message>
+        <source>Words may be excluded by using a minus ( - ) character, example: lazy -dog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Words may be excluded by using a minus ( - ) prefix character, example: lazy -dog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Words may be required by using a plus ( + ) prefix character, example: +yellow coat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wildcard characters * and ? can be used for partial string matching, example: syst* may expand to systems</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fuzzy searches can also be used appending a ~ character, example: like suster~ may match sister</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Proximity searches can be established using double quotes and a maximum distance (in words) after a ~ character, example: &quot;conference publish&quot;~5 will match text where conference and publish are separated by a maximum of 5 words</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -159,6 +259,14 @@
     <message>
         <source>Refine your search</source>
         <translation>Förfina din sökning</translation>
+    </message>
+    <message>
+        <source>tips</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove filter on </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -648,6 +756,10 @@
         <source>Publication Year</source>
         <translation>Publiceringsår</translation>
     </message>
+    <message>
+        <source>Clear all filters</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>extension/ezfind/popupmenu</name>
@@ -680,11 +792,15 @@
     </message>
     <message>
         <source>Server not running</source>
-        <translation>Sökmaskinen svara inte. Troligen är den inte igång.</translation>
+        <translation type="obsolete">Sökmaskinen svara inte. Troligen är den inte igång.</translation>
     </message>
     <message>
         <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.1</source>
-        <translation>eZFind-sökutökningen %version &amp;copy; 1999–2012 eZ Systems AS, med Apache Solr 3.1</translation>
+        <translation type="obsolete">eZFind-sökutökningen %version &amp;copy; 1999–2012 eZ Systems AS, med Apache Solr 3.1</translation>
+    </message>
+    <message>
+        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.5</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

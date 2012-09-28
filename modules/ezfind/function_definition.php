@@ -75,7 +75,7 @@ $FunctionList['search'] = array( 'name' => 'search',
                                                         array( 'name' => 'ignore_visibility',
                                                                'type' => 'bool',
                                                                'required' => false,
-                                                               'default' => false ),
+                                                               'default' => null ),
                                                         array( 'name' => 'limitation',
                                                                'type' => 'array',
                                                                'required' => false,
@@ -119,7 +119,11 @@ $FunctionList['search'] = array( 'name' => 'search',
                                                         array ( 'name'  => 'search_result_clustering',
                                                                 'type' => 'array',
                                                                 'required' => false,
-                                                                'default' => null )) );
+                                                                'default' => null ),
+                                                        array ( 'name'  => 'extended_attribute_filter',
+                                                                'type' => 'array',
+                                                                'required' => false,
+                                                                'default' => array() )) );
 
 
 $FunctionList['getDefaultSearchFacets'] = array( 'name' => 'getDefaultSearchFacets',

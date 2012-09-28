@@ -31,11 +31,9 @@
  * @package eZFind
  */
 
-require_once( "kernel/common/template.php" );
-
 $module = $Params['Module'];
 $http = eZHTTPTool::instance();
-$tpl = templateInit();
+$tpl = eZTemplate::factory();
 $feedback = array();
 $wildcard = eZFindElevateConfiguration::WILDCARD;
 $viewParameters = array();
