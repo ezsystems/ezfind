@@ -187,7 +187,7 @@
     </message>
     <message>
         <source>Words may be required by using a plus ( + ) prefix character, example: +yellow coat</source>
-        <translation>Des mots peuvent être requis en les préfixant par un plus ( - ), par exemple : manteau +jaune</translation>
+        <translation type="unfinished">Des mots peuvent être requis en les préfixant par un plus ( + ), par exemple : manteau +jaune</translation>
     </message>
     <message>
         <source>Wildcard characters * and ? can be used for partial string matching, example: syst* may expand to systems</source>
