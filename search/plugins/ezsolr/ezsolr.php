@@ -364,16 +364,42 @@ class eZSolr implements ezpSearchEngine
             $docPathStrings,
             $subtreeLimitations
         );
+        $ignoreVisibility = eZContentObjectTreeNode::showInvisibleNodes();
+        if ( isset( $this->postSearchProcessingData['ignore_visibility'] ) )
+        {
+            $ignoreVisibility = $this->postSearchProcessingData['ignore_visibility'];
+        }
+
 
         // Intersect between $validSubtreeArray (search location filter) and $validSubtreeLimitations (user policy limitations)
         // indicates valid locations for $doc in current search query
-        // If this intersect is not empty, we take the first element to get the corresponding node ID
-        $validSubtrees = array_intersect( $validSubtreeArray, $validSubtreeLimitations );
+        // If this intersect is not empty, we take the first node id that
+        // matches the visibility requirement
+        $validSubtrees = array_flip(
+            array_intersect( $validSubtreeArray, $validSubtreeLimitations )
+        );
         if ( !empty( $validSubtrees ) )
         {
-            $validSubtree = array_shift( $validSubtrees );
-            $nodeArray = explode( '/', rtrim( $validSubtree, '/' ) );
-            return (int)array_pop( $nodeArray );
+            foreach ( $docPathStrings as $k => $path )
+            {
+                if ( isset( $validSubtrees[$path] ) )
+                {
+                    if (
+                        $ignoreVisibility ||
+                        !$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'is_invisible' )][$k]
+                    )
+                    {
+                        $nodeArray = explode( '/', rtrim( $path, '/' ) );
+                        return (int)array_pop( $nodeArray );
+                    }
+                }
+            }
+            eZDebug::writeError(
+                "Could not find a visible location for content " .
+                "#{$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'id' )]} " .
+                "that current user has read access on. The Solr index is probably outdated",
+                __METHOD__
+            );
         }
         else
         {
@@ -387,6 +413,17 @@ class eZSolr implements ezpSearchEngine
                     "Subtree limitations for user : " . print_r( $subtreeLimitations, true ),
                     __METHOD__
                 );
+            }
+            foreach ( $docPathStrings as $k => $path )
+            {
+                if (
+                    $ignoreVisibility ||
+                    !$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'is_invisible' )][$k]
+                )
+                {
+                    $nodeArray = explode( '/', rtrim( $path, '/' ) );
+                    return (int)array_pop( $nodeArray );
+                }
             }
         }
 
