@@ -28,6 +28,10 @@
 # echo "SOLR_HOME=/var/www/ezpublish/extension/ezfind/java" > /etc/sysconfig/solr
 #
 #
+# @todo use the standard messages from the init scripts for all operations instead of taking over with our version?
+#
+# @see http://fedoraproject.org/wiki/Packaging:SysVInitScript for return codes and general guidelines
+#
 # chkconfig: 2345 64 36
 # description: SOLR indexing server
 # processname: solr
@@ -43,44 +47,42 @@ JAVA_HOME= # Set java home here if java is not available in /usr/bin/java or /us
 OPTIONS=
 
 if [ -f /etc/sysconfig/solr ]; then
-        . /etc/sysconfig/solr
+    . /etc/sysconfig/solr
 fi
 
 # @todo (maybe) allow var names from http://gitorious.org/opensuse/webpin2/blobs/master/solr.init as well
 pidfile=${PIDFILE-/var/run/solr.pid}
-lockfile=${LOCKFILE-/var/lock/subsys/$NAME}
+lockfile=${LOCKFILE-/var/lock/subsys/solr}
 
+# check for java
 for JAVA in "$JAVA_HOME/bin/java" "/usr/bin/java" "/usr/local/bin/java"
 do
-        if [ -x $JAVA ]
-        then
-                break
-        fi
+    if [ -x $JAVA ]; then
+        break
+    fi
 done
-if [ ! -x $JAVA ]
-then
-        echo "Unable to locate java. Please set JAVA_HOME environment variable."
-        exit
+if [ ! -x $JAVA ]; then
+    echo "Unable to locate java. Please set JAVA_HOME environment variable."
+    exit 6
 fi
 
+# check for solr
 if [ ! -d "$SOLR_HOME" ]; then
-        echo "the directory $SOLR_HOME (SOLR_HOME) does not exist"; 
-	if [ "$1" = "stop" ]; then
-	        exit 0
-	else
-	        exit 5
-	fi;
+    echo "the directory $SOLR_HOME (SOLR_HOME) does not exist"; 
+    if [ "$1" = "stop" ]; then
+        exit 0
+    else
+        exit 5
+    fi;
 fi
-
 SOLR_JAR="$SOLR_HOME/start.jar"
-
 if [ ! -f "$SOLR_JAR" ]; then
-        echo "$SOLR_JAR not installed"; 
-	if [ "$1" = "stop" ]; then
-	        exit 0
-	else
-	        exit 5
-        fi
+    echo "$SOLR_JAR not installed"; 
+    if [ "$1" = "stop" ]; then
+        exit 0
+    else
+        exit 5
+    fi
 fi
 
 RETVAL=0
@@ -88,13 +90,12 @@ RETVAL=0
 d_start() {
     CURRENT_DIR=`pwd`
     cd $SOLR_HOME
-    daemon --check $NAME --pidfile ${pidfile} nohup $JAVA $OPTIONS -jar start.jar
+    daemon --check $NAME --pidfile ${pidfile} nohup $JAVA $OPTIONS -jar start.jar > /dev/null 2> /dev/null &
     RETVAL=$?
     cd $CURRENT_DIR
-    if [ $RETVAL -eq 0 ]
-    then
+    if [ $RETVAL -eq 0 ]; then
         sleep 1 # Sleep 1 second, to make sure java is registered.
-        # @bug this is plain wrong, we might get a different java here...
+        # @bug this is plain wrong, we might get many different java processes here...
         pid=`pidof java`
         echo $pid > ${pidfile}
         touch ${lockfile}
@@ -103,7 +104,8 @@ d_start() {
 }
 
 d_stop() {
-    killproc -p ${pidfile} $NAME >> /dev/null
+    # d_stop returns 0 even when process has been killed by hand. This might be confusing, so we let its std err/out get through
+    killproc -p ${pidfile} $NAME
     RETVAL=$?
     [ $RETVAL -eq 0 ] && rm -f ${lockfile} ${pidfile}
     return $RETVAL
@@ -116,21 +118,19 @@ d_restart() {
 }
 
 d_reload() {
-    killproc -p ${pidfile} $NAME -HUP
-    RETVAL=$?
-    return $RETVAL
+    killproc -p ${pidfile} $NAME -HUP 2> /dev/null
+    return $?
 }
 
 d_status() {
-    status -p ${pidfile} $NAME >> /dev/null
+    status -p ${pidfile} $NAME >> /dev/null 2> /dev/null
     return $?
 }
 
 case "$1" in
   start)
     echo " * Starting $DESC ($NAME)"
-    d_status
-    if [ $? -eq 0 ]
+    if d_status
     then
       echo "   ...already running."
     else
@@ -155,8 +155,7 @@ case "$1" in
     ;;
   restart)
     echo " * Restarting $DESC ($NAME)"
-    d_status
-    if [ $? -ne 0 ]
+    if d_status
     then
       echo "   ...not running."
       RETVAL=1
@@ -176,8 +175,7 @@ case "$1" in
     echo "   ...done."
     ;;
   status)
-    d_status
-    if [ $? -eq 0 ]
+    if d_status
     then
       echo " * $DESC ($NAME) is running"
     else
