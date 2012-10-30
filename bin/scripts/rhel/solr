@@ -58,38 +58,41 @@ RETVAL=0
 d_start() {
     CURRENT_DIR=`pwd`
     cd $SOLR_HOME
-    daemon --check $NAME --pidfile ${pidfile} nohup $JAVA -jar start.jar > /dev/null 2>&1 &
+    daemon --check $NAME --pidfile ${pidfile} nohup $JAVA -jar start.jar
     RETVAL=$?
-    sleep 1 # Sleep 1 second, to make sure java is registered.
-    # @bug this is plain wrong, we might get a different java here...
-    pid=`pidof java`
-    echo $pid > ${pidfile}
     cd $CURRENT_DIR
-    [ $RETVAL -eq 0 ] && touch ${lockfile}
+    if [ $RETVAL -eq 0 ]
+    then
+        sleep 1 # Sleep 1 second, to make sure java is registered.
+        # @bug this is plain wrong, we might get a different java here...
+        pid=`pidof java`
+        echo $pid > ${pidfile}
+        touch ${lockfile}
+    fi
     return $RETVAL
 }
 
 d_stop() {
-    killproc -p ${pidfile} $NAME >> /dev/null 2&>1
+    killproc -p ${pidfile} $NAME >> /dev/null
     RETVAL=$?
     [ $RETVAL -eq 0 ] && rm -f ${lockfile} ${pidfile}
     return $RETVAL
 }
 
 d_restart() {
-    d_stop >> /dev/null 2&>1
+    d_stop >> /dev/null
     sleep 1
-    d_start >> /dev/null 2&>1
+    d_start >> /dev/null
 }
 
 d_reload() {
-    killproc -p ${pidfile} $NAME -HUP 2&>1
+    killproc -p ${pidfile} $NAME -HUP
     RETVAL=$?
     return $RETVAL
 }
 
 d_status() {
-    status -p ${pidfile} $NAME >> /dev/null 2&>1
+    status -p ${pidfile} $NAME >> /dev/null
     return $?
 }
 
