@@ -67,7 +67,7 @@ d_start() {
 d_stop() {
     killproc -p ${pidfile} $NAME >> /dev/null 2&>1
     RETVAL=$?
-    [ $RETVAL -eq 0 ] && rm -f ${lockfile}
+    [ $RETVAL -eq 0 ] && rm -f ${lockfile} ${pidfile}
     return $RETVAL
 }
 
