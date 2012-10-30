@@ -29,17 +29,24 @@ JAVA_HOME= # Set java home here if java is not available in /usr/bin/java or /us
 
 source /etc/rc.d/init.d/functions
 
+if [ -f /etc/sysconfig/solr ]; then
+        . /etc/sysconfig/solr
+fi
+
+pidfile=${PIDFILE-/var/run/solr.pid}
+lockfile=${LOCKFILE-/var/lock/subsys/$NAME}
+
 for JAVA in "$JAVA_HOME/bin/java" "/usr/bin/java" "/usr/local/bin/java"
 do
-	if [ -x $JAVA ]
+        if [ -x $JAVA ]
         then
-		break
-	fi
+                break
+        fi
 done
 if [ ! -x $JAVA ]
 then
-	echo "Unable to locate java. Please set JAVA_HOME environment variable."
-	exit
+        echo "Unable to locate java. Please set JAVA_HOME environment variable."
+        exit
 fi
 
 RETVAL=0
@@ -47,20 +54,20 @@ RETVAL=0
 d_start() {
     CURRENT_DIR=`pwd`
     cd $SOLR_HOME
-    daemon --check $NAME --pidfile /var/run/solr.pid nohup $JAVA -jar start.jar > /dev/null 2>&1 &
+    daemon --check $NAME --pidfile ${pidfile} nohup $JAVA -jar start.jar > /dev/null 2>&1 &
     RETVAL=$?
     sleep 1 # Sleep 1 second, to make sure java is registered.
     pid=`pidof java`
-    echo $pid > /var/run/solr.pid
+    echo $pid > ${pidfile}
     cd $CURRENT_DIR
-    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$NAME
+    [ $RETVAL -eq 0 ] && touch ${lockfile}
     return $RETVAL
 }
 
 d_stop() {
-    killproc -p /var/run/solr.pid $NAME >> /dev/null 2&>1
+    killproc -p ${pidfile} $NAME >> /dev/null 2&>1
     RETVAL=$?
-    [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/$NAME
+    [ $RETVAL -eq 0 ] && rm -f ${lockfile}
     return $RETVAL
 }
 
@@ -71,13 +78,13 @@ d_restart() {
 }
 
 d_reload() {
-    killproc -p /var/run/solr.pid $NAME -HUP 2&>1
+    killproc -p ${pidfile} $NAME -HUP 2&>1
     RETVAL=$?
     return $RETVAL
 }
 
 d_status() {
-    status -p /var/run/solr.pid $NAME >> /dev/null 2&>1
+    status -p ${pidfile} $NAME >> /dev/null 2&>1
     return $?
 }
 
