@@ -158,6 +158,7 @@ class ezfeZPSolrQueryBuilder
         $visibilityDefaultSetting = self::$SiteINI->variable( 'SiteAccessSettings', 'ShowHiddenNodes' );
         $visibilityDefault = ( $visibilityDefaultSetting === 'true' ) ? true : false;
         $ignoreVisibility = isset( $params['IgnoreVisibility'] )  ?  $params['IgnoreVisibility'] : $visibilityDefault;
+        $this->searchPluginInstance->postSearchProcessingData['ignore_visibility'] = $ignoreVisibility;
         $limitation = isset( $params['Limitation'] )  ?  $params['Limitation'] : null;
         $boostFunctions = isset( $params['BoostFunctions'] )  ?  $params['BoostFunctions'] : null;
         $forceElevation = isset( $params['ForceElevation'] )  ?  $params['ForceElevation'] : false;
@@ -451,7 +452,8 @@ class ezfeZPSolrQueryBuilder
                 eZSolr::getMetaFieldName( 'main_url_alias' ) . ' ' . eZSolr::getMetaFieldName( 'installation_url' ) . ' ' .
                 eZSolr::getMetaFieldName( 'id' ) . ' ' . eZSolr::getMetaFieldName( 'main_node_id' ) . ' ' .
                 eZSolr::getMetaFieldName( 'language_code' ) . ' ' . eZSolr::getMetaFieldName( 'name' ) .
-                ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ) . ' ' . implode( ' ', $extraFieldsToReturn );
+                ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ) . ' ' .
+                eZSolr::getMetaFieldName( 'is_invisible' ) . ' ' . implode( ' ', $extraFieldsToReturn );
 
         if ( ! $asObjects )
         {
