@@ -4,9 +4,19 @@
 #
 # Usage:
 #
-# Set the correct SOLR_HOME value, and copy this file to /etc/init.d, then
-# - either run chkconfig --add solr, or
-# - symlink to /etc/init.d/solr to /etc/rc3.<n>/S70solr and /etc/rc5.<n>/k70solr
+# 1. installation
+#    Copy this file to /etc/init.d, then
+#    - either run chkconfig --add solr, or
+#    - symlink to /etc/init.d/solr to /etc/rc3.<n>/S70solr and /etc/rc5.<n>/k70solr
+#
+# 2. configuration
+#    Set options in /etc/sysconfig/solr
+#    Variables which can be defined in /etc/sysconfig/solr:
+#      SOLR_HOME (mandatory)
+#      JAVA_HOME
+#      PIDFILE
+#      LOCKFILE
+#      OPTIONS (for the JVM command-line)
 #
 # Example:
 # cp solr /etc/init.d/solr
@@ -15,26 +25,28 @@
 # cd /etc/rc5.d && ln -s ../init.d/solr S70solr
 # cd /etc/rc3.d && ln -s ../init.d/solr K70solr
 # cd /etc/rc5.d && ln -s ../init.d/solr K70solr
+# echo "SOLR_HOME=/var/www/ezpublish/extension/ezfind/java" > /etc/sysconfig/solr
 #
 #
 # chkconfig: 2345 64 36
 # description: SOLR indexing server
 # processname: solr
 # pidfile: /var/run/solr.pid
+# config: /etc/sysconfig/solr
+
+source /etc/rc.d/init.d/functions
 
 DESC="Solr indexing server"
 NAME=solr
-SOLR_HOME= # Set solr home here (example: /var/www/ezpublish/extension/ezfind/java)
-JAVA_HOME= # Set java home here if java is not available in /usr/bin/java or /usr/local/bin/java
-
-source /etc/rc.d/init.d/functions
+SOLR_HOME= # Set solr home here if you can not create /etc/sysconfig/solr (example: /var/www/ezpublish/extension/ezfind/java)
+JAVA_HOME= # Set java home here if java is not available in /usr/bin/java or /usr/local/bin/java and you can not create /etc/sysconfig/solr
+OPTIONS=
 
 if [ -f /etc/sysconfig/solr ]; then
         . /etc/sysconfig/solr
 fi
 
-# @todo allow user to set SOLR_HOME and JAVA_HOME in /etc/sysconfig/solr as well (maybe allow var name from http://gitorious.org/opensuse/webpin2/blobs/master/solr.init as well)
-# @todo allow user to set up custom args for the JVM in /etc/sysconfig/solr
+# @todo (maybe) allow var names from http://gitorious.org/opensuse/webpin2/blobs/master/solr.init as well
 pidfile=${PIDFILE-/var/run/solr.pid}
 lockfile=${LOCKFILE-/var/lock/subsys/$NAME}
 
@@ -76,7 +88,7 @@ RETVAL=0
 d_start() {
     CURRENT_DIR=`pwd`
     cd $SOLR_HOME
-    daemon --check $NAME --pidfile ${pidfile} nohup $JAVA -jar start.jar
+    daemon --check $NAME --pidfile ${pidfile} nohup $JAVA $OPTIONS -jar start.jar
     RETVAL=$?
     cd $CURRENT_DIR
     if [ $RETVAL -eq 0 ]
