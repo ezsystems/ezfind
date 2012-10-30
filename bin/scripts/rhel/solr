@@ -51,7 +51,25 @@ then
         exit
 fi
 
-# @todo check as well that $SOLR_HOME is a dir and that it has in it start.jar
+if [ ! -d "$SOLR_HOME" ]; then
+        echo "the directory $SOLR_HOME (SOLR_HOME) does not exist"; 
+	if [ "$1" = "stop" ]; then
+	        exit 0
+	else
+	        exit 5
+	fi;
+fi
+
+SOLR_JAR="$SOLR_HOME/start.jar"
+
+if [ ! -f "$SOLR_JAR" ]; then
+        echo "$SOLR_JAR not installed"; 
+	if [ "$1" = "stop" ]; then
+	        exit 0
+	else
+	        exit 5
+        fi
+fi
 
 RETVAL=0
 
