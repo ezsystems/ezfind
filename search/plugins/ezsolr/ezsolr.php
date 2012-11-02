@@ -830,11 +830,25 @@ class eZSolr implements ezpSearchEngine
     /**
      * Removes object $contentObject from the search database.
      *
+     * @deprecated Since 5.0, use removeObjectById()
      * @param eZContentObject $contentObject the content object to remove
      * @param bool $commit Whether to commit after removing the object
      * @return bool True if the operation succeed.
      */
     function removeObject( $contentObject, $commit = null )
+    {
+        return $this->removeObjectById( $contentObject->attribute( 'id' ), $commit );
+    }
+
+    /**
+     * Removes a content object by Id from the search database.
+     *
+     * @since 5.0
+     * @param int $contentObjectId The content object to remove by id
+     * @param bool $commit Whether to commit after removing the object
+     * @return bool True if the operation succeed.
+     */
+    public function removeObjectById( $contentObjectId, $commit = null )
     {
         /*
          * @since eZFind 2.2: allow delayed commits if explicitely set as configuration setting and
@@ -851,7 +865,7 @@ class eZSolr implements ezpSearchEngine
         }
 
         // 1: remove the assciated "elevate" configuration
-        eZFindElevateConfiguration::purge( '', $contentObject->attribute( 'id' ) );
+        eZFindElevateConfiguration::purge( '', $contentObjectId );
         //eZFindElevateConfiguration::synchronizeWithSolr();
         $this->pushElevateConfiguration();
 
@@ -867,7 +881,7 @@ class eZSolr implements ezpSearchEngine
         foreach ( $languages as $language )
         {
             $languageCode = $language->attribute( 'locale' );
-            $docs[$languageCode] = $this->guid( $contentObject, $languageCode );
+            $docs[$languageCode] = $this->guid( $contentObjectId, $languageCode );
         }
         if ( $this->UseMultiLanguageCores === true )
         {
@@ -1154,12 +1168,15 @@ class eZSolr implements ezpSearchEngine
     /**
      * Computes the unique ID of a content object language version
      *
-     * @param eZContentObject $contentObject The content object
+     * @param eZContentObject|int $contentObject The content object OR content object Id
      * @param string $languageCode
      * @return string guid
      */
     function guid( $contentObject, $languageCode = '' )
     {
+        if ( !$contentObject instanceof eZContentObject )
+            return md5( self::installationID() . '-' . $contentObject . '-' . $languageCode );
+
         return md5( self::installationID() . '-' . $contentObject->attribute( 'id' ) . '-' . $languageCode );
     }
 
