@@ -90,6 +90,30 @@
         <source>Advanced search.</source>
         <translation>Búsqueda avanzada.</translation>
     </message>
+    <message>
+        <source>Search scope</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Section</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation type="unfinished">Todos</translation>
+    </message>
+    <message>
+        <source>Search only from the current location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The same location</source>
+        <translation type="unfinished">En la misma ubicación</translation>
+    </message>
 </context>
 <context>
     <name>design/base</name>
@@ -165,6 +189,26 @@
         <source>Words may be excluded by using a minus ( - ) character, example: lazy -dog</source>
         <translation>Se pueden excluir palabras usando el carácter menos ( - ), ejemplo: gratis -cerveza</translation>
     </message>
+    <message>
+        <source>Words may be excluded by using a minus ( - ) prefix character, example: lazy -dog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Words may be required by using a plus ( + ) prefix character, example: +yellow coat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wildcard characters * and ? can be used for partial string matching, example: syst* may expand to systems</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fuzzy searches can also be used appending a ~ character, example: like suster~ may match sister</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Proximity searches can be established using double quotes and a maximum distance (in words) after a ~ character, example: &quot;conference publish&quot;~5 will match text where conference and publish are separated by a maximum of 5 words</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>design/ezflow/block/search</name>
@@ -223,6 +267,14 @@
     <message>
         <source>Refine your search</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>tips</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove filter on </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -728,6 +780,10 @@
         <source>Publication Year</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Clear all filters</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>extension/ezfind/popupmenu</name>
@@ -775,7 +831,7 @@
         <translation type="obsolete">Extensión de búsqueda eZ Find 2.3 &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 1.5-dev</translation>
     </message>
     <message>
-        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.1</source>
+        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.5</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

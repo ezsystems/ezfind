@@ -110,46 +110,61 @@ class eZFindServerCallFunctions
     {
         $result = array();
         $findINI = eZINI::instance( 'ezfind.ini' );
-        $solrINI = eZINI::instance( 'solr.ini' );
-        $siteINI = eZINI::instance();
-        $currentLanguage = $siteINI->variable( 'RegionalSettings', 'ContentObjectLocale' );
 
-        $input = isset( $args[0] ) ? mb_strtolower( $args[0], 'UTF-8' ) : null;
-        $limit = isset( $args[1] ) ? (int)$args[1] : (int)$findINI->variable( 'AutoCompleteSettings', 'Limit' );
-
-        $facetField = $findINI->variable( 'AutoCompleteSettings', 'FacetField' );
-
-        $params = array( 'q' => '*:*',
-                         'json.nl' => 'arrarr',
-                         'facet' => 'true',
-                         'facet.field' => $facetField,
-                         'facet.prefix' => $input,
-                         'facet.limit' => $limit,
-                         'facet.mincount' => 1 );
-
-        if ( $findINI->variable( 'LanguageSearch', 'MultiCore' ) == 'enabled' )
+        // Only make calls if explicitely enabled
+        if ( $findINI->hasVariable( 'AutoCompleteSettings', 'AutoComplete' ) && $findINI->variable( 'AutoCompleteSettings', 'AutoComplete' ) === 'enabled' )
         {
-           $languageMapping = $findINI->variable( 'LanguageSearch','LanguagesCoresMap' );
-           $shardMapping = $solrINI->variable( 'SolrBase', 'Shards' );
-           $fullSolrURI = $shardMapping[$languageMapping[$currentLanguage]];
+
+            $solrINI = eZINI::instance( 'solr.ini' );
+            $siteINI = eZINI::instance();
+            $currentLanguage = $siteINI->variable( 'RegionalSettings', 'ContentObjectLocale' );
+
+            $input = isset( $args[0] ) ? mb_strtolower( $args[0], 'UTF-8' ) : null;
+            $limit = isset( $args[1] ) ? (int)$args[1] : (int)$findINI->variable( 'AutoCompleteSettings', 'Limit' );
+
+            $facetField = $findINI->variable( 'AutoCompleteSettings', 'FacetField' );
+            $facetMethod = $findINI->variable( 'AutoCompleteSettings', 'FacetMethod' );
+
+            $params = array( 'q' => '*:*',
+                             'rows' => 0,
+                             'json.nl' => 'arrarr',
+                             'facet' => 'true',
+                             'facet.field' => $facetField,
+                             'facet.prefix' => $input,
+                             'facet.limit' => $limit,
+                             'facet.method' => $facetMethod,
+                             'facet.mincount' => 1 );
+
+            if ( $findINI->variable( 'LanguageSearch', 'MultiCore' ) == 'enabled' )
+            {
+               $languageMapping = $findINI->variable( 'LanguageSearch','LanguagesCoresMap' );
+               $shardMapping = $solrINI->variable( 'SolrBase', 'Shards' );
+               $fullSolrURI = $shardMapping[$languageMapping[$currentLanguage]];
+            }
+            else
+            {
+                $fullSolrURI = $solrINI->variable( 'SolrBase', 'SearchServerURI' );
+                // Autocomplete search should be done in current language and fallback languages
+                $validLanguages = array_unique(
+                    array_merge(
+                        $siteINI->variable( 'RegionalSettings', 'SiteLanguageList' ),
+                        array( $currentLanguage )
+                    )
+                );
+                $params['fq'] = 'meta_language_code_ms:(' . implode( ' OR ', $validLanguages ) . ')';
+            }
+
+            $solrBase = new eZSolrBase( $fullSolrURI );
+            $result = $solrBase->rawSolrRequest( '/select', $params, 'json' );
+
+            return $result['facet_counts']['facet_fields'][$facetField];
         }
         else
         {
-            $fullSolrURI = $solrINI->variable( 'SolrBase', 'SearchServerURI' );
-            // Autocomplete search should be done in current language and fallback languages
-            $validLanguages = array_unique(
-                array_merge(
-                    $siteINI->variable( 'RegionalSettings', 'SiteLanguageList' ),
-                    array( $currentLanguage )
-                )
-            );
-            $params['fq'] = 'meta_language_code_ms:(' . implode( ' OR ', $validLanguages ) . ')';
+            // not enabled, just return an empty array
+            return array();
         }
 
-        $solrBase = new eZSolrBase( $fullSolrURI );
-        $result = $solrBase->rawSolrRequest( '/select', $params, 'json' );
-
-        return $result['facet_counts']['facet_fields'][$facetField];
     }
 }
 ?>

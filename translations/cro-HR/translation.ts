@@ -90,6 +90,30 @@
         <source>Advanced search.</source>
         <translation>Napredno pretraživanje.</translation>
     </message>
+    <message>
+        <source>Search scope</source>
+        <translation>Opseg pretraživanja</translation>
+    </message>
+    <message>
+        <source>Section</source>
+        <translation>Sekcija</translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation>Sve</translation>
+    </message>
+    <message>
+        <source>Search only from the current location</source>
+        <translation>Traži samo ispod trenutne lokacije</translation>
+    </message>
+    <message>
+        <source>Current location</source>
+        <translation>Trenutna lokacija</translation>
+    </message>
+    <message>
+        <source>The same location</source>
+        <translation>Ista lokacija</translation>
+    </message>
 </context>
 <context>
     <name>design/base</name>
@@ -157,6 +181,26 @@
         <source>Words may be excluded by using a minus ( - ) character, example: lazy -dog</source>
         <translation>Riječi mogu isključene koristeći minus ( - ), npr: lijeni -pas</translation>
     </message>
+    <message>
+        <source>Words may be excluded by using a minus ( - ) prefix character, example: lazy -dog</source>
+        <translation>Riječi mogu biti isključene iz pretrage koristeći minus ( - ), npr. lijeni -pas</translation>
+    </message>
+    <message>
+        <source>Words may be required by using a plus ( + ) prefix character, example: +yellow coat</source>
+        <translation>Riječi mogu biti zahtijevane za pretragu koristeći plus ( + ), npr. +žuti kaput</translation>
+    </message>
+    <message>
+        <source>Wildcard characters * and ? can be used for partial string matching, example: syst* may expand to systems</source>
+        <translation>* i ? znakovi se mogu koristiti za djelomično uspoređivanje teksta, npr. sust* može odgovarati riječi sustavi</translation>
+    </message>
+    <message>
+        <source>Fuzzy searches can also be used appending a ~ character, example: like suster~ may match sister</source>
+        <translation>Neizrazite pretrage se mogu koristiti dodavanjem znaka ~ na riječ, npr. sustra~ može odgovarati riječi sestra</translation>
+    </message>
+    <message>
+        <source>Proximity searches can be established using double quotes and a maximum distance (in words) after a ~ character, example: &quot;conference publish&quot;~5 will match text where conference and publish are separated by a maximum of 5 words</source>
+        <translation>Pretrage po udaljenosti se mogu obaviti koristeći duple navodnike i najveću dopuštenu udaljenost (u riječima) nakon znaka ~ npr. &quot;konferencija publish&quot;~5 će odgovarati tekstu gdje su riječi konferencija i publish odvojene sa maksimalno 5 riječi</translation>
+    </message>
 </context>
 <context>
     <name>design/ezflow/block/search</name>
@@ -211,6 +255,14 @@
     <message>
         <source>Refine your search</source>
         <translation>Uredite vašu pretragu</translation>
+    </message>
+    <message>
+        <source>tips</source>
+        <translation>savjeti</translation>
+    </message>
+    <message>
+        <source>Remove filter on </source>
+        <translation>Ukloni filter na </translation>
     </message>
 </context>
 <context>
@@ -700,6 +752,10 @@
         <source>Publication Year</source>
         <translation>Godina objave</translation>
     </message>
+    <message>
+        <source>Clear all filters</source>
+        <translation>Ukloni sve filtre</translation>
+    </message>
 </context>
 <context>
     <name>extension/ezfind/popupmenu</name>
@@ -731,8 +787,8 @@
         <translation>Pretraživanje je trajalo: %1 msek, koristeći </translation>
     </message>
     <message>
-        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.1</source>
-        <translation>eZ Find %version ekstenzija za pretraživanje &amp;copy; 1999-2012 eZ Systems AS, upogonjeno koristeći Apache Solr 3.1</translation>
+        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.5</source>
+        <translation>eZ Find %version ekstenzija za pretraživanje &amp;copy; 1999-2012 eZ Systems AS, upogonjeno koristeći Apache Solr 3.5</translation>
     </message>
 </context>
 </TS>
