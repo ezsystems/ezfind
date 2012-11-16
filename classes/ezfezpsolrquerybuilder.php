@@ -453,7 +453,8 @@ class ezfeZPSolrQueryBuilder
                 eZSolr::getMetaFieldName( 'id' ) . ' ' . eZSolr::getMetaFieldName( 'main_node_id' ) . ' ' .
                 eZSolr::getMetaFieldName( 'language_code' ) . ' ' . eZSolr::getMetaFieldName( 'name' ) .
                 ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ) . ' ' .
-                eZSolr::getMetaFieldName( 'is_invisible' ) . ' ' . implode( ' ', $extraFieldsToReturn );
+                eZSolr::getMetaFieldName( 'main_path_string' ) . ' ' . eZSolr::getMetaFieldName( 'is_invisible' ) . ' ' .
+                implode( ' ', $extraFieldsToReturn );
 
         if ( ! $asObjects )
         {
