@@ -335,6 +335,23 @@ class eZSolr implements ezpSearchEngine
     protected function getNodeID( $doc )
     {
         $docPathStrings = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'path_string' )];
+        $docVisibilities = $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'is_invisible' )];
+        if ( count( $docPathStrings ) > 1 )
+        {
+            // reordering the path strings and the associated visibilities so
+            // that the main node path string and the main node visibility are
+            // in the first position.
+            $mainNodeIdx = array_search(
+                $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_path_string' )],
+                $docPathStrings
+            );
+            if ( $mainNodeIdx != 0 )
+            {
+                array_unshift( $docVisibilities, $docVisibilities[$mainNodeIdx] );
+                array_unshift( $docPathStrings, $docPathStrings[$mainNodeIdx] );
+                unset( $docVisibilities[$mainNodeIdx], $docPathStrings[$mainNodeIdx] );
+            }
+        }
         $locationFilter = isset( $this->postSearchProcessingData['subtree_array'] ) ? $this->postSearchProcessingData['subtree_array'] : array();
         $subtreeLimitations = isset( $this->postSearchProcessingData['subtree_limitations'] ) ? $this->postSearchProcessingData['subtree_limitations'] : array();
         $validSubtreeArray = $this->getValidPathStringsByLimitation(
@@ -365,10 +382,7 @@ class eZSolr implements ezpSearchEngine
             {
                 if ( isset( $validSubtrees[$path] ) )
                 {
-                    if (
-                        $ignoreVisibility ||
-                        !$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'is_invisible' )][$k]
-                    )
+                    if ( $ignoreVisibility || !$docVisibilities[$k] )
                     {
                         $nodeArray = explode( '/', rtrim( $path, '/' ) );
                         return (int)array_pop( $nodeArray );
@@ -397,10 +411,7 @@ class eZSolr implements ezpSearchEngine
             }
             foreach ( $docPathStrings as $k => $path )
             {
-                if (
-                    $ignoreVisibility ||
-                    !$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'is_invisible' )][$k]
-                )
+                if ( $ignoreVisibility || !$docVisibilities[$k] )
                 {
                     $nodeArray = explode( '/', rtrim( $path, '/' ) );
                     return (int)array_pop( $nodeArray );
