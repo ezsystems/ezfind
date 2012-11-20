@@ -66,7 +66,7 @@
     -->
 
     <!-- The StrField type is not analyzed, but indexed/stored verbatim. -->
-    <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
+    <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="false"/>
 
     <!-- needed for the hardcoded meta fields -->
     <fieldType name="mstring" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
