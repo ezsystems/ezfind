@@ -1477,19 +1477,14 @@ class ezfeZPSolrQueryBuilder
         $boostQuery = eZSolr::getMetaFieldName( 'installation_id' ) . ':' . eZSolr::installationID() . '^1.5';
         $ini = eZINI::instance();
 
-        // Language boost. Only boost 3 first languages.
-        $languageBoostList = array( '1.2', '1.0', '0.8' );
-        foreach ( $ini->variable( 'RegionalSettings', 'SiteLanguageList' ) as $idx => $languageCode )
-        {
-            if ( empty( $languageBoostList[$idx] ) )
-            {
-                break;
-            }
-            $boostQuery .= ' ' . eZSolr::getMetaFieldName( 'language_code' ) . ':' . $languageCode . '^' . $languageBoostList[$idx];
-        }
+        // Get the default siteaccess language via the Locale ini setting
+        $locale = $ini->variable( 'RegionalSettings', 'Locale' );
+
+        // Boost only the default siteaccess language
+        $boostQuery .= ' ' . eZSolr::getMetaFieldName( 'language_code' ) . ':' . $locale . '^1.2';
 
         // @TODO : User defined boosts through ini settings
-        return $boostQuery;
+        return trim($boostQuery);
     }
 
     /**
