@@ -799,7 +799,7 @@
         <translation type="obsolete">eZFind-sökutökningen %version &amp;copy; 1999–2012 eZ Systems AS, med Apache Solr 3.1</translation>
     </message>
     <message>
-        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.5</source>
+        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.6.1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
