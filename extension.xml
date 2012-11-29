@@ -13,7 +13,7 @@
                 <license>Apache License, Version 2.0</license>
                 <copyright>The Apache Software Foundation.</copyright>
                 <info_url>http://lucene.apache.org/solr/</info_url>
-                <version>3.5</version>
+                <version>3.6.1</version>
             </uses>
         </software>
 

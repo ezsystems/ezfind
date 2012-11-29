@@ -803,7 +803,7 @@
         <translation type="obsolete">eZ Find 2.3 検索プラグイン &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 1.5-dev</translation>
     </message>
     <message>
-        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.5</source>
+        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.6.1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
