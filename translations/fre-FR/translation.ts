@@ -90,6 +90,30 @@
         <source>Advanced search.</source>
         <translation>Recherche avancée.</translation>
     </message>
+    <message>
+        <source>Search scope</source>
+        <translation>Périmètre de recherche</translation>
+    </message>
+    <message>
+        <source>Section</source>
+        <translation>Section</translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation>Tous</translation>
+    </message>
+    <message>
+        <source>Search only from the current location</source>
+        <translation>Rechercher seulement à partir de l&apos;emplacement actuel</translation>
+    </message>
+    <message>
+        <source>Current location</source>
+        <translation>Emplacement actuel</translation>
+    </message>
+    <message>
+        <source>The same location</source>
+        <translation>Le même emplacement</translation>
+    </message>
 </context>
 <context>
     <name>design/base</name>
@@ -157,6 +181,26 @@
         <source>Words may be excluded by using a minus ( - ) character, example: lazy -dog</source>
         <translation>Des mots peuvent être exclus en utilisant le caractère &quot;moins&quot; ( - ), par exemple: paresseux -chien</translation>
     </message>
+    <message>
+        <source>Words may be excluded by using a minus ( - ) prefix character, example: lazy -dog</source>
+        <translation>Des mots peuvent être exclus en les préfixant par un moins ( - ), par exemple : paresseux -chien</translation>
+    </message>
+    <message>
+        <source>Words may be required by using a plus ( + ) prefix character, example: +yellow coat</source>
+        <translation>Des mots peuvent être requis en les préfixant par un plus ( + ), par exemple : manteau +jaune</translation>
+    </message>
+    <message>
+        <source>Wildcard characters * and ? can be used for partial string matching, example: syst* may expand to systems</source>
+        <translation>Les caractères génériques * et ? peuvent être utilisés pour les recherches partielles, par exemple &quot;syst*&quot; correspondra à &quot;systèmes&quot;</translation>
+    </message>
+    <message>
+        <source>Fuzzy searches can also be used appending a ~ character, example: like suster~ may match sister</source>
+        <translation>Les recherches approximatives peuvent être utilisées en ajoutant le caractère ~, par exemple &quot;sor~&quot;  peut correspondre à &quot;soeur&quot;</translation>
+    </message>
+    <message>
+        <source>Proximity searches can be established using double quotes and a maximum distance (in words) after a ~ character, example: &quot;conference publish&quot;~5 will match text where conference and publish are separated by a maximum of 5 words</source>
+        <translation>Les recherches de proximité peuvent être effectuées en utilisant des guillemets et une distance maximale (en mots) après le caractère ~, par exemple: &quot;conférence publier&quot;~5 correspondra aux textes où conférence et publier sont séparés par un maximum de 5 mots</translation>
+    </message>
 </context>
 <context>
     <name>design/ezflow/block/search</name>
@@ -211,6 +255,14 @@
     <message>
         <source>Refine your search</source>
         <translation>Affinez la recherche</translation>
+    </message>
+    <message>
+        <source>tips</source>
+        <translation>astuces</translation>
+    </message>
+    <message>
+        <source>Remove filter on </source>
+        <translation>Supprimer le filtre de </translation>
     </message>
 </context>
 <context>
@@ -700,6 +752,10 @@
         <source>Publication Year</source>
         <translation>Année de publication</translation>
     </message>
+    <message>
+        <source>Clear all filters</source>
+        <translation>Supprimer tous les filtres</translation>
+    </message>
 </context>
 <context>
     <name>extension/ezfind/popupmenu</name>
@@ -736,7 +792,11 @@
     </message>
     <message>
         <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.1</source>
-        <translation>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, propulsé par Apache Solr 3.1</translation>
+        <translation type="obsolete">eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, propulsé par Apache Solr 3.1</translation>
+    </message>
+    <message>
+        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.6.1</source>
+        <translation>Plugin de recherche eZ Find %version &amp;copy; 1999-2012 eZ Systems AS, propulsé par Apache Solr 3.6.1</translation>
     </message>
 </context>
 </TS>

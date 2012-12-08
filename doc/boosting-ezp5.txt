@@ -1,0 +1,66 @@
+Since eZ Publish 5, the boost_functions parameter is extended and now properly
+supports all boosting capabilities of Solr in order to fine-tune the search result
+relevancy scores.
+
+
+A) Fetch function parameters
+
+Most boost features are exposed via ezfind's native search fetch function parameters.
+
+The existing boost_function now has 4 distinct subparameters, each of them accepting an array of
+expressions corresponding to the Solr edismax boost parameters.
+
+1) 'fields'
+-----------
+
+Fields can be specified either in the form <class_identifier>/<attribute identifier>
+or as a their raw field identifier in the Solr index (typically for custom fields)
+
+Example:
+
+ ... 'boost_functions', hash('fields',array('article/tags:3')) ....
+
+or with a raw Solr field identifier
+
+... 'boost_functions', hash('fields',array('attr_tags_lk:3')) ....
+
+which will apply a boost factor of 3
+for the tags attribute at query time if matches are found there
+
+2) 'mfunctions' (since eZ Find 2.8 / eZ Publish 5)
+--------------------------------------------------
+
+These correspond to the Solr edismax 'boost' parameter and multiply the score
+with the function value. This is usually what you should use (and not the additive 'functions')
+
+Example:
+
+... 'boost_functions', hash('mfunctions', array('recip(ms(NOW/DAY,meta_published_dt),3.16e-11,0.5,0.5)' )) ....
+
+3) 'functions':
+----------------
+
+These are like mfunctions, but add their value to teh relevancy score
+
+Example:
+
+.... 'boost_functions', hash('functions', array('sum(product(attr_importance_si,0.1),1)')) ...
+
+4) 'queries'
+------------
+
+These are added to the main query and need to follow the Solr/Lucene query format ans specify the boost factor explicitely for it
+
+Example:
+
+'boost_functions', hash('queries', array('meta_class_identifier_ms:article^10')),
+
+
+B) Through ini settings
+
+There is also a possibility to define site-wide raw boost queries in ezfind.ini, for example
+
+[QueryBoost]
+#RawBoostQueries[]
+RawBoostQueries[]=meta_class_identifier_ms:summary^4
+

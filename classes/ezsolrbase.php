@@ -324,7 +324,7 @@ class eZSolrBase
         }
         else
         {
-            if ( is_integer( $commitWithin ) && $commitWithin > 0 )
+            if ( is_numeric( $commitWithin ) && $commitWithin > 0 )
             {
                 $postString = '<add commitWithin="' . $commitWithin . '">';
             }

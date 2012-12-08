@@ -1111,6 +1111,7 @@
   <requestHandler name="ezpublish" class="solr.DisMaxRequestHandler" >
     <lst name="defaults">
       <str name="echoParams">explicit</str>
+      <str name="defType">edismax</str>
       <float name="tie">0.01</float>
       <str name="qf">
         ezf_df_text
@@ -1655,7 +1656,7 @@
        <healthcheck type="file">server-enabled</healthcheck>
       -->
   </admin>
-  
+
   <requestHandler name="/replication" class="solr.ReplicationHandler" >
 
   <lst name="master">
