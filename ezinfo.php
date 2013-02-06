@@ -3,7 +3,7 @@
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 // SOFTWARE NAME: eZ Find
 // SOFTWARE RELEASE: //autogentag//
-// COPYRIGHT NOTICE: Copyright (C) 1999-2012 eZ Systems AS
+// COPYRIGHT NOTICE: Copyright (C) 1999-2013 eZ Systems AS
 // SOFTWARE LICENSE: GNU General Public License v2.0
 // NOTICE: >
 //   This program is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ class eZFindInfo
         return array(
             'Name' => "eZ Find",
             'Version' => '//autogentag//',
-            'Copyright' => "Copyright (C) 1999-2012 eZ Systems AS.",
+            'Copyright' => "Copyright (C) 1999-2013 eZ Systems AS.",
             'Info_url' => "http://ez.no/ezfind",
             'License' => "GNU General Public License v2.0",
             '3rdparty_software' =>
