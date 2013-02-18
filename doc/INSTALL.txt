@@ -2,7 +2,7 @@
 
 
 Requirements:
-- eZ Publish 4.x
+- eZ Publish 5.x
 - Java Runtime Environment 5.0 or later. ( http://java.sun.com/javase/downloads/index.jsp )
 - PHP Curl extension ( http://php.net/manual/en/ref.curl.php )
 
