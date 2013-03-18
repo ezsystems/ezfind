@@ -367,7 +367,7 @@
     </message>
     <message>
         <source>Last three months</source>
-        <translation>Letzen drei Monate</translation>
+        <translation>Letzten drei Monate</translation>
     </message>
     <message>
         <source>Last year</source>
