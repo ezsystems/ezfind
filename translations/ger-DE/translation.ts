@@ -163,50 +163,50 @@
     <name>design/ezfind/search</name>
     <message>
         <source>Spell check suggestion: did you mean</source>
-        <translation type="unfinished"></translation>
+        <translation>Rechtschreibprüfung: Meinten Sie</translation>
     </message>
     <message>
         <source>The search is case insensitive. Upper and lower case characters may be used.</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Suche unterscheidet zwischen Groß- und Kleinschreibung.</translation>
     </message>
     <message>
         <source>The search result contains all search terms.</source>
-        <translation type="unfinished"></translation>
+        <translation>Das Suchergebnis enthält alle Suchbegriffe.</translation>
     </message>
     <message>
         <source>Phrase search can be achieved by using quotes, example: &quot;Quick brown fox jumps over the lazy dog&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Phrasensuche kann durch Anführungszeichen erreicht werden, z. B.: &quot;Der schnelle braune Fuchs springt über den faulen Hund&quot;</translation>
     </message>
     <message>
         <source>Words may be excluded by using a minus ( - ) character, example: lazy -dog</source>
-        <translation type="unfinished"></translation>
+        <translation>Wörter können mit einem Minuszeichen ( - ) ausgeschlossen werden, z. B.: faul -Hund</translation>
     </message>
     <message>
         <source>Words may be excluded by using a minus ( - ) prefix character, example: lazy -dog</source>
-        <translation type="unfinished"></translation>
+        <translation>Wörter können mit einem Minuszeichen ( - ) ausgeschlossen werden, z. B.: faul -Hund</translation>
     </message>
     <message>
         <source>Words may be required by using a plus ( + ) prefix character, example: +yellow coat</source>
-        <translation type="unfinished"></translation>
+        <translation>Wörter, die im Suchergebnis zwingend erforderlich sind, können mit einem Pluszeichen ( + ) angegeben werden, z. B.: +gelbe Jacke</translation>
     </message>
     <message>
         <source>Wildcard characters * and ? can be used for partial string matching, example: syst* may expand to systems</source>
-        <translation type="unfinished"></translation>
+        <translation>Platzhalterzeichen * und ? können verwendet werden um nur Teile eines Wortes zu suchen, segel* sucht z. B. nach segeln, segelflug, segelfliegen etc.</translation>
     </message>
     <message>
         <source>Fuzzy searches can also be used appending a ~ character, example: like suster~ may match sister</source>
-        <translation type="unfinished"></translation>
+        <translation>Eine unscharfe Suche ist mit einem ~ Zeichen möglich, schwister~ würde z. B. auch schwester finden</translation>
     </message>
     <message>
         <source>Proximity searches can be established using double quotes and a maximum distance (in words) after a ~ character, example: &quot;conference publish&quot;~5 will match text where conference and publish are separated by a maximum of 5 words</source>
-        <translation type="unfinished"></translation>
+        <translation>Eine angenäherte Suche ist unter Anwendung von Anführungszeichen und einen maximalen Abstand (in Worten) nach einem ~ Zeichen möglich, "Konferenz veröffentlichen" ~ 5 sucht nach einem Text, in dem Konferenz und veröffentlichen bis maximal 5 Wörter getrennt sind</translation>
     </message>
 </context>
 <context>
     <name>design/ezflow/block/search</name>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Suche</translation>
     </message>
 </context>
 <context>
@@ -250,11 +250,11 @@
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Hilfe</translation>
     </message>
     <message>
         <source>Refine your search</source>
-        <translation type="unfinished"></translation>
+        <translation>Filter</translation>
     </message>
     <message>
         <source>tips</source>
@@ -269,11 +269,11 @@
     <name>design/ezwebin/full/article</name>
     <message>
         <source>Comments</source>
-        <translation type="unfinished"></translation>
+        <translation>Kommentare</translation>
     </message>
     <message>
         <source>New comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Neuer Kommentar</translation>
     </message>
     <message>
         <source>%login_link_startLog in%login_link_end or %create_link_startcreate a user account%create_link_end to comment.</source>
@@ -292,11 +292,11 @@
     <name>design/ezwebin/pagelayout</name>
     <message>
         <source>Search text:</source>
-        <translation type="unfinished"></translation>
+        <translation>Suchtext:</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Suche</translation>
     </message>
 </context>
 <context>
@@ -437,11 +437,11 @@
     <name>extension/ezfind/ajax-search</name>
     <message>
         <source>No search results...</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine Suchergebnisse...</translation>
     </message>
     <message>
         <source>Did you mean</source>
-        <translation type="unfinished"></translation>
+        <translation>Meinten Sie</translation>
     </message>
     <message>
         <source>Refine with facets</source>
@@ -730,23 +730,23 @@
     <name>extension/ezfind/facets</name>
     <message>
         <source>Creation time</source>
-        <translation type="unfinished"></translation>
+        <translation>Erstellungszeit</translation>
     </message>
     <message>
         <source>Clear all</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle entfernen</translation>
     </message>
     <message>
         <source>Content type</source>
-        <translation type="unfinished"></translation>
+        <translation>Inhaltsart</translation>
     </message>
     <message>
         <source>Author</source>
-        <translation type="unfinished"></translation>
+        <translation>Verfasser</translation>
     </message>
     <message>
         <source>Keywords</source>
-        <translation type="unfinished"></translation>
+        <translation>Schlüsselwörter</translation>
     </message>
     <message>
         <source>Publication Year</source>
