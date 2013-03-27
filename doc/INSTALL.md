@@ -13,55 +13,62 @@ Installing:
 2. Run it:
    1. For small sites: use a regular java 1.5 JRE from Sun
       Start the Java based search engine (based on Solr).
-      Enter `extension/ezfind/java`
-      Start the Solr engine with the command:
-```bash
-$ java -Dezfind -jar start.jar
-```
+      Enter `extension/ezfind/java` and start the Solr engine with the command:
+
+      ```bash
+      $ java -Dezfind -jar start.jar
+      ```
       (See configuration for more details)
       Make sure that the user running the java application has write access to
       `extension/ezfind/java/solr/data` and `extension/ezfind/java/logs` .
    2. For high performance, larger sites, use a 64 bit OS and 64 bit Java VM from Sun (1.5 recommended)
       you need to use some extra parameters for java too, the following is recommended for typical sites:
-```bash
-$ java -server -d64 -Xmx1500m -Xms1500m -XX:+UseParallelGC -XX:+AggressiveOpts -XX:NewRatio=5 -jar start.jar
-```
+
+      ```bash
+      $ java -server -d64 -Xmx1500m -Xms1500m -XX:+UseParallelGC -XX:+AggressiveOpts -XX:NewRatio=5 -jar start.jar
+      ```
       This will: make sure the Java VM is started with 64 bit mode,
       allocate a heap space of 1500MB which is used for Solr caches and objects,
       the rest of the options are related to garbage collection
 3. Enable the extension in eZ Publish. Do this by opening settings/override/site.ini.append.php ,
    and add in the `[ExtensionSettings]` block:
-```ini
-ActiveExtensions[]=ezfind
-```
+
+   ```ini
+   ActiveExtensions[]=ezfind
+   ```
    To get the correct templates for ezwebin, and for all ezfind features to be available,
    ezfind must be enabled before the ezwebin and ezflow extensions. The final result must follow the following principle:
-```ini
-[ExtensionSettings]
-ActiveExtensions[]=ezfind
-ActiveExtensions[]=ezwebin
-ActiveExtensions[]=ezflow
-```
+
+   ```ini
+   [ExtensionSettings]
+   ActiveExtensions[]=ezfind
+   ActiveExtensions[]=ezwebin
+   ActiveExtensions[]=ezflow
+   ```
 4. Update the class autoloads by running the script:
-```bash
-$ php bin/php/ezpgenerateautoloads.php
-```
+
+   ```bash
+   $ php bin/php/ezpgenerateautoloads.php
+   ```
 5. Add a table in the database used by your eZ Publish instance. You can do so as follows
    (from eZ Publish's root directory), in the case you are using MySQL:
-```bash
-$ mysql -u <user> -p <database_name> < extension/ezfind/sql/mysql/schema.sql
-```
+
+   ```bash
+   $ mysql -u <user> -p <database_name> < extension/ezfind/sql/mysql/schema.sql
+   ```
    The procedure is very similar in case you are using another RDMS. You may want to have a look at the
    sql/oracle and sql/postgresql for Oracle and PostgreSQL databases respectively.
    Please refer to the documentation reference for your DBMS if you are experiencing issues.
 6. Clear template override cache with the command:
-```bash
-$ php bin/php/ezcache.php --clear-id=template-override
-```
+
+   ```bash
+   $ php bin/php/ezcache.php --clear-id=template-override
+   ```
 7. Re-index the site content by running:
-```bash
-$ php extension/ezfind/bin/php/updatesearchindexsolr.php -s <admin siteaccess>
-```
+
+   ```bash
+   $ php extension/ezfind/bin/php/updatesearchindexsolr.php -s <admin siteaccess>
+   ```
 
 Configuration:
 --------------
