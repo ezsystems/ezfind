@@ -1593,7 +1593,7 @@ class eZSolr implements ezpSearchEngine
                     }
 
                     $resultTree = new eZFindResultNode( $nodeRowList[$nodeID] );
-                    $resultTree->setContentObject( new eZContentObject( $nodeRowList[$nodeID] ) );
+                    $resultTree->setContentObject( eZContentObject::fetch( $nodeRowList[$nodeID]["contentobject_id"] ) );
                     $resultTree->setAttribute( 'is_local_installation', true );
                     // can_read permission must be checked as they could be out of sync in Solr, however, when called from template with:
                     // limitation, hash( 'accessWord', ... ) this check should not be performed as it has precedence.
