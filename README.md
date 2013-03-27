@@ -1,11 +1,15 @@
+eZ Find
+=======
+
 License: See, [LICENSE](LICENSE)
+
 Installation: See, [doc/INSTALL.md](doc/INSTALL.md)
 
 eZ Find is a search extension for eZ Publish, providing more functionality and
 better results than the default search in eZ Publish.
 
 The main advantages of eZ Find are relevancy ranking and keyword highlighting
- the search results. The engine uses heuristics to analyze the structure of
+the search results. The engine uses heuristics to analyze the structure of
 the information and thus determine relevancy. For example, if a keyword is
 found in a content object's title or in any of its short attributes,
 the object will have higher relevance in the search results (as opposed to
