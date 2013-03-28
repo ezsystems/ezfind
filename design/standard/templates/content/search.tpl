@@ -5,7 +5,7 @@
                         hash( 'query', $search_text,
                               'section_id', $search_section_id,
                               'subtree_array', $search_subtree_array,
-                              'sort_by', hash( 'modified', 'desc' ),
+                              'sort_by', hash( 'score', 'desc' ),
                               'offset', $view_parameters.offset,
                               'limit', $page_limit )
                               )}
