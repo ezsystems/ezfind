@@ -1080,7 +1080,6 @@ class eZSolr implements ezpSearchEngine
 
             $stopWordArray = array();
 
-            eZDebug::accumulatorStop( 'Search' );
             eZDebugSetting::writeDebug( 'extension-ezfind-query-mlt', $resultArray['interestingTerms'], 'MoreLikeThis terms' );
             return array(
                 'SearchResult' => $objectRes,
@@ -1091,7 +1090,6 @@ class eZSolr implements ezpSearchEngine
         }
         else
         {
-            eZDebug::accumulatorStop( 'Search' );
             return array(
                 'SearchResult' => false,
                 'SearchCount' => 0,
