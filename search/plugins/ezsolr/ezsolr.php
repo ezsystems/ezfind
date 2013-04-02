@@ -1593,7 +1593,27 @@ class eZSolr implements ezpSearchEngine
                     }
 
                     $resultTree = new eZFindResultNode( $nodeRowList[$nodeID] );
-                    $resultTree->setContentObject( new eZContentObject( $nodeRowList[$nodeID] ) );
+                    $node = $nodeRowList[$nodeID];
+                    $resultTree->setContentObject(
+                        new eZContentObject(
+                            array(
+                                "id" => $node["id"],
+                                "section_id" => $node["section_id"],
+                                "owner_id" => $node["owner_id"],
+                                "contentclass_id" => $node["contentclass_id"],
+                                "name" => $node["name"],
+                                "published" => $node["published"],
+                                "modified" => $node["modified"],
+                                "current_version" => $node["current_version"],
+                                "status" => $node["status"],
+                                "remote_id" => $node["object_remote_id"],
+                                "language_mask" => $node["language_mask"],
+                                "initial_language_id" => $node["initial_language_id"],
+                                "class_identifier" => $node["class_identifier"],
+                                "serialized_name_list" => $node["class_serialized_name_list"],
+                            )
+                        )
+                    );
                     $resultTree->setAttribute( 'is_local_installation', true );
                     // can_read permission must be checked as they could be out of sync in Solr, however, when called from template with:
                     // limitation, hash( 'accessWord', ... ) this check should not be performed as it has precedence.
