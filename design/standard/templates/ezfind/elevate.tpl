@@ -304,7 +304,7 @@
            </tr>
         {/foreach}
    {else}
-       <tr class="bgdark">
+       <tr>
            <th>{'Search query'|i18n( 'extension/ezfind/elevate' )}</th>
            <th>{'Content object'|i18n( 'extension/ezfind/elevate' )}</th>
            <th>{'Language'|i18n( 'extension/ezfind/elevate' )}</th>
