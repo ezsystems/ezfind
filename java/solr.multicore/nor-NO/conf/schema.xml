@@ -235,7 +235,7 @@
         to generate text:"pdp 11" rather than (text:PDP OR text:11).
         NOTE: autoGeneratePhraseQueries="true" tends to not work well for non whitespace delimited languages.
         -->
-    <fieldType name="text" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
+    <fieldType name="text" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="false">
       <analyzer type="index">
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         <!-- in this example, we will only use synonyms at query time
@@ -263,14 +263,14 @@
                 words="stopwords.txt"
                 enablePositionIncrements="true"
                 />
-        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="0"/>
         <filter class="solr.LowerCaseFilterFactory"/>
         <filter class="solr.ASCIIFoldingFilterFactory"/>
         <filter class="solr.SnowballPorterFilterFactory" language="Norwegian" protected="protwords.txt"/>
       </analyzer>
     </fieldType>
 
-    <fieldType name="text_icu" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
+    <fieldType name="text_icu" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="false">
       <analyzer type="index">
         <tokenizer class="solr.ICUTokenizerFactory"/>
         <!-- in this example, we will only use synonyms at query time
@@ -299,7 +299,7 @@
                 words="stopwords.txt"
                 enablePositionIncrements="true"
                 />
-        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="0"/>
         <filter class="solr.ICUFoldingFilterFactory"/>
         <!--<filter class="solr.ICUCollationKeyFilterFactory" locale="en" strength="primary"/>
         <filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/> -->
