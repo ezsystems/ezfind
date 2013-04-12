@@ -160,6 +160,25 @@
     </message>
 </context>
 <context>
+    <name>design/ezdemo/full/product</name>
+    <message>
+        <source>You might also be interested in:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>People who bought this also bought</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to basket</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>design/ezfind/search</name>
     <message>
         <source>Spell check suggestion: did you mean</source>
@@ -199,7 +218,7 @@
     </message>
     <message>
         <source>Proximity searches can be established using double quotes and a maximum distance (in words) after a ~ character, example: &quot;conference publish&quot;~5 will match text where conference and publish are separated by a maximum of 5 words</source>
-        <translation>Eine angenäherte Suche ist unter Anwendung von Anführungszeichen und einen maximalen Abstand (in Worten) nach einem ~ Zeichen möglich, "Konferenz veröffentlichen" ~ 5 sucht nach einem Text, in dem Konferenz und veröffentlichen bis maximal 5 Wörter getrennt sind</translation>
+        <translation>Eine angenäherte Suche ist unter Anwendung von Anführungszeichen und einen maximalen Abstand (in Worten) nach einem ~ Zeichen möglich, &quot;Konferenz veröffentlichen&quot; ~ 5 sucht nach einem Text, in dem Konferenz und veröffentlichen bis maximal 5 Wörter getrennt sind</translation>
     </message>
 </context>
 <context>

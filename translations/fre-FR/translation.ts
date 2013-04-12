@@ -160,6 +160,25 @@
     </message>
 </context>
 <context>
+    <name>design/ezdemo/full/product</name>
+    <message>
+        <source>You might also be interested in:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>People who bought this also bought</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to basket</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>design/ezfind/search</name>
     <message>
         <source>Spell check suggestion: did you mean</source>
