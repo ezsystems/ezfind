@@ -137,7 +137,6 @@ class ezfeZPSolrQueryBuilder
      * @return array Solr query results.
      *
      * @see ezfeZPSolrQueryBuilder::buildBoostFunctions()
-
      */
     public function buildSearch( $searchText, $params = array(), $searchTypes = array() )
     {
@@ -168,6 +167,7 @@ class ezfeZPSolrQueryBuilder
         $highlightParams = isset( $params['HighLightParams'] ) ? $params['HighLightParams'] : array();
         $searchResultClusterParams = isset( $params['SearchResultClustering'] ) ? $params['SearchResultClustering'] : array();
         $extendedAttributeFilter = isset( $params['ExtendedAttributeFilter'] ) ? $params['ExtendedAttributeFilter'] : array();
+        $fieldsToSearch = isset( $params['FieldsToSearch'] ) ? $params['FieldsToSearch'] : array();
 
 
         // distributed search option
@@ -322,25 +322,43 @@ class ezfeZPSolrQueryBuilder
         // Create sort parameters based on the parameters.
         $sortParameter = $this->buildSortParameter( $params );
 
-        //the array_unique below is necessary because attribute identifiers are not unique .. and we get as
-        //much highlight snippets as there are duplicate attribute identifiers
-        //these are also in the list of query fields (dismax, ezpublish) request handlers
-	$queryFields = array_unique( $this->getClassAttributes( $contentClassID, $contentClassAttributeID, $fieldTypeExcludeList ) );
-
+        // If there are any declared fields to search, Search them instead of the default search fields
+        if ( !empty( $fieldsToSearch ) )
+        {
+            $queryFields = $fieldsToSearch;
+        }
+        else
+        {
+            //the array_unique below is necessary because attribute identifiers are not unique .. and we get as
+            //much highlight snippets as there are duplicate attribute identifiers
+            //these are also in the list of query fields (dismax, ezpublish) request handlers
+            $queryFields = array_unique( $this->getClassAttributes( $contentClassID, $contentClassAttributeID, $fieldTypeExcludeList ) );
+        }
         //highlighting only in the attributes, otherwise the object name is repeated in the highlight, which is already
         //partly true as it is mostly composed of one or more attributes.
         //maybe we should add meta data to the index to filter them out.
 
-        $highLightFields = $queryFields;
+        // Give the direct query the highest priority for adding highlight fields
+        if ( isset( $highlightParams['highlight_fields'] ) )
+        {
+            $highLightFields = $highlightParams['highlight_fields'];
+        }
+        elseif ( count( self::$FindINI->variable( 'HighLighting', 'HighLightField' ) ) )
+        {
+            $highLightFields = self::$FindINI->variable( 'HighLighting', 'HighLightField' );
+        }
+        else
+        {
+            $highLightFields = $queryFields;
+        }
 
         //@since eZ Find 2.3
         //when dedicated attributes are searched for, don't add meta-fields to the $queryfields list
-        if ( !$contentClassAttributeID )
+        if ( !$contentClassAttributeID && !$fieldsToSearch )
         {
             $queryFields[] = eZSolr::getMetaFieldName( 'name' );
             $queryFields[] = eZSolr::getMetaFieldName( 'owner_name' );
         }
-
 
         $spellCheckParamList = array();
         // @param $spellCheck expects array (true|false, dictionary identifier, ...)
