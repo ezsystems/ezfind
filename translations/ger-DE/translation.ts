@@ -296,15 +296,15 @@
     </message>
     <message>
         <source>%login_link_startLog in%login_link_end or %create_link_startcreate a user account%create_link_end to comment.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitte melden Sie sich %login_link_startLogan%login_link_end oder %create_link_startregistrieren%create_link_end Sie sich um kommentieren zu können.</translation>
     </message>
     <message>
         <source>Tip a friend</source>
-        <translation type="unfinished"></translation>
+        <translation>Einem Freund empfehlen</translation>
     </message>
     <message>
         <source>Related content</source>
-        <translation type="unfinished"></translation>
+        <translation>Verwandter Inhalt</translation>
     </message>
 </context>
 <context>
