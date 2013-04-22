@@ -186,7 +186,7 @@
     </message>
     <message>
         <source>The search is case insensitive. Upper and lower case characters may be used.</source>
-        <translation>Die Suche unterscheidet zwischen Groß- und Kleinschreibung.</translation>
+        <translation>Die Suche unterscheidet nicht zwischen Groß- und Kleinschreibung.</translation>
     </message>
     <message>
         <source>The search result contains all search terms.</source>
