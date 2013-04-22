@@ -186,7 +186,7 @@
     </message>
     <message>
         <source>The search is case insensitive. Upper and lower case characters may be used.</source>
-        <translation>Die Suche unterscheidet zwischen Groß- und Kleinschreibung.</translation>
+        <translation>Die Suche unterscheidet nicht zwischen Groß- und Kleinschreibung.</translation>
     </message>
     <message>
         <source>The search result contains all search terms.</source>
@@ -296,15 +296,15 @@
     </message>
     <message>
         <source>%login_link_startLog in%login_link_end or %create_link_startcreate a user account%create_link_end to comment.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitte melden Sie sich %login_link_startLogan%login_link_end oder %create_link_startregistrieren%create_link_end Sie sich um kommentieren zu können.</translation>
     </message>
     <message>
         <source>Tip a friend</source>
-        <translation type="unfinished"></translation>
+        <translation>Einem Freund empfehlen</translation>
     </message>
     <message>
         <source>Related content</source>
-        <translation type="unfinished"></translation>
+        <translation>Verwandter Inhalt</translation>
     </message>
 </context>
 <context>
