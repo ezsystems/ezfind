@@ -898,7 +898,8 @@ class eZSolr implements ezpSearchEngine
         {
             foreach ( $docs as $languageCode => $doc )
             {
-                $this->SolrLanguageShards[$languageCode]->deleteDocs( array( $doc ), false, $commit, $optimize );
+                if ($this->SolrLanguageShards[$languageCode] instanceof eZSolrBase )
+                    $this->SolrLanguageShards[$languageCode]->deleteDocs( array( $doc ), false, $commit, $optimize );
             }
         }
         else
