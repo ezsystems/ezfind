@@ -54,7 +54,7 @@ class eZSolrDoc
     {
         if ( $boost !== null && is_numeric( $boost ))
         {
-            $this->docBoost = $boost;
+            $this->DocBoost = $boost;
         }
     }
 
@@ -67,7 +67,7 @@ class eZSolrDoc
     {
         if ( $boost !== null && is_numeric( $boost ))
         {
-            $this->docBoost = $boost;
+            $this->DocBoost = $boost;
         }
     }
 
