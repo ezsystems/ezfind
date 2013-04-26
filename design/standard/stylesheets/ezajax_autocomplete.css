@@ -3,7 +3,7 @@ div#ezautocomplete {
     z-index: 1000;
 }
 
-div#header .yui-ac-content li {
+div#header .yui-ac-content li, div.ezobject-relation-search-autocomplete .yui-ac-content li {
     margin: 0;
     padding: 2px 5px;
     cursor: default;
@@ -22,13 +22,13 @@ div#ezautocomplete .yui-ac, div#ezautocomplete .yui-ac-input {
     position: relative;
 }
 
-div#ezautocomplete .yui-ac-container {
+div#ezautocomplete .yui-ac-container, div.ezobject-relation-search-autocomplete.yui-ac-container {
     position: absolute;
     top: 1.6em;
     text-align:left;
 }
 
-div#ezautocomplete .yui-ac-content {
+div#ezautocomplete .yui-ac-content, div.ezobject-relation-search-autocomplete .yui-ac-content {
     position: absolute;
     width: 100%;
     border: 1px solid #808080;
@@ -39,7 +39,7 @@ div#ezautocomplete .yui-ac-content {
     padding-bottom: 15px;
 }
 
-div#ezautocomplete .yui-ac-shadow {
+div#ezautocomplete .yui-ac-shadow, div.ezobject-relation-search-autocomplete .yui-ac-shadow {
     position: absolute;
     margin: .3em;
     width: 100%;
@@ -57,13 +57,13 @@ div#ezautocomplete .yui-ac iframe {
     padding-bottom: .3em;
 }
 
-div#ezautocomplete .yui-ac-content ul {
+div#ezautocomplete .yui-ac-content ul, div.ezobject-relation-search-autocomplete .yui-ac-content ul {
     margin: 0;
     padding: 0;
     width: 100%;
 }
 
-div#ezautocomplete .yui-ac-content li {
+div#ezautocomplete .yui-ac-content li, div.ezobject-relation-search-autocomplete .yui-ac-content li {
     background-image: none;
     margin: 0;
     padding: 2px 5px;
@@ -74,11 +74,11 @@ div#ezautocomplete .yui-ac-content li {
     display: block;
 }
 
-div#ezautocomplete .yui-ac-content li.yui-ac-prehighlight {
+div#ezautocomplete .yui-ac-content li.yui-ac-prehighlight, div.ezobject-relation-search-autocomplete .yui-ac-content li.yui-ac-prehighlight {
     background: #BABABA;
 }
 
-div#ezautocomplete .yui-ac-content li.yui-ac-highlight {
+div#ezautocomplete .yui-ac-content li.yui-ac-highlight, div.ezobject-relation-search-autocomplete .yui-ac-content li.yui-ac-highlight {
     background: #B0B0B0;
     color: #FFF;
 }

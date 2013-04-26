@@ -154,6 +154,42 @@ class eZFindServerCallFunctions
                 $params['fq'] = 'meta_language_code_ms:(' . implode( ' OR ', $validLanguages ) . ')';
             }
 
+            //build the query part for the subtree limitation
+            if ( isset( $args[2] ) && (int)$args[2] )
+            {
+                if ( isset( $params['fq'] ) && $params['fq'] )
+                {
+                    $params['fq'] .= ' AND ';
+                }
+                $params['fq'] .= eZSolr::getMetaFieldName( 'path' ) . ':' . (int)$args[2];
+            }
+            //build the query part for the class limitation
+            if ( isset( $args[3] ) && $args[3] )
+            {
+                if ( isset( $params['fq'] ) && $params['fq'] )
+                {
+                    $params['fq'] .= ' AND ';
+                }
+                $classes = explode( ',', $args[3] );
+                $classQueryParts = array();
+                foreach( $classes as $class )
+                {
+                    if ( is_string( $class ) )
+                    {
+                        if ( $class = eZContentClass::fetchByIdentifier( $class ) )
+                        {
+                            $classQueryParts[] = eZSolr::getMetaFieldName( 'contentclass_id' ) . ':' . $class->attribute( 'id' );
+                        }
+                    }
+                    else
+                    {
+                        $classQueryParts[] = eZSolr::getMetaFieldName( 'contentclass_id' ) . ':' . $class;
+                    }
+                }
+                $classQueryParts = implode( ' OR ', $classQueryParts );
+                $params['fq'] .= '(' . $classQueryParts . ')';
+            }
+
             $solrBase = new eZSolrBase( $fullSolrURI );
             $result = $solrBase->rawSolrRequest( '/select', $params, 'json' );
 
