@@ -39,9 +39,13 @@ eZAJAXAutoComplete.prototype.init = function() {
         autocomplete.allowBrowserAutocomplete = false;
         autocomplete.generateRequest = function(q) {
             var returnString = "::" + q + "::" + that.conf.resultlimit + "::";
-            if( typeof that.conf.subtree !== 'undefined' ) returnString += that.conf.subtree;
+            if( typeof that.conf.subtree !== 'undefined' ) {
+                returnString += that.conf.subtree;
+            }
             returnString += "::";
-            if( typeof that.conf.classes !== 'undefined' ) returnString += that.conf.classes;
+            if( typeof that.conf.classes !== 'undefined' ) {
+                returnString += that.conf.classes;
+            }
             returnString += "?ContentType=json";
             return returnString;
         };
