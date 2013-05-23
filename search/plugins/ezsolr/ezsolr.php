@@ -990,7 +990,7 @@ class eZSolr implements ezpSearchEngine
         {
             $searchCount = $resultArray[ 'response' ][ 'numFound' ];
             $objectRes = $this->buildResultObjects(
-                $resultArray, $searchCount, $asObjects
+                $resultArray, $searchCount, $fieldsToReturn, $asObjects
             );
 
             $stopWordArray = array();
@@ -1075,7 +1075,7 @@ class eZSolr implements ezpSearchEngine
         {
             $searchCount = $resultArray[ 'response' ][ 'numFound' ];
             $objectRes = $this->buildResultObjects(
-                $resultArray, $searchCount, $asObjects
+                $resultArray, $searchCount, array(), $asObjects
             );
 
             $stopWordArray = array();
@@ -1492,7 +1492,7 @@ class eZSolr implements ezpSearchEngine
      * @see eZSolrBase::search
      * @see eZSolrBase::moreLikeThis
      */
-    protected function buildResultObjects( $resultArray, &$searchCount, $asObjects = true )
+    protected function buildResultObjects( $resultArray, &$searchCount, $fieldsToReturn = array(), $asObjects = true )
     {
         $objectRes = array();
         $highLights = array();
