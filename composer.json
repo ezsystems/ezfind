@@ -1,0 +1,10 @@
+{
+    "name": "keyteq/ezfind",
+    "type": "ezpublish-legacy-extension",
+    "description": "Fork of ezfind used to add patches while we wait for them to be part of the official distribution",
+    "license": "GPL-2.0",
+    "minimum-stability": "dev",
+    "require": {
+        "ezsystems/ezpublish-legacy-extension-installer": "*"
+    }
+}
