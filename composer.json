@@ -5,6 +5,6 @@
     "license": "GPL-2.0",
     "minimum-stability": "dev",
     "require": {
-        "ezsystems/ezpublish-legacy-extension-installer": "*"
+        "ezsystems/ezpublish-legacy-installer": "*"
     }
 }
