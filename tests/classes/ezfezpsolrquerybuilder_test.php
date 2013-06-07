@@ -33,7 +33,7 @@ class ezfeZPSolrQueryBuilderTest extends ezpDatabaseTestCase
     {
         // echo "DB: " . eZDB::instance()->DB . "\n";
         // xdebug_print_function_stack();
-//self::$qb->getClassAttributes(); die('d');
+
         // default parameters
         self::assertEquals(
             self::expectedGetClassAttributes(),
