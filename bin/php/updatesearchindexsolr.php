@@ -592,7 +592,9 @@ class ezfUpdateSearchIndexSolr
         $dbImpl = $this->Options['db-driver'] ? $this->Options['db-driver'] : false;
         $showSQL = $this->Options['sql'] ? true : false;
 
-        $db = eZDB::instance();
+        // Forcing creation of new instance to avoid mysql wait_timeout to kill
+        // the connection before it's done
+        $db = eZDB::instance( false, false, true );
 
         if ( $dbHost or $dbName or $dbUser or $dbImpl )
         {
