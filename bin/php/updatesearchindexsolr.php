@@ -283,7 +283,8 @@ class ezfUpdateSearchIndexSolr
 
         $processLimit = min( $this->Options['conc'] ? $this->Options['conc'] : 2,
                              10 ); // Maximum 10 processes
-        $useFork = ( function_exists( 'pcntl_fork' ) &&
+        $useFork = ( $processLimit > 1 &&
+                     function_exists( 'pcntl_fork' ) &&
                      function_exists( 'posix_kill' ) );
         if ( $useFork )
         {
@@ -346,6 +347,7 @@ class ezfUpdateSearchIndexSolr
                     else
                     {
                         // Execute in same process
+                        $this->CLI->output( "\n" . 'Starting a new batch' );
                         $count = $this->execute( $nodeID, $offset, $this->Limit );
                         $this->iterate( $count );
                         $offset += $this->Limit;
