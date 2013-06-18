@@ -320,34 +320,25 @@ class ezfSolrDocumentFieldBase
      */
     static function getInstance( eZContentObjectAttribute $objectAttribute )
     {
-        if ( isset( self::$singletons[$objectAttribute->attribute( 'id' )] ) )
-        {
-            return self::$singletons[$objectAttribute->attribute( 'id' )];
-        }
-        else
-        {
-            $datatypeString = $objectAttribute->attribute( 'data_type_string' );
+        $datatypeString = $objectAttribute->attribute( 'data_type_string' );
 
-            // Check if using custom handler.
-            $customMapList = self::$FindINI->variable( 'SolrFieldMapSettings', 'CustomMap' );
-            if ( isset( $customMapList[$datatypeString] ) )
+        // Check if using custom handler.
+        $customMapList = self::$FindINI->variable( 'SolrFieldMapSettings', 'CustomMap' );
+        if ( isset( $customMapList[$datatypeString] ) )
+        {
+            $fieldBaseClass = $customMapList[$datatypeString];
+            if ( class_exists( $fieldBaseClass ) )
             {
-                $fieldBaseClass = $customMapList[$datatypeString];
-                if ( class_exists( $fieldBaseClass ) )
-                {
-                    self::$singletons[$objectAttribute->attribute( 'id' )] = new $customMapList[$datatypeString]( $objectAttribute );
-                    return self::$singletons[$objectAttribute->attribute( 'id' )];
-                }
-                else
-                {
-                    eZDebug::writeError( "Unknown document field base class '$fieldBaseClass' for datatype '$datatypeString', check your ezfind.ini configuration", __METHOD__ );
-                }
+                return new $fieldBaseClass( $objectAttribute );
             }
-
-            // Return standard handler.
-            self::$singletons[$objectAttribute->attribute( 'id' )] = new ezfSolrDocumentFieldBase( $objectAttribute );
-            return self::$singletons[$objectAttribute->attribute( 'id' )];
+            else
+            {
+                eZDebug::writeError( "Unknown document field base class '$fieldBaseClass' for datatype '$datatypeString', check your ezfind.ini configuration", __METHOD__ );
+            }
         }
+
+        // Return standard handler.
+        return new ezfSolrDocumentFieldBase( $objectAttribute );
     }
 
     /**
