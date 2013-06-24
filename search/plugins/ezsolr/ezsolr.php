@@ -242,6 +242,11 @@ class eZSolr implements ezpSearchEngine
                 return null;
             }
             $contentClassAttribute = eZContentClassAttribute::fetch( $contentClassAttributeID );
+            if ( ! $contentClassAttribute instanceof eZContentClassAttribute )
+            {
+                eZDebug::writeNotice( "Can not find field name for classattribute, id: $contentClassAttributeID, basename: $baseName", __METHOD__ );
+                return null;
+            }
             $fieldName = ezfSolrDocumentFieldBase::getFieldName( $contentClassAttribute, $subattribute, $context );
 
             if ( $includingClassID )
