@@ -927,10 +927,10 @@ class eZSolr implements ezpSearchEngine
         $asObjects = isset( $params['AsObjects'] ) ? $params['AsObjects'] : true;
 
         //distributed search: fields to return can be specified in 2 parameters
-        $fieldsToReturn = isset( $params['FieldsToReturn'] ) ? $params['FieldsToReturn'] : array();
+        $params['FieldsToReturn'] = isset( $params['FieldsToReturn'] ) ? $params['FieldsToReturn'] : array();
         if ( isset( $params['DistributedSearch']['returnfields'] ) )
         {
-            $fieldsToReturn = array_merge( $fieldsToReturn, $params['DistributedSearch']['returnfields'] );
+            $params['FieldsToReturn'] = array_merge( $params['FieldsToReturn'], $params['DistributedSearch']['returnfields'] );
 
         }
 
@@ -990,7 +990,7 @@ class eZSolr implements ezpSearchEngine
         {
             $searchCount = $resultArray[ 'response' ][ 'numFound' ];
             $objectRes = $this->buildResultObjects(
-                $resultArray, $searchCount, $asObjects
+                $resultArray, $searchCount, $asObjects, $params['FieldsToReturn']
             );
 
             $stopWordArray = array();
@@ -1492,7 +1492,7 @@ class eZSolr implements ezpSearchEngine
      * @see eZSolrBase::search
      * @see eZSolrBase::moreLikeThis
      */
-    protected function buildResultObjects( $resultArray, &$searchCount, $asObjects = true )
+    protected function buildResultObjects( $resultArray, &$searchCount, $asObjects = true, $fieldsToReturn = array() )
     {
         $objectRes = array();
         $highLights = array();
@@ -1517,6 +1517,7 @@ class eZSolr implements ezpSearchEngine
             $docs = $result['docs'];
             $localNodeIDList = array();
             $nodeRowList = array();
+
             // Loop through result, and get eZContentObjectTreeNode ID
             foreach ( $docs as $idx => $doc )
             {
@@ -1572,6 +1573,8 @@ class eZSolr implements ezpSearchEngine
                         }
 
                     }
+                    $emit['highlight'] = isset( $highLights[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' )]] ) ?
+                                         $highLights[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' )]] : null;
                     $objectRes[] = $emit;
                     unset( $emit );
                     continue;
