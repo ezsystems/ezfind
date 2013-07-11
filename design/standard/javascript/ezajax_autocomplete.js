@@ -38,7 +38,16 @@ eZAJAXAutoComplete.prototype.init = function() {
         autocomplete.minQueryLength = that.conf.minquerylength;
         autocomplete.allowBrowserAutocomplete = false;
         autocomplete.generateRequest = function(q) {
-            return "::" + q + "::" + that.conf.resultlimit + "?ContentType=json";
+            var returnString = "::" + q + "::" + that.conf.resultlimit + "::";
+            if( typeof that.conf.subtree !== 'undefined' ) {
+                returnString += that.conf.subtree;
+            }
+            returnString += "::";
+            if( typeof that.conf.classes !== 'undefined' ) {
+                returnString += that.conf.classes;
+            }
+            returnString += "?ContentType=json";
+            return returnString;
         };
     }, this );
 }
