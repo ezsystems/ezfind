@@ -277,13 +277,13 @@
 
 <table class="list" cellspacing="0">
 {if eq( $configurations_count, 0 )}
-    <tr class="bgdark">
+    <tr>
         <th>{'No existing Elevate configuration.'|i18n( 'extension/ezfind/elevate' )}</th>
     </tr>
     </table>
 {else}
    {if is_set( $view_parameters.search_query )}
-        <tr class="bgdark">
+        <tr>
             <th>{'Content object'|i18n( 'extension/ezfind/elevate' )}</th>
             <th>{'Actions'|i18n( 'extension/ezfind/elevate' )}</th>
         </tr>
@@ -304,7 +304,7 @@
            </tr>
         {/foreach}
    {else}
-       <tr class="bgdark">
+       <tr>
            <th>{'Search query'|i18n( 'extension/ezfind/elevate' )}</th>
            <th>{'Content object'|i18n( 'extension/ezfind/elevate' )}</th>
            <th>{'Language'|i18n( 'extension/ezfind/elevate' )}</th>

@@ -4,7 +4,7 @@
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 // SOFTWARE NAME: eZ Find
 // SOFTWARE RELEASE: 1.0.x
-// COPYRIGHT NOTICE: Copyright (C) 1999-2012 eZ Systems AS
+// COPYRIGHT NOTICE: Copyright (C) 1999-2013 eZ Systems AS
 // SOFTWARE LICENSE: GNU General Public License v2.0
 // NOTICE: >
 //   This program is free software; you can redistribute it and/or
@@ -283,7 +283,8 @@ class ezfUpdateSearchIndexSolr
 
         $processLimit = min( $this->Options['conc'] ? $this->Options['conc'] : 2,
                              10 ); // Maximum 10 processes
-        $useFork = ( function_exists( 'pcntl_fork' ) &&
+        $useFork = ( $processLimit > 1 &&
+                     function_exists( 'pcntl_fork' ) &&
                      function_exists( 'posix_kill' ) );
         if ( $useFork )
         {
@@ -346,6 +347,7 @@ class ezfUpdateSearchIndexSolr
                     else
                     {
                         // Execute in same process
+                        $this->CLI->output( "\n" . 'Starting a new batch' );
                         $count = $this->execute( $nodeID, $offset, $this->Limit );
                         $this->iterate( $count );
                         $offset += $this->Limit;
@@ -592,7 +594,9 @@ class ezfUpdateSearchIndexSolr
         $dbImpl = $this->Options['db-driver'] ? $this->Options['db-driver'] : false;
         $showSQL = $this->Options['sql'] ? true : false;
 
-        $db = eZDB::instance();
+        // Forcing creation of new instance to avoid mysql wait_timeout to kill
+        // the connection before it's done
+        $db = eZDB::instance( false, false, true );
 
         if ( $dbHost or $dbName or $dbUser or $dbImpl )
         {

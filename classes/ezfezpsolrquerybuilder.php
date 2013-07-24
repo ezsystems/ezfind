@@ -4,7 +4,7 @@
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 // SOFTWARE NAME: eZ Find
 // SOFTWARE RELEASE: 1.0.x
-// COPYRIGHT NOTICE: Copyright (C) 1999-2012 eZ Systems AS
+// COPYRIGHT NOTICE: Copyright (C) 1999-2013 eZ Systems AS
 // SOFTWARE LICENSE: GNU General Public License v2.0
 // NOTICE: >
 //   This program is free software; you can redistribute it and/or
@@ -453,7 +453,8 @@ class ezfeZPSolrQueryBuilder
                 eZSolr::getMetaFieldName( 'id' ) . ' ' . eZSolr::getMetaFieldName( 'main_node_id' ) . ' ' .
                 eZSolr::getMetaFieldName( 'language_code' ) . ' ' . eZSolr::getMetaFieldName( 'name' ) .
                 ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ) . ' ' .
-                eZSolr::getMetaFieldName( 'is_invisible' ) . ' ' . implode( ' ', $extraFieldsToReturn );
+                eZSolr::getMetaFieldName( 'main_path_string' ) . ' ' . eZSolr::getMetaFieldName( 'is_invisible' ) . ' ' .
+                implode( ' ', $extraFieldsToReturn );
 
         if ( ! $asObjects )
         {
@@ -875,7 +876,8 @@ class ezfeZPSolrQueryBuilder
                 eZSolr::getMetaFieldName( 'main_url_alias' ) . ' ' . eZSolr::getMetaFieldName( 'installation_url' ) . ' ' .
                 eZSolr::getMetaFieldName( 'id' ) . ' ' . eZSolr::getMetaFieldName( 'main_node_id' ) . ' ' .
                 eZSolr::getMetaFieldName( 'language_code' ) . ' ' . eZSolr::getMetaFieldName( 'name' ) .
-                ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' . eZSolr::getMetaFieldName( 'path_string' ),
+                ' score ' . eZSolr::getMetaFieldName( 'published' ) . ' ' .
+                eZSolr::getMetaFieldName( 'path_string' ) . ' ' . eZSolr::getMetaFieldName( 'is_invisible' ),
                 'fq' => $filterQuery,
                 'wt' => 'php' ),
             $facetQueryParamList );

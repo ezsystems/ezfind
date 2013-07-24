@@ -160,6 +160,25 @@
     </message>
 </context>
 <context>
+    <name>design/ezdemo/full/product</name>
+    <message>
+        <source>You might also be interested in:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>People who bought this also bought</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to basket</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>design/ezfind/search</name>
     <message>
         <source>Spell check suggestion: did you mean</source>
@@ -787,11 +806,11 @@
         <translation>Nie dotyczy</translation>
     </message>
     <message>
-        <source>eZ Find 2.6 search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.1</source>
-        <translation type="obsolete">Rozszerzenie do wyszukiwania treści eZ Find 2.6 &amp;copy; 1999-2012 eZ Systems AS, oparte na Apache Solr 3.1</translation>
+        <source>eZ Find 2.6 search plugin &amp;copy; 1999-2013 eZ Systems AS, powered by Apache Solr 3.1</source>
+        <translation type="obsolete">Rozszerzenie do wyszukiwania treści eZ Find 2.6 &amp;copy; 1999-2013 eZ Systems AS, oparte na Apache Solr 3.1</translation>
     </message>
     <message>
-        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.5</source>
+        <source>eZ Find %version search plugin &amp;copy; 1999-2013 eZ Systems AS, powered by Apache Solr 3.6.1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
