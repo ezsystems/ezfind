@@ -950,11 +950,12 @@ class ezfeZPSolrQueryBuilder
 
                     default:
                     {
+                        $fieldName = $field;
                         $field = eZSolr::getFieldName( $field, false, 'sort' );
                         if ( !$field )
                         {
                             eZDebug::writeNotice( 'Sort field does not exist in local installation, but may still be valid: ' .
-                                                  $facetDefinition['field'],
+                                                  $fieldName,
                                                   __METHOD__ );
                             continue;
                         }
