@@ -41,6 +41,7 @@ class eZFindResultNode extends eZContentObjectTreeNode
     function eZFindResultNode( $rows = array() )
     {
         $this->eZContentObjectTreeNode( $rows );
+        $this->ContentObjectID = $rows['id'];
         $this->LocalAttributeValueList = array();
         $this->LocalAttributeNameList = array( 'is_local_installation',
                                                'name',
