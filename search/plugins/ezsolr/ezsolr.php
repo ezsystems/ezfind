@@ -1553,9 +1553,15 @@ class eZSolr implements ezpSearchEngine
                     $emit = array();
                     foreach ( $doc as $fieldName => $fieldValue )
                     {
-                        list($prefix, $rest) = explode ('_', $fieldName, 2);
-                        // get the identifier for meta, binary fields
-                        $inner = implode('_', explode('_', $rest, -1));
+                        //check if field is not in the explicit field list, to keep explode from generating notices.
+                        //sets vars to fail first 2 tests if field is not prefixed
+                        list( $prefix, $rest ) = array( null, null );
+                        if ( strchr( $fieldName, '_' ) )
+                        {
+                            list( $prefix, $rest ) = explode( '_', $fieldName, 2 );
+                            // get the identifier for meta, binary fields
+                            $inner = implode( '_', explode( '_', $rest, -1 ) );
+                        }
 
                         if ( $prefix === 'meta' )
                         {
