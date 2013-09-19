@@ -1553,17 +1553,20 @@ class eZSolr implements ezpSearchEngine
                     $emit = array();
                     foreach ( $doc as $fieldName => $fieldValue )
                     {
-                        list($prefix, $rest) = explode ('_', $fieldName, 2);
-                        // get the identifier for meta, binary fields
-                        $inner = implode('_', explode('_', $rest, -1));
-
-                        if ( $prefix === 'meta' )
+                        // check if field is not in the explicit field list, to keep explode from generating notices.
+                        if ( strpos( $fieldName, '_' ) !== false )
                         {
-                            $emit[$inner] = $fieldValue;
-                        }
-                        elseif ( $prefix === 'as' )
-                        {
-                            $emit['data_map'][$inner] = ezfSolrStorage::unserializeData( $fieldValue );
+                            list( $prefix, $rest ) = explode( '_', $fieldName, 2 );
+                            // get the identifier for meta, binary fields
+                            $inner = implode( '_', explode( '_', $rest, -1 ) );
+                            if ( $prefix === 'meta' )
+                            {
+                                $emit[$inner] = $fieldValue;
+                            }
+                            elseif ( $prefix === 'as' )
+                            {
+                                $emit['data_map'][$inner] = ezfSolrStorage::unserializeData( $fieldValue );
+                            }
                         }
                         // it may be a field originating from the explicit fieldlist to return, so it should be added for template consumption
                         // note that the fieldname will be kept verbatim in a substructure 'fields'
