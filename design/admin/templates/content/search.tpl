@@ -31,10 +31,9 @@
 <div class="context-attributes">
 
 <div class="block">
-    <div id="ezautocomplete">
+    <div class="yui3-skin-sam ez-autocomplete">
         <input class="halfbox" type="text" name="SearchText" id="Search" value="{$search_text|wash}" />
         <input class="button"  name="SearchButton" type="submit" value="{'Search'|i18n( 'design/admin/content/search' )}" />
-        <div id="mainarea-autocomplete-rs"></div>
     </div>
 </div>
 
@@ -110,16 +109,18 @@
 
 </form>
 
-{ezscript_require( array('ezjsc::jquery', 'ezjsc::yui2', 'ezajax_autocomplete.js') )}
+{ezscript_require( array('ezjsc::yui3', 'ezajax_autocomplete.js') )}
 <script type="text/javascript">
-jQuery('#mainarea-autocomplete-rs').css('width', jQuery('input#Search').width());
-var autocomplete = new eZAJAXAutoComplete({ldelim}
-    url: "{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}",
-    inputid: 'Search',
-    containerid: 'mainarea-autocomplete-rs',
-    minquerylength: {ezini( 'AutoCompleteSettings', 'MinQueryLength', 'ezfind.ini' )},
-    resultlimit: {ezini( 'AutoCompleteSettings', 'Limit', 'ezfind.ini' )}
+
+YUI(YUI3_config).use('ezfindautocomplete', function (Y) {ldelim}
+    Y.eZ.initAutoComplete({ldelim}
+        url: "{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}",
+        inputSelector: '#Search',
+        minQueryLength: {ezini( 'AutoCompleteSettings', 'MinQueryLength', 'ezfind.ini' )},
+        resultLimit: {ezini( 'AutoCompleteSettings', 'Limit', 'ezfind.ini' )}
+    {rdelim});
 {rdelim});
+
 </script>
 
 {/let}

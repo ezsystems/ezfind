@@ -1,0 +1,18 @@
+.ez-autocomplete .yui3-aclist-list {
+    background: white;
+}
+
+.ez-autocomplete .yui3-aclist-item {
+    background-image: none;
+    display: block;
+    text-align: left;
+}
+
+#header .ez-autocomplete .yui3-aclist-item {
+    display: block;
+}
+
+.ez-autocomplete li.yui3-aclist-item-active {
+    background: #B0B0B0;
+    color: #FFF;
+}

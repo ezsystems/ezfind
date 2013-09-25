@@ -15,7 +15,7 @@
         {if $search_node_id|gt( 1 )}
             {set $search_title = "Search in '%node'"|i18n( 'design/admin/pagelayout',, hash( '%node', fetch( 'content', 'node', hash( 'node_id', $search_node_id ) ).name ) )}
         {/if}
-        <div id="ezautocomplete">
+        <div class="yui3-skin-sam ez-autocomplete">
         <div id="searchtextwrapper">
             <input id="searchtext" name="SearchText" type="text" size="20" value="{if is_set( $search_text )}{$search_text|wash}{/if}" title="{$search_title|wash}" />
         </div>
@@ -86,15 +86,16 @@
 </form>
 </div>
 
-{ezscript_require( array('ezjsc::jquery', 'ezjsc::yui2', 'ezajax_autocomplete.js') )}
+{ezscript_require( array('ezjsc::yui3', 'ezajax_autocomplete.js') )}
 <script type="text/javascript">
-jQuery('#header-autocomplete-rs').css('width', jQuery('input#searchtext').width() + 25);
-var autocomplete = new eZAJAXAutoComplete({ldelim}
-    url: '{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}',
-    inputid: 'searchtext',
-    containerid: 'header-autocomplete-rs',
-    minquerylength: {ezini( 'AutoCompleteSettings', 'MinQueryLength', 'ezfind.ini' )},
-    resultlimit: {ezini( 'AutoCompleteSettings', 'Limit', 'ezfind.ini' )}
+
+YUI(YUI3_config).use('ezfindautocomplete', function (Y) {ldelim}
+    Y.eZ.initAutoComplete({ldelim}
+            url: "{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}",
+            inputSelector: '#searchtext',
+            minQueryLength: {ezini( 'AutoCompleteSettings', 'MinQueryLength', 'ezfind.ini' )},
+            resultLimit: {ezini( 'AutoCompleteSettings', 'Limit', 'ezfind.ini' )}
+    {rdelim});
 {rdelim});
 
 {literal}

@@ -1,0 +1,8 @@
+.ez-autocomplete .yui3-aclist-list {
+    text-align:left;
+}
+
+.ez-autocomplete li.yui3-aclist-item-active {
+    background: #B0B0B0;
+    color: #FFF;
+}
