@@ -1,44 +1,50 @@
-/**
- * Using YUI AutoComplete to provide suggested terms from eZ Find
- */
+YUI.add('ezfindautocomplete', function (Y) {
+    "use strict";
 
-/**
- * Constructor for the AJAX based autocomplete component
- *
- * @param conf Component configuration object
- */
-function eZAJAXAutoComplete( conf ) {
-    this.conf = conf;
+    Y.namespace('eZ');
 
-    var that = this,
-        loader = new YAHOO.util.YUILoader( YUI2_config );
+    /**
+     * Inits a YUI3 autocomplete doing ezfind lookups
+     *
+     * @param conf : array
+     *  - url: url of the ajax server
+     *  - inputSelector: where on the page the autocomplete must be enable, example: #myform
+     *  - minQueryLength: number of char to be typed before the lookup
+     *  - resultLimit: number of results fetched
+     *
+     */
+    function initAutoComplete(conf) {
+        // Create a DataSource instance.
+        var ds = new Y.DataSource.IO({
+            source: conf.url
+        });
 
-    loader.require( ['connection', 'autocomplete'] );
-    loader.onSuccess = function() {
-        that.init();
-    };
-    loader.insert( {}, 'js' );
-}
+        Y.one(conf.inputSelector).plug(Y.Plugin.AutoComplete, {
+            maxResults: conf.resultLimit,
+            minQueryLength: conf.minQueryLength,
+            resultHighlighter: 'phraseMatch',
+            // What is displayed in the list
+            resultTextLocator:  function (result) {
+                return result[0];
+            },
+            source: ds,
+            // This will be appended to the URL that was supplied to the DataSource's "source" config above.
+            requestTemplate: "::{query}::" + conf.resultLimit + "?ContentType=json",
+            // Custom result list locator to parse the results out of the response.
+            resultListLocator: function (response) {
+                if (response && response[0] && response[0].responseText){
+                    return Y.JSON.parse(response[0].responseText).content;
+                } else {
+                    return [];
+                }
+            }
+        });
+    }
 
-/**
- * Initializes YUI2 DataSource and AutoComplete components
- */
-eZAJAXAutoComplete.prototype.init = function() {
-    var that = this;
+    Y.eZ.initAutoComplete = initAutoComplete;
 
-    var datasource = new YAHOO.util.DataSource( this.conf.url, { responseType: YAHOO.util.DataSource.TYPE_JSON,
-                                                                 connXhrMode: "cancelStaleRequests",
-                                                                 responseSchema: { resultsList: "content",
-                                                                                   fields: ["facet", "count"],
-                                                                                   metaFields: { errorMessage: "error_text" } } } );
-
-    YAHOO.util.Event.onAvailable( this.conf.containerid, function( e ) {
-        var autocomplete = new YAHOO.widget.AutoComplete( that.conf.inputid, that.conf.containerid, datasource );
-        autocomplete.useShadow = true;
-        autocomplete.minQueryLength = that.conf.minquerylength;
-        autocomplete.allowBrowserAutocomplete = false;
-        autocomplete.generateRequest = function(q) {
-            return "::" + q + "::" + that.conf.resultlimit + "?ContentType=json";
-        };
-    }, this );
-}
+}, '1.0.0', {
+    requires: [
+        'autocomplete', 'autocomplete-highlighters', 'datasource-io', 'json-parse'
+    ]
+});
