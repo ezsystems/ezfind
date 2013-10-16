@@ -19,16 +19,19 @@ class ezfIndexParentName implements ezfIndexPlugin
      * The modify method gets the current content object AND the list of
      * Solr Docs (for each available language version).
      *
-     *
-     * @param eZContentObject $contentObect
-     * @param array $docList
+     * @param eZContentObject $contentObject
+     * @param eZSolrDoc[] $docList
+     * @internal param \eZContentObject $contentObect
      */
     public function modify( eZContentObject $contentObject, &$docList )
     {
+        /** @var eZContentObjectTreeNode $contentNode */
         $contentNode = $contentObject->attribute( 'main_node' );
+        /** @var eZContentObjectTreeNode $parentNode */
         $parentNode = $contentNode->attribute( 'parent' );
         if ( $parentNode instanceof eZContentObjectTreeNode )
         {
+            /** @var eZContentObject $parentObject */
             $parentObject       = $parentNode->attribute( 'object' );
             $parentVersion      = $parentObject->currentVersion();
             if( $parentVersion === false )

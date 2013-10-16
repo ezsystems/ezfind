@@ -10,25 +10,27 @@
  */
 abstract class ezpFileArchive
 {
-
     /**
      * archiveFile method is common for all archive classes
      * @todo maybe define a global interface instead with this method?
+     *
      * @param string $path the filepath
+     * @param array $seeds
+     * @param string $prefix
      * @param string $realm a realm or other classifier, possibly to be used for partitioning
-     * @param array $keys an associative array of other values to avoid collisions if needed
-     *        standard elements are 'prefix', 'seeds'
-     *        the path should generally be used as a seed element as well
+     *
+     * @return array|bool
      */
     abstract protected function archiveFile( $path, $seeds, $prefix = null, $realm = null );
 
     /**
+     * @param string $path
+     * @param array $seeds
+     * @param string $prefix
+     * @param string $realm
      *
+     * @return string
      */
     abstract protected function getArchiveFileName( $path, $seeds, $prefix = null, $realm = null );
-
 }
-
-
-
 ?>

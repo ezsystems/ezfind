@@ -17,17 +17,11 @@
 
 class ezfSolrStorage
 {
-
-    /**
-     *
-     */
     const STORAGE_ATTR_FIELD_PREFIX = 'as_';
     const STORAGE_ATTR_FIELD_SUFFIX = '_bst';
     const CONTENT_METHOD_TOSTRING = 'to_string';
     const CONTENT_METHOD_CUSTOM_HANDLER = 'custom_handler';
     const STORAGE_VERSION_FORMAT = '1';
-
-    /* var $handler; */
 
     function  __construct( )
     {
@@ -36,9 +30,9 @@ class ezfSolrStorage
 
     /**
      * @param eZContentObjectAttribute $contentObjectAttribute the attribute to serialize
+     *
      * @return array for further processing
      */
-
     public static function getAttributeData ( eZContentObjectAttribute $contentObjectAttribute )
     {
         $dataTypeIdentifier = $contentObjectAttribute->attribute( 'data_type_string' );
@@ -71,15 +65,20 @@ class ezfSolrStorage
         }
     }
 
+    /**
+     * @param $attributeData
+     *
+     * @return string
+     */
     public static function serializeData ( $attributeData )
     {
-            return base64_encode( json_encode( $attributeData ) );
+        return base64_encode( json_encode( $attributeData ) );
     }
 
     /**
+     * @param string $storageString
      *
-     * @param string $jsonString
-     * @return mixed
+     * @return array
      */
     public static function unserializeData ( $storageString )
     {
@@ -90,8 +89,8 @@ class ezfSolrStorage
     }
 
     /**
-     *
      * @param string $fieldNameBase
+     *
      * @return string Solr field name
      */
     public static function getSolrStorageFieldName( $fieldNameBase )

@@ -14,16 +14,25 @@ class ezfTemplateOperators
 {
     const QUOTES_TO_ESCAPE = '"';
 
+    /**
+     * @return array
+     */
     public function operatorList()
     {
         return array( 'solr_escape', 'solr_quotes_escape' );
     }
 
+    /**
+     * @return bool
+     */
     public function namedParameterPerOperator()
     {
         return true;
     }
 
+    /**
+     * @return array
+     */
     public function namedParameterList()
     {
         return array(
@@ -38,6 +47,15 @@ class ezfTemplateOperators
         );
     }
 
+    /**
+     * @param eZTemplate $tpl
+     * @param string $operatorName
+     * @param array $operatorParameters
+     * @param string $rootNamespace
+     * @param string $currentNamespace
+     * @param mixed $operatorValue
+     * @param array $namedParameters
+     */
     public function modify( $tpl, $operatorName, $operatorParameters, $rootNamespace, $currentNamespace, &$operatorValue, $namedParameters )
     {
         switch ( $operatorName )
@@ -57,10 +75,12 @@ class ezfTemplateOperators
      * If there are double quotes inside $query, they will be escaped.
      * Edge quotes are ignored.
      *
-     * @param string $query
-     * @return string
      * @see http://lucene.apache.org/core/old_versioned_docs/versions/3_4_0/queryparsersyntax.html#Escaping%20Special%20Characters
      * @see http://issues.ez.no/18701
+     *
+     * @param string $query
+     *
+     * @return string
      */
     public function escapeQuery( $query )
     {
@@ -77,6 +97,7 @@ class ezfTemplateOperators
      *
      * @param string $query
      * @param bool $leaveEdgeQuotes If true, edge quotes surrounding $query will be ignored.
+     *
      * @return string
      */
     public function escapeQuotes( $query, $leaveEdgeQuotes = false )

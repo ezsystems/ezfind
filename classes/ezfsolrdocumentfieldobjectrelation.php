@@ -146,8 +146,10 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
      * Identifies, based on the existing object relations, the type of the subattribute.
      *
      * @param eZContentClassAttribute $classAttribute The ezobjectrelation/ezobjectrelationlist attribute
-     * @param $subAttribute The subattribute's name
-     * @return string The type of the subattribute, false otherwise.
+     * @param string $subAttribute The subattribute's name
+     * @param string $context
+     *
+     * @return string|bool The type of the subattribute, false otherwise.
      */
     protected static function getTypeForSubattribute( eZContentClassAttribute $classAttribute, $subAttribute, $context = 'search'  )
     {

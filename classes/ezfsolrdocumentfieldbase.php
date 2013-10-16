@@ -47,7 +47,7 @@ class ezfSolrDocumentFieldBase
      * Constructor. Use ezfSolrDocumentFieldBase::instance() to create new
      * object of ezfSolrDocumentFieldBase class.
      *
-     * @param eZContentObjectAttribute Instance of eZContentObjectAttribute
+     * @param eZContentObjectAttribute $attribute Instance of eZContentObjectAttribute
      */
     function __construct( eZContentObjectAttribute $attribute )
     {
@@ -186,9 +186,11 @@ class ezfSolrDocumentFieldBase
      * - textTight - Text, less filters are applied than for the text datatype.
      *
      * @see ezfSolrDocumentFieldName::$FieldTypeMap
-     * @param eZContentClassAttribute Instance of eZContentClassAttribute.
-     * @param $subAttribute string In case the type of a datatype's sub-attribute is requested,
-     *                             the subattribute's name is passed here.
+     *
+     * @param eZContentClassAttribute $classAttribute Instance of eZContentClassAttribute.
+     * @param $subAttribute string  In case the type of a datatype's sub-attribute is requested,
+     *                              the subattribute's name is passed here.
+     * @param string $context
      *
      * @return string Field type. Null if no field type is defined.
      */
@@ -266,8 +268,8 @@ class ezfSolrDocumentFieldBase
      * Get Field name. Classes extending ezfSolrDocumentFieldBase should extend this functions if
      * they provide custom field names.
      *
-     * @param eZContentClassAttribute Instance of eZContentClassAttribute.
-     * @param mixed Additional conditions for creating the field name. What
+     * @param eZContentClassAttribute $classAttribute Instance of eZContentClassAttribute.
+     * @param mixed $subattribute Additional conditions for creating the field name. What
      *              this value may be depends on the Datatype used for the
      *              eZContentClassAttribute. Default value: null.
      *
@@ -285,6 +287,7 @@ class ezfSolrDocumentFieldBase
      *
      * @param eZContentClassAttribute $classAttribute Instance of eZContentClassAttribute.
      * @param mixed $subAttribute Typically the 'subattribute' name
+     * @param string $context
      *
      * @return string Fully qualified Solr field name.
      */
@@ -314,7 +317,7 @@ class ezfSolrDocumentFieldBase
      * To override the standard class ezfSolrDocumentFieldBase, specify in the configuration
      * files which sub-class which should be used.
      *
-     * @param eZContentObjectAttribute Instance of eZContentObjectAttribute.
+     * @param eZContentObjectAttribute $objectAttribute Instance of eZContentObjectAttribute.
      *
      * @return ezfSolrDocumentFieldBase Instance of ezfSolrDocumentFieldBase.
      */
@@ -345,10 +348,10 @@ class ezfSolrDocumentFieldBase
      * Preprocess value to make sure it complies to the
      * requirements Solr has to the different field types.
      *
-     * @param mixed Value
-     * @param string Fielt type
+     * @param mixed $value
+     * @param string $fieldType
      *
-     * @return moxed Processed value
+     * @return mixed Processed value
      */
     static function preProcessValue( $value, $fieldType )
     {
@@ -389,7 +392,7 @@ class ezfSolrDocumentFieldBase
      * Convert timestamp to Solr date
      * See also: http://www.w3.org/TR/xmlschema-2/#dateTime
      *
-     * @param int Timestamp
+     * @param int $timestamp
      *
      * @return string Solr datetime
      */
@@ -445,6 +448,8 @@ class ezfSolrDocumentFieldBase
      * It is used in the search plugin eZSolr.
      *
      * @param string $baseName
+     * @param string $context
+     *
      * @return string
      *
      * @example
@@ -464,6 +469,7 @@ class ezfSolrDocumentFieldBase
      *
      * @param string $baseName
      * @param eZContentClassAttribute $classAttribute
+     *
      * @return string
      *
      * @example
@@ -501,9 +507,19 @@ class ezfSolrDocumentFieldBase
             return false;
     }
 
-    /// Vars
+    /**
+     * @var eZContentObjectAttribute
+     */
     public $ContentObjectAttribute;
+
+    /**
+     * @var eZINI
+     */
     static $FindINI;
+
+    /**
+     * @var ezfSolrDocumentFieldName
+     */
     static $DocumentFieldName;
 
     /**

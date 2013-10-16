@@ -35,9 +35,11 @@
 
 class eZFindResultNode extends eZContentObjectTreeNode
 {
-    /*!
-     \reimp
-    */
+    /**
+     * Constructor
+     *
+     * @param array $rows
+     */
     function eZFindResultNode( $rows = array() )
     {
         $this->eZContentObjectTreeNode( $rows );
@@ -55,9 +57,6 @@ class eZFindResultNode extends eZContentObjectTreeNode
                                                'score_percent' );
     }
 
-    /*!
-     \reimp
-    */
     function attribute( $attr, $noFunction = false )
     {
         $retVal = null;
@@ -106,27 +105,18 @@ class eZFindResultNode extends eZContentObjectTreeNode
         return $retVal;
     }
 
-    /*!
-     \reimp
-    */
     function attributes()
     {
         return array_merge( $this->LocalAttributeNameList,
                             eZContentObjectTreeNode::attributes() );
     }
 
-    /*!
-     \reimp
-    */
     function hasAttribute( $attr )
     {
         return ( in_array( $attr, $this->LocalAttributeNameList ) ||
                  eZContentObjectTreeNode::hasAttribute( $attr ) );
     }
 
-    /*!
-     \reimp
-    */
     function setAttribute( $attr, $value )
     {
         switch( $attr )

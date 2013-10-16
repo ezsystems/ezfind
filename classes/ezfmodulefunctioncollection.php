@@ -90,18 +90,32 @@ class ezfModuleFunctionCollection
     /**
      * Search function
      *
-     * @param string Query string
-     * @param int Offset
-     * @param int Limit
-     * @param array Facet definition
-     * @param array Filter parameters
-     * @param array Sort by parameters
-     * @param mixed Content class ID or list of content class IDs
-     * @param array list of subtree limitation node IDs
-     * @param boolean $enableElevation Controls whether elevation should be enabled or not
-     * @param boolean $forceElevation Controls whether elevation is forced. Applies when the srt criteria is NOT the default one ( 'score desc' ).
+     * @see ezfeZPSolrQueryBuilder::buildSearch()
      *
-     * @return array Search result
+     * @param string $query Query string
+     * @param int $offset Offset
+     * @param int $limit Limit
+     * @param array $facets Facet definition
+     * @param array $filters Filter parameters
+     * @param array $sortBy Sort by parameters
+     * @param int|int[] $classID Content class ID or list of content class IDs
+     * @param int $sectionID
+     * @param array $subtreeArray
+     * @param bool $ignoreVisibility
+     * @param array $limitation list of subtree limitation node IDs
+     * @param bool $asObjects
+     * @param bool $spellCheck
+     * @param array $boostFunctions
+     * @param string $queryHandler
+     * @param bool $enableElevation Controls whether elevation should be enabled or not
+     * @param bool $forceElevation Controls whether elevation is forced. Applies when the srt criteria is NOT the default one ( 'score desc' ).
+     * @param int $publishDate
+     * @param array $distributedSearch
+     * @param array $fieldsToReturn
+     * @param array $searchResultClustering
+     * @param array $extendedAttributeFilter
+     *
+     * @return array Search Result
      */
     public function search( $query, $offset = 0, $limit = 10, $facets = null,
                             $filters = null, $sortBy = null, $classID = null, $sectionID = null,
@@ -136,9 +150,9 @@ class ezfModuleFunctionCollection
     /**
      * rawSolrRequest function
      *
-     * @param base specifies the Solr server/shard to use
-     * @param request the base request
-     * @param parameters all parameters for the request
+     * @param string $baseURI specifies the Solr server/shard to use
+     * @param string $request the base request
+     * @param array $parameters all parameters for the request
      *
      * @return array result as a PHP array
      */
@@ -151,22 +165,22 @@ class ezfModuleFunctionCollection
 
     /**
      * moreLikeThis function
-     * @todo document the solrconfig.xml required setting for remote streaming to be true
-     *       if $queryType 'url' is to be used
+     *
+     * @todo document the solrconfig.xml required setting for remote streaming to be true if $queryType 'url' is to be used
      * @todo consider adding limitation and visibility parameters
      *
-     * @param string $queryType string ( 'nid' | 'oid' | 'text' | 'url' )
+     * @param string $queryType 'nid' | 'oid' | 'text' | 'url'
      * @param string $query value for QueryType
-     * @param int Offset
-     * @param int Limit
-     * @param array Facet definition
-     * @param array Filter parameters
-     * @param array Sort by parameters
-     * @param mixed Content class ID or list of content class IDs
-     * @param array list of subtree limitation node IDs
-     * @param boolean asObjects return regular eZPublish objects if true, stored Solr content if false
-     * @param string|null $queryInstallationID the eZ Find installation id to
-     *        use when looking for the reference document in Solr
+     * @param int $offset Offset
+     * @param int $limit Limit
+     * @param array $facets Facet definition
+     * @param array $filters Filter parameters
+     * @param array $sortBy Sort by parameters
+     * @param int|int[] $classID Content class ID or list of content class IDs
+     * @param int $sectionID
+     * @param array $subtreeArray list of subtree limitation node IDs
+     * @param bool $asObjects return regular eZPublish objects if true, stored Solr content if false
+     * @param string $queryInstallationID the eZ Find installation id to use when looking for the reference document in Solr
      *
      * @return array result as a PHP array
      */
@@ -256,9 +270,9 @@ class ezfModuleFunctionCollection
     /**
      * spellCheck function, see also the search integrated spell check
      *
-     * @param string contains the string/word
-     * @param parameters all parameters for the request
-     * @param realm the ini configured parameters grouped into a realm
+     * @param string $string contains the string/word
+     * @param array $parameters all parameters for the request
+     * @param string $realm the ini configured parameters grouped into a realm
      *
      * @return array result as a PHP array
      */
@@ -268,7 +282,9 @@ class ezfModuleFunctionCollection
         return false;
     }
 
-
+    /**
+     * @return array
+     */
     public function getDefaultSearchFacets()
     {
         $limit = 5;

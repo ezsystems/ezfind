@@ -15,20 +15,7 @@
  */
 class ezfSolrUtils
 {
-
     /**
-     *
-     */
-
-
-    /*function  __construct( )
-    {
-
-    }*/
-
-
-    /**
-     *
      * @param eZSolrBase $fromCore
      * @param eZSolrBase $toCore
      * @param string $keyField
@@ -40,6 +27,7 @@ class ezfSolrUtils
      * @param boolean $commit
      * @param boolean $optimize
      * @param int $commitWithin
+     *
      * @return boolean success (true |  false)
      */
     public static function copyDocument ( eZSolrBase $fromCore, eZSolrBase $toCore, $keyField, $docID, $params = array(), $commit = false, $optimize = false, $commitWithin = 0 )
@@ -88,7 +76,6 @@ class ezfSolrUtils
     }
 
     /**
-     *
      * @param eZSolrBase $fromCore
      * @param eZSolrBase $toCore
      * @param string $keyField
@@ -100,6 +87,7 @@ class ezfSolrUtils
      * @param boolean $commit
      * @param boolean $optimize
      * @param int $commitWithin
+     *
      * @return boolean success
      */
     public static function moveDocument ( eZSolrBase $fromCore, eZSolrBase $toCore, $keyField, $docID, $params = array(), $commit = false, $optimize = false, $commitWithin = 0 )
@@ -116,18 +104,17 @@ class ezfSolrUtils
     }
 
     /**
-     *
      * @param eZSolrBase $fromCore
      * @param eZSolrBase $toCore
-     * @param <type> $keyField
-     * @param <type> $filterQuery
-     * @param <type> $params hash array with fields to modify or add, fields to suppress
+     * @param string $keyField
+     * @param string $filterQuery
+     * @param array $params hash array with fields to modify or add, fields to suppress
      *      hash keys: 'modify_fields' (hash array key->value),
      *                 'suppress_fields' (array of strings),
      *                 'add_fields' (hash array key->value)
-     * @param <type> $commit
-     * @param <type> $optimize
-     * @param <type> $commitWithin
+     * @param bool $commit
+     * @param bool $optimize
+     * @param int $commitWithin
      */
     public static function copyDocumentsByQuery ( eZSolrBase $fromCore, eZSolrBase $toCore, $keyField, $filterQuery, $params = array(), $commit = false, $optimize = false, $commitWithin = 0 )
     {
@@ -148,15 +135,15 @@ class ezfSolrUtils
      *
      * @param eZSolrBase $fromCore
      * @param eZSolrBase $toCore
-     * @param <type> $keyField
-     * @param <type> $filterQuery
-     * @param <type> $params hash array with fields to modify or add, fields to suppress
+     * @param string $keyField
+     * @param string $filterQuery
+     * @param array $params hash array with fields to modify or add, fields to suppress
      *      hash keys: 'modify_fields' (hash array key->value),
      *                 'suppress_fields' (array of strings),
      *                 'add_fields' (hash array key->value)
-     * @param <type> $commit
-     * @param <type> $optimize
-     * @param <type> $commitWithin
+     * @param bool $commit
+     * @param bool $optimize
+     * @param int $commitWithin
      */
     public static function moveDocumentsByQuery ( eZSolrBase $fromCore, eZSolrBase $toCore, $keyField, $filterQuery, $params = array(), $commit = false, $optimize = false, $commitWithin = 0 )
     {
@@ -174,12 +161,12 @@ class ezfSolrUtils
     }
 
     /**
-     *
      * @param eZSolrBase $solrCore the Solr instance to use
      * @param array $fields a hash array in teh form fieldname => fieldvalue (single scalar or array for multivalued fields)
      * @param boolean $commit do a commit or not
      * @param boolean $optimize do an optimize or not, usually false as this can be very CPU intensive
      * @param int $commitWithin optional commitWithin commit window expressed in milliseconds
+     *
      * @return boolean success or failure
      */
     public static function addDocument (eZSolrBase $solrCore, $fields = array(), $commit = false, $optimize = false, $commitWithin = 0 )
