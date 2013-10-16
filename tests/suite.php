@@ -9,6 +9,10 @@
 
 class eZFindTestSuite extends ezpDatabaseTestSuite
 {
+    protected $sqlFiles = array(
+        array( 'extension/ezfind/sql/', 'schema.sql' ),
+    );
+
     public function __construct()
     {
         parent::__construct();
@@ -37,9 +41,6 @@ class eZFindTestSuite extends ezpDatabaseTestSuite
 
         // make sure extension is enabled and settings are read
         ezpExtensionHelper::load( 'ezfind' );
-
-        $sqlFiles = array( 'extension/ezfind/sql/mysql/mysql.sql' );
-        ezpTestDatabaseHelper::insertSqlData( $this->sharedFixture, $sqlFiles );
     }
 
     public function tearDown()
