@@ -73,7 +73,7 @@ class eZFindFetchRegression extends ezpDatabaseTestCase
             '',
             array( 'SortBy' => array( 'name', 'asc' ) ) + $this->fetchParams );
 
-        self::assertType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
+        self::assertInternalType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
     }
 
     /**
@@ -87,7 +87,7 @@ class eZFindFetchRegression extends ezpDatabaseTestCase
             '',
             array( 'SortBy' => array( 'class_id', 'asc' ) ) + $this->fetchParams );
 
-        self::assertType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
+        self::assertInternalType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
     }
 
     /**
@@ -101,7 +101,7 @@ class eZFindFetchRegression extends ezpDatabaseTestCase
             '',
             array( 'SortBy' => array( 'path', 'asc' ) ) + $this->fetchParams );
 
-        self::assertType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
+        self::assertInternalType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
     }
 }
 ?>
