@@ -112,7 +112,7 @@ class ezfSolrDocumentFieldDummyExample extends ezfSolrDocumentFieldBase
     /**
      * @see ezfSolrDocumentFieldBase::getFieldName()
      */
-    public static function getFieldName( eZContentClassAttribute $classAttribute, $subAttribute = null )
+    public static function getFieldName( eZContentClassAttribute $classAttribute, $subAttribute = null, $context = 'search' )
     {
         if ( $subAttribute and
              $subAttribute !== '' and
@@ -162,7 +162,7 @@ class ezfSolrDocumentFieldDummyExample extends ezfSolrDocumentFieldBase
     /**
      * @see ezfSolrDocumentFieldBase::getClassAttributeType()
      */
-    static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null )
+    static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null, $context = 'search' )
     {
         if ( $subAttribute and
              $subAttribute !== '' and
