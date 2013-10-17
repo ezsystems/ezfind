@@ -125,7 +125,7 @@ class ezfSolrDocumentFieldBaseTest extends ezpDatabaseTestCase
                                                       'data_int'          => $imageId4 ) );
         $ezcca4->store();
         //Create entry in ezcontentobject_link
-        $q4 = "INSERT INTO ezcontentobject_link VALUES( {$ezcca4->attribute( 'id' )}, $srcObjId4, 1, 123456, 0, 8, $imageId4 );";
+        $q4 = "INSERT INTO ezcontentobject_link VALUES( {$ezcca4->attribute( 'id' )}, $srcObjId4, 1, 123456, 8, $imageId4 );";
         eZDB::instance()->query( $q4 );
 
         $expected4 = ezfSolrDocumentFieldBase::SUBATTR_FIELD_PREFIX . 'image-name_t';
