@@ -26,6 +26,8 @@
 //
 //
 
+use Symfony\Component\Console\Input\ArgvInput;
+
 require 'autoload.php';
 
 if ( !function_exists( 'readline' ) )
@@ -105,6 +107,7 @@ class ezfUpdateSearchIndexSolr
                 'clean-all' => "Remove all search data for all installations",
                 'conc' => 'Parallelization, number of concurent processes to use',
                 'php-exec' => 'Full path to PHP executable',
+                'console-exec' => 'Full path to eZ5 console.',
                 'commit-within' => 'Commit to Solr within this time in seconds (default '
                     . self::DEFAULT_COMMIT_WITHIN . ' seconds)',
                 'offset' => '*For internal use only*',
@@ -161,8 +164,16 @@ class ezfUpdateSearchIndexSolr
         {
             $this->CLI->output( 'Starting object re-indexing' );
 
-            // Get PHP executable from user.
-            $this->getPHPExecutable();
+            /** @var ArgvInput $input */
+            global $input;
+
+            if (is_null($input)) {
+                $this->getPHPExecutable(); // Get PHP executable from user.
+            }
+            else {
+                $this->getConsoleExecutable($input);
+            }
+
 
             $this->runMain();
         }
@@ -234,27 +245,62 @@ class ezfUpdateSearchIndexSolr
     }
 
     /**
+     * This script is being executed as a legacy-script from eZ5.
+     *
+     * @param ArgvInput $input
+     */
+    protected function getConsoleExecutable($input)
+    {
+        $output = array();
+        $exec = '../ezpublish/console';
+
+        if ( !empty($this->Options['console-exec']) )
+        {
+            $exec = $this->Options['console-exec'];
+        }
+
+        exec($exec, $output);
+
+        while( !$this->validateExecutable($output, 'Symfony') )
+        {
+            $input = readline( 'Enter path to Console executable ( or [q] to quit )' );
+            if ( $input === 'q' )
+            {
+                $this->Script->shutdown( 0 );
+            }
+
+            exec( $input, $output );
+        }
+
+        $parts = array($exec);
+
+        if ($input->hasOption('env'))
+        {
+            $parts[] = '--env=' . $input->getOption('env');
+        }
+
+        $parts[] = $input->getArgument('command');
+
+        $this->Executable = implode(' ', $parts);
+    }
+
+    /**
      * Get PHP executable from user input. Exit if php executable cannot be
      * found and if no executable is entered.
      */
     protected function getPHPExecutable()
     {
-        $validExecutable = false;
         $output = array();
         $exec = 'php';
+
         if ( !empty( $this->Options['php-exec'] ) )
         {
             $exec = $this->Options['php-exec'];
         }
+
         exec( $exec . ' -v', $output );
 
-        if ( count( $output ) && strpos( $output[0], 'PHP' ) !== false )
-        {
-            $validExecutable = true;
-            $this->Executable = $exec;
-        }
-
-        while( !$validExecutable )
+        while( !$this->validateExecutable($output, 'PHP') )
         {
             $input = readline( 'Enter path to PHP-CLI executable ( or [q] to quit )' );
             if ( $input === 'q' )
@@ -263,13 +309,14 @@ class ezfUpdateSearchIndexSolr
             }
 
             exec( $input . ' -v', $output );
-
-            if ( count( $output ) && strpos( $output[0], 'PHP' ) !== false )
-            {
-                $validExecutable = true;
-                $this->Executable = $input;
-            }
         }
+
+        $this->Executable = $exec;
+    }
+
+    protected function validateExecutable($output, $string)
+    {
+        return count($output) && strpos ( $output[0], $string ) !== false;
     }
 
     /**
@@ -491,7 +538,7 @@ class ezfUpdateSearchIndexSolr
 
         if ( $this->Options['siteaccess'] )
         {
-            $paramString .= ' -s ' . escapeshellarg( $this->Options['siteaccess'] );
+            $paramString .= ' --siteaccess=' . $this->Options['siteaccess'];
         }
 
         $paramString .=
