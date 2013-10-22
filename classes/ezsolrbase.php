@@ -51,7 +51,7 @@ class eZSolrBase
      * Constructor.
      * Initializes the solr URI and various INI files
      *
-     * @param string $baseURI An optional solr URI that overrides the INI one.
+     * @param string|bool $baseURI An optional solr URI that overrides the INI one.
      */
     function __construct( $baseURI = false )
     {
@@ -77,14 +77,14 @@ class eZSolrBase
 
     }
 
-    /*!
-     Build a HTTP GET query
-
-     \param Solr request type name.
-     \param Query parameters ( associative array )
-
-     \return Complete HTTP get URL.
-    */
+    /**
+     * Build a HTTP GET query
+     *
+     * @param string $request Solr request type name
+     * @param array $queryParams Query parameters ( associative array )
+     *
+     * @return string Complete HTTP get URL
+     */
     function buildHTTPGetQuery( $request, $queryParams )
     {
         foreach ( $queryParams as $name => $value )
@@ -105,16 +105,16 @@ class eZSolrBase
         return $this->SearchServerURI . $request . '?' . implode( '&', $encodedQueryParams );
     }
 
-
-    /*!
-     \protected
-     Build HTTP Post string.
-
-     \param Query parameters, associative array
-
-     \return POST part of HTML request
+    /**
+     * Build HTTP Post string.
+     *
+     * @protected
+     *
+     * @param array $queryParams Query parameters, associative array
+     *
+     * @return string POST part of HTML request
      */
-	function buildPostString( $queryParams )
+    function buildPostString( $queryParams )
     {
         foreach ( $queryParams as $name => $value )
         {
@@ -138,7 +138,6 @@ class eZSolrBase
      *
      * @param string $request request name (examples: /select, /update, ...)
      * @param string $postData post data
-     * @param string $languageCodes A language code string
      * @param string $contentType POST content type
      *
      * @return string Result of HTTP Request ( without HTTP headers )
@@ -162,15 +161,16 @@ class eZSolrBase
         return $this->sendHTTPRequestRetry( eZSolrBase::buildHTTPGetQuery( $request, $getParams ) );
     }
 
-    /*!
-      OBS ! Experimental.
-
-      Can be used for anything, uses the post method
-      ResponseWriter wt=php is default, alternative: json or phps
-
-      \param $request refers to the request handler called
-      \param $params is an array of post variables to include. The actual values
-             are urlencoded in the buildPostString() call
+    /**
+     * OBS ! Experimental.
+     * Can be used for anything, uses the post method ResponseWriter wt=php is default, alternative: json or phps
+     *
+     * @param string $request refers to the request handler called
+     * @param array $params an array of post variables to include.
+     *                      The actual values are urlencoded in the buildPostString() call
+     * @param string $wt
+     *
+     * @return array|bool|mixed
      */
     function rawSolrRequest ( $request = '', $params = array(), $wt = 'php' )
     {
@@ -229,19 +229,22 @@ class eZSolrBase
         return $this->rawSolrRequest ( '/admin/ping' );
     }
 
-    /*!
-      Performs a commit in Solr, which means the index is made live after performing
-      all pending additions and deletes
+    /**
+     * Performs a commit in Solr, which means the index is made live after performing all pending additions and deletes
+     *
+     * @return string
      */
     function commit()
     {
         return $this->postQuery (  '/update', '<commit/>', 'text/xml' );
     }
 
-    /*!
-      Performs an optimize in Solr, which means the index is compacted
-      for maximum performance.
-      \param $withCommit means a commit is performed first
+    /**
+     * Performs an optimize in Solr, which means the index is compacted for maximum performance.
+     *
+     * @param bool $withCommit means a commit is performed first
+     *
+     * @return string
      */
     function optimize( $withCommit = false )
     {
@@ -267,7 +270,11 @@ class eZSolrBase
      * </response>
      *
      * Function will check if solrResult document contains "<int name="status">0</int>"
-     **/
+     *
+     * @param string $updateResult
+     *
+     * @return bool
+     */
     static function validateUpdateResult ( $updateResult )
     {
         if ( empty( $updateResult ) )
@@ -307,10 +314,13 @@ class eZSolrBase
     /**
      * Adds an array of docs (of type eZSolrDoc) to the Solr index for maximum
      * performance.
-     * @param array $docs associative array of documents to add
-     * @param boolean $commit wether or not to perform a solr commit at the end
-     * @param integer $commitWithin specifies within how many milliseconds a commit should occur if no other commit
+     *
+     * @param eZSolrDoc[] $docs associative array of documents to add
+     * @param bool $commit wether or not to perform a solr commit at the end
+     * @param bool $optimize
+     * @param int $commitWithin specifies within how many milliseconds a commit should occur if no other commit
      *       is triggered in the meantime (Solr 1.4, eZ Find 2.2)
+     * @return bool
      */
     function addDocs ( $docs = array(), $commit = true, $optimize = false, $commitWithin = 0  )
     {
@@ -357,10 +367,12 @@ class eZSolrBase
     /**
      * Removes an array of docID's from the Solr index
      *
-     * @param array $docsID List of document IDs to delete. If set to <empty>,
+     * @param array $docIDs List of document IDs to delete. If set to <empty>,
      *              $query will be used to delete documents instead.
-     * @param string $query Solr Query. This will be ignored if $docIDs is set.
+     * @param string|bool $query Solr Query. This will be ignored if $docIDs is set.
+     * @param bool $commit
      * @param bool $optimize set to true to perform a solr optimize after delete
+     *
      * @return bool
      **/
     function deleteDocs ( $docIDs = array(), $query = false, $commit = true,  $optimize = false )
@@ -400,6 +412,7 @@ class eZSolrBase
      *        or
      *        - an ezfeZPSolrQueryBuilder instance
      * @param string $wt Query response writer
+     *
      * @return array The search results
      */
     function rawSearch ( $params = array(), $wt = 'php' )
@@ -410,13 +423,13 @@ class eZSolrBase
     /**
      * Sends the updated elevate configuration to Solr
      *
-     * @params array $params Raw query parameters
+     * This method is a simple wrapper around rawSearch in order to easily ignore elevate when using multicore
      *
-     *
-     * @note This method is a simple wrapper around rawSearch in order to easily
-     *       ignore elevate when using multicore
-     * @return bool
      * @see rawSearch()
+     *
+     * @param array $params Raw query parameters
+     *
+     * @return array
      */
     function pushElevateConfiguration( $params )
     {
@@ -429,11 +442,11 @@ class eZSolrBase
      * In this case, we will retry just after, with a max number of retries defined in solr.ini ([SolrBase].ProcessMaxRetries)
      *
      * @param string $url
-     * @param string $postData POST data as string (field=value&foo=bar). Default is false (HTTP Request will be GET)
+     * @param string|bool $postData POST data as string (field=value&foo=bar). Default is false (HTTP Request will be GET)
      * @param string $contentType Default is {@link self::DEFAULT_REQUEST_CONTENTTYPE}
      * @param string $userAgent Default is {@link self::DEFAULT_REQUEST_USERAGENT}
      *
-     * @return HTTP result ( without headers ), false if the request fails.
+     * @return string|bool HTTP result ( without headers ), false if the request fails.
      */
     protected function sendHTTPRequestRetry( $url, $postData = false, $contentType = self::DEFAULT_REQUEST_CONTENTTYPE, $userAgent = self::DEFAULT_REQUEST_USERAGENT )
     {
@@ -478,13 +491,13 @@ class eZSolrBase
      * Some improvements. Will use Curl, if curl is present.
      *
      * @param string $url
-     * @param string $postData POST data as string (field=value&foo=bar). Default is false (HTTP Request will be GET)
+     * @param string|bool $postData POST data as string (field=value&foo=bar). Default is false (HTTP Request will be GET)
      * @param string $contentType Default is {@link self::DEFAULT_REQUEST_CONTENTTYPE}
      * @param string $userAgent Default is {@link self::DEFAULT_REQUEST_USERAGENT}
      *
      * @throws ezfSolrException Throws an ezfSolrException if the request results a timeout.
      *                          If curl is available, this exception will also be thrown, with its error number and message
-     * @return HTTP result ( without headers ), false if the request fails.
+     * @return string HTTP result ( without headers ), false if the request fails.
      */
     function sendHTTPRequest( $url, $postData = false, $contentType = self::DEFAULT_REQUEST_CONTENTTYPE, $userAgent = self::DEFAULT_REQUEST_USERAGENT )
     {

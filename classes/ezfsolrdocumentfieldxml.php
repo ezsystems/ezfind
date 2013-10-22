@@ -37,9 +37,9 @@
 class ezfSolrDocumentFieldXML extends ezfSolrDocumentFieldBase
 {
     /**
+     * @param string $text
      *
-     * @param text $text
-     * @return text
+     * @return string
      *
      * instead of walking thorugh the dom tree, strip all xml/html like
      * this is more brute force, but helps in the case of html literal blocks

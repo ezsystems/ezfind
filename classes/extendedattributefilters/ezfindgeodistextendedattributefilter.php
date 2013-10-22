@@ -32,6 +32,7 @@ class eZFindGeoDistExtendedAttributeFilter implements eZFindExtendedAttributeFil
      * Modifies SolR query params according to filter parameters
      * @param array $queryParams
      * @param array $filterParams
+     *
      * @return array $queryParams
      */
     public function filterQueryParams( array $queryParams, array $filterParams )

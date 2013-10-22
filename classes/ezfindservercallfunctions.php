@@ -9,9 +9,11 @@ class eZFindServerCallFunctions
     /**
      * Returns search results based on given params
      *
-     * @param mixed $args
-     * @return array
      * @deprecated Use ezjsc::search instead (in ezjscore)
+     *
+     * @param mixed $args
+     *
+     * @return array
      */
     public static function search( $args )
     {
@@ -104,6 +106,7 @@ class eZFindServerCallFunctions
      * Returns autocomplete suggestions for given params
      *
      * @param mixed $args
+     *
      * @return array
      */
     public static function autocomplete( $args )

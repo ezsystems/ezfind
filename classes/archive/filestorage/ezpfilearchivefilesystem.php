@@ -11,12 +11,29 @@
 
 class ezpFileArchiveFileSystem extends ezpFileArchive
 {
-
+    /**
+     * @var string
+     */
     private $ArchiveDirName = 'archive';
+
+    /**
+     * @var string
+     */
     private $hashAlgorithm = 'md5';
+
+    /**
+     * @var string
+     */
     private $ArchiveDir;
+
+    /**
+     * @var int
+     */
     private $ArchiveDirLevels = 3;
 
+    /**
+     * Constructor
+     */
     public function  __construct()
     {
         $sys = eZSys::instance();
@@ -28,11 +45,8 @@ class ezpFileArchiveFileSystem extends ezpFileArchive
         }
     }
 
-
     public function archiveFile( $path, $seeds, $prefix = null, $realm = null )
     {
-
-
         $archiveFileName = $this->getArchiveFileName( $path, $seeds, $prefix, $realm );
         if ( eZFileHandler::copy( $path, $archiveFileName ) )
         {
@@ -42,10 +56,6 @@ class ezpFileArchiveFileSystem extends ezpFileArchive
         {
             return false;
         }
-
-
-
-
     }
 
     public function getArchiveFileName( $path, $seeds, $prefix = null, $realm = null )
@@ -74,7 +84,6 @@ class ezpFileArchiveFileSystem extends ezpFileArchive
 
         return $archiveFileName;
     }
-
 }
 
 ?>

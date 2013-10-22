@@ -26,7 +26,9 @@ class eZFindExtendedAttributeFilterFactory
 
     /**
      * Get singleton instance for filter
+     *
      * @param string $filterID
+     *
      * @return eZFindExtendedAttributeFilterInterface|false
      */
     public static function getInstance( $filterID )

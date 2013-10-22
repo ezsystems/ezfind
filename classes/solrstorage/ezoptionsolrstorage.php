@@ -14,6 +14,7 @@ class ezoptionSolrStorage extends ezdatatypeSolrStorage
     /**
      * @param eZContentObjectAttribute $contentObjectAttribute the attribute to serialize
      * @param eZContentClassAttribute $contentClassAttribute the content class of the attribute to serialize
+     *
      * @return array
      */
     public static function getAttributeContent( eZContentObjectAttribute $contentObjectAttribute, eZContentClassAttribute $contentClassAttribute )

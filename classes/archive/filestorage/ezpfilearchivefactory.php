@@ -11,11 +11,10 @@
 
 class ezpFileArchiveFactory
 {
-
     /**
-     *
      * @param string $method
-     * @param string $path
+     *
+     * @return bool|ezpFileArchiveFileSystem
      */
     public static function getFileArchiveHandler( $method = 'filesystem' )
     {
@@ -28,11 +27,6 @@ class ezpFileArchiveFactory
                 //break;
         }
     }
-
-
-
-
 }
-
 
 ?>

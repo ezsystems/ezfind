@@ -38,10 +38,9 @@ class ezfeZPSolrQueryBuilder
 {
     /**
      * Constructor
-     *
      * Sets variables for creating a new instance of ezfeZPSolrQueryBuilder
-     * @param Object $searchPluginInstance Search engine instance. Allows the query builder to
-     *        communicate with the caller ( eZSolr instance ).
+     *
+     * @param eZSolr $searchPluginInstance
      */
     function ezfeZPSolrQueryBuilder( $searchPluginInstance )
     {
@@ -49,13 +48,15 @@ class ezfeZPSolrQueryBuilder
     }
 
     /**
-     * @since eZ Find 2.0
      * build a multi field query, basically doing the same as a Lucene MultiField query
      * not always safe
+     *
+     * @since eZ Find 2.0
      * @param string $searchText
      * @param array $solrFields
-     * @param string $boostFields a hash array
+     * @param array $boostFields a hash array
      *
+     * @return string
      */
     public function buildMultiFieldQuery( $searchText, $solrFields = array(), $boostFields = array() )
     {
@@ -725,9 +726,11 @@ class ezfeZPSolrQueryBuilder
      * @since eZ Find 2.0
      *
      * More Like This similarity searches
-     * @param query
+     * @param string $queryType
+     * @param string $query
+     * @param array $params
      *
-     * @return
+     * @return array
      */
     public function buildMoreLikeThis( $queryType, $query, $params = array() )
     {
@@ -1077,9 +1080,11 @@ class ezfeZPSolrQueryBuilder
      * Identifies which boolean operator to use when building the filter string ( fq parameter in the final Solr raw request )
      * Removes the operator from the array, if existing.
      *
-     * @param array &$filter Filter array processed in self::getParamFilterQuery
-     * @returns string The boolean operator to use. Default to 'AND'
      * @see ezfeZPSolrQueryBuilder::getParamFilterQuery
+     *
+     * @param array &$filter Filter array processed in self::getParamFilterQuery
+     *
+     * @returns string The boolean operator to use. Default to 'AND'
      */
     protected function getBooleanOperatorFromFilter( &$filter )
     {
@@ -1559,6 +1564,7 @@ class ezfeZPSolrQueryBuilder
      *
      * @param array $limitation Override the limitation of the user. Same format as the return of eZUser::hasAccessTo()
      * @param boolean $ignoreVisibility Set to true for the visibility to be ignored
+     *
      * @return string Lucene/Solr query string which can be used as filter query for Solr
      */
     protected function policyLimitationFilterQuery( $limitation = null, $ignoreVisibility = null )
@@ -1765,11 +1771,11 @@ class ezfeZPSolrQueryBuilder
      * Get an array of class attribute identifiers based on either a class attribute
      * list, or a content classes list
      *
-     * @param array $classIDArray
+     * @param array|bool $classIDArray
      *        Classes to search in. Either an array of class ID, class identifiers,
      *        a class ID or a class identifier.
      *        Using numerical attribute/class identifiers for $classIDArray is more efficient.
-     * @param array $classAttributeID
+     * @param array|bool $classAttributeIDArray
      *        Class attributes to search in. Either an array of class attribute id,
      *        or a single class attribute. Literal identifiers are not allowed.
      * @param array $fieldTypeExcludeList
@@ -1862,6 +1868,11 @@ class ezfeZPSolrQueryBuilder
         return $fieldArray;
     }
 
+    /**
+     * @param array $parameterList
+     *
+     * @return array
+     */
     private function buildSearchResultClusterQuery( $parameterList = array() )
     {
         $result = array( 'clustering' => 'false');
@@ -1890,8 +1901,19 @@ class ezfeZPSolrQueryBuilder
     }
 
     /// Vars
+    /**
+     * @var eZINI
+     */
     static $FindINI;
+
+    /**
+     * @var eZINI
+     */
     static $SolrINI;
+
+    /**
+     * @var eZINI
+     */
     static $SiteINI;
 
     /**

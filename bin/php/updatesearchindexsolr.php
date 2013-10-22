@@ -210,6 +210,7 @@ class ezfUpdateSearchIndexSolr
             )
         )
         {
+            /** @var eZContentObjectTreeNode[] $subTree */
             foreach ( $subTree as $innerNode )
             {
                 $object = $innerNode->attribute( 'object' );
@@ -307,6 +308,7 @@ class ezfUpdateSearchIndexSolr
         $this->CLI->output( 'Number of objects to index: ' . $this->ObjectCount );
         $this->Script->resetIteration( $this->ObjectCount, 0 );
 
+        /** @var eZContentObjectTreeNode[] $topNodeArray */
         $topNodeArray = eZPersistentObject::fetchObjectList(
             eZContentObjectTreeNode::definition(),
             null,
@@ -414,7 +416,7 @@ class ezfUpdateSearchIndexSolr
     /**
      * Iterate index counter
      *
-     * @param int $count
+     * @param int|bool $count
      */
     protected function iterate( $count = false )
     {
@@ -436,9 +438,11 @@ class ezfUpdateSearchIndexSolr
     /**
      * Fork and execute
      *
-     * @param int $nodeid
+     * @param int $nodeID
      * @param int $offset
      * @param int $limit
+     *
+     * @return int
      */
     protected function forkAndExecute( $nodeID, $offset, $limit )
     {
@@ -534,6 +538,7 @@ class ezfUpdateSearchIndexSolr
      */
     protected function objectCount()
     {
+        /** @var eZContentObjectTreeNode[] $topNodeArray */
         $topNodeArray = eZPersistentObject::fetchObjectList(
             eZContentObjectTreeNode::definition(),
             null,
@@ -641,6 +646,7 @@ class ezfUpdateSearchIndexSolr
      * If $coreUrl is false, the default Solr Url from solr.ini is used
      *
      * @param mixed $coreUrl
+     *
      * @return bool
      */
     protected function isSolrRunning( $coreUrl = false )

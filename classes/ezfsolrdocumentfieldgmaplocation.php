@@ -11,12 +11,14 @@
 
 class ezfSolrDocumentFieldGmapLocation extends ezfSolrDocumentFieldBase
 {
+    /**
+     * @var array
+     */
     public static $subattributesDefinition = array( self::DEFAULT_SUBATTRIBUTE => 'text',
                                                     'coordinates' => 'geopoint',
                                                     'geohash' => 'geohash',
                                                     'latitude' => 'float',
                                                     'longitude' => 'float' );
-
 
     const DEFAULT_SUBATTRIBUTE = 'address';
 
@@ -24,7 +26,6 @@ class ezfSolrDocumentFieldGmapLocation extends ezfSolrDocumentFieldBase
     {
         parent::__construct( $attribute );
     }
-
 
     public function getData()
     {
@@ -93,6 +94,7 @@ class ezfSolrDocumentFieldGmapLocation extends ezfSolrDocumentFieldBase
         }
         return $subfields;
     }
+
     static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null, $context = 'search' )
     {
         if ( $subAttribute and

@@ -217,13 +217,14 @@ class eZFindElevateConfiguration extends eZPersistentObject
     /**
      * Retrieves the content objects elevated by a given query string, possibly per language.
      *
-     * @param mixed $searchQuery Can be a string containing the search_query to filter on.
+     * @param string|array $queryString Can be a string containing the search_query to filter on.
      *                           Can also be an array looking like the following, supporting fuzzy search optionnally.
      * <code>
      *    array( 'searchQuery' => ( string )  'foo bar',
      *           'fuzzy'       => ( boolean ) true      )
      * </code>
      *
+     * @param bool $groupByLanguage
      * @param string $languageCode if filtering on language-code is required
      * @param array $limit Associative array containing the 'offset' and 'limit' keys, with integers as values, framing the result set. Example :
      * <code>
@@ -232,7 +233,8 @@ class eZFindElevateConfiguration extends eZPersistentObject
      * </code>
      *
      * @param boolean $countOnly If only the count of matching results is needed
-     * @return mixed An array containing the content objects elevated by the query string, optionnally sorted by language code, null if error. If $countOnly is true,
+     *
+     * @return eZContentObject[]|array|int|null An array containing the content objects elevated by the query string, optionnally sorted by language code, null if error. If $countOnly is true,
      *               only the result count is returned.
      */
     public static function fetchObjectsForQueryString( $queryString, $groupByLanguage = true, $languageCode = null, $limit = null, $countOnly = false )
@@ -293,6 +295,8 @@ class eZFindElevateConfiguration extends eZPersistentObject
      * @param string $queryString Query string for which elevate configuration is added
      * @param int $objectID Content object for which the elevate configuration is added
      * @param string $languageCode Language code for which the elevate configuration is added. Defaults to 'all languages'
+     *
+     * @return eZFindElevateConfiguration|null
      */
     public static function add( $queryString, $objectID, $languageCode = self::WILDCARD )
     {
@@ -325,6 +329,8 @@ class eZFindElevateConfiguration extends eZPersistentObject
      * @param string $queryString Query string for which elevate configuration is removed
      * @param int $objectID Content object for which the elevate configuration is removed
      * @param string $languageCode Language code for which the elevate configuration is removed. Defaults to 'all languages'
+     *
+     * @return bool|void
      */
     public static function purge( $queryString = '' , $objectID = null, $languageCode = null )
     {
@@ -347,6 +353,8 @@ class eZFindElevateConfiguration extends eZPersistentObject
     /**
      * Synchronizes the elevate configuration stored in the DB
      * with the one actually used by Solr.
+     *
+     * @param eZSolrBase $shard
      *
      * @return boolean true if the whole operation passed, false otherwise.
      */
@@ -463,7 +471,8 @@ class eZFindElevateConfiguration extends eZPersistentObject
      * The requestHandler ( Solr extension ) will take care of reloading the configuration.
      *
      * @see $configurationXML
-     * @return void
+     * @param eZSolrBase $shard
+     * @throws Exception
      */
     protected static function pushConfigurationToSolr( $shard = null )
     {

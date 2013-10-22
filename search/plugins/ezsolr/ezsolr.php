@@ -82,6 +82,7 @@ class eZSolr implements ezpSearchEngine
      * and fill the structure described below.
      *
      * @param eZContentObject $object
+     *
      * @return array
      * <code>
      *    array(
@@ -128,8 +129,8 @@ class eZSolr implements ezpSearchEngine
     /**
      * Get meta attribute Solr document field type
      *
-     * @param  string name Meta attribute name
-     * @param  string context search, facet, filter, sort
+     * @param string $name Meta attribute name
+     * @param string $context search, facet, filter, sort
      *
      * @return string Solr document field type. Null if meta attribute type does not exists.
      */
@@ -179,7 +180,7 @@ class eZSolr implements ezpSearchEngine
      *
      * @param string $baseName Base field name.
      * @param boolean $includingClassID conditions the structure of the answer. See return value explanation.
-     * @param $context is introduced in ez find 2.2 to allow for more optimal sorting, faceting, filtering
+     * @param string $context is introduced in ez find 2.2 to allow for more optimal sorting, faceting, filtering
      *
      * @return mixed Internal base name. Returns null if no valid base name was provided.
      *               If $includingClassID is true, an associative array will be returned, as shown below :
@@ -257,7 +258,8 @@ class eZSolr implements ezpSearchEngine
     /**
      * Check if eZSolr has meta attribute type.
      *
-     * @param string Meta attribute name
+     * @param string $name Meta attribute name
+     * @param string $context
      *
      * @return string Solr document field type
      */
@@ -271,7 +273,8 @@ class eZSolr implements ezpSearchEngine
      *
      * Get meta attribute field name
      *
-     * @param string Meta attribute field name ( base )
+     * @param string $baseName Meta attribute field name ( base )
+     * @param string $context
      *
      * @return string Solr doc field name
      */
@@ -310,6 +313,7 @@ class eZSolr implements ezpSearchEngine
      * depending on whether a subtree filter was applied or not.
      *
      * @param array $doc The search result, directly received from Solr.
+     *
      * @return string The URL Alias corresponding the the search result
      */
     protected function getUrlAlias( $doc )
@@ -330,6 +334,7 @@ class eZSolr implements ezpSearchEngine
      * so that valid locations must comply subtree filters (if any) AND subtree/node policy limitations (if any)
      *
      * @param array $doc The search result, directly received from Solr.
+     *
      * @return int The NodeID corresponding the search result
      */
     protected function getNodeID( $doc )
@@ -427,6 +432,7 @@ class eZSolr implements ezpSearchEngine
      *
      * @param array $pathStrings Array of path strings (i.e. locations for a content object)
      * @param array $subtreeLimitations Array of NodeIds that are considered valid (i.e. policy limitations or location filters)
+     *
      * @return array
      */
     private function getValidPathStringsByLimitation( array $pathStrings, array $subtreeLimitations )
@@ -461,7 +467,8 @@ class eZSolr implements ezpSearchEngine
      * @param eZContentObject $contentObject Object to add to search engine
      * @param bool $commit Whether to commit after adding the object.
      *        If set, run optimize() as well every 1000nd time this function is run.
-     * @param $commitWithin Commit within delay (see Solr documentation)
+     * @param int $commitWithin Commit within delay (see Solr documentation)
+     *
      * @return bool True if the operation succeed.
      */
     function addObject( $contentObject, $commit = true, $commitWithin = 0 )
@@ -763,8 +770,11 @@ class eZSolr implements ezpSearchEngine
     /**
      * Add instance of ezfSolrDocumentFieldBase to Solr document.
      *
-     * @param ezfSolrDocumentFieldBase Instance of ezfSolrDocumentFieldBase
-     * @param eZSolrDoc Solr document
+     * @param ezfSolrDocumentFieldBase $fieldBase Instance of ezfSolrDocumentFieldBase
+     * @param eZSolrDoc $doc Solr document
+     * @param bool $boost
+     *
+     * @return bool
      */
     function addFieldBaseToDoc( ezfSolrDocumentFieldBase $fieldBase, eZSolrDoc $doc, $boost = false )
     {
@@ -844,6 +854,7 @@ class eZSolr implements ezpSearchEngine
      * @deprecated Since 5.0, use removeObjectById()
      * @param eZContentObject $contentObject the content object to remove
      * @param bool $commit Whether to commit after removing the object
+     *
      * @return bool True if the operation succeed.
      */
     function removeObject( $contentObject, $commit = null )
@@ -857,6 +868,7 @@ class eZSolr implements ezpSearchEngine
      * @since 5.0
      * @param int $contentObjectId The content object to remove by id
      * @param bool $commit Whether to commit after removing the object
+     *
      * @return bool True if the operation succeed.
      */
     public function removeObjectById( $contentObjectId, $commit = null )
@@ -911,10 +923,11 @@ class eZSolr implements ezpSearchEngine
      * Search on the Solr search server
      * @todo: add functionality not to call the DB to recreate objects : $asObjects == false
      *
-     * @param string search term
-     * @param array parameters. @see ezfeZPSolrQueryBuilder::buildSearch()
      * @see ezfeZPSolrQueryBuilder::buildSearch()
-     * @param array search types. Reserved.
+     *
+     * @param string $searchText
+     * @param array $params parameters.
+     * @param array $searchTypes Reserved.
      *
      * @return array List of eZFindResultNode objects.
      */
@@ -1131,9 +1144,13 @@ class eZSolr implements ezpSearchEngine
      * use spellcheck option in search for spellchecking search results
      *
      * @package unfinished
+     * @param string $string
+     * @param bool $onlyMorePopular
+     * @param int $suggestionCount
+     * @param float $accuracy
+     *
      * @return array Solr result set.
      * @todo: configure different spell check handlers and handle multicore configs (need a parameter for it)
-     *
      */
     function spellCheck ( $string, $onlyMorePopular = false, $suggestionCount = 1, $accuracy = 0.5 )
     {
@@ -1179,6 +1196,7 @@ class eZSolr implements ezpSearchEngine
      *
      * @param eZContentObject|int $contentObject The content object OR content object Id
      * @param string $languageCode
+     *
      * @return string guid
      */
     function guid( $contentObject, $languageCode = '' )
@@ -1191,9 +1209,13 @@ class eZSolr implements ezpSearchEngine
 
     /**
      * Clean up search index for current installation.
+     *
+     * @param bool $allInstallations
+     * @param bool $optimize
+     *
      * @return bool true if cleanup was successful
      * @todo:  handle multicore configs (need a parameter for it) for return values
-    **/
+     */
     function cleanup( $allInstallations = false, $optimize = false )
     {
         if ( $allInstallations === true )
@@ -1307,11 +1329,15 @@ class eZSolr implements ezpSearchEngine
      * Called when a new section is assigned to an object, trough a node.
      * Simply re-index for now
      *
+     * @see eZSearch::updateNodeSection()
+     *
      * @todo: defer to cron if there are children involved and re-index these too
      * @todo when Solr supports it: update fields only
      *
+     * @param int $nodeID
+     * @param int $sectionID
+     *
      * @return void
-     * @see eZSearch::updateNodeSection()
      */
     public function updateNodeSection( $nodeID, $sectionID )
     {
@@ -1322,10 +1348,12 @@ class eZSolr implements ezpSearchEngine
     /**
      * Update the section in the search engine
      *
-     * @param array $objectID
-     * @param int $sectionID
-     * @return void
      * @see eZSearch::updateObjectsSection()
+     *
+     * @param array $objectIDs
+     * @param int $sectionID
+     *
+     * @return void
      */
     public function updateObjectsSection( array $objectIDs, $sectionID )
     {
@@ -1345,12 +1373,14 @@ class eZSolr implements ezpSearchEngine
      * Will re-index content identified by $nodeID.
      * If the node has children, they will be also re-indexed, but this action is deferred to ezfindexsubtree cronjob.
      *
+     * @see eZSearch::updateNodeVisibility()
+     *
      * @todo when Solr supports it: update fields only
      *
      * @param $nodeID
      * @param $action
+     *
      * @return void
-     * @see eZSearch::updateNodeVisibility()
      */
     public function updateNodeVisibility( $nodeID, $action )
     {
@@ -1373,14 +1403,14 @@ class eZSolr implements ezpSearchEngine
      * Called when a node assignement is added to an object.
      * Simply re-index for now.
      *
+     * @see eZSearch::addNodeAssignment()
+     *
      * @todo: defer to cron if there are children involved and re-index these too
      * @todo when Solr supports it: update fields only
      *
      * @param $mainNodeID
      * @param $objectID
      * @param $nodeAssignmentIDList
-     * @return unknown_type
-     * @see eZSearch::addNodeAssignment()
      */
     public function addNodeAssignment( $mainNodeID, $objectID, $nodeAssignmentIDList )
     {
@@ -1394,10 +1424,11 @@ class eZSolr implements ezpSearchEngine
      * @todo: defer to cron if there are children involved and re-index these too
      * @todo when Solr supports it: update fields only
      *
-     * @param $mainNodeID
-     * @param $objectID
-     * @param $nodeAssignmentIDList
-     * @return unknown_type
+     * @param int $mainNodeID
+     * @param int $newMainNodeID
+     * @param int $objectID
+     * @param array $nodeAssigmentIDList
+     * @return void
      * @see eZSearch::removeNodeAssignment()
      */
     public function removeNodeAssignment( $mainNodeID, $newMainNodeID, $objectID, $nodeAssigmentIDList )
@@ -1415,7 +1446,6 @@ class eZSolr implements ezpSearchEngine
      * @param $nodeID
      * @param $selectedNodeID
      * @param $nodeIdList
-     * @return void
      */
     public function swapNode( $nodeID, $selectedNodeID, $nodeIdList = array() )
     {

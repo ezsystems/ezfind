@@ -97,6 +97,10 @@ class eZSolrDoc
         $this->Doc[$name]['boost'] = $boost;
     }
 
+    /**
+     * @param string $name
+     * @param int|float $boost
+     */
     public function setFieldBoost ($name, $boost)
     {
         if ( $boost !== null && is_numeric($boost) && array_key_exists($name, $this->Doc))
