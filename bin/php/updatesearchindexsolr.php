@@ -26,8 +26,6 @@
 //
 //
 
-use Symfony\Component\Console\Input\ArgvInput;
-
 require 'autoload.php';
 
 if ( !function_exists( 'readline' ) )
@@ -164,7 +162,6 @@ class ezfUpdateSearchIndexSolr
         {
             $this->CLI->output( 'Starting object re-indexing' );
 
-            /** @var ArgvInput $input */
             global $input;
 
             if (is_null($input)) {
@@ -246,8 +243,6 @@ class ezfUpdateSearchIndexSolr
 
     /**
      * This script is being executed as a legacy-script from eZ5.
-     *
-     * @param ArgvInput $input
      */
     protected function getConsoleExecutable($input)
     {
