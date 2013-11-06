@@ -1402,8 +1402,7 @@ class eZSolr implements ezpSearchEngine
      */
     public function removeNodeAssignment( $mainNodeID, $newMainNodeID, $objectID, $nodeAssigmentIDList )
     {
-        $contentObject = eZContentObject::fetch( $objectID );
-        $this->addObject( $contentObject );
+        eZContentOperationCollection::registerSearchObject( $objectID );
     }
 
     /**
