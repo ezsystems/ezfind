@@ -532,10 +532,9 @@ class ezfeZPSolrQueryBuilder
      *
      * In site.ini :
      * <code>
-     * # Prioritized list of languages. Only objects existing in these
-     * # languages will be shown (unless ShowUntranslatedObjects is enabled).
-     * # If an object exists in more languages, that one which is first in
-     * # SiteLanguageList will be used to render it.
+     * # Prioritized list of languages. Only translations in these
+     * # languages will be shown
+     *
      * [RegionalSettings]
      * SiteLanguageList[]
      * SiteLanguageList[]=eng-GB
@@ -549,12 +548,8 @@ class ezfeZPSolrQueryBuilder
      * </code>
      *
      * When SearchMainLanguageOnly is set to 'enabled', only results in the first language in SiteLanguageList[] will be returned.
-     * When SearchMainLanguageOnly is set to 'disabled', results will be returned with respecting the fallback defined in SiteLanguageList[] :
-     *  of all matching results, the ones in eng-GB will be returned, and in case no translation in eng-GB exists for a result,
-     *  it will be returned in fre-FR if existing.
+     * When SearchMainLanguageOnly is set to 'disabled', searching will be done across all possible translations defined in SiteLanguageList[]
      *
-     * @TODO Offer a more relaxed option, allowing search across translations regardless of
-     * available translations
      *
      * @return string The correct language filtering string, appended to the 'fq' parameter in the Solr request.
      */
@@ -571,23 +566,7 @@ class ezfeZPSolrQueryBuilder
         {
             $languageFilterString = $languageCodeMetaName . ':' . $languages[0];
         }
-        else
-        {
-            foreach ( $languages as $key => $language )
-            {
-                if ( $key == 0 )
-                {
-                    $languageFilterString = $languageCodeMetaName . ':' . $languages[0];
-                }
-                else
-                {
-                    $languageFilterString .= " OR ( $languageCodeMetaName:$language $languageExcludeString )";
-                }
 
-                $languageExcludeString .= " AND -$availableLanguageCodesMetaName:$language";
-            }
-            $languageFilterString .= " OR ( " . eZSolr::getMetaFieldName( 'always_available' ) . ':true ' . $languageExcludeString . ')';
-        }
         return $languageFilterString;
     }
 
@@ -677,7 +656,7 @@ class ezfeZPSolrQueryBuilder
                         $queryFields[$key] = $boostString;
                     }
                     // might be a custom created field, lets add it implicitely with its boost specification
-                    else 
+                    else
                     {
                         $queryFields[] = $boostString;
                     }
