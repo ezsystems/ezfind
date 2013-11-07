@@ -701,7 +701,7 @@ class eZSolr implements ezpSearchEngine
             {
                 if( !class_exists( $pluginClassString ) )
                 {
-                    eZDebug::writeError( "Unable to find the PHP class '$classname' defined for index time plugins for eZ Find", __METHOD__ );
+                    eZDebug::writeError( "Unable to find the PHP class '$pluginClassString' defined for index time plugins for eZ Find", __METHOD__ );
                     continue;
                 }
                 $plugin = new $pluginClassString;
