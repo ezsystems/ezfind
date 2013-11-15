@@ -548,23 +548,29 @@ class ezfeZPSolrQueryBuilder
      * </code>
      *
      * When SearchMainLanguageOnly is set to 'enabled', only results in the first language in SiteLanguageList[] will be returned.
-     * When SearchMainLanguageOnly is set to 'disabled', searching will be done across all possible translations defined in SiteLanguageList[]
+     * When SearchMainLanguageOnly is set to 'disabled', searching will be done across all possible translations defined in
+     * SiteLanguageList[] (unless ShowUntranslatedObjects is enabled, in this case no language filtering will be done at all)
      *
      *
      * @return string The correct language filtering string, appended to the 'fq' parameter in the Solr request.
      */
     protected function buildLanguageFilterQuery()
     {
-        $languageFilterString = $languageExcludeString = '';
+        $languageFilterString = '';
         $ini = eZINI::instance();
         $languages = $ini->variable( 'RegionalSettings', 'SiteLanguageList' );
         $searchMainLanguageOnly = self::$FindINI->variable( 'LanguageSearch', 'SearchMainLanguageOnly' ) == 'enabled';
+        $showUntranslatedObjects = $ini->variable( 'RegionalSettings', 'ShowUntranslatedObjects' ) == 'enabled';
         $languageCodeMetaName = eZSolr::getMetaFieldName( 'language_code' );
         $availableLanguageCodesMetaName = eZSolr::getMetaFieldName( 'available_language_codes' );
 
         if (  $searchMainLanguageOnly )
         {
             $languageFilterString = $languageCodeMetaName . ':' . $languages[0];
+        }
+        else if ( $showUntranslatedObjects === false )
+        {
+            $languageFilterString = $languageCodeMetaName . ':(' . implode( ' OR ' , $languages ) . ')';
         }
 
         return $languageFilterString;
