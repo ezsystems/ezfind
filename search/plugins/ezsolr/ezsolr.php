@@ -1005,11 +1005,10 @@ class eZSolr implements ezpSearchEngine
         else
         {
             eZDebug::accumulatorStop( 'Search' );
-            return array(
-                'SearchResult' => false,
-                'SearchCount' => 0,
-                'StopWordArray' => array(),
-                'SearchExtras' => new ezfSearchResultInfo( array( 'error' => ezpI18n::tr( 'ezfind', $error ) ) ) );
+
+            // If resultArray is false, SOLR was not available or did not respond - handle as error.
+            $errorModule = eZModule::exists( 'error' );
+            return $errorModule->handleError( eZError::KERNEL_NOT_AVAILABLE, 'kernel' );
         }
     }
 
@@ -1090,11 +1089,9 @@ class eZSolr implements ezpSearchEngine
         }
         else
         {
-            return array(
-                'SearchResult' => false,
-                'SearchCount' => 0,
-                'StopWordArray' => array(),
-                'SearchExtras' => new ezfSearchResultInfo( array( 'error' => ezpI18n::tr( 'ezfind', $error ) ) ) );
+            // If resultArray is false, SOLR was not available or did not respond - handle as error.
+            $errorModule = eZModule::exists( 'error' );
+            return $errorModule->handleError( eZError::KERNEL_NOT_AVAILABLE, 'kernel' );
         }
     }
 
