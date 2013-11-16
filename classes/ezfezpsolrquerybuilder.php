@@ -571,6 +571,7 @@ class ezfeZPSolrQueryBuilder
         else if ( $showUntranslatedObjects === false )
         {
             $languageFilterString = $languageCodeMetaName . ':(' . implode( ' OR ' , $languages ) . ')';
+            $languageFilterString .= " OR ( " . eZSolr::getMetaFieldName( 'always_available' ) . ':true )';
         }
 
         return $languageFilterString;
