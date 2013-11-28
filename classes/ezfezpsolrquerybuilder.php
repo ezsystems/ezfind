@@ -307,10 +307,13 @@ class ezfeZPSolrQueryBuilder
         }
 
         //add raw filters
-        $rawFilters = self::$FindINI->variable( 'SearchFilters', 'RawFilterList' );
-        if ( is_array( $rawFilters ) )
+        if ( self::$FindINI->hasVariable( 'SearchFilters', 'RawFilterList' ) )
         {
-            $filterQuery = array_merge( $filterQuery, $rawFilters );
+            $rawFilters = self::$FindINI->variable( 'SearchFilters', 'RawFilterList' );
+            if ( is_array( $rawFilters ) )
+            {
+                $filterQuery = array_merge( $filterQuery, $rawFilters );
+            }
         }
 
         // Build and get facet query prameters.
@@ -790,10 +793,13 @@ class ezfeZPSolrQueryBuilder
         }
 
         //add raw filters
-        $rawFilters = self::$FindINI->variable( 'SearchFilters', 'RawFilterList' );
-        if ( is_array( $rawFilters ) )
+        if ( self::$FindINI->hasVariable( 'SearchFilters', 'RawFilterList' ) )
         {
-            $filterQuery = array_merge( $filterQuery, $rawFilters );
+            $rawFilters = self::$FindINI->variable( 'SearchFilters', 'RawFilterList' );
+            if ( is_array( $rawFilters ) )
+            {
+                $filterQuery = array_merge( $filterQuery, $rawFilters );
+            }
         }
 
         // Build and get facet query prameters.
