@@ -12,5 +12,8 @@
     "minimum-stability": "dev",
     "require": {
         "ezsystems/ezpublish-legacy-installer": "*"
+    },
+    "extra": {
+        "ezpublish-legacy-extension-name": "ezfind"
     }
 }
