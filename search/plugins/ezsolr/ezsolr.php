@@ -870,10 +870,6 @@ class eZSolr implements ezpSearchEngine
         {
             $commit = false;
         }
-        elseif ( !isset( $commit ) )
-        {
-            $commit = true;
-        }
 
         // 1: remove the assciated "elevate" configuration
         eZFindElevateConfiguration::purge( '', $contentObjectId );
