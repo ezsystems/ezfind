@@ -116,12 +116,12 @@
 
 <table class="list" cellspacing="0">
 {if eq( $configurations_count, 0 )}
-    <tr class="bgdark">
+    <tr>
         <th>{'No existing Elevate configuration.'|i18n( 'extension/ezfind/elevate' )}</th>
     </tr>
     </table>
 {else}
-   <tr class="bgdark">
+   <tr>
        <th>{'Search query'|i18n( 'extension/ezfind/elevate' )}</th>
        <th>{'Language'|i18n( 'extension/ezfind/elevate' )}</th>
        <th>{'Actions'|i18n( 'extension/ezfind/elevate' )}</th>

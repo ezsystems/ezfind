@@ -90,6 +90,30 @@
         <source>Advanced search.</source>
         <translation>Wyszukiwanie zaawansowane.</translation>
     </message>
+    <message>
+        <source>Search scope</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Section</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation type="unfinished">Wszystkie</translation>
+    </message>
+    <message>
+        <source>Search only from the current location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The same location</source>
+        <translation type="unfinished">Ta sama lokalizacja</translation>
+    </message>
 </context>
 <context>
     <name>design/base</name>
@@ -136,6 +160,25 @@
     </message>
 </context>
 <context>
+    <name>design/ezdemo/full/product</name>
+    <message>
+        <source>You might also be interested in:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>People who bought this also bought</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to basket</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>design/ezfind/search</name>
     <message>
         <source>Spell check suggestion: did you mean</source>
@@ -156,6 +199,26 @@
     <message>
         <source>Words may be excluded by using a minus ( - ) character, example: lazy -dog</source>
         <translation>Słowa kluczowe mogą być wyłączane z wyszukiwania przy pomocy symbolu minus (-), przykład: leniwy -pies</translation>
+    </message>
+    <message>
+        <source>Words may be excluded by using a minus ( - ) prefix character, example: lazy -dog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Words may be required by using a plus ( + ) prefix character, example: +yellow coat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wildcard characters * and ? can be used for partial string matching, example: syst* may expand to systems</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fuzzy searches can also be used appending a ~ character, example: like suster~ may match sister</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Proximity searches can be established using double quotes and a maximum distance (in words) after a ~ character, example: &quot;conference publish&quot;~5 will match text where conference and publish are separated by a maximum of 5 words</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -211,6 +274,14 @@
     <message>
         <source>Refine your search</source>
         <translation>Wyszukaj ponownie</translation>
+    </message>
+    <message>
+        <source>tips</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove filter on </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -700,6 +771,10 @@
         <source>Publication Year</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Clear all filters</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>extension/ezfind/popupmenu</name>
@@ -731,11 +806,11 @@
         <translation>Nie dotyczy</translation>
     </message>
     <message>
-        <source>eZ Find 2.6 search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.1</source>
-        <translation type="obsolete">Rozszerzenie do wyszukiwania treści eZ Find 2.6 &amp;copy; 1999-2012 eZ Systems AS, oparte na Apache Solr 3.1</translation>
+        <source>eZ Find 2.6 search plugin &amp;copy; 1999-2013 eZ Systems AS, powered by Apache Solr 3.1</source>
+        <translation type="obsolete">Rozszerzenie do wyszukiwania treści eZ Find 2.6 &amp;copy; 1999-2013 eZ Systems AS, oparte na Apache Solr 3.1</translation>
     </message>
     <message>
-        <source>eZ Find %version search plugin &amp;copy; 1999-2012 eZ Systems AS, powered by Apache Solr 3.1</source>
+        <source>eZ Find %version search plugin &amp;copy; 1999-2013 eZ Systems AS, powered by Apache Solr 3.6.1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

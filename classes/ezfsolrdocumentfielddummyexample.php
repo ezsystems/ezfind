@@ -4,7 +4,7 @@
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 // SOFTWARE NAME: eZ Find
 // SOFTWARE RELEASE: 2.1.x
-// COPYRIGHT NOTICE: Copyright (C) 1999-2012 eZ Systems AS
+// COPYRIGHT NOTICE: Copyright (C) 1999-2013 eZ Systems AS
 // SOFTWARE LICENSE: GNU General Public License v2.0
 // NOTICE: >
 //   This program is free software; you can redistribute it and/or
@@ -112,7 +112,7 @@ class ezfSolrDocumentFieldDummyExample extends ezfSolrDocumentFieldBase
     /**
      * @see ezfSolrDocumentFieldBase::getFieldName()
      */
-    public static function getFieldName( eZContentClassAttribute $classAttribute, $subAttribute = null )
+    public static function getFieldName( eZContentClassAttribute $classAttribute, $subAttribute = null, $context = 'search' )
     {
         if ( $subAttribute and
              $subAttribute !== '' and
@@ -162,7 +162,7 @@ class ezfSolrDocumentFieldDummyExample extends ezfSolrDocumentFieldBase
     /**
      * @see ezfSolrDocumentFieldBase::getClassAttributeType()
      */
-    static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null )
+    static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null, $context = 'search' )
     {
         if ( $subAttribute and
              $subAttribute !== '' and

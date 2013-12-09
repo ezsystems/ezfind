@@ -3,7 +3,7 @@
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 // SOFTWARE NAME: eZ Find
 // SOFTWARE RELEASE: 1.0.x
-// COPYRIGHT NOTICE: Copyright (C) 1999-2012 eZ Systems AS
+// COPYRIGHT NOTICE: Copyright (C) 1999-2013 eZ Systems AS
 // SOFTWARE LICENSE: GNU General Public License v2.0
 // NOTICE: >
 //   This program is free software; you can redistribute it and/or
@@ -41,6 +41,10 @@ class eZFindResultNode extends eZContentObjectTreeNode
     function eZFindResultNode( $rows = array() )
     {
         $this->eZContentObjectTreeNode( $rows );
+        if ( isset( $rows['id'] ) )
+        {
+            $this->ContentObjectID = $rows['id'];
+        }
         $this->LocalAttributeValueList = array();
         $this->LocalAttributeNameList = array( 'is_local_installation',
                                                'name',

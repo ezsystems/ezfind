@@ -2,18 +2,30 @@
 /**
  * File containing eZSolrBaseRegression class
  *
- * @copyright Copyright (C) 1999-2012 eZ Systems AS. All rights reserved.
+ * @copyright Copyright (C) 1999-2013 eZ Systems AS. All rights reserved.
  * @license http://ez.no/licenses/gnu_gpl GNU GPLv2
  * @package ezfind
  */
 class eZSolrBaseRegression extends ezpDatabaseTestCase
 {
+    /**
+     * @var string
+     */
     protected $testURI;
 
+    /**
+     * @var array
+     */
     protected $postParams;
 
+    /**
+     * @var string
+     */
     protected $nonReachableSolr;
 
+    /**
+     * @var eZINI
+     */
     protected $solrINI;
 
     public function setUp()
@@ -51,14 +63,14 @@ class eZSolrBaseRegression extends ezpDatabaseTestCase
 
         $postString = $solrBase->buildPostString( $this->postParams );
         $res = $refMethod->invoke( $solrBase, $solrBase->SearchServerURI.$this->testURI, $postString );
-        self::assertType( PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $res );
+        self::assertInternalType( PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $res );
         self::assertTrue( strpos( $res, '<?xml' ) !== false );
 
         // Now test with postQuery(), that calls sendHTTPRequestRetry() and check result is the same
         $refMethod2 = $refObj->getMethod( 'postQuery' );
         $refMethod2->setAccessible( true );
         $res2 = $refMethod2->invoke( $solrBase, $this->testURI, $postString );
-        self::assertType( PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $res2 );
+        self::assertInternalType( PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $res2 );
         self::assertTrue( strpos( $res2, '<?xml' ) !== false );
     }
 

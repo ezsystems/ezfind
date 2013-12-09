@@ -3,7 +3,7 @@
     <metadata>
         <name>eZ Find LS</name>
         <version>//autogentag//</version>
-        <copyright>Copyright (C) 1999-2012 eZ Systems AS.</copyright>
+        <copyright>Copyright (C) 1999-2013 eZ Systems AS.</copyright>
         <license>//EZP_LICENSE//</license>
         <info_url>http://ez.no/ezfind</info_url>
 
@@ -13,7 +13,7 @@
                 <license>Apache License, Version 2.0</license>
                 <copyright>The Apache Software Foundation.</copyright>
                 <info_url>http://lucene.apache.org/solr/</info_url>
-                <version>3.5</version>
+                <version>3.6.1</version>
             </uses>
         </software>
 
