@@ -2,7 +2,7 @@ package org.ezsystems.solr.handler.ezfind;
 
 // ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
 // SOFTWARE NAME: eZ Find
-// SOFTWARE RELEASE: 2.0.x
+// SOFTWARE RELEASE: 5.3
 // COPYRIGHT NOTICE: Copyright (C) 1999-2013 eZ Systems AS
 // SOFTWARE LICENSE: GNU General Public License v2.0
 // NOTICE: >
@@ -43,6 +43,8 @@ import org.apache.solr.core.SolrDeletionPolicy;
 import org.apache.solr.handler.component.SearchComponent;
 import org.apache.solr.handler.component.QueryElevationComponent;
 
+import org.apache.solr.common.util.SimpleOrderedMap;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
@@ -54,7 +56,11 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 import java.net.URL;
+
+import java.util.List;
+
 
 /**
  * Multi purposer handler, extending Solr's features for <a href="http://ez.no/ezfind/">eZ Find</a>, technological bridge
@@ -64,6 +70,13 @@ import java.net.URL;
 
 public class eZFindRequestHandler extends RequestHandlerBase implements SolrCoreAware {
 
+ 
+  
+  volatile long numRequests;
+  volatile long totalTime;
+  volatile long numErrors;
+    
+    
   /**
    * Storing the current core.
    */
@@ -96,8 +109,11 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
    * may be specified when declaring a request handler in
    * solrconfig.xml
    */
-  public void init( NamedList args )
-  {}
+  @Override
+  public void init(NamedList params) {
+    
+      super.init(params);  
+  }
 
   /**
    * Returns the name of the QueryElevation component's configuration file.
@@ -129,9 +145,14 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
    * An empty handleRequest implementation would fulfill
    * all interface obligations.
    */
-  //@Override
+
+  @Override
   public void handleRequestBody(SolrQueryRequest req, SolrQueryResponse rsp)
   {
+      numRequests++;
+      long startTime = System.currentTimeMillis();
+      
+      
 	  String newElevateConfiguration = req.getParams().get( eZFindRequestHandler.CONF_PARAM_NAME );
 
 	  if ( newElevateConfiguration != null )
@@ -139,16 +160,10 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
 		  String f = this.getElevateConfigurationFileName();
 
 	      File fC = new File( this.core.getResourceLoader().getConfigDir(), f );
-	      //File fD = new File( this.core.getDataDir(), f );
 
-	      // updating files below.
-	      // TODO : Need for concurrency management / thread safety
-	      // TODO : Need for XML validation here
 	      if( fC.exists() ) {
-	          // Update fC.
               try
               {
-            	  this.log.info( "Updating " + fC );
                   FileWriter fw = new FileWriter( fC );
                   BufferedWriter out = new BufferedWriter( fw );
 	              out.write( newElevateConfiguration );
@@ -157,10 +172,12 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
 	    	      this.elevationComponent.inform( this.core );
               }
               catch (Exception e) {
-            	  this.log.info( "Exception when updating " + fC.getAbsolutePath() + " : " + e.getMessage() );
-            	  rsp.add( "error", "Error when updating " + fC.getAbsolutePath() + " : " + e.getMessage() );
-              }
-	      }
+            	  numErrors++;
+                  this.log.log(Level.SEVERE, e.getMessage());
+              } finally {
+                  totalTime += System.currentTimeMillis() - startTime;
+              }	      
+        }
 
 
 	      /**
@@ -216,41 +233,34 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
 
 
   // ////////////////////// SolrInfoMBeans methods //////////////////////
-
+  @Override
   public String getDescription() {
-    return "eZFind's dedicated request Handler.";
+    return "eZFind's elevate helper request Handler.";
   }
 
+  @Override
   public String getVersion() {
-    return "$Revision:$";
+    return "5.3";
   }
 
-  /** CVS Id, SVN Id, etc */
-  public String getSourceId() {
-    return "$Id:$";
-  }
-
+  
   /** CVS Source, SVN Source, etc */
+  @Override
   public String getSource() {
-    return "$URL:$";
+    return "http://ez.no";
   }
 
   /**
    * Simple common usage name, e.g. BasicQueryHandler,
    * or fully qualified clas name.
    */
+  @Override
   public String getName()
   {
 	  return "eZFindQueryHandler";
   }
 
-  /** Purpose of this Class */
-  public Category getCategory()
-  {
-	  return null;
-  }
-
-  /**
+    /**
    * Documentation URL list.
    *
    * <p>
@@ -258,6 +268,7 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
    * FAQ on class usage, Design doc for class, Wiki, bug reporting URL, etc...
    * </p>
    */
+  @Override
   public URL[] getDocs()
   {
 	  return null;
@@ -272,8 +283,13 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
    * <code>toString()</code> representation will be used.
    * </p>
    */
-  public NamedList getStatistics()
-  {
-	  return null;
-  }
+   @Override
+   public NamedList<Object> getStatistics() {
+        NamedList all = new SimpleOrderedMap<Object>();
+        all.add("requests", "" + numRequests);
+        all.add("errors", "" + numErrors);
+        all.add("averageTimePerReq(ms)", "" + (totalTime / numRequests));
+        all.add("totalTime(ms)", "" + totalTime);
+        return all;
+    }
 }
