@@ -288,7 +288,10 @@ public class eZFindRequestHandler extends RequestHandlerBase implements SolrCore
         NamedList all = new SimpleOrderedMap<Object>();
         all.add("requests", "" + numRequests);
         all.add("errors", "" + numErrors);
-        all.add("averageTimePerReq(ms)", "" + (totalTime / numRequests));
+        if ( numRequests > 0)
+        {
+            all.add("averageTimePerReq(ms)", "" + (totalTime / numRequests));
+        }
         all.add("totalTime(ms)", "" + totalTime);
         return all;
     }
