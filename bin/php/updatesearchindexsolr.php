@@ -59,8 +59,7 @@ $script = eZScript::instance(
     )
 );
 
-
-$solrUpdate = new ezfUpdateSearchIndexSolr( $script, $cli );
+$solrUpdate = new ezfUpdateSearchIndexSolr( $script, $cli, $argv[0] );
 $solrUpdate->run();
 
 $script->shutdown( 0 );
@@ -71,16 +70,23 @@ $script->shutdown( 0 );
 class ezfUpdateSearchIndexSolr
 {
     /**
+     * @var string
+     */
+    protected $executedScript;
+
+    /**
      * Constructor
      *
      * @param eZScript $script
      * @param eZCLI $cli
+     * @param string $executedScript
      */
-    function ezfUpdateSearchIndexSolr( eZScript $script, eZCLI $cli )
+    function ezfUpdateSearchIndexSolr( eZScript $script, eZCLI $cli, $executedScript )
     {
         $this->Script = $script;
         $this->CLI = $cli;
         $this->Options = null;
+        $this->executedScript = $executedScript;
     }
 
     /**
@@ -477,7 +483,6 @@ class ezfUpdateSearchIndexSolr
      */
     protected function execute( $nodeID, $offset, $limit, $isSubProcess = false )
     {
-        global $argv;
         // Create options string.
         $paramString = '';
         $paramList = array( 'db-host', 'db-user', 'db-password', 'db-type', 'db-driver', 'db-database' );
@@ -501,7 +506,7 @@ class ezfUpdateSearchIndexSolr
             ' --topNodeID=' . $nodeID;
 
         $output = array();
-        $command = $this->Executable . ' ' . $argv[0] . $paramString;
+        $command = $this->Executable . ' ' . $this->executedScript . $paramString;
         exec( $command, $output );
 //        wtf code follows, but leave it here commented for future enhancements
 //        if ( $isSubProcess )
@@ -627,12 +632,10 @@ class ezfUpdateSearchIndexSolr
      */
     protected function changeSiteAccessSetting( $siteaccess )
     {
-        global $isQuiet;
         $cli = eZCLI::instance();
         if ( !in_array( $siteaccess, eZINI::instance()->variable( 'SiteAccessSettings', 'AvailableSiteAccessList' ) ) )
         {
-            if ( !$isQuiet )
-                $cli->notice( "Siteaccess $siteaccess does not exist, using default siteaccess" );
+            $cli->notice( "Siteaccess $siteaccess does not exist, using default siteaccess" );
         }
     }
 

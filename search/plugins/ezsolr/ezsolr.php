@@ -701,7 +701,7 @@ class eZSolr implements ezpSearchEngine
             {
                 if( !class_exists( $pluginClassString ) )
                 {
-                    eZDebug::writeError( "Unable to find the PHP class '$classname' defined for index time plugins for eZ Find", __METHOD__ );
+                    eZDebug::writeError( "Unable to find the PHP class '$pluginClassString' defined for index time plugins for eZ Find", __METHOD__ );
                     continue;
                 }
                 $plugin = new $pluginClassString;
@@ -844,11 +844,12 @@ class eZSolr implements ezpSearchEngine
      * @deprecated Since 5.0, use removeObjectById()
      * @param eZContentObject $contentObject the content object to remove
      * @param bool $commit Whether to commit after removing the object
+     * @param integer $commitWithin specifies within how many milliseconds a commit should occur if no other commit
      * @return bool True if the operation succeed.
      */
-    function removeObject( $contentObject, $commit = null )
+    function removeObject( $contentObject, $commit = null, $commitWithin = 0 )
     {
-        return $this->removeObjectById( $contentObject->attribute( 'id' ), $commit );
+        return $this->removeObjectById( $contentObject->attribute( 'id' ), $commit, $commitWithin );
     }
 
     /**
@@ -857,9 +858,10 @@ class eZSolr implements ezpSearchEngine
      * @since 5.0
      * @param int $contentObjectId The content object to remove by id
      * @param bool $commit Whether to commit after removing the object
+     * @param integer $commitWithin specifies within how many milliseconds a commit should occur if no other commit
      * @return bool True if the operation succeed.
      */
-    public function removeObjectById( $contentObjectId, $commit = null )
+    public function removeObjectById( $contentObjectId, $commit = null, $commitWithin = 0 )
     {
         /*
          * @since eZFind 2.2: allow delayed commits if explicitely set as configuration setting and
@@ -886,6 +888,10 @@ class eZSolr implements ezpSearchEngine
         {
             $optimize = true;
         }
+        if ( $commitWithin === 0 && $this->FindINI->variable( 'IndexOptions', 'CommitWithin' ) > 0 )
+        {
+            $commitWithin = $this->FindINI->variable( 'IndexOptions', 'CommitWithin' );
+        }
 
         // 2: create a delete array with all the required infos, groupable by language
         $languages = eZContentLanguage::fetchList();
@@ -898,12 +904,12 @@ class eZSolr implements ezpSearchEngine
         {
             foreach ( $docs as $languageCode => $doc )
             {
-                $this->SolrLanguageShards[$languageCode]->deleteDocs( array( $doc ), false, $commit, $optimize );
+                $this->SolrLanguageShards[$languageCode]->deleteDocs( array( $doc ), false, $commit, $optimize, $commitWithin );
             }
         }
         else
         {
-            return $this->Solr->deleteDocs( $docs, false, $commit, $optimize );
+            return $this->Solr->deleteDocs( $docs, false, $commit, $optimize, $commitWithin );
         }
     }
 
@@ -1402,8 +1408,7 @@ class eZSolr implements ezpSearchEngine
      */
     public function removeNodeAssignment( $mainNodeID, $newMainNodeID, $objectID, $nodeAssigmentIDList )
     {
-        $contentObject = eZContentObject::fetch( $objectID );
-        $this->addObject( $contentObject );
+        eZContentOperationCollection::registerSearchObject( $objectID );
     }
 
     /**
