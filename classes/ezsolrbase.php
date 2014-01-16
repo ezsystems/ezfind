@@ -361,11 +361,18 @@ class eZSolrBase
      *              $query will be used to delete documents instead.
      * @param string $query Solr Query. This will be ignored if $docIDs is set.
      * @param bool $optimize set to true to perform a solr optimize after delete
+     * @param integer $commitWithin specifies within how many milliseconds a commit should occur if no other commit
      * @return bool
      **/
-    function deleteDocs ( $docIDs = array(), $query = false, $commit = true,  $optimize = false )
+    function deleteDocs ( $docIDs = array(), $query = false, $commit = true,  $optimize = false, $commitWithin = 0 )
     {
         $postString = '<delete>';
+
+        if ( is_numeric( $commitWithin ) && $commitWithin > 0 )
+        {
+            $postString = '<delete commitWithin="' . $commitWithin . '">';
+        }
+
         if ( empty( $query ) )
         {
             foreach ( $docIDs as $docID )
