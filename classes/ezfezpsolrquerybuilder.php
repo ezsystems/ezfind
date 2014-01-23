@@ -1367,15 +1367,11 @@ class ezfeZPSolrQueryBuilder
                     case 'between':
                     case 'none':
                     case 'all':
-                    {
                         $queryPart['date.other'] = strtolower( $facetDefinition['date.other'] );
-                    }
-
+                        break;
                     default:
-                    {
                         eZDebug::writeWarning( 'Invalid option gived for date.other: ' . $facetDefinition['date.other'],
                                                __METHOD__ );
-                    } break;
                 }
             }
 
