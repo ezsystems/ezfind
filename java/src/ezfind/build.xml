@@ -23,7 +23,7 @@
   <property name="ezfind-java-path" value="../.." />
   <property name="ezfind-src-path" value="./src/main/java/" />
   <property name="dest" value="${solr-path}/lib" />
-  <property name="version" value="solr-4.6" />
+  <property name="version" value="solr-4.6.1" />
   <property name="fullnamever" value="ezsystems-${ant.project.name}-${version}"/>
 
   <description>
