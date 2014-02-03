@@ -1,4 +1,4 @@
-java/solr/data
+data/
 java/logs
 .project
 java/solr-webapp
