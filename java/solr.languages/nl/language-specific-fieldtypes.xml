@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- Dutch -->
-<fieldType name="text_nl" class="solr.TextField" positionIncrementGap="100">
+<fieldType name="text" class="solr.TextField" positionIncrementGap="100">
     <analyzer>
         <tokenizer class="solr.StandardTokenizerFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
