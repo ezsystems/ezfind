@@ -154,6 +154,7 @@ class ezfSolrDocumentFieldName
                                   'tlong' => 'tl',
                                   'tdate' => 'tdt',
                                   'geopoint' => 'gpt',
+                                  'location' => 'loc',
                                   'geohash' => 'gh',
                                   'mstring' => 'ms',
                                   'mtext' => 'mt',

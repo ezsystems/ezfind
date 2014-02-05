@@ -654,6 +654,10 @@
        <dynamicField name="*_tdt" type="tdate"  indexed="true"  stored="true"/>
        <!-- geopoint for geospatial/location searches, boosting, ... -->
        <dynamicField name="*_gpt" type="geopoint"  indexed="true"  stored="true"/>
+       <!-- location for geospatial searches -->
+       <dynamicField name="*_loc" type="location"  indexed="true"  stored="true"/>
+       <dynamicField name="*_loc_0_coordinate" type="double"  indexed="true"  stored="true"/>
+       <dynamicField name="*_loc_1_coordinate" type="double"  indexed="true"  stored="true"/>
        <!-- storage fields accepts base64 encoded strings -->
        <dynamicField name="*_bst" type="binary"  indexed="false"  stored="true"/>
 
@@ -685,6 +689,10 @@
        <dynamicField name="*____tdt" type="tdate"  indexed="true"  stored="true" multiValued="true"/>
        <!-- geopoint for geospatial/location searches, boosting, ... -->
        <dynamicField name="*____gpt" type="geopoint"  indexed="true"  stored="true" multiValued="true"/>
+       <!-- location for geospatial search -->
+       <dynamicField name="*____loc" type="location"  indexed="true"  stored="true"/>
+       <dynamicField name="*____loc_0_coordinate" type="double"  indexed="true"  stored="true"/>
+       <dynamicField name="*____loc_1_coordinate" type="double"  indexed="true"  stored="true"/>
        <!-- storage fields accepts base64 encoded strings -->
        <dynamicField name="*____bst" type="binary"  indexed="false"  stored="true" multiValued="true"/>
 
