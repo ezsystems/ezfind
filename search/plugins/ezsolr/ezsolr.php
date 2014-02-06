@@ -389,12 +389,8 @@ class eZSolr implements ezpSearchEngine
                     }
                 }
             }
-            eZDebug::writeError(
-                "Could not find a visible location for content " .
-                "#{$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'id' )]} " .
-                "that current user has read access on. The Solr index is probably outdated",
-                __METHOD__
-            );
+            // Could not find a visible location for content that current user has read access on.
+            return null;
         }
         else
         {
@@ -1591,6 +1587,10 @@ class eZSolr implements ezpSearchEngine
                 {
                     // Search result document is from current installation
                     $nodeID = $this->getNodeID( $doc );
+
+                    // no actual $nodeID, may ocurr due to subtree/visibility limitations.
+                    if ( $nodeID === null )
+                        continue;
 
                     // Invalid $nodeID
                     // This can happen if a content has been deleted while Solr was not running, provoking desynchronization
