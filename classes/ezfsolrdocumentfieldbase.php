@@ -475,7 +475,7 @@ class ezfSolrDocumentFieldBase
      */
     public static function generateSubmetaFieldName( $baseName, eZContentClassAttribute $classAttribute )
     {
-        return self::$DocumentFieldName->lookupSchemaName( self::SUBMETA_FIELD_PREFIX . $classAttribute->attribute( 'identifier' ) . self::SUBATTR_FIELD_SEPARATOR . $baseName,
+        return self::$DocumentFieldName->lookupSchemaName( self::SUBMETA_FIELD_PREFIX . $classAttribute->attribute( 'identifier' ) . self::SUBATTR_FIELD_SEPARATOR . $baseName . self::SUBATTR_FIELD_SEPARATOR,
                                                            eZSolr::getMetaAttributeType( $baseName ) );
     }
 
