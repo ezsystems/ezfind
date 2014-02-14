@@ -272,6 +272,7 @@ class eZSolrBase
     {
         if ( empty( $updateResult ) )
         {
+            eZDebug::writeError( 'Empty response received from Solr', 'eZ Find' );
             return false;
         }
         $dom = new DOMDocument( '1.0' );
@@ -280,6 +281,7 @@ class eZSolrBase
 
         if ( !$status )
         {
+            eZDebug::writeError( 'Invalid XML received from Solr: '.$updateResult, 'eZ Find' );
             return false;
         }
 
@@ -287,6 +289,7 @@ class eZSolrBase
 
         if ( $intElements->length < 1 )
         {
+            eZDebug::writeError( 'Invalid response from Solr: '.$updateResult, 'eZ Find' );
             return false;
         }
 
@@ -301,6 +304,7 @@ class eZSolrBase
                 }
             }
         }
+        eZDebug::writeError( 'Invalid response from Solr: '.$updateResult, 'eZ Find' );
         return false;
     }
 
