@@ -1,7 +1,7 @@
 Changes in multi-language/multicore support in eZ Find 5.3
 ==========================================================
 
-The monolytic  schema.xml has been split up in several parts, which are
+The monolithic schema.xml has been split up in several parts, which are
 re-assembled upon startup of Solr or a core (stand alone or master/slave)
 reload or collection (SolrCloud) reload.
 
