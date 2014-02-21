@@ -1561,33 +1561,29 @@ class ezfeZPSolrQueryBuilder
             {
                 return false;
             }
-
-            if ( isset( $limitation['accessWord'] ) )
-            {
-                switch ( $limitation['accessWord'] )
-                {
-                    case 'limited':
-                        if ( isset( $limitation['policies'] ) )
-                        {
-                            $policies = $limitation['policies'];
-                            break;
-                        }
-                        // break omitted, "limited" without policies == "no"
-                    case 'no':
-                        return 'NOT *:*';
-                    case 'yes':
-                        break;
-                    default:
-                        return false;
-                }
-            }
         }
         else
         {
-            $accessResult = eZUser::currentUser()->hasAccessTo( 'content', 'read' );
-            if ( !in_array( $accessResult['accessWord'], array( 'yes', 'no' ) ) )
+            $limitation = eZUser::currentUser()->hasAccessTo( 'content', 'read' );
+        }
+
+        if ( isset( $limitation['accessWord'] ) )
+        {
+            switch ( $limitation['accessWord'] )
             {
-                $policies = $accessResult['policies'];
+                case 'limited':
+                    if ( isset( $limitation['policies'] ) )
+                    {
+                        $policies = $limitation['policies'];
+                        break;
+                    }
+                    // break omitted, "limited" without policies == "no"
+                case 'no':
+                    return ' NOT *:* ';
+                case 'yes':
+                    break;
+                default:
+                    return false;
             }
         }
 
