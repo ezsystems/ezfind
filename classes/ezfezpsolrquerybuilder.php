@@ -1559,7 +1559,7 @@ class ezfeZPSolrQueryBuilder
         {
             if ( empty( $limitation ) )
             {
-                return false;
+                $limitation['accessWord'] = 'yes';
             }
         }
         else
