@@ -1293,7 +1293,7 @@ class eZSolr implements ezpSearchEngine
         $extensionInfo = ezpExtension::getInstance( 'ezfind' )->getInfo();
         return ezpI18n::tr(
             'ezfind',
-            'eZ Find %version search plugin &copy; 1999-2013 eZ Systems AS, powered by Apache Solr 3.6.1',
+            'eZ Find %version search plugin &copy; 1999-2013 eZ Systems AS, powered by Apache Solr 4.7.0',
             null,
             array( '%version' => $extensionInfo['version'] )
         );
