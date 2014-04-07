@@ -458,9 +458,10 @@ class eZSolr implements ezpSearchEngine
      * @param bool $commit Whether to commit after adding the object.
      *        If set, run optimize() as well every 1000nd time this function is run.
      * @param $commitWithin Commit within delay (see Solr documentation)
+     * @param bool $softCommit perform a Solr soft commit, which is not flushed to disk
      * @return bool True if the operation succeed.
      */
-    function addObject( $contentObject, $commit = true, $commitWithin = 0 )
+    function addObject( $contentObject, $commit = true, $commitWithin = 0, $softCommit = null )
     {
         // Add all translations to the document list
         $docList = array();
@@ -722,6 +723,13 @@ class eZSolr implements ezpSearchEngine
         }
 
         $optimize = false;
+
+        if ( !isset( $softCommit ) && $this->FindINI->variable( 'IndexOptions', 'EnableSoftCommits' ) === 'true' )
+        {
+            $softCommit = true;
+        }
+
+
         if ( $this->FindINI->variable( 'IndexOptions', 'DisableDirectCommits' ) === 'true' )
         {
             $commit = false;
@@ -750,7 +758,7 @@ class eZSolr implements ezpSearchEngine
         }
         else
         {
-            return $this->Solr->addDocs( $docList, $commit, $optimize, $commitWithin );
+            return $this->Solr->addDocs( $docList, $commit, $optimize, $commitWithin, $softCommit );
         }
 
 
@@ -798,19 +806,19 @@ class eZSolr implements ezpSearchEngine
     /**
      * Performs a solr COMMIT
      */
-    function commit()
+    function commit( $softCommit = false )
     {
 
         if ( $this->UseMultiLanguageCores === true )
         {
             foreach ( $this->SolrLanguageShards as $shard )
             {
-                $shard->commit();
+                $shard->commit( $softCommit );
             }
         }
         else
         {
-            $this->Solr->commit();
+            $this->Solr->commit( $softCommit );
         }
 
     }
@@ -1281,7 +1289,7 @@ class eZSolr implements ezpSearchEngine
         $extensionInfo = ezpExtension::getInstance( 'ezfind' )->getInfo();
         return ezpI18n::tr(
             'ezfind',
-            'eZ Find %version search plugin &copy; 1999-2013 eZ Systems AS, powered by Apache Solr 3.6.1',
+            'eZ Find %version search plugin &copy; 1999-2013 eZ Systems AS, powered by Apache Solr 4.7.0',
             null,
             array( '%version' => $extensionInfo['version'] )
         );

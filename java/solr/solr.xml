@@ -22,13 +22,13 @@
   persistent: Save changes made via the API to this file
   sharedLib: path to a lib directory that will be shared across all cores
 -->
-<solr persistent="false">
+<solr persistent="true">
 
   <!--
   adminPath: RequestHandler path to manage cores.
     If 'null' (or absent), cores will not be manageable via request handler
   -->
-  <cores adminPath="/admin/cores" defaultCoreName="collection1">
-    <core name="collection1" instanceDir="." />
+  <cores adminPath="/admin/cores" defaultCoreName="ezp-default">
+    <core name="ezp-default" instanceDir="ezp-default" />
   </cores>
 </solr>

@@ -229,13 +229,17 @@ class eZSolrBase
         return $this->rawSolrRequest ( '/admin/ping' );
     }
 
-    /*!
-      Performs a commit in Solr, which means the index is made live after performing
-      all pending additions and deletes
+    /**
+     * Performs a commit in Solr, which means the index is made live after performing
+     * all pending additions and deletes
+     * Since eZFind 5.3 Solr 4.x, support softCommit parameter
+     * @param boolean $softCommit if set/evaluates to true, will perform a soft commit
+     *
      */
-    function commit()
+    function commit( $softCommit = false )
     {
-        return $this->postQuery (  '/update', '<commit/>', 'text/xml' );
+        $commitElement = $softCommit ? '<commit softCommit="true" />' : '<commit/>' ;
+        return $this->postQuery (  '/update', $commitElement, 'text/xml' );
     }
 
     /*!
@@ -316,7 +320,7 @@ class eZSolrBase
      * @param integer $commitWithin specifies within how many milliseconds a commit should occur if no other commit
      *       is triggered in the meantime (Solr 1.4, eZ Find 2.2)
      */
-    function addDocs ( $docs = array(), $commit = true, $optimize = false, $commitWithin = 0  )
+    function addDocs ( $docs = array(), $commit = true, $optimize = false, $commitWithin = 0, $softCommit = false  )
     {
         if ( !is_array( $docs ) )
         {
@@ -351,7 +355,7 @@ class eZSolrBase
             }
             elseif ( $commit )
             {
-                $this->commit();
+                $this->commit( $softCommit );
             }
             return self::validateUpdateResult ( $updateResult );
         }
