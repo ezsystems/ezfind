@@ -3,15 +3,15 @@ Installing eZFind
 
 Requirements:
 -------------
-- eZ Publish 4.x
-- Java Runtime Environment 5.0 or later. (http://java.sun.com/javase/downloads/index.jsp)
+- eZ Publish 4.7 or eZ Publish 5.x
+- Java Runtime Environment 7.x (http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 - PHP Curl extension (http://php.net/manual/en/ref.curl.php)
 
 Installing:
 -----------
 1. Extract the ezfind extension and place it in the extensions folder.
 2. Run it:
-   1. For small sites: use a regular java 1.5 JRE from Sun
+   1. For small sites: use a regular java 1.7 JRE from Sun
       Start the Java based search engine (based on Solr).
       Enter `extension/ezfind/java` and start the Solr engine with the command:
 
