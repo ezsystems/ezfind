@@ -2,7 +2,7 @@
 eZ find & Solr multicore how-to
 ===============================
 
-Since eZ Find 5.3 (which uogrades Solr to 4.7), running Solr in multicore mode
+Since eZ Find 5.3 (which upgrades Solr to 4.7), running Solr in multicore mode
 is the default
 
 Starting solr multicore
