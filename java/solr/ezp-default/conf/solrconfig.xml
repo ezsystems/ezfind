@@ -1567,7 +1567,7 @@
     -->
   <searchComponent name="elevator" class="solr.QueryElevationComponent" >
     <!-- pick a fieldType to analyze queries -->
-    <str name="queryFieldType">string</str>
+    <str name="queryFieldType">elevate_string</str>
     <str name="config-file">elevate.xml</str>
   </searchComponent>
 
