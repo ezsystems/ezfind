@@ -340,7 +340,8 @@
             page_uri='/ezfind/elevate'
             item_count=$configurations_count
             view_parameters=$view_parameters
-            item_limit=$limit}
+            item_limit=$limit
+            show_google_navigator=true()}
    </div>
 {/if}
 
