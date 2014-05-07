@@ -14,6 +14,7 @@
 
 <div id="search-results-{$block.id}"></div>
 {ezscript_require( array( 'ezjsc::jquery', 'ezjsc::yui3', 'ezjsc::yui3io', 'ezjsc::yui2', 'ezajaxsearch.js', 'ezajax_autocomplete.js' ) )}
+{ezcss_require( 'ezajax_autocomplete.css' )}
 
 
 <script type="text/javascript">

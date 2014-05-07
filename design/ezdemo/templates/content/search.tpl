@@ -342,6 +342,7 @@
 
 
 {ezscript_require( array('ezjsc::yui3', 'ezajax_autocomplete.js') )}
+{ezcss_require( 'ezajax_autocomplete.css' )}
 
 <script type="text/javascript">
 

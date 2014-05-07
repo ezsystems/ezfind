@@ -20,6 +20,7 @@
 {if $pagedata.is_edit|not()}
 
 {ezscript_require( array('ezjsc::yui3', 'ezajax_autocomplete.js') )}
+{ezcss_require( 'ezajax_autocomplete.css' )}
 <script type="text/javascript">
 
 YUI(YUI3_config).use('ezfindautocomplete', function (Y) {ldelim}
