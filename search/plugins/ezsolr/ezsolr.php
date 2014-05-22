@@ -588,9 +588,10 @@ class eZSolr implements ezpSearchEngine
                                     $metaInfo['fieldType'] ) );
             }
 
-
+            // Get url_alias in specific language
+            $urlAlias = eZFunctionHandler::execute( 'switchlanguage', 'url_alias', array( 'node_id' => $mainNodeID, 'locale' => $languageCode ) );
             // Add main url_alias
-            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' ), $mainNode->attribute( 'url_alias' ) );
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' ), $urlAlias );
 
             // Add main path_string
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_path_string' ), $mainNode->attribute( 'path_string' ) );
