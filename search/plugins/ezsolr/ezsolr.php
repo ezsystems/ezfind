@@ -976,7 +976,7 @@ class eZSolr implements ezpSearchEngine
         {
             $searchCount = $resultArray[ 'response' ][ 'numFound' ];
             $objectRes = $this->buildResultObjects(
-                $resultArray, $searchCount, $asObjects, $params['FieldsToReturn']
+                $resultArray, $searchCount, $asObjects, $params
             );
 
             $stopWordArray = array();
@@ -1061,7 +1061,7 @@ class eZSolr implements ezpSearchEngine
         {
             $searchCount = $resultArray[ 'response' ][ 'numFound' ];
             $objectRes = $this->buildResultObjects(
-                $resultArray, $searchCount, $asObjects
+                $resultArray, $searchCount, $asObjects, $params
             );
 
             $stopWordArray = array();
@@ -1477,7 +1477,7 @@ class eZSolr implements ezpSearchEngine
      * @see eZSolrBase::search
      * @see eZSolrBase::moreLikeThis
      */
-    protected function buildResultObjects( $resultArray, &$searchCount, $asObjects = true, $fieldsToReturn = array() )
+    protected function buildResultObjects( $resultArray, &$searchCount, $asObjects = true, $params = array() )
     {
         $objectRes = array();
         $highLights = array();
@@ -1555,7 +1555,7 @@ class eZSolr implements ezpSearchEngine
                         }
                         // it may be a field originating from the explicit fieldlist to return, so it should be added for template consumption
                         // note that the fieldname will be kept verbatim in a substructure 'fields'
-                        elseif( in_array( $fieldName, $fieldsToReturn ) )
+                        elseif( in_array( $fieldName, $params['FieldsToReturn'] ) )
                         {
                             $emit['fields'][$fieldName] = $fieldValue;
                         }
