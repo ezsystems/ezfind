@@ -297,12 +297,15 @@ class ezfSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                     $subObjectID = $relationItem['contentobject_id'];
                     if ( !$subObjectID )
                         continue;
-                    $subObject = eZContentObjectVersion::fetchVersion( $relationItem['contentobject_version'], $subObjectID );
+
+                    // Using last version of object (version inside xml data is the original version)
+                    $subObject = eZContentObject::fetch( $subObjectID );
+
                     if ( !$subObject || $relationItem['in_trash'] )
                         continue;
 
                     // 1st create aggregated metadata fields
-                    $metaAttributeValues = eZSolr::getMetaAttributesForObject( $subObject->attribute( 'contentobject' ) );
+                    $metaAttributeValues = eZSolr::getMetaAttributesForObject( $subObject );
                     foreach ( $metaAttributeValues as $metaInfo )
                     {
                         $submetaFieldName = ezfSolrDocumentFieldBase::generateSubmetaFieldName( $metaInfo['name'], $contentClassAttribute );
