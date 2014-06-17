@@ -11,3 +11,5 @@
         <!-- more aggressive: <filter class="solr.SnowballPorterFilterFactory" language="Italian"/> -->
     </analyzer>
 </fieldType>
+
+<fieldType name="mtext" class="solr.ICUCollationField" locale="it" strength="primary"/>

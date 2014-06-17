@@ -11,3 +11,5 @@
         <!-- The "light" and "minimal" stemmers support variants: nb=Bokmål, nn=Nynorsk, no=Both -->
     </analyzer>
 </fieldType>
+
+<fieldType name="mtext" class="solr.ICUCollationField" locale="no" strength="primary"/>

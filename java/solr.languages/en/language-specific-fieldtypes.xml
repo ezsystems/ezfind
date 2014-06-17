@@ -35,3 +35,5 @@
         <filter class="solr.PorterStemFilterFactory"/>
     </analyzer>
 </fieldType>
+
+<fieldType name="mtext" class="solr.ICUCollationField" locale="en" strength="primary"/>

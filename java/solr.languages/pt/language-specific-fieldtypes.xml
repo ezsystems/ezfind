@@ -11,3 +11,5 @@
         <!-- most aggressive: <filter class="solr.PortugueseStemFilterFactory"/> -->
     </analyzer>
 </fieldType>
+
+<fieldType name="mtext" class="solr.ICUCollationField" locale="pt" strength="primary"/>

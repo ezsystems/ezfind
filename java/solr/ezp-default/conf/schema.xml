@@ -91,6 +91,14 @@
                   </analyzer>
               </fieldType>
 
+            <!--
+            This fieldtype is mainly used for meta_sort_name_ms. By default, we use a multiple language default collation
+            configuration: language="".
+            If you want to customize if for one particular language, use a language 2 letters code as:
+            en, de, no, fr,... according to ISO 639, see http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+            -->
+              <fieldType name="mtext" class="solr.ICUCollationField" locale="" strength="primary"/>
+
           </xi:fallback>
       </xi:include>
     <!-- The StrField type is not analyzed, but indexed/stored verbatim. -->
@@ -98,20 +106,6 @@
 
     <!-- needed for the hardcoded meta fields -->
     <fieldType name="mstring" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
-
-    <fieldType name="mtext" class="solr.TextField" sortMissingLast="true" omitNorms="true">
-        <analyzer>
-            <tokenizer class="solr.KeywordTokenizerFactory"/>
-            <filter class="solr.LowerCaseFilterFactory" />
-            <!--
-            This fieldtype is mainly used for meta_sort_name_ms. By default, we use a multiple language
-            configuration: language="".
-            If you want to customize if for one particular language, use a language 2 letters code as:
-            en, de, no, fr,...
-            -->
-            <filter class="solr.CollationKeyFilterFactory" language="" strength="primary" />
-        </analyzer>
-    </fieldType>
 
     <!-- boolean type: "true" or "false" -->
     <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true" omitNorms="true"/>

@@ -10,3 +10,4 @@
         <filter class="solr.CJKBigramFilterFactory"/>
     </analyzer>
 </fieldType>
+<fieldType name="mtext" class="solr.ICUCollationField" locale="" strength="primary"/>

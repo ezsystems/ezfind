@@ -9,3 +9,5 @@
         <!-- less aggressive: <filter class="solr.FinnishLightStemFilterFactory"/> -->
     </analyzer>
 </fieldType>
+
+<fieldType name="mtext" class="solr.ICUCollationField" locale="fi" strength="primary"/>

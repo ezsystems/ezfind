@@ -45,3 +45,5 @@
         <filter class="solr.LowerCaseFilterFactory"/>
     </analyzer>
 </fieldType>
+
+<fieldType name="mtext" class="solr.ICUCollationField" locale="" strength="primary"/>

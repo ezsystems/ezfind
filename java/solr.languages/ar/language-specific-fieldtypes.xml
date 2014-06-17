@@ -11,3 +11,5 @@
         <filter class="solr.ArabicStemFilterFactory"/>
     </analyzer>
 </fieldType>
+
+<fieldType name="mtext" class="solr.ICUCollationField" locale="ar" strength="primary"/>
