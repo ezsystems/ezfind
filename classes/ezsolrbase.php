@@ -120,7 +120,7 @@ class eZSolrBase
      * @param string $languageCodes A language code string
      * @param string $contentType POST content type
      *
-     * @return string Result of HTTP Request ( without HTTP headers )
+     * @return string|boolean Result of HTTP Request ( without HTTP headers ), false if the request fails.
      */
     protected function postQuery( $request, $postData, $contentType = self::DEFAULT_REQUEST_CONTENTTYPE )
     {
@@ -134,22 +134,22 @@ class eZSolrBase
      * @param string $request request name
      * @param string $getParams HTTP GET parameters, as an associative array
      *
-     * @return Result of HTTP Request ( without HTTP headers )
+     * @return string|boolean Result of HTTP Request ( without HTTP headers ), false if the request fails.
      */
     function getQuery( $request, $getParams )
     {
         return $this->sendHTTPRequestRetry( eZSolrBase::buildHTTPGetQuery( $request, $getParams ) );
     }
 
-    /*!
-      OBS ! Experimental.
 
-      Can be used for anything, uses the post method
-      ResponseWriter wt=php is default, alternative: json or phps
-
-      \param $request refers to the request handler called
-      \param $params is an array of post variables to include. The actual values
-             are urlencoded in the buildPostString() call
+    /**
+     * @note OBS ! Experimental.
+     *
+     * @param $request refers to the request handler called
+     * @param $params is an array of post variables to include.
+     *        The actual values are urlencoded in the buildPostString() call
+     *
+     * @return array|boolean Result of SOLR request, false if the request fails or invalid results.
      */
     function rawSolrRequest ( $request = '', $params = array(), $wt = 'php' )
     {
