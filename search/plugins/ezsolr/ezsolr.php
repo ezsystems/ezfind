@@ -1498,6 +1498,15 @@ class eZSolr implements ezpSearchEngine
         if ( !empty( $resultArray ) )
         {
             $result = $resultArray['response'];
+            if ( !is_array( $result ) ||
+                 !isset( $result['maxScore'] ) ||
+                 !isset( $result['docs'] ) ||
+                 !is_array( $result['docs'] ) )
+            {
+                eZDebug::writeError( 'Unexpected response from Solr: ' . var_export( $result, true ), __METHOD__ );
+                return $objectRes;
+            }
+
             $maxScore = $result['maxScore'];
             $docs = $result['docs'];
             $localNodeIDList = array();
