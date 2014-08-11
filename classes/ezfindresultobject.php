@@ -26,19 +26,8 @@ class eZFindResultObject extends eZContentObject
     */
     function attribute( $attr, $noFunction = false )
     {
-        $retVal = null;
-        switch ( $attr )
-        {
-            default:
-            {
-                if ( in_array( $attr, $this->LocalAttributeNameList ) )
-                {
-                    $retVal = isset( $this->LocalAttributeValueList[$attr] ) ?
-                        $this->LocalAttributeValueList[$attr] : null;
-                }
-            } break;
-        }
-        return $retVal;
+        return isset( $this->LocalAttributeValueList[$attr] ) ?
+                $this->LocalAttributeValueList[$attr] : null;
     }
 
     /*!
