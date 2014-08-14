@@ -97,6 +97,13 @@ class ezfUpdateSearchIndexSolr
         );
         $this->Script->initialize();
 
+        // check if ezfind is enabled and exit if not
+        if ( ! in_array( 'ezfind', eZExtension::activeExtensions() ) )
+        {
+            $this->CLI->error( 'eZ Find extension is not enabled and because of that index process will fail. Please enable it and run this script again.' );
+            $this->Script->shutdown( 0 );
+        }
+
         // Fix siteaccess
         $siteAccess = $this->Options['siteaccess'] ? $this->Options['siteaccess'] : false;
         if ( $siteAccess )
