@@ -521,6 +521,15 @@ class eZSolr implements ezpSearchEngine
         //  Create the list of available languages for this version :
         $availableLanguages = $currentVersion->translationList( false, false );
 
+        // Check if the content in a given language has been deleted
+        $indexedTranslations = $this->getLanguagesForObject( $contentObject );
+        $translationsToRemove = array_diff( $indexedTranslations, $availableLanguages );
+
+        if ( !empty( $translationsToRemove ) )
+        {
+            $this->removeObjectById( $contentObject, null, 0, $translationsToRemove );
+        }
+
         // Loop over each language version and create an eZSolrDoc for it
         foreach ( $availableLanguages as $languageCode )
         {
@@ -839,9 +848,10 @@ class eZSolr implements ezpSearchEngine
      * @param int $contentObjectId The content object to remove by id
      * @param bool $commit Whether to commit after removing the object
      * @param integer $commitWithin specifies within how many milliseconds a commit should occur if no other commit
+     * @param array $languages (of strings) in which the content will be removed. null will remove all translations
      * @return bool True if the operation succeed.
      */
-    public function removeObjectById( $contentObjectId, $commit = null, $commitWithin = 0 )
+    public function removeObjectById( $contentObjectId, $commit = null, $commitWithin = 0, array $languages = null )
     {
         /*
          * @since eZFind 2.2: allow delayed commits if explicitely set as configuration setting and
@@ -874,10 +884,22 @@ class eZSolr implements ezpSearchEngine
         }
 
         // 2: create a delete array with all the required infos, groupable by language
-        $languages = eZContentLanguage::fetchList();
+        if ( $languages === null )
+        {
+            $languages = eZContentLanguage::fetchList();
+        }
+
         foreach ( $languages as $language )
         {
-            $languageCode = $language->attribute( 'locale' );
+            if ( $language instanceof eZContentLanguage )
+            {
+                $languageCode = $language->attribute( 'locale' );
+            }
+            else
+            {
+                $languageCode = $language;
+            }
+
             $docs[$languageCode] = $this->guid( $contentObjectId, $languageCode );
         }
         if ( $this->UseMultiLanguageCores === true )
@@ -1173,6 +1195,37 @@ class eZSolr implements ezpSearchEngine
             return md5( self::installationID() . '-' . $contentObject . '-' . $languageCode );
 
         return md5( self::installationID() . '-' . $contentObject->attribute( 'id' ) . '-' . $languageCode );
+    }
+
+    /**
+     * Provides all languages an object is indexed in
+     * @param eZContentObject $contentObject
+     *
+     * @return array of languages (as strings)
+     */
+    public function getLanguagesForObject( eZContentObject $contentObject)
+    {
+        $languages = array();
+
+        $solrResults = $this->Solr->rawSearch(
+            array(
+                'fl' => 'meta_language_code_ms',
+                'fq' => 'meta_id_si:' . $contentObject->attribute( 'id' )
+            )
+        );
+
+        if ( isset( $solrResults['response']['docs'] ) )
+        {
+            foreach ( $solrResults['response']['docs'] as $doc )
+            {
+                if ( isset( $doc['meta_language_code_ms'] ) )
+                {
+                    $languages[] = $doc['meta_language_code_ms'];
+                }
+            }
+        }
+
+        return $languages;
     }
 
     /**
