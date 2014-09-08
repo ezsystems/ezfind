@@ -401,10 +401,13 @@
  <!-- eZ Find: This field type is dedicated to Elevate.  -->
     <fieldType name="elevate_string" stored="false" indexed="false" class="solr.TextField">
           <analyzer>
-              <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+              <tokenizer class="solr.KeywordTokenizerFactory"/>
               <filter class="solr.LowerCaseFilterFactory"/>
+              <!-- Alternative configuration for elevation, adding a normalisation step for accented chracters based on the ICU library -->
+              <!-- <filter class="solr.ICUFoldingFilterFactory"/> -->
           </analyzer>
     </fieldType>
+
 
 <!-- eZ Find: This field type is dedicated to ez publish keywords.  -->
     <fieldtype name="keyword" class="solr.TextField" positionIncrementGap="100">
