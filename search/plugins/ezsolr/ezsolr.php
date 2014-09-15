@@ -527,7 +527,7 @@ class eZSolr implements ezpSearchEngine
 
         if ( !empty( $translationsToRemove ) )
         {
-            $this->removeObjectById( $contentObject, null, 0, $translationsToRemove );
+            $this->removeObjectById( $contentObject->attribute( 'id' ), null, 0, $translationsToRemove );
         }
 
         // Loop over each language version and create an eZSolrDoc for it
