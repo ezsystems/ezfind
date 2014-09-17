@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <fieldType name="text" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="false">
       <analyzer>
       <!-- Kuromoji Japanese morphological analyzer/tokenizer (JapaneseTokenizer)
@@ -45,3 +44,5 @@
         <filter class="solr.LowerCaseFilterFactory"/>
     </analyzer>
 </fieldType>
+
+<fieldType name="mtext" class="solr.ICUCollationField" locale="" strength="primary"/>

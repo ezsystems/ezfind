@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <!-- Norwegian -->
 <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
     <analyzer>
@@ -11,3 +10,5 @@
         <!-- The "light" and "minimal" stemmers support variants: nb=Bokmål, nn=Nynorsk, no=Both -->
     </analyzer>
 </fieldType>
+
+<fieldType name="mtext" class="solr.ICUCollationField" locale="no" strength="primary"/>
