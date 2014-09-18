@@ -360,6 +360,9 @@ class ezfUpdateSearchIndexSolr
     {
         eZDB::setInstance( null );
 
+        // Prepare DB-based cluster handler for fork (it will re-connect DB automatically).
+        eZClusterFileHandler::preFork();
+
         $pid = pcntl_fork();
 
         // reinitialize DB after fork
