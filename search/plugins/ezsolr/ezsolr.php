@@ -1207,12 +1207,43 @@ class eZSolr implements ezpSearchEngine
     {
         $languages = array();
 
-        $solrResults = $this->Solr->rawSearch(
-            array(
-                'fl' => 'meta_language_code_ms',
-                'fq' => 'meta_id_si:' . $contentObject->attribute( 'id' )
-            )
+        $params = array(
+            'fl' => 'meta_language_code_ms',
+            'fq' => 'meta_id_si:' . $contentObject->attribute( 'id' )
         );
+
+        if ( $this->UseMultiLanguageCores === true )
+        {
+            foreach ( $this->SolrLanguageShards as $shard )
+            {
+                /** @var eZSolrBase $shard */
+                $languages = array_merge(
+                    $languages,
+                    $this->extractLanguageCodesFromSolrResult( $shard->rawSearch( $params ) )
+                );
+            }
+        }
+        else
+        {
+            $languages = array_merge(
+                $languages,
+                $this->extractLanguageCodesFromSolrResult( $this->Solr->rawSearch( $params ) )
+            );
+        }
+
+        return $languages;
+    }
+
+    /**
+     * Extracts the list of 'meta_language_code_ms' from a solrResult array.
+     *
+     * @param $solrResults
+     *
+     * @return array of languages (as strings)
+     */
+    private function extractLanguageCodesFromSolrResult( $solrResults )
+    {
+        $languages = array();
 
         if ( isset( $solrResults['response']['docs'] ) )
         {
