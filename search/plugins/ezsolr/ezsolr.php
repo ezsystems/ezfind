@@ -602,7 +602,7 @@ class eZSolr implements ezpSearchEngine
             $urlAlias = eZFunctionHandler::execute( 'switchlanguage', 'url_alias', array( 'node_id' => $mainNodeID, 'locale' => $languageCode ) );
             // Add main url_alias
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_url_alias' ), $urlAlias );
-            
+
             // Add main path_string
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'main_path_string' ), $mainNode->attribute( 'path_string' ) );
 
@@ -1386,7 +1386,7 @@ class eZSolr implements ezpSearchEngine
     public function updateNodeSection( $nodeID, $sectionID )
     {
         $contentObject = eZContentObject::fetchByNodeID( $nodeID );
-        $this->addObject( $contentObject );
+        eZContentOperationCollection::registerSearchObject( $contentObject->ID );
     }
 
     /**
@@ -1406,7 +1406,7 @@ class eZSolr implements ezpSearchEngine
             // section id or the content object may come from the memory cache
             // make sure the section_id is the right one
             $object->setAttribute( 'section_id', $sectionID );
-            $this->addObject( $object );
+            eZContentOperationCollection::registerSearchObject( $id );
         }
     }
 
