@@ -261,7 +261,19 @@ class ezfeZPSolrQueryBuilder
         // Add section to query filter.
         if ( $sectionID )
         {
-            $filterQuery[] = eZSolr::getMetaFieldName( 'section_id' ) . ':' . $sectionID;
+            if ( is_array( $sectionID ) )
+            {
+                $sectionQuery = array();
+                foreach ( $sectionID as $sectionIDElement )
+                {
+                    $sectionQuery[] = eZSolr::getMetaFieldName( 'section_id' ) . ':' . $sectionIDElement;
+                }
+                $filterQuery[] = implode( ' OR ', $sectionQuery );
+            }
+            else
+            {
+                $filterQuery[] = eZSolr::getMetaFieldName( 'section_id' ) . ':' . $sectionID;
+            }
         }
 
         $languageFilterQuery = $this->buildLanguageFilterQuery();
