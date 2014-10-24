@@ -312,7 +312,10 @@ class ezfeZPSolrQueryBuilder
         if ( !$contentClassAttributeID )
         {
             $queryFields[] = eZSolr::getMetaFieldName( 'name' );
-            $queryFields[] = eZSolr::getMetaFieldName( 'owner_name' );
+            if ( !self::$FindINI->hasVariable( 'SearchFilters', 'ExcludeOwnerName' ) || self::$FindINI->variable( 'SearchFilters', 'ExcludeOwnerName' ) !== 'enabled' )
+            {
+                $queryFields[] = eZSolr::getMetaFieldName( 'owner_name' );
+            }
         }
 
 
