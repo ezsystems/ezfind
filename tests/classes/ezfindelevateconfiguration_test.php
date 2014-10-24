@@ -6,14 +6,6 @@ class eZFindElevateConfigurationTest extends ezpDatabaseTestCase
 {
     protected $backupGlobals = false;
 
-    protected $sqlFiles = array( 'extension/ezfind/sql/mysql/mysql.sql' );
-
-    public function setUp()
-    {
-        parent::setUp();
-        ezpTestDatabaseHelper::insertSqlData( $this->sharedFixture, $this->sqlFiles );
-    }
-
     /**
      * Data provider for testGetRuntimeQueryParameters
      */
