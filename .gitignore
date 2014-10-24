@@ -3,4 +3,6 @@ java/logs
 .project
 java/solr-webapp
 java/solr/lib/classes
+java/solr/ezp-default/conf/_rest_managed.json
+
 

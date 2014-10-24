@@ -35,7 +35,7 @@
        that you fully re-index after changing this setting as it can
        affect both how text is indexed and queried.
   -->
-  <luceneMatchVersion>4.6</luceneMatchVersion>
+  <luceneMatchVersion>4.10.1</luceneMatchVersion>
 
   <!-- <lib/> directives can be used to instruct Solr to load an Jars
        identified and use them to resolve any "plugins" specified in
@@ -1108,6 +1108,7 @@
   </requestHandler>
 
   <!-- for back compat with clients using /update/json and /update/csv -->
+  <!--
   <requestHandler name="/update/json" class="solr.UpdateRequestHandler">
         <lst name="defaults">
          <str name="stream.contentType">application/json</str>
@@ -1118,6 +1119,7 @@
          <str name="stream.contentType">application/csv</str>
        </lst>
   </requestHandler>
+  -->
 
   <!-- Solr Cell Update Request Handler
 
