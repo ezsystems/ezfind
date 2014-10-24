@@ -6,6 +6,12 @@ class eZSolrMultiCoreBaseTest extends ezpDatabaseTestCase
 {
     public function setUp()
     {
+        $className = 'eZSolrMultiCoreBase';
+        if ( !class_exists( $className ) )
+        {
+            $this->markTestSkipped( "The class '{$className}' doesn't exist." );
+        }
+        
         parent::setUp();
     }
 
