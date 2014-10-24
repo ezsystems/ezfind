@@ -1661,6 +1661,7 @@ class eZSolr implements ezpSearchEngine
                     }
                     $emit['highlight'] = isset( $highLights[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' )]] ) ?
                                          $highLights[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' )]] : null;
+                    $emit['elevated'] = ( isset($doc['[elevated]']) ? $doc['[elevated]'] === true : false );
                     $objectRes[] = $emit;
                     unset( $emit );
                     continue;
@@ -1744,6 +1745,7 @@ class eZSolr implements ezpSearchEngine
                  */
                 $maxScore != 0 ? $resultTree->setAttribute( 'score_percent', (int) ( ( $doc['score'] / $maxScore ) * 100 ) ) : $resultTree->setAttribute( 'score_percent', 100 );
                 $resultTree->setAttribute( 'language_code', $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'language_code' )] );
+                $resultTree->setAttribute( 'elevated', ( isset($doc['[elevated]']) ? $doc['[elevated]'] === true : false ) );
                 $objectRes[] = $resultTree;
             }
         }
