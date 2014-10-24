@@ -51,7 +51,8 @@ class ezfSearchResultInfo
                       // spellcheck dictionary/index -- Solr php response writer "bug"
                       'spellcheck_collation',
                       'interestingTerms',
-                      'clusters'
+                      'clusters',
+                      'highlighting'
             );
     }
 
@@ -321,6 +322,17 @@ class ezfSearchResultInfo
                 if ( isset( $this->ResultArray['clusters'] ) )
                 {
                     return $this->ResultArray['clusters'];
+                }
+                else
+                {
+                    return false;
+                }
+            } break;
+            case 'highlighting':
+            {
+                if ( isset( $this->ResultArray['highlighting'] ) )
+                {
+                    return $this->ResultArray['highlighting'];
                 }
                 else
                 {
