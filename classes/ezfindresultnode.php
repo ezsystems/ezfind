@@ -24,7 +24,9 @@ class eZFindResultNode extends eZContentObjectTreeNode
                                                'published',
                                                'language_code',
                                                'highlight',
-                                               'score_percent' );
+                                               'score_percent',
+                                               'elevated'
+                );
     }
 
     /*!
