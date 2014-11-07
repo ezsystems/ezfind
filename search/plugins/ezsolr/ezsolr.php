@@ -1431,7 +1431,14 @@ class eZSolr implements ezpSearchEngine
     {
         $node = eZContentObjectTreeNode::fetch( $nodeID );
         $this->addObject( $node->attribute( 'object' ) );
-        if ( $node->childrenCount( false ) )
+
+        $params = array(
+            'Depth'             => 1,
+            'DepthOperator'     => 'eq',
+            'Limitation'        => array(),
+            'IgnoreVisibility'  => true,
+        );
+        if ( $node->subTreeCount( $params ) > 0 )
         {
             $pendingAction = new eZPendingActions(
                 array(
