@@ -180,6 +180,7 @@ class ezfeZPSolrQueryBuilder
             $params['Filter'] = array( $params['Filter'] );
         }
 
+        $pathFieldName = eZSolr::getMetaFieldName( $ignoreVisibility ? 'path' : 'visible_path' );
 
 
         $filterQuery = array();
@@ -191,7 +192,7 @@ class ezfeZPSolrQueryBuilder
             $subtreeQueryParts = array();
             foreach ( $subtrees as $subtreeNodeID )
             {
-                $subtreeQueryParts[] = eZSolr::getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
+                $subtreeQueryParts[] = $pathFieldName . ':' . $subtreeNodeID;
             }
 
             $filterQuery[] = implode( ' OR ', $subtreeQueryParts );
@@ -1533,6 +1534,8 @@ class ezfeZPSolrQueryBuilder
         $filterQuery = false;
         $policies = array();
 
+        $pathFieldName = $ignoreVisibility ? eZSolr::getMetaFieldName( 'path' ) : eZSolr::getMetaFieldName( 'visible_path' );
+
         if ( is_array( $limitation ) )
         {
             if ( empty( $limitation ) )
@@ -1606,7 +1609,7 @@ class ezfeZPSolrQueryBuilder
                             $pathArray = explode( '/', $pathString );
                             // we only take the last node ID in the path identification string
                             $subtreeNodeID = array_pop( $pathArray );
-                            $policyLimitationsOnLocations[] = eZSolr::getMetaFieldName( 'path' ) . ':' . $subtreeNodeID;
+                            $policyLimitationsOnLocations[] = $pathFieldName . ':' . $subtreeNodeID;
                             if ( isset( $this->searchPluginInstance->postSearchProcessingData['subtree_limitations'] ) )
                                 $this->searchPluginInstance->postSearchProcessingData['subtree_limitations'][] = $subtreeNodeID;
                             else

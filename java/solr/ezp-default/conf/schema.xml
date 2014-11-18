@@ -149,7 +149,7 @@
 
     <!-- A Trie based date field for faster date range queries and date faceting. -->
     <fieldType name="tdate" class="solr.TrieDateField" omitNorms="true" precisionStep="6" positionIncrementGap="0"/>
-    
+
     <!--
       Note:
       These should only be used for compatibility with existing indexes (created with older Solr versions)
@@ -564,6 +564,11 @@
    <field name="meta_is_hidden_b" type="boolean" indexed="true" stored="true" multiValued="true"/>
    <field name="meta_is_invisible_b" type="boolean" indexed="true" stored="true" multiValued="true"/>
    <field name="meta_priority_si" type="sint" indexed="true" stored="true" multiValued="true"/>
+   <!-- denormalised fields for hidden and visible path elements -->
+   <field name="meta_visible_path_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- Visible Location path IDs -->
+   <field name="meta_visible_path_string_ms" type="mstring" indexed="true" stored="true" multiValued="true"/> <!-- Visible Location path string -->
+   <field name="meta_hidden_path_si" type="sint" indexed="true" stored="true" multiValued="true"/>     <!-- Hidden Location path IDs -->
+   <field name="meta_hidden_path_string_ms" type="mstring" indexed="true" stored="true" multiValued="true"/> <!-- Hidden Location path string -->
 
    <!-- Here, default is used to create a "timestamp" field indicating
         When each document was indexed.
