@@ -694,6 +694,9 @@
        <dynamicField name="*___sort_field_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>  <!-- Location sort field -->
        <dynamicField name="*___sort_order_ms" type="mstring" indexed="true" stored="true" multiValued="true"/>  <!-- Location sort order -->
        <dynamicField name="*___view_count_si" type="sint" indexed="true" stored="true" multiValued="true"/>  <!-- View count -->
+       <dynamicField name="*____loc" type="location" indexed="true" stored="true"/>
+       <dynamicField name="*____loc_0_coordinate" type="double" indexed="true" stored="true"/>
+       <dynamicField name="*____loc_1_coordinate" type="double" indexed="true" stored="true"/>
 
 
       <field name="ezf_df_text" type="text"    indexed="true"  stored="true" multiValued="true" termVectors="true"/>
