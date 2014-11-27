@@ -24,6 +24,12 @@ class eZSolrBase
      */
     var $SearchServerURI;
 
+    /**
+    * The solr update servers List
+    * @var string
+    */
+    var $UpdateServerList;
+
     var $SolrINI;
 
     /**
@@ -52,6 +58,14 @@ class eZSolrBase
         else
         {
             $this->SearchServerURI = 'http://localhost:8983/solr';
+        }
+        if( $this->SolrINI->hasVariable( 'SolrBase', 'UpdateServerList' ) )
+        {
+            $this->UpdateServerList = $this->SolrINI->variable( 'SolrBase', 'UpdateServerList' );
+        }
+        else
+        {
+            $this->UpdateServerList = array( $this->SearchServerURI );
         }
 
     }
@@ -124,8 +138,25 @@ class eZSolrBase
      */
     protected function postQuery( $request, $postData, $contentType = self::DEFAULT_REQUEST_CONTENTTYPE )
     {
-        $url = $this->SearchServerURI . $request;
-        return $this->sendHTTPRequestRetry( $url, $postData, $contentType );
+        if( $request == '/update' )
+        {
+            $result = false;
+            foreach( $this->UpdateServerList as $serverURI )
+            {
+                $url = $serverURI . $request;
+                $httpRequest = $this->sendHTTPRequestRetry( $url, $postData, $contentType );
+                if( $httpRequest !== false )
+                {
+                    $result = $httpRequest;
+                }
+            }
+                return $result;
+            }
+            else
+            {
+                $url = $this->SearchServerURI . $request;
+                return $this->sendHTTPRequestRetry( $url, $postData, $contentType );
+            }
     }
 
     /**
