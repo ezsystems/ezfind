@@ -154,8 +154,8 @@ class eZSolrBase
         }
         else
         {
-           $url = $this->SearchServerURI . $request;
-           return $this->sendHTTPRequestRetry( $url, $postData, $contentType );
+            $url = $this->SearchServerURI . $request;
+            return $this->sendHTTPRequestRetry( $url, $postData, $contentType );
         }
     }
 
