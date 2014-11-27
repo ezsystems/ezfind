@@ -150,13 +150,13 @@ class eZSolrBase
                     $result = $httpRequest;
                 }
             }
-                return $result;
-            }
-            else
-            {
-                $url = $this->SearchServerURI . $request;
-                return $this->sendHTTPRequestRetry( $url, $postData, $contentType );
-            }
+            return $result;
+        }
+        else
+        {
+           $url = $this->SearchServerURI . $request;
+           return $this->sendHTTPRequestRetry( $url, $postData, $contentType );
+        }
     }
 
     /**
