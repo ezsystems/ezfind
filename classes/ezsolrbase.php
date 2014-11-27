@@ -25,9 +25,9 @@ class eZSolrBase
     var $SearchServerURI;
 
     /**
-    * The solr update servers List
-    * @var string
-    */
+     * The solr update servers List
+     * @var string
+     */
     var $UpdateServerList;
 
     var $SolrINI;
