@@ -1461,12 +1461,13 @@ class eZSolr implements ezpSearchEngine
      * @param $mainNodeID
      * @param $objectID
      * @param $nodeAssignmentIDList
+     * @param bool $isMoved true if node is being moved
      * @return unknown_type
      * @see eZSearch::addNodeAssignment()
      */
-    public function addNodeAssignment( $mainNodeID, $objectID, $nodeAssignmentIDList )
+    public function addNodeAssignment( $mainNodeID, $objectID, $nodeAssignmentIDList, $isMoved )
     {
-        eZContentOperationCollection::registerSearchObject( $objectID );
+        eZContentOperationCollection::registerSearchObject( $objectID, null, $isMoved );
     }
 
     /**
