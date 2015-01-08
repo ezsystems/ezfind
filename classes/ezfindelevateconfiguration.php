@@ -461,7 +461,6 @@ class eZFindElevateConfiguration extends eZPersistentObject
         elseif ( isset( $result['error'] ) )
         {
             eZDebug::writeError( $result['error'], __METHOD__ );
-            throw new Exception( $result['error'] );
         }
         else
         {
