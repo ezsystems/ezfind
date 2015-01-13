@@ -19,6 +19,17 @@ YUI.add('ezfindautocomplete', function (Y) {
             source: conf.url
         });
 
+        // Build Ajax request URL string, passed to AutoComplete as the requestTemplate
+        var urlString = "::{query}::" + conf.resultLimit + "::";
+        if( typeof conf.subtree !== 'undefined' ) {
+            urlString += conf.subtree;
+        }
+        urlString += "::";
+        if( typeof conf.classes !== 'undefined' ) {
+            urlString += conf.classes;
+        }
+        urlString += "?ContentType=json";
+
         Y.one(conf.inputSelector).plug(Y.Plugin.AutoComplete, {
             maxResults: conf.resultLimit,
             minQueryLength: conf.minQueryLength,
@@ -29,7 +40,7 @@ YUI.add('ezfindautocomplete', function (Y) {
             },
             source: ds,
             // This will be appended to the URL that was supplied to the DataSource's "source" config above.
-            requestTemplate: "::{query}::" + conf.resultLimit + "?ContentType=json",
+            requestTemplate: urlString,
             // Custom result list locator to parse the results out of the response.
             resultListLocator: function (response) {
                 if (response && response[0] && response[0].responseText){
