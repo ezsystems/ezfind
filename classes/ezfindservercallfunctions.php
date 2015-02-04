@@ -175,7 +175,7 @@ class eZFindServerCallFunctions
                 $classQueryParts = array();
                 foreach( $classes as $class )
                 {
-                    if ( is_string( $class ) )
+                    if ( !is_numeric( $class ) )
                     {
                         if ( $class = eZContentClass::fetchByIdentifier( $class ) )
                         {
