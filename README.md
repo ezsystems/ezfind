@@ -23,3 +23,9 @@ index. After the index is complete, the copy of the current index is replaced
 with the newest version. In addition, the search engine remembers all caching
 structures from previous searches and, during indexing, updates these as well.
 Therefore, the more the search engine is used, the faster it becomes.
+
+
+Issue tracker
+-------------
+Submitting bugs, improvements and stories is possible on https://jira.ez.no/browse/EZP.
+If you discover a security issue, please see how to responsibly report such issues on https://doc.ez.no/Security.
