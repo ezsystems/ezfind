@@ -328,7 +328,8 @@ class eZSolr implements ezpSearchEngine
             {
                 array_unshift( $docVisibilities, $docVisibilities[$mainNodeIdx] );
                 array_unshift( $docPathStrings, $docPathStrings[$mainNodeIdx] );
-                unset( $docVisibilities[$mainNodeIdx], $docPathStrings[$mainNodeIdx] );
+                // adding +1 to indexing because of array_unshift
+                unset( $docVisibilities[$mainNodeIdx + 1], $docPathStrings[$mainNodeIdx + 1] );
             }
         }
         $locationFilter = isset( $this->postSearchProcessingData['subtree_array'] ) ? $this->postSearchProcessingData['subtree_array'] : array();
