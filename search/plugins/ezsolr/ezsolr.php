@@ -124,7 +124,11 @@ class eZSolr implements ezpSearchEngine
                                              'owner_name' => 'text',
                                              'owner_group_id' => 'sint',
                                              'path' => 'sint',
-                                             'object_states' => 'sint'),
+                                             'object_states' => 'sint',
+                                             'visible_path' => 'sint',
+                                             'hidden_path' => 'sint',
+                                             'visible_path_string' => 'mstring',
+                                             'hidden_path_string' => 'mstring' ),
                                       self::metaAttributes(),
                                       self::nodeAttributes() ),
                                 'facet' =>  array(
@@ -465,6 +469,11 @@ class eZSolr implements ezpSearchEngine
         $mainNodeID = $mainNode->attribute( 'node_id' );
         // initialize array of parent node path ids, needed for multivalued path field and subtree filters
         $nodePathArray = array();
+        // eZ Find 5.4+ expanding on nodePathArray, collect them in different visibility arrays
+        $invisibleNodePathArray = array();
+        $visibleNodePathArray = array();
+        $invisibleNodePathString = array();
+        $visibleNodePathString = array();
 
         //included in $nodePathArray
         //$pathArray = $mainNode->attribute( 'path_array' );
@@ -485,6 +494,16 @@ class eZSolr implements ezpSearchEngine
                                                 'fieldType' => $fieldType );
             }
             $nodePathArray[] = $contentNode->attribute( 'path_array' );
+            if ( $contentNode->attribute( 'is_hidden' ) || $contentNode->attribute( 'is_invisible' ) )
+            {
+                $invisibleNodePathArray = array_merge( $invisibleNodePathArray, $contentNode->attribute( 'path_array' ) );
+                $invisibleNodePathString[]= $contentNode->attribute( 'path_string' );
+            }
+            else
+            {
+                $visibleNodePathArray = array_merge( $visibleNodePathArray, $contentNode->attribute( 'path_array' ) );
+                $visibleNodePathString[] = $contentNode->attribute( 'path_string' );
+            }
 
         }
 
@@ -628,6 +647,12 @@ class eZSolr implements ezpSearchEngine
                 $doc->addField( 'meta_main_path_element_' . $key . '_si', $pathNodeID );
 
             }
+            // Since eZ Find 5.4
+
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'visible_path' ), $visibleNodePathArray );
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'visible_path_string' ), $visibleNodePathString );
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'hidden_path' ), $invisibleNodePathArray );
+            $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'hidden_path_string' ), $invisibleNodePathString );
 
             eZContentObject::recursionProtectionStart();
 
