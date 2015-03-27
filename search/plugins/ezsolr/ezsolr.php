@@ -1670,7 +1670,7 @@ class eZSolr implements ezpSearchEngine
                     $emit = array();
                     foreach ( $doc as $fieldName => $fieldValue )
                     {
-                        // check if field is not in the explicit field list, to keep explode from generating notices.
+                        // check if fieldName contains an _, to keep list() from generating notices.
                         if ( strpos( $fieldName, '_' ) !== false )
                         {
                             list( $prefix, $rest ) = explode( '_', $fieldName, 2 );
