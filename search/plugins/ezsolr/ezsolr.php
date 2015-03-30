@@ -1670,7 +1670,7 @@ class eZSolr implements ezpSearchEngine
                     $emit = array();
                     foreach ( $doc as $fieldName => $fieldValue )
                     {
-                        // check if field is not in the explicit field list, to keep explode from generating notices.
+                        // check if fieldName contains an _, to keep list() from generating notices.
                         if ( strpos( $fieldName, '_' ) !== false )
                         {
                             list( $prefix, $rest ) = explode( '_', $fieldName, 2 );
@@ -1684,14 +1684,14 @@ class eZSolr implements ezpSearchEngine
                             {
                                 $emit['data_map'][$inner] = ezfSolrStorage::unserializeData( $fieldValue );
                             }
-                        }
-                        // it may be a field originating from the explicit fieldlist to return, so it should be added for template consumption
-                        // note that the fieldname will be kept verbatim in a substructure 'fields'
-                        elseif( in_array( $fieldName, $params['FieldsToReturn'] ) )
-                        {
-                            $emit['fields'][$fieldName] = $fieldValue;
-                        }
 
+                            // it may be a field originating from the explicit fieldlist to return, so it should be added for template consumption
+                            // note that the fieldname will be kept verbatim in a substructure 'fields'
+                            elseif ( in_array( $fieldName, $params['FieldsToReturn'] ) )
+                            {
+                                $emit['fields'][$fieldName] = $fieldValue;
+                            }
+                        }
                     }
                     $emit['highlight'] = isset( $highLights[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' )]] ) ?
                                          $highLights[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' )]] : null;
