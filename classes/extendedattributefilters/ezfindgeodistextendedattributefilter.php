@@ -63,7 +63,7 @@ class eZFindGeoDistExtendedAttributeFilter implements eZFindExtendedAttributeFil
             $queryParams['sort']  = 'geodist() asc,' . $queryParams['sort'];
 
             //exclude unlocated documents
-            $queryParams['fq'][] = $fieldName.':[-90,-90 TO 90,90]';
+            $queryParams['fq'][] = $fieldName.':[-180,-90 TO 180,90]';
         }
         catch( Exception $e )
         {
