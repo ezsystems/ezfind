@@ -59,8 +59,9 @@ class eZFindGeoDistExtendedAttributeFilter implements eZFindExtendedAttributeFil
             $queryParams['sfield'] = $fieldName;
             $queryParams['pt'] = $filterParams['latitude'] . ',' . $filterParams['longitude'];
 
-            //sort by geodist
-            $queryParams['sort']  = 'geodist() asc,' . $queryParams['sort'];
+            //sort by geodist, according to ezfsolrdocumentfieldgmaplocation line 46, eZ indexes longitude,latitude
+            $geodistOrigin = $filterParams['longitude'] . "," . $filterParams['latitude'];
+            $queryParams['sort'] = "geodist($fieldName,$geodistOrigin) asc," . $queryParams['sort'];
 
             //exclude unlocated documents
             $queryParams['fq'][] = $fieldName.':[-180,-90 TO 180,90]';
