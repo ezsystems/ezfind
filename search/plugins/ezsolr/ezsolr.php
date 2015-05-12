@@ -99,6 +99,29 @@ class eZSolr implements ezpSearchEngine
                       'view_count' => 'sint' );
     }
 
+
+    /**
+     *
+     * @return array additional node attributes which are stored in the nested location child docs
+     */
+    static function additionalNodeAttributes()
+    {
+        return array( 'parent_node_id' => 'mstring',
+                      'main_node_id' => 'mstring',
+                      'parent_node_id' => 'mstring',
+                      'contentobject_id' => 'mstring',
+                      'path_identification_string' => 'mstring',
+                      'remote_id' => 'mstring',
+                      'name' => 'mstring',
+                      'children_count' => 'sint',
+                      'is_main' => 'boolean',
+                      'url' => 'mstring',
+                      'class_identifier' => 'mstring',
+                      'class_name' => 'mstring',
+                      'is_container' => 'boolean',);
+    }
+
+
     /**
      * Get meta attribute Solr document field type
      *
@@ -130,7 +153,8 @@ class eZSolr implements ezpSearchEngine
                                              'visible_path_string' => 'mstring',
                                              'hidden_path_string' => 'mstring' ),
                                       self::metaAttributes(),
-                                      self::nodeAttributes() ),
+                                      self::nodeAttributes(),
+                                      self::additionalNodeattributes() ),
                                 'facet' =>  array(
                                              'owner_name' => 'string' ),
                                 'filter' => array(),
@@ -489,9 +513,18 @@ class eZSolr implements ezpSearchEngine
             $nodeID = $contentNode->attribute( 'node_id' );
             foreach ( eZSolr::nodeAttributes() as $attributeName => $fieldType )
             {
-                $nodeAttributeValues[$nodeID][] = array( 'name' => $attributeName,
-                                                'value' => $contentNode->attribute( $attributeName ),
-                                                'fieldType' => $fieldType );
+                $nodeAttributeValues[$nodeID][$attributeName] = array(
+                    'value' => $contentNode->attribute($attributeName),
+                    'fieldType' => $fieldType);
+            }
+
+            //WIP additional meta info for locations/nodes
+            foreach (eZSolr::additionalNodeAttributes() as $attributeName => $fieldType)
+            {
+                $additionalAttributeValues[$nodeID][$attributeName] = array (
+                    'value' => $contentNode->attribute($attributeName),
+                    'fieldType' => $fieldType);
+
             }
             $nodePathArray[] = $contentNode->attribute( 'path_array' );
             if ( $contentNode->attribute( 'is_hidden' ) || $contentNode->attribute( 'is_invisible' ) )
@@ -561,6 +594,8 @@ class eZSolr implements ezpSearchEngine
             $doc = new eZSolrDoc( $docBoost );
             // Set global unique object ID
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' ), $this->guid( $contentObject, $languageCode ) );
+            // WIP: hardcoded fieldname for now
+            $doc->addField('meta_doctype_ms','content');
 
             // Set installation identifier
             $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' ), self::installationID() );
@@ -604,19 +639,43 @@ class eZSolr implements ezpSearchEngine
             }
 
             // Set content node meta attribute values.
+            // WIP: initial hack, add  children docs here as well
             foreach ( $nodeAttributeValues as $nodeID => $metaInfoArray )
             {
-                foreach( $metaInfoArray as $metaInfo)
+                $doc->Children[$nodeID] = new eZSolrDoc();
+                $doc->Children[$nodeID]->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' ), $this->guid( $contentObject, $languageCode, $nodeID ) );
+                // hardcoded field name for now
+                $doc->Children[$nodeID]->addField('meta_doctype_ms','location');
+
+                foreach( $metaInfoArray as $metaInfoName => $metaInfo)
                 {
-                    $doc->addField( ezfSolrDocumentFieldBase::generateMetaFieldName( $metaInfo['name'] ),
-                                ezfSolrDocumentFieldBase::preProcessValue( $metaInfo['value'], $metaInfo['fieldType'] ) );
+                    $locFieldName = ezfSolrDocumentFieldBase::generateMetaFieldName( $metaInfoName );
+                    $locFieldValue = ezfSolrDocumentFieldBase::preProcessValue( $metaInfo['value'], $metaInfo['fieldType'] );
+                    $doc->addField( $locFieldName, $locFieldValue );
+                    $doc->Children[$nodeID]->addField('loc_' . $locFieldName, $locFieldValue);
                 }
+                // WIP: add sorting by priority values as a field in the content doc for the respective parent
+                // location (aka node) ids
+            }
+
+            //WIP additional meta data to add to the location child docs
+            foreach ( $additionalAttributeValues as $nodeID => $metaInfoArray )
+            {
+                foreach( $metaInfoArray as $metaInfoName => $metaInfo)
+                {
+                    $locFieldName = ezfSolrDocumentFieldBase::generateMetaFieldName( $metaInfoName );
+                    $locFieldValue = ezfSolrDocumentFieldBase::preProcessValue( $metaInfo['value'], $metaInfo['fieldType'] );
+                    $doc->Children[$nodeID]->addField('loc_' . $locFieldName, $locFieldValue);
+                }
+                // provide data for sorting according to the the fetch content list way, 1 level deep
+                $doc->addField('loc_priority_for_parent_' . $additionalAttributeValues[$nodeID]['parent_node_id']['value'] . '_i', $nodeAttributeValues[$nodeID]['priority']['value']);
+
             }
 
             // Main node gets single valued fields for sorting, using a dedicated prefix
-            foreach ( $nodeAttributeValues[$mainNodeID] as $metaInfo )
+            foreach ( $nodeAttributeValues[$mainNodeID] as $metaInfoName => $metaInfo )
             {
-                $fieldName = 'main_node_' . ezfSolrDocumentFieldBase::generateMetaFieldName( $metaInfo['name'] );
+                $fieldName = 'main_node_' . ezfSolrDocumentFieldBase::generateMetaFieldName( $metaInfoName );
                 $doc->addField( $fieldName,
                                     ezfSolrDocumentFieldBase::preProcessValue( $metaInfo['value'],
                                     $metaInfo['fieldType'] ) );
@@ -1220,12 +1279,12 @@ class eZSolr implements ezpSearchEngine
      * @param string $languageCode
      * @return string guid
      */
-    function guid( $contentObject, $languageCode = '' )
+    function guid( $contentObject, $languageCode = '', $locationID = '' )
     {
         if ( !$contentObject instanceof eZContentObject )
             return md5( self::installationID() . '-' . $contentObject . '-' . $languageCode );
 
-        return md5( self::installationID() . '-' . $contentObject->attribute( 'id' ) . '-' . $languageCode );
+        return md5( self::installationID() . '-' . $contentObject->attribute( 'id' ) . '-' . $languageCode . '-' . $locationID );
     }
 
     /**
@@ -1696,6 +1755,7 @@ class eZSolr implements ezpSearchEngine
                     $emit['highlight'] = isset( $highLights[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' )]] ) ?
                                          $highLights[$doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'guid' )]] : null;
                     $emit['elevated'] = ( isset($doc['[elevated]']) ? $doc['[elevated]'] === true : false );
+                    $emit['children'] = ( isset( $doc['_childDouments_'] ) ) ? $doc['_childDocuments_'] : NULL;
                     $objectRes[] = $emit;
                     unset( $emit );
                     continue;
@@ -1780,6 +1840,7 @@ class eZSolr implements ezpSearchEngine
                 $maxScore != 0 ? $resultTree->setAttribute( 'score_percent', (int) ( ( $doc['score'] / $maxScore ) * 100 ) ) : $resultTree->setAttribute( 'score_percent', 100 );
                 $resultTree->setAttribute( 'language_code', $doc[ezfSolrDocumentFieldBase::generateMetaFieldName( 'language_code' )] );
                 $resultTree->setAttribute( 'elevated', ( isset($doc['[elevated]']) ? $doc['[elevated]'] === true : false ) );
+                $resultTree->setAttribute( 'children', ( isset($doc['_childDocuments_']) ? $doc['_childDocuments_'] : NULL ) );
                 $objectRes[] = $resultTree;
             }
         }
