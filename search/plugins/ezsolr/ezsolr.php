@@ -1644,6 +1644,8 @@ class eZSolr implements ezpSearchEngine
                 }
             }
 
+            $localNodeIDList = array_unique( $localNodeIDList );
+
             if ( !empty( $localNodeIDList ) )
             {
                 $tmpNodeRowList = eZContentObjectTreeNode::fetch( $localNodeIDList, false, false );
