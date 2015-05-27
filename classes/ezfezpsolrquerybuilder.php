@@ -115,6 +115,10 @@ class ezfeZPSolrQueryBuilder
         eZDebugSetting::writeDebug( 'extension-ezfind-query', $params, 'search params' );
         $searchCount = 0;
 
+        $eZFindIni = eZINI::instance( 'ezfind.ini' );
+        $solrIni = eZINI::instance( 'solr.ini' );
+        $siteIni = eZINI::instance( 'site.ini' );
+
         $offset = ( isset( $params['SearchOffset'] ) && $params['SearchOffset'] ) ? $params['SearchOffset'] : 0;
         $limit = ( isset( $params['SearchLimit']  ) && $params['SearchLimit'] ) ? $params['SearchLimit'] : 10;
         $subtrees = isset( $params['SearchSubTreeArray'] ) ? $params['SearchSubTreeArray'] : array();
@@ -124,9 +128,9 @@ class ezfeZPSolrQueryBuilder
         $dateFilter = isset( $params['SearchDate'] ) && $params['SearchDate'] > 0 ? $params['SearchDate'] : false;
         $asObjects = isset( $params['AsObjects'] ) ? $params['AsObjects'] : true;
         $spellCheck = isset( $params['SpellCheck'] ) && $params['SpellCheck'] > 0 ? $params['SpellCheck'] : array();
-        $queryHandler = isset( $params['QueryHandler'] )  ?  $params['QueryHandler'] : self::$FindINI->variable( 'SearchHandler', 'DefaultSearchHandler' );
+        $queryHandler = isset( $params['QueryHandler'] )  ?  $params['QueryHandler'] : $eZFindIni->variable( 'SearchHandler', 'DefaultSearchHandler' );
         // eZFInd 2.3: check ini setting and take it as a default instead of false
-        $visibilityDefaultSetting = self::$SiteINI->variable( 'SiteAccessSettings', 'ShowHiddenNodes' );
+        $visibilityDefaultSetting = $siteIni->variable( 'SiteAccessSettings', 'ShowHiddenNodes' );
         $visibilityDefault = ( $visibilityDefaultSetting === 'true' ) ? true : false;
         $ignoreVisibility = isset( $params['IgnoreVisibility'] )  ?  $params['IgnoreVisibility'] : $visibilityDefault;
         $this->searchPluginInstance->postSearchProcessingData['ignore_visibility'] = $ignoreVisibility;
@@ -146,7 +150,7 @@ class ezfeZPSolrQueryBuilder
         $extraFieldsToSearch = array();
         $extraFieldsToReturn = array();
         $shardURLs = array();
-        $iniShards = self::$SolrINI->variable( 'SolrBase' , 'Shards' );
+        $iniShards = $solrIni->variable( 'SolrBase' , 'Shards' );
         $shardQuery = NULL;
         $shardFilterQuery = array();
 
@@ -234,7 +238,7 @@ class ezfeZPSolrQueryBuilder
 			$filterQuery[] = eZSolr::getMetaFieldName( 'published' ) . ':[' . ezfSolrDocumentFieldBase::preProcessValue( $searchTimestamp, 'date' ) .'/DAY TO *]';
 		}
 
-        if ( (!eZContentObjectTreeNode::showInvisibleNodes() || !$ignoreVisibility ) && ( self::$FindINI->variable( 'SearchFilters', 'FilterHiddenFromDB' ) == 'enabled' ) )
+        if ( (!eZContentObjectTreeNode::showInvisibleNodes() || !$ignoreVisibility ) && ( $eZFindIni->variable( 'SearchFilters', 'FilterHiddenFromDB' ) == 'enabled' ) )
         {
             $db = eZDB::instance();
             $invisibleNodeIDArray = $db->arrayQuery( 'SELECT node_id FROM ezcontentobject_tree WHERE ezcontentobject_tree.is_invisible = 1', array( 'column' => 0) );
@@ -279,9 +283,9 @@ class ezfeZPSolrQueryBuilder
         }
 
         //add raw filters
-        if ( self::$FindINI->hasVariable( 'SearchFilters', 'RawFilterList' ) )
+        if ( $eZFindIni->hasVariable( 'SearchFilters', 'RawFilterList' ) )
         {
-            $rawFilters = self::$FindINI->variable( 'SearchFilters', 'RawFilterList' );
+            $rawFilters = $eZFindIni->variable( 'SearchFilters', 'RawFilterList' );
             if ( is_array( $rawFilters ) )
             {
                 $filterQuery = array_merge( $filterQuery, $rawFilters );
@@ -313,7 +317,7 @@ class ezfeZPSolrQueryBuilder
         if ( !$contentClassAttributeID )
         {
             $queryFields[] = eZSolr::getMetaFieldName( 'name' );
-            if ( !self::$FindINI->hasVariable( 'SearchFilters', 'ExcludeOwnerName' ) || self::$FindINI->variable( 'SearchFilters', 'ExcludeOwnerName' ) !== 'enabled' )
+            if ( !$eZFindIni->hasVariable( 'SearchFilters', 'ExcludeOwnerName' ) || $eZFindIni->variable( 'SearchFilters', 'ExcludeOwnerName' ) !== 'enabled' )
             {
                 $queryFields[] = eZSolr::getMetaFieldName( 'owner_name' );
             }
@@ -323,9 +327,9 @@ class ezfeZPSolrQueryBuilder
         $spellCheckParamList = array();
         // @param $spellCheck expects array (true|false, dictionary identifier, ...)
         if ( ( isset( $spellCheck[0] ) and $spellCheck[0] ) or
-             ( self::$FindINI->variable( 'SpellCheck', 'SpellCheck' ) == 'enabled' and ( isset( $spellCheck[0] ) and !$spellCheck[0] ) ) )
+             ( $eZFindIni->variable( 'SpellCheck', 'SpellCheck' ) == 'enabled' and ( isset( $spellCheck[0] ) and !$spellCheck[0] ) ) )
         {
-            $dictionary = isset( $spellCheck[1]) ? $spellCheck[1] : self::$FindINI->variable( 'SpellCheck', 'DefaultDictionary' );
+            $dictionary = isset( $spellCheck[1]) ? $spellCheck[1] : $eZFindIni->variable( 'SpellCheck', 'DefaultDictionary' );
             $spellCheckParamList = array(
                 'spellcheck' => 'true',
                 // q is manipulated in case of standard request handler, so make it explicit by using spellcheck.q
@@ -399,7 +403,7 @@ class ezfeZPSolrQueryBuilder
                 // remark it should be lowercase in solrconfig.xml!
 
                 $boostQueryString = $this->boostQuery();
-                $rawBoostQueries = self::$FindINI->variable( 'QueryBoost', 'RawBoostQueries' );
+                $rawBoostQueries = $eZFindIni->variable( 'QueryBoost', 'RawBoostQueries' );
                 if ( is_array( $rawBoostQueries ) && !empty( $rawBoostQueries ) )
                 {
                     $boostQueryString .= ' ' . implode( ' ', $rawBoostQueries );
@@ -467,13 +471,13 @@ class ezfeZPSolrQueryBuilder
                 'version' => '2.2',
                 'fl' => $fieldsToReturnString,
                 'fq' => $filterQuery,
-                'hl' => self::$FindINI->variable( 'HighLighting', 'Enabled' ),
+                'hl' => $eZFindIni->variable( 'HighLighting', 'Enabled' ),
                 'hl.fl' => implode( ' ', $highLightFields ),
-                'hl.snippets' => self::$FindINI->variable( 'HighLighting', 'SnippetsPerField' ),
-                'hl.fragsize' => self::$FindINI->variable( 'HighLighting', 'FragmentSize' ),
-                'hl.requireFieldMatch' => self::$FindINI->variable( 'HighLighting', 'RequireFieldMatch' ),
-                'hl.simple.pre' => self::$FindINI->variable( 'HighLighting', 'SimplePre' ),
-                'hl.simple.post' => self::$FindINI->variable( 'HighLighting', 'SimplePost' ),
+                'hl.snippets' => $eZFindIni->variable( 'HighLighting', 'SnippetsPerField' ),
+                'hl.fragsize' => $eZFindIni->variable( 'HighLighting', 'FragmentSize' ),
+                'hl.requireFieldMatch' => $eZFindIni->variable( 'HighLighting', 'RequireFieldMatch' ),
+                'hl.simple.pre' => $eZFindIni->variable( 'HighLighting', 'SimplePre' ),
+                'hl.simple.post' => $eZFindIni->variable( 'HighLighting', 'SimplePost' ),
                 'wt' => 'php'
             ),
             $facetQueryParamList,
@@ -539,9 +543,10 @@ class ezfeZPSolrQueryBuilder
     protected function buildLanguageFilterQuery()
     {
         $languageFilterString = '';
+        $eZFindIni = eZINI::instance( 'ezfind.ini' );
         $ini = eZINI::instance();
         $languages = $ini->variable( 'RegionalSettings', 'SiteLanguageList' );
-        $searchMainLanguageOnly = self::$FindINI->variable( 'LanguageSearch', 'SearchMainLanguageOnly' ) == 'enabled';
+        $searchMainLanguageOnly = $eZFindIni->variable( 'LanguageSearch', 'SearchMainLanguageOnly' ) == 'enabled';
         $showUntranslatedObjects = $ini->variable( 'RegionalSettings', 'ShowUntranslatedObjects' ) == 'enabled';
         $languageCodeMetaName = eZSolr::getMetaFieldName( 'language_code' );
         $availableLanguageCodesMetaName = eZSolr::getMetaFieldName( 'available_language_codes' );
@@ -704,6 +709,8 @@ class ezfeZPSolrQueryBuilder
         eZDebugSetting::writeDebug( 'extension-ezfind-query-mlt', $params, 'mlt params' );
         $searchCount = 0;
 
+        $eZFindIni = eZINI::instance( 'ezfind.ini' );
+
         $queryInstallationID = ( isset( $params['QueryInstallationID'] ) && $params['QueryInstallationID'] ) ? $params['QueryInstallationID'] : eZSolr::installationID();
         $offset = ( isset( $params['SearchOffset'] ) && $params['SearchOffset'] ) ? $params['SearchOffset'] : 0;
         $limit = ( isset( $params['SearchLimit']  ) && $params['SearchLimit'] ) ? $params['SearchLimit'] : 10;
@@ -758,9 +765,9 @@ class ezfeZPSolrQueryBuilder
         }
 
         //add raw filters
-        if ( self::$FindINI->hasVariable( 'SearchFilters', 'RawFilterList' ) )
+        if ( $eZFindIni->hasVariable( 'SearchFilters', 'RawFilterList' ) )
         {
-            $rawFilters = self::$FindINI->variable( 'SearchFilters', 'RawFilterList' );
+            $rawFilters = $eZFindIni->variable( 'SearchFilters', 'RawFilterList' );
             if ( is_array( $rawFilters ) )
             {
                 $filterQuery = array_merge( $filterQuery, $rawFilters );
@@ -775,7 +782,7 @@ class ezfeZPSolrQueryBuilder
 
         // Create sort parameters based on the parameters.
         $sortParameter = $this->buildSortParameter( $params );
-        $iniExtractionFields = self::$FindINI->variable( 'MoreLikeThis', 'ExtractionFields' );
+        $iniExtractionFields = $eZFindIni->variable( 'MoreLikeThis', 'ExtractionFields' );
 
         if ( $iniExtractionFields == 'general' )
         {
@@ -816,12 +823,12 @@ class ezfeZPSolrQueryBuilder
 
         // fetch the mlt tuning parameters from ini settings
 
-        $mintf = self::$FindINI->variable( 'MoreLikeThis', 'MinTermFreq' )  ? self::$FindINI->variable( 'MoreLikeThis', 'MinTermFreq' ) : 1;
-        $mindf = self::$FindINI->variable( 'MoreLikeThis', 'MinDocFreq' ) ? self::$FindINI->variable( 'MoreLikeThis', 'MinDocFreq' ) : 1;
-        $minwl = self::$FindINI->variable( 'MoreLikeThis', 'MinWordLength' ) ? self::$FindINI->variable( 'MoreLikeThis', 'MinWordLength' ) : 3;
-        $maxwl = self::$FindINI->variable( 'MoreLikeThis', 'MaxWordLength' ) ? self::$FindINI->variable( 'MoreLikeThis', 'MaxWordLength' ) : 20;
-        $maxqt = self::$FindINI->variable( 'MoreLikeThis', 'MaxQueryTerms' ) ? self::$FindINI->variable( 'MoreLikeThis', 'MaxQueryTerms' ) : 5;
-        $boostmlt = self::$FindINI->variable( 'MoreLikeThis', 'BoostTerms' ) ? self::$FindINI->variable( 'MoreLikeThis', 'BoostTerms' ) : 'true';
+        $mintf = $eZFindIni->hasVariable( 'MoreLikeThis', 'MinTermFreq' )  ? $eZFindIni->variable( 'MoreLikeThis', 'MinTermFreq' ) : 1;
+        $mindf = $eZFindIni->hasVariable( 'MoreLikeThis', 'MinDocFreq' ) ? $eZFindIni->variable( 'MoreLikeThis', 'MinDocFreq' ) : 1;
+        $minwl = $eZFindIni->hasVariable( 'MoreLikeThis', 'MinWordLength' ) ? $eZFindIni->variable( 'MoreLikeThis', 'MinWordLength' ) : 3;
+        $maxwl = $eZFindIni->hasVariable( 'MoreLikeThis', 'MaxWordLength' ) ? $eZFindIni->variable( 'MoreLikeThis', 'MaxWordLength' ) : 20;
+        $maxqt = $eZFindIni->hasVariable( 'MoreLikeThis', 'MaxQueryTerms' ) ? $eZFindIni->variable( 'MoreLikeThis', 'MaxQueryTerms' ) : 5;
+        $boostmlt = $eZFindIni->hasVariable( 'MoreLikeThis', 'BoostTerms' ) ? $eZFindIni->variable( 'MoreLikeThis', 'BoostTerms' ) : 'true';
 
         // @todo decide which of the hard-coded mlt parameters should become input parameters or ini settings
         return array_merge(
@@ -1531,6 +1538,8 @@ class ezfeZPSolrQueryBuilder
      */
     protected function policyLimitationFilterQuery( $limitation = null, $ignoreVisibility = null )
     {
+        $eZFindIni = eZINI::instance( 'ezfind.ini' );
+
         $filterQuery = false;
         $policies = array();
 
@@ -1702,7 +1711,7 @@ class ezfeZPSolrQueryBuilder
 
         // Add limitations for allowing search of other installations.
         $anonymousPart = '';
-        if ( self::$FindINI->variable( 'SiteSettings', 'SearchOtherInstallations' ) == 'enabled' )
+        if ( $eZFindIni->variable( 'SiteSettings', 'SearchOtherInstallations' ) == 'enabled' )
         {
             $anonymousPart = ' OR ' . eZSolr::getMetaFieldName( 'anon_access' ) . ':true ';
         }
@@ -1855,19 +1864,17 @@ class ezfeZPSolrQueryBuilder
         return $result;
     }
 
-    /// Vars
-    static $FindINI;
-    static $SolrINI;
-    static $SiteINI;
-
     /**
      * Array containing the allowed boolean operators for the 'fq' parameter
      * Initialized by the end of this file.
      *
      * @var array
      * @see ezfeZPSolrQueryBuilder::getBooleanOperatorFromFilter
+     *
+     * @todo need to refactor this: its only valid for the standard Solr request syntax, not for dismax based variants
+     * @todo negations should be added as well
      */
-    public static $allowedBooleanOperators;
+    public static $allowedBooleanOperators = array( 'AND', 'and', 'OR', 'or' );
 
     /**
      * @since eZ Find 2.1
@@ -1891,13 +1898,4 @@ class ezfeZPSolrQueryBuilder
     const FACET_MINCOUNT = 1;
 }
 
-ezfeZPSolrQueryBuilder::$FindINI = eZINI::instance( 'ezfind.ini' );
-ezfeZPSolrQueryBuilder::$SolrINI = eZINI::instance( 'solr.ini' );
-ezfeZPSolrQueryBuilder::$SiteINI = eZINI::instance( 'site.ini' );
-// need to refactor this: its only valid for the standard Solr request syntax, not for dismax based variants
-// furthermore, negations should be added as well
-ezfeZPSolrQueryBuilder::$allowedBooleanOperators = array( 'AND',
-                                                          'and',
-                                                          'OR',
-                                                          'or' );
 ?>
