@@ -118,7 +118,7 @@ class eZSolrDoc
 
         if ($this->DocBoost !== null && is_numeric( $this->DocBoost ) )
         {
-            $this->DomRootElement->setAttribute( 'boost', $this->DocBoost );
+            $this->DomRootElement->setAttribute( 'boost', number_format( $this->DocBoost, 2, '.', '' ) );
         }
 
         foreach ($this->Doc as $name => $field) {
