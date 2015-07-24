@@ -18,15 +18,19 @@ class eZFindResultNode extends eZContentObjectTreeNode
             $this->ContentObjectID = $rows['id'];
         }
         $this->LocalAttributeValueList = array();
-        $this->LocalAttributeNameList = array( 'is_local_installation',
-                                               'name',
-                                               'global_url_alias',
-                                               'published',
-                                               'language_code',
-                                               'highlight',
-                                               'score_percent',
-                                               'elevated'
-                );
+        $this->LocalAttributeNameList = array(
+            'is_local_installation',
+            'name',
+            'global_url_alias',
+            'published',
+            'language_code',
+            'highlight',
+            'score_percent',
+            'elevated',
+            //WIP: for now contains raw dump of child docs returned ... ie all nodes that satisfy
+            // upstream child filter conditions
+            'children',
+        );
     }
 
     /*!

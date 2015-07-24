@@ -24,6 +24,12 @@ class eZSolrDoc
 
     /**
      *
+     * @var array of child documents as eZSolrDoc objects!
+     */
+    public  $Children = array();
+
+    /**
+     *
      * @var numeric
      */
     private $DocBoost = null;
@@ -105,23 +111,25 @@ class eZSolrDoc
         }
     }
 
-    /**
-     * Convert current object to XML string
-     *
-     * @return string XML string.
-     */
-    function docToXML()
-    {
-        $this->DomDoc = new DOMDocument( '1.0', 'utf-8' );
-        $this->DomRootElement = $this->DomDoc->createElement( 'doc' );
-        $this->DomDoc->appendChild( $this->DomRootElement );
 
-        if ($this->DocBoost !== null && is_numeric( $this->DocBoost ) )
+    /**
+     *
+     * @param DOMDocument $domDoc The (usually) empty DOM master document
+     * @param mixed $inputArray containing the fields, field values and field boosts
+     * @param Booleam $boost the Lucene overall document boost to apply if any
+     * @return DOMElement The doc and field structure
+     */
+    public static function createDocElementFromArray( DOMDocument $domDoc, $inputArray = array(), $boost = NULL )
+    {
+        $docRootElement = $domDoc->createElement( 'doc' );
+
+        if ( $boost !== null && is_numeric( $boost ) )
         {
-            $this->DomRootElement->setAttribute( 'boost', $this->DocBoost );
+            $docRootElement->setAttribute( 'boost', $boost );
         }
 
-        foreach ($this->Doc as $name => $field) {
+        foreach ( $inputArray as $name => $field )
+        {
             foreach( $field['content'] as $value )
             {
                 // $value should never be array. Log the value and the stack trace.
@@ -133,19 +141,40 @@ class eZSolrDoc
                                          "\nStack trace: " . var_export( $dump, 1 ) );
                     continue;
                 }
-                $fieldElement = $this->DomDoc->createElement( 'field' );
-                $fieldElement->appendChild( $this->DomDoc->createTextNode( $value ) );
+                $fieldElement = $domDoc->createElement( 'field' );
+                $fieldElement->appendChild( $domDoc->createTextNode( $value ) );
                 $fieldElement->setAttribute( 'name', $name );
 
-                if ( $field['boost'] !== null && is_numeric( $field['boost'] ) )
+                if ( isset( $field['boost'] ) && is_numeric( $field['boost'] ) )
                 {
                     $fieldElement->setAttribute( 'boost', $field['boost'] );
                 }
 
-                $this->DomRootElement->appendChild( $fieldElement );
+                $docRootElement->appendChild( $fieldElement );
+            }
+        }
+        return $docRootElement;
+    }
+
+    /**
+     * Convert current object to XML string
+     *
+     * @return string XML string.
+     */
+    function docToXML()
+    {
+        $this->DomDoc = new DOMDocument( '1.0', 'utf-8' );
+        $this->DomRootElement = self::createDocElementFromArray( $this->DomDoc, $this->Doc, $this->DocBoost );
+
+        foreach ( $this->Children as $child )
+        {
+            if ( $child instanceof eZSolrDoc )
+            {
+                $this->DomRootElement->appendChild( self::createDocElementFromArray( $this->DomDoc, $child->Doc ) );
             }
         }
 
+        $this->DomDoc->appendChild( $this->DomRootElement );
 
         $rawXML = $this->DomDoc->saveXML( $this->DomRootElement );
         //make sure there are no control characters left that could currupt the XML string

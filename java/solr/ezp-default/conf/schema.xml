@@ -529,6 +529,7 @@
    &customfields;
 
    <field name="_version_" type="long" indexed="true" stored="true"/>
+   <field name="_root_" type="string" indexed="true" stored="false"/>
 
    <field name="meta_guid_ms" type="mstring" indexed="true" stored="true" /> <!-- Global unique ID ( per installation per object per language ) -->
 

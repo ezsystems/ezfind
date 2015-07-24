@@ -442,6 +442,12 @@ class ezfeZPSolrQueryBuilder
                 implode( ' ', $docTransformerFields) . ' ' .
                 implode( ' ', $extraFieldsToReturn );
 
+        // WIP locations as child docs of main content
+        // first add a "parent" filter to the main query
+        $filterQuery[]='meta_doctype_ms:content';
+        // add the child doctransformer
+        $fieldsToReturnString .= ' ' . '[child parentFilter="meta_doctype_ms:content" childFilter="meta_doctype_ms:location"]';
+
         if ( ! $asObjects )
         {
             if ( empty( $fieldsToReturn ))
