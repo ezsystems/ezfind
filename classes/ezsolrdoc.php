@@ -118,7 +118,9 @@ class eZSolrDoc
 
         if ($this->DocBoost !== null && is_numeric( $this->DocBoost ) )
         {
-            $this->DomRootElement->setAttribute( 'boost', $this->DocBoost );
+            // This will force the '.' as decimal separator and not depend on the locale
+            $docBoost = sprintf('%F',$this->DocBoost);
+            $this->DomRootElement->setAttribute( 'boost', $docBoost );
         }
 
         foreach ($this->Doc as $name => $field) {
