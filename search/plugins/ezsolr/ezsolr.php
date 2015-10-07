@@ -985,7 +985,17 @@ class eZSolr implements ezpSearchEngine
                 $coreToUse = $this->SolrLanguageShards[$languages[0]];
                 if ( $this->FindINI->variable( 'LanguageSearch', 'SearchMainLanguageOnly' ) <> 'enabled' )
                 {
-                    $shardQueryPart = array( 'shards' => implode( ',', $this->SolrLanguageShardURIs ) );
+                    $solrLanguageShardURIs = array();
+
+                    foreach( $this->SolrLanguageShardURIs as $language => $solrLanguageShardURI )
+                    {
+                        if ( in_array( $language, $languages ) )
+                        {
+                            $solrLanguageShardURIs[] = $solrLanguageShardURI;
+                        }
+                    }
+
+                    $shardQueryPart = array( 'shards' => implode( ',', $solrLanguageShardURIs ) );
                 }
             }
             //eZDebug::writeNotice( $languages, __METHOD__ . ' languages' );
