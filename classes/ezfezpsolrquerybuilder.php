@@ -94,7 +94,8 @@ class ezfeZPSolrQueryBuilder
      *                                        'searchfields', array ( 'myfield1, 'myfield2', ... )
      *                                        'returnfields', array ( 'myfield1, 'myfield2', ... )
      *                                        'rawfilterlist, array ( 'foreignfield:a', '(foreignfield:b AND otherfield:c)', ... )
-     *                                      )
+     *                                      ),
+     *        'RawFilter' => array( <raw_filter> )
      *      );
      * </code>
      * For full facet description, see facets design document.
@@ -179,6 +180,7 @@ class ezfeZPSolrQueryBuilder
         }
 
         // check if filter parameter is indeed an array, and set it otherwise
+        // By default, multiple filters are combined with "AND" to send to Solr
         if ( isset( $params['Filter']) && ! is_array( $params['Filter'] ) )
         {
             $params['Filter'] = array( $params['Filter'] );
@@ -290,6 +292,18 @@ class ezfeZPSolrQueryBuilder
             {
                 $filterQuery = array_merge( $filterQuery, $rawFilters );
             }
+        }
+
+        // Add per-query raw filters
+        // Check if raw filter parameter is indeed an array, and set it otherwise
+        // By default, multiple filters are combined with "AND" to send to Solr
+        if ( isset( $params['RawFilter']) && ! is_array( $params['RawFilter'] ) )
+        {
+            $params['RawFilter'] = array( $params['RawFilter'] );
+        }
+        if ( $params['RawFilter'] )
+        {
+            $filterQuery = array_merge( $filterQuery, $params['RawFilter'] );
         }
 
         // Build and get facet query prameters.
