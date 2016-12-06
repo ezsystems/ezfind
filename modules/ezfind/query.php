@@ -5,18 +5,20 @@ $result = '';
 $module = $Params[ 'Module' ];
 $formats = array( 'php', 'json', 'csv' );
 $field_list = array();
-$fields = array(
+$data = array(
     'limit' => 10,
     'offset' => 0,
     'query'  => '',
-    'format' => 'php'
+    'format' => 'php',
+    'fields' => array(),
 );
 
 if( isset( $_REQUEST[ 'submit' ] ) )
 {
     $solr = new eZSolrBase();
 
-    $fields = $_REQUEST[ 'fields' ];
+    $data = array_replace_recursive( $data, $_REQUEST[ 'data' ] );
+
     $format = 'php';
 
     $params = array(
@@ -24,39 +26,37 @@ if( isset( $_REQUEST[ 'submit' ] ) )
         'fl' => '*',
     );
 
-    if( $fields[ 'query' ] )
+    if( $data[ 'query' ] )
     {
-        $params[ 'q' ] = $fields[ 'query' ];
+        $params[ 'q' ] = $data[ 'query' ];
     }
-    if( in_array( $fields[ 'format' ], $formats ) )
+    if( in_array( $data[ 'format' ], $formats ) )
     {
-        $format = $fields[ 'format' ];
+        $format = $data[ 'format' ];
     }
-    if( $format == 'csv' && $params[ 'q' ] && $fields[ 'fields' ] )
+    if( $format == 'csv' && $params[ 'q' ] && $data[ 'fields' ] )
     {
-        $params[ 'fl' ] = $fields[ 'fields' ];
-        $field_list = explode( ',', $fields[ 'fields' ] );
-        $field_list = array_map( 'trim', $field_list );
+        $params[ 'fl' ] = $data[ 'fields' ];
     }
-    if( $fields[ 'limit' ] )
+    if( $data[ 'limit' ] )
     {
-        $params[ 'rows' ] = $fields[ 'limit' ];
+        $params[ 'rows' ] = $data[ 'limit' ];
     }
-    if( $fields[ 'offset' ] )
+    if( $data[ 'offset' ] )
     {
-        $params[ 'start' ] = $fields[ 'limit' ];
+        $params[ 'start' ] = $data[ 'limit' ];
     }
-    if( $fields[ 'sort' ] )
+    if( $data[ 'sort' ] )
     {
-        $params[ 'sort' ] = $fields[ 'sort' ];
+        $params[ 'sort' ] = $data[ 'sort' ];
     }
 
     $result = $solr->rawSearch( $params );
 
-    $result = print_r( formatData( $result, $format, $field_list ), true );
+    $result = print_r( formatData( $result, $format, $data[ 'fields' ] ), true );
 }
 
-$tpl->setVariable( 'fields', $fields );
+$tpl->setVariable( 'data', $data );
 $tpl->setVariable( 'result', $result );
 
 $Result = array();
@@ -77,35 +77,33 @@ function formatData( $data, $format, $fields )
     {
         case 'csv':
         {
-            $data = $data[ 'response' ][ 'docs' ];
-            
-            foreach( $data as $r => $row )
+            $resultData = $data[ 'response' ][ 'docs' ];
+
+			$csvData = fopen('php://temp/maxmemory:'. (5*1024*1024), 'r+');
+			fputcsv( $csvData, $fields );
+
+            foreach( $resultData as $row )
             {
-                $newRowContent = array();
+            	$csvRow = array();
+            	foreach( $fields as $id )
+				{
+					$value = $row[ $id ];
+					// flatten arrays
+					if( is_array( $value ) )
+					{
+						$value = implode( '::', $value );
+					}
+					$csvRow[] = $value;
+				}
 
-                if( !empty( $fields ) )
-                {
-                    $rowOrdered = array();
-                    foreach( $fields as $field )
-                    {
-                        $rowOrdered[ $field ] = $row[ $field ] ? $row[ $field ] : '';
-                    }
-                    $row = $rowOrdered;
-                }
-
-                foreach( $row as $field )
-                {
-                    // multi-value fields
-                    $content = is_array( $field ) ? implode( '::', $field ) : $field;
-
-                    $newRowContent[] = '"' . str_replace( '"', '\"', $content ) . '"';
-                }
-                                
-                $data[ $r ] = implode( ',', $newRowContent );
+				fputcsv( $csvData, $csvRow );
             }
-            
-            $data = implode( "\n", $data );
-        }
+
+            // reset pointer
+			rewind( $csvData );
+
+			$data = stream_get_contents( $csvData );
+		}
         break;
 
         case 'json':

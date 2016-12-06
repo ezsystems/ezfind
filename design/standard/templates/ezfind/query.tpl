@@ -1,3 +1,9 @@
+{*
+    INPUT
+
+        data : form data
+        result : solr search result
+*}
 {def
     $solr_fields_meta = array(
         'meta_guid_ms',
@@ -20,7 +26,6 @@
     $formats = array( 'php', 'json', 'csv' )
 }
 
-
 <div>
     <form method="post" action={'ezfind/query'|ezurl()}>
     
@@ -30,52 +35,56 @@
             <tr>
                 <td>q</td>
                 <td>
-                    <textarea name="fields[query]" type="text" style="width: 600px; height: 100px;">{$fields[ 'query' ]}</textarea>
+                    <textarea name="data[query]" type="text" style="width: 600px; height: 100px;">{$data[ 'query' ]}</textarea>
                 </td>
             </tr>
             <tr>
                 <td>format</td>
                 <td>
-                    <select name="fields[format]">
+                    <select name="data[format]">
                     {foreach $formats as $format}
-                        <option {if eq( $format, $fields.format )}selected="selected"{/if}>{$format}</option>
+                        <option {if eq( $format, $data.format )}selected="selected"{/if}>{$format}</option>
                     {/foreach}
                     </select>
                 </td>
             </tr>
             <tr>
                 <td>offset</td>
-                <td><input type="text" name="fields[offset]" value="{$fields.offset}" /></td>
+                <td><input type="text" name="data[offset]" value="{$data.offset}" /></td>
             </tr>
             <tr>
                 <td>limit</td>
-                <td><input type="text" name="fields[limit]" value="{$fields.limit}" /></td>
+                <td><input type="text" name="data[limit]" value="{$data.limit}" /></td>
             </tr>
             <tr>
                 <td>sort</td>
-                <td><input type="text" name="fields[sort]" value="{$fields.sort}" /></td>
+                <td><input type="text" name="data[sort]" value="{$data.sort}" /></td>
             </tr>
             <tr>
                 <td>Fields</td>
                 <td>
-                    <textarea name="fields[fields]" id="fields_input" style="width: 600px; height: 100px;">{$fields.fields|implode(',')}</textarea>
-                    <br />
-                    <select size="6" id="available_fields" multiple="multiple">
+                    <select size="12" name="data[fields][]" multiple="multiple">
                         <optgroup label="Meta">
                             {foreach $solr_fields_meta as $solr_field}
-                                <option value="{$solr_field}">{$solr_field}</option>
+                                <option value="{$solr_field}" {if $data.fields|contains( $solr_field )}selected="selected"{/if}>
+                                    {$solr_field}
+                                </option>
                             {/foreach}
-                        </optiongroup>
+                        </optgroup>
                         <optgroup label="Attribute">
                             {foreach $solr_fields_attr as $solr_field}
-                                <option value="{$solr_field}">{$solr_field}</option>
+                                <option value="{$solr_field}" {if $data.fields|contains( $solr_field )}selected="selected"{/if}>
+                                    {$solr_field}
+                                </option>
                             {/foreach}
-                        </optiongroup>
+                        </optgroup>
                         <optgroup label="Others">
                             {foreach $solr_fields_other as $solr_field}
-                                <option value="{$solr_field}">{$solr_field}</option>
+                                <option value="{$solr_field}" {if $data.fields|contains( $solr_field )}selected="selected"{/if}>
+                                    {$solr_field}
+                                </option>
                             {/foreach}
-                        </optiongroup>
+                        </optgroup>
                     </select>
                 </td>
             </tr>
@@ -92,13 +101,3 @@
 </pre>
     </div>
 {/if}
-
-<script type="text/javascript">
-    jQuery( '#available_fields option' ).click( function(e)
-    {ldelim}
-        var separator = '';
-        if( jQuery( '#fields_input' ).val() != '' ) separator = ','; else seperator = '';
-        jQuery( '#fields_input' ).val( jQuery( '#fields_input' ).val() + separator + jQuery( this ).attr( 'value' ) );
-        jQuery( this ).remove();
-    {rdelim});
-</script>
