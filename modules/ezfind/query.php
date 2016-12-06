@@ -79,31 +79,31 @@ function formatData( $data, $format, $fields )
         {
             $resultData = $data[ 'response' ][ 'docs' ];
 
-			$csvData = fopen('php://temp/maxmemory:'. (5*1024*1024), 'r+');
-			fputcsv( $csvData, $fields );
+            $csvData = fopen('php://temp/maxmemory:'. (5*1024*1024), 'r+');
+            fputcsv( $csvData, $fields );
 
             foreach( $resultData as $row )
             {
-            	$csvRow = array();
-            	foreach( $fields as $id )
-				{
-					$value = $row[ $id ];
-					// flatten arrays
-					if( is_array( $value ) )
-					{
-						$value = implode( '::', $value );
-					}
-					$csvRow[] = $value;
-				}
+                $csvRow = array();
+                foreach( $fields as $id )
+                {
+                    $value = $row[ $id ];
+                    // flatten arrays
+                    if( is_array( $value ) )
+                    {
+                        $value = implode( '::', $value );
+                    }
+                    $csvRow[] = $value;
+                }
 
-				fputcsv( $csvData, $csvRow );
+                fputcsv( $csvData, $csvRow );
             }
 
             // reset pointer
-			rewind( $csvData );
+            rewind( $csvData );
 
-			$data = stream_get_contents( $csvData );
-		}
+            $data = stream_get_contents( $csvData );
+        }
         break;
 
         case 'json':
