@@ -42,6 +42,15 @@ $ViewList['remove_elevation'] = array(
     'params' => array( 'ObjectID', 'SearchQuery', 'LanguageCode' )
                                     );
 
+$ViewList[ 'query' ] = array(
+    'functions' => array( 'query_admin' ),
+    'default_navigation_part' => 'ezfindnavigationpart',
+    'ui_context' => 'administration',
+    'script' => 'query.php',
+    'params' => array(),
+);
+
 $FunctionList = array();
 $FunctionList['elevate'] = array();
+$FunctionList['query_admin'] = array();
 ?>
