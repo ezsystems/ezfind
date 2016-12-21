@@ -264,9 +264,10 @@ class ezfeZPSolrQueryBuilder
         }
 
         // Add section to query filter.
-        if ( $sectionID )
+        $sectionLimitationFilter = $this->getSectionFilterQuery( $sectionID );
+        if ( $sectionLimitationFilter !== null )
         {
-            $filterQuery[] = eZSolr::getMetaFieldName( 'section_id' ) . ':' . $sectionID;
+            $filterQuery[] = $sectionLimitationFilter;
         }
 
         $languageFilterQuery = $this->buildLanguageFilterQuery();
@@ -1471,10 +1472,10 @@ class ezfeZPSolrQueryBuilder
     /**
      * Generate class query filter.
      *
-     * @param mixed eZContentClass id, identifier or list of ids.
+     * @param mixed $contentClassIdent eZContentClass id, identifier or list of ids.
      *
      * @return string Content class query filter. Returns null if invalid
-     * $contentClassIdent is provided.
+     *         $contentClassIdent is provided.
      */
     protected function getContentClassFilterQuery( $contentClassIdent )
     {
@@ -1525,6 +1526,51 @@ class ezfeZPSolrQueryBuilder
         }
 
         eZDebug::writeError( 'No valid content class', __METHOD__ );
+
+        return null;
+    }
+
+    /**
+     * Generate section query filter.
+     *
+     * @param mixed $sectionIdent eZSection id or list of ids.
+     *
+     * @return string Section query filter. Returns null if invalid
+     *         $sectionIdent is provided.
+     */
+    protected function getSectionFilterQuery( $sectionIdent )
+    {
+        if ( empty( $sectionIdent ) )
+        {
+            return null;
+        }
+
+        if ( is_array( $sectionIdent ) )
+        {
+            $sectionQueryParts = array();
+            foreach ( $sectionIdent as $sectionID )
+            {
+                $sectionID = trim( $sectionID );
+                if ( ctype_digit( $sectionID ) )
+                {
+                    $sectionQueryParts[] = eZSolr::getMetaFieldName( 'section_id' ) . ':' . $sectionID;
+                }
+                else
+                {
+                    eZDebug::writeError( "Unknown section_id filtering parameter: $sectionID", __METHOD__ );
+                }
+            }
+
+            return implode( ' OR ', $sectionQueryParts );
+        }
+
+        $sectionIdent = trim( $sectionIdent );
+        if ( ctype_digit( $sectionIdent ) )
+        {
+            return eZSolr::getMetaFieldName( 'section_id' ) . ':' . $sectionIdent;
+        }
+
+        eZDebug::writeError( 'No valid section id', __METHOD__ );
 
         return null;
     }
