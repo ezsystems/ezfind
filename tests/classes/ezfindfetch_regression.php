@@ -2,8 +2,8 @@
 /**
  * File containing eZFindFetchRegression class
  *
- * @copyright Copyright (C) 1999-2013 eZ Systems AS. All rights reserved.
- * @license http://ez.no/licenses/gnu_gpl GNU GPLv2
+ * @copyright Copyright (C) eZ Systems AS. All rights reserved.
+ * @license For full copyright and license information view LICENSE file distributed with this source code.
  * @package ezfind
  */
 class eZFindFetchRegression extends ezpDatabaseTestCase
@@ -73,7 +73,7 @@ class eZFindFetchRegression extends ezpDatabaseTestCase
             '',
             array( 'SortBy' => array( 'name', 'asc' ) ) + $this->fetchParams );
 
-        self::assertType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
+        self::assertInternalType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
     }
 
     /**
@@ -87,7 +87,7 @@ class eZFindFetchRegression extends ezpDatabaseTestCase
             '',
             array( 'SortBy' => array( 'class_id', 'asc' ) ) + $this->fetchParams );
 
-        self::assertType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
+        self::assertInternalType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
     }
 
     /**
@@ -101,7 +101,7 @@ class eZFindFetchRegression extends ezpDatabaseTestCase
             '',
             array( 'SortBy' => array( 'path', 'asc' ) ) + $this->fetchParams );
 
-        self::assertType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
+        self::assertInternalType( PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $res['SearchResult'] );
     }
 }
 ?>

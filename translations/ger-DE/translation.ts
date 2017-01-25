@@ -144,7 +144,7 @@
     </message>
     <message>
         <source>Try changing some keywords eg. car instead of cars.</source>
-        <translation>Versuchen sie einige Suchbegriffe zu ändern, beispielsweise &quot;Auto&quot; statt &quot;Autos&quot;.</translation>
+        <translation>Versuchen Sie, einige Suchbegriffe zu ändern, beispielsweise &quot;Auto&quot; statt &quot;Autos&quot;.</translation>
     </message>
     <message>
         <source>Try more general keywords.</source>
@@ -253,7 +253,7 @@
     </message>
     <message>
         <source>Try changing some keywords (eg, &quot;car&quot; instead of &quot;cars&quot;).</source>
-        <translation>Versuchen sie einige Suchbegriffe zu ändern (z.B. &quot;Auto&quot; statt &quot;Autos&quot;).</translation>
+        <translation>Versuchen Sie, einige Suchbegriffe zu ändern (z.B. &quot;Auto&quot; statt &quot;Autos&quot;).</translation>
     </message>
     <message>
         <source>Try searching with less specific keywords.</source>
@@ -261,7 +261,7 @@
     </message>
     <message>
         <source>Reduce number of keywords to get more results.</source>
-        <translation>Versuchen Sie die Menge der Suchbegriffe zu reduzieren um mehr Treffer zu erzielen.</translation>
+        <translation>Versuchen Sie, die Menge der Suchbegriffe zu reduzieren, um mehr Treffer zu erzielen.</translation>
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
@@ -382,11 +382,11 @@
     </message>
     <message>
         <source>Last month</source>
-        <translation>Letzer Monat</translation>
+        <translation>Letzter Monat</translation>
     </message>
     <message>
         <source>Last three months</source>
-        <translation>Letzten drei Monate</translation>
+        <translation>Letzte drei Monate</translation>
     </message>
     <message>
         <source>Last year</source>

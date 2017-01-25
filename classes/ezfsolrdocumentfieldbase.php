@@ -1,32 +1,9 @@
 <?php
-//
-//
-// ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
-// SOFTWARE NAME: eZ Find
-// SOFTWARE RELEASE: 2.2.x
-// COPYRIGHT NOTICE: Copyright (C) 1999-2013 eZ Systems AS
-// SOFTWARE LICENSE: GNU General Public License v2.0
-// NOTICE: >
-//   This program is free software; you can redistribute it and/or
-//   modify it under the terms of version 2.0  of the GNU General
-//   Public License as published by the Free Software Foundation.
-//
-//   This program is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU General Public License for more details.
-//
-//   You should have received a copy of version 2.0 of the GNU General
-//   Public License along with this program; if not, write to the Free
-//   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-//   MA 02110-1301, USA.
-//
-//
-// ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
-//
-
-/*! \file ezfsolrdocumentfieldbase.php
-*/
+/**
+ * @copyright Copyright (C) eZ Systems AS. All rights reserved.
+ * @license For full copyright and license information view LICENSE file distributed with this source code.
+ * @version //autogentag//
+ */
 
 /**
  * Class ezfSolrDocumentFieldBase. This class handles indexing of data from eZ Publish
@@ -194,9 +171,10 @@ class ezfSolrDocumentFieldBase
      */
     static function getClassAttributeType( eZContentClassAttribute $classAttribute, $subAttribute = null, $context = 'search' )
     {
+        $eZFindIni = eZINI::instance( 'ezfind.ini' );
         // Subattribute-related behaviour here.
         $datatypeString = $classAttribute->attribute( 'data_type_string' );
-        $customMapList = self::$FindINI->variable( 'SolrFieldMapSettings', 'CustomMap' );
+        $customMapList = $eZFindIni->variable( 'SolrFieldMapSettings', 'CustomMap' );
 
         if ( array_key_exists( $datatypeString, $customMapList ) )
         {
@@ -210,19 +188,19 @@ class ezfSolrDocumentFieldBase
         }
 
         // Fallback #1: single-fielded datatype behaviour here.
-        $datatypeMapList = self::$FindINI->variable( 'SolrFieldMapSettings', eZSolr::$fieldTypeContexts[$context] );
+        $datatypeMapList = $eZFindIni->variable( 'SolrFieldMapSettings', eZSolr::$fieldTypeContexts[$context] );
         if ( !empty( $datatypeMapList[$classAttribute->attribute( 'data_type_string' )] ) )
         {
             return $datatypeMapList[$classAttribute->attribute( 'data_type_string' )];
         }
         // Fallback #2: search field datatypemap (pre ezfind 2.2 behaviour)
-        $datatypeMapList = self::$FindINI->variable( 'SolrFieldMapSettings', 'DatatypeMap' );
+        $datatypeMapList = $eZFindIni->variable( 'SolrFieldMapSettings', 'DatatypeMap' );
         if ( !empty( $datatypeMapList[$classAttribute->attribute( 'data_type_string' )] ) )
         {
             return $datatypeMapList[$classAttribute->attribute( 'data_type_string' )];
         }
         // Fallback #3: return default field.
-        return self::$FindINI->variable( 'SolrFieldMapSettings', 'Default' );
+        return $eZFindIni->variable( 'SolrFieldMapSettings', 'Default' );
     }
 
     /**
@@ -239,8 +217,10 @@ class ezfSolrDocumentFieldBase
      */
     public static function getFieldNameList( eZContentClassAttribute $classAttribute, $exclusiveTypeFilter = array() )
     {
+        $eZFindIni = eZINI::instance( 'ezfind.ini' );
+        
         $datatypeString = $classAttribute->attribute( 'data_type_string' );
-        $customMapList = self::$FindINI->variable( 'SolrFieldMapSettings', 'CustomMap' );
+        $customMapList = $eZFindIni->variable( 'SolrFieldMapSettings', 'CustomMap' );
 
         if ( array_key_exists( $datatypeString, $customMapList ) )
         {
@@ -290,8 +270,10 @@ class ezfSolrDocumentFieldBase
      */
     public static function getFieldName( eZContentClassAttribute $classAttribute, $subAttribute = null, $context = 'search' )
     {
+        $eZFindIni = eZINI::instance( 'ezfind.ini' );
+        
         $datatypeString = $classAttribute->attribute( 'data_type_string' );
-        $customMapList = self::$FindINI->variable( 'SolrFieldMapSettings', 'CustomMap' );
+        $customMapList = $eZFindIni->variable( 'SolrFieldMapSettings', 'CustomMap' );
 
         if ( array_key_exists( $datatypeString, $customMapList ) )
         {
@@ -320,10 +302,12 @@ class ezfSolrDocumentFieldBase
      */
     static function getInstance( eZContentObjectAttribute $objectAttribute )
     {
+        $eZFindIni = eZINI::instance( 'ezfind.ini' );
+        
         $datatypeString = $objectAttribute->attribute( 'data_type_string' );
 
         // Check if using custom handler.
-        $customMapList = self::$FindINI->variable( 'SolrFieldMapSettings', 'CustomMap' );
+        $customMapList = $eZFindIni->variable( 'SolrFieldMapSettings', 'CustomMap' );
         if ( isset( $customMapList[$datatypeString] ) )
         {
             $fieldBaseClass = $customMapList[$datatypeString];
@@ -395,7 +379,7 @@ class ezfSolrDocumentFieldBase
      */
     static function convertTimestampToDate( $timestamp )
     {
-        return strftime( '%Y-%m-%dT%H:%M:%SZ', (int)$timestamp );
+        return gmstrftime( '%Y-%m-%dT%H:%M:%SZ', (int)$timestamp );
     }
 
 
@@ -416,7 +400,9 @@ class ezfSolrDocumentFieldBase
     {
         // base name of subfields ends with self::SUBATTR_FIELD_PREFIX so
         // that it's possible to differentiate those fields in schema.xml
-        return self::$DocumentFieldName->lookupSchemaName( self::SUBATTR_FIELD_PREFIX . $classAttribute->attribute( 'identifier' )
+        $documentFieldName = self::getDocumentFieldName();
+
+        return $documentFieldName->lookupSchemaName( self::SUBATTR_FIELD_PREFIX . $classAttribute->attribute( 'identifier' )
                                                             . self::SUBATTR_FIELD_SEPARATOR . $subfieldName . self::SUBATTR_FIELD_SEPARATOR,
                                                            $type );
     }
@@ -435,7 +421,9 @@ class ezfSolrDocumentFieldBase
      */
     public static function generateAttributeFieldName( eZContentClassAttribute $classAttribute, $type )
     {
-        return self::$DocumentFieldName->lookupSchemaName( self::ATTR_FIELD_PREFIX . $classAttribute->attribute( 'identifier' ),
+        $documentFieldName = self::getDocumentFieldName();
+
+        return $documentFieldName->lookupSchemaName( self::ATTR_FIELD_PREFIX . $classAttribute->attribute( 'identifier' ),
                                                            $type );
     }
 
@@ -453,7 +441,9 @@ class ezfSolrDocumentFieldBase
      */
     public static function generateMetaFieldName( $baseName, $context = 'search' )
     {
-        return self::$DocumentFieldName->lookupSchemaName( self::META_FIELD_PREFIX . $baseName,
+        $documentFieldName = self::getDocumentFieldName();
+
+        return $documentFieldName->lookupSchemaName( self::META_FIELD_PREFIX . $baseName,
                                                            eZSolr::getMetaAttributeType( $baseName, $context ) );
     }
 
@@ -475,7 +465,9 @@ class ezfSolrDocumentFieldBase
      */
     public static function generateSubmetaFieldName( $baseName, eZContentClassAttribute $classAttribute )
     {
-        return self::$DocumentFieldName->lookupSchemaName( self::SUBMETA_FIELD_PREFIX . $classAttribute->attribute( 'identifier' ) . self::SUBATTR_FIELD_SEPARATOR . $baseName,
+        $documentFieldName = self::getDocumentFieldName();
+
+        return $documentFieldName->lookupSchemaName( self::SUBMETA_FIELD_PREFIX . $classAttribute->attribute( 'identifier' ) . self::SUBATTR_FIELD_SEPARATOR . $baseName . self::SUBATTR_FIELD_SEPARATOR,
                                                            eZSolr::getMetaAttributeType( $baseName ) );
     }
 
@@ -501,9 +493,19 @@ class ezfSolrDocumentFieldBase
             return false;
     }
 
+    /**
+     * Sets the static DocumentFieldName instance
+     *
+     * @return ezfSolrDocumentFieldName
+     */
+    public static function getDocumentFieldName()
+    {
+        return self::$DocumentFieldName = ( self::$DocumentFieldName instanceof ezfSolrDocumentFieldName ) ?
+            self::$DocumentFieldName : new ezfSolrDocumentFieldName();
+    }
+
     /// Vars
     public $ContentObjectAttribute;
-    static $FindINI;
     static $DocumentFieldName;
 
     /**
@@ -552,8 +554,5 @@ class ezfSolrDocumentFieldBase
      */
     const SUBATTR_FIELD_SEPARATOR = '___';
 }
-
-ezfSolrDocumentFieldBase::$FindINI = eZINI::instance( 'ezfind.ini' );
-ezfSolrDocumentFieldBase::$DocumentFieldName = new ezfSolrDocumentFieldName();
 
 ?>

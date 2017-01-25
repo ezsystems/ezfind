@@ -130,10 +130,9 @@
     <h1 class="long">{"Search"|i18n("design/ezwebin/content/search")}</h1>
 </div>
 
-<div id="ezautocomplete" class="block">
+<div class="block yui3-skin-sam">
     <input class="halfbox" type="text" size="20" name="SearchText" id="Search" value="{$search_text|wash}" />
     <input class="button" name="SearchButton" type="submit" value="{'Search'|i18n('design/ezwebin/content/search')}" />
-    <div id="mainarea-autocomplete-rs"></div>
 </div>
 {if $search_extras.spellcheck_collation}
      {def $spell_url=concat('/content/search/',$search_text|count_chars()|gt(0)|choose('',concat('?SearchText=',$search_extras.spellcheck_collation|urlencode)))|ezurl}
@@ -342,16 +341,18 @@
 <p class="small"><em>{'Search took: %1 msecs, using '|i18n('ezfind',,array($search_extras.responseHeader.QTime|wash))}{$search_extras.engine}</em></p>
 
 
+{ezscript_require( array('ezjsc::yui3', 'ezajax_autocomplete.js') )}
+{ezcss_require( 'ezajax_autocomplete.css' )}
 
-{ezscript_require( array('ezjsc::jquery', 'ezjsc::yui2', 'ezajax_autocomplete.js') )}
-<script language="JavaScript" type="text/javascript">
-jQuery('#mainarea-autocomplete-rs').css('width', jQuery('input#Search').width());
-var autocomplete = new eZAJAXAutoComplete({ldelim}
-    url: "{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}",
-    inputid: 'Search',
-    containerid: 'mainarea-autocomplete-rs',
-    minquerylength: {ezini( 'AutoCompleteSettings', 'MinQueryLength', 'ezfind.ini' )},
-    resultlimit: {ezini( 'AutoCompleteSettings', 'Limit', 'ezfind.ini' )}
+<script type="text/javascript">
+
+YUI(YUI3_config).use('ezfindautocomplete', function (Y) {ldelim}
+    Y.eZ.initAutoComplete({ldelim}
+        url: "{'ezjscore/call/ezfind::autocomplete'|ezurl('no')}",
+        inputSelector: '#Search',
+        minQueryLength: {ezini( 'AutoCompleteSettings', 'MinQueryLength', 'ezfind.ini' )},
+        resultLimit: {ezini( 'AutoCompleteSettings', 'Limit', 'ezfind.ini' )}
+    {rdelim});
 {rdelim});
 
 {literal}

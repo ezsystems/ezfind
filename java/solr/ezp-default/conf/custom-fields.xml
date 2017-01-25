@@ -1,0 +1,4 @@
+<!-- You can add your custom fields here, do not edit schema.xml -->
+<field name="dummy" type="text" indexed="false" stored="false"/>
+
+<copyField source="*_dummy" dest="dummy"/>

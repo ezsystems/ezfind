@@ -31,12 +31,12 @@ source /etc/rc.d/init.d/functions
 
 for JAVA in "$JAVA_HOME/bin/java" "/usr/bin/java" "/usr/local/bin/java"
 do
-	if [ -x $JAVA ]
+	if [ -x "$JAVA" ]
         then
 		break
 	fi
 done
-if [ ! -x $JAVA ]
+if [ ! -x "$JAVA" ]
 then
 	echo "Unable to locate java. Please set JAVA_HOME environment variable."
 	exit
@@ -46,38 +46,47 @@ RETVAL=0
 
 d_start() {
     CURRENT_DIR=`pwd`
-    cd $SOLR_HOME
-    daemon --check $NAME --pidfile /var/run/solr.pid nohup $JAVA -jar start.jar > /dev/null 2>&1 &
-    RETVAL=$?
+    cd "$SOLR_HOME"
+    daemon --check "$NAME" --pidfile "/var/run/$NAME.pid" nohup $JAVA -jar start.jar > /dev/null 2>&1 &
+    cd "$CURRENT_DIR"
     sleep 1 # Sleep 1 second, to make sure java is registered.
-    pid=`pidof java`
-    echo $pid > /var/run/solr.pid
-    cd $CURRENT_DIR
-    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$NAME
-    return $RETVAL
+    
+    # Using pidof is not good, as there might be other java processes as well.
+    # Replaced this by calling ps. Still, this is somewhat awkward.
+    # 2014-10-10 alex.schuster@ez.no
+    #pid=`pidof java`
+    pid=`ps ax | grep '[/]usr/bin/java -jar start.jar' | grep -v nohup | awk '{ print $1 }'`
+    if [ -z $pid ]
+    then
+        echo "Error starting $NAME!"
+        return 1
+    fi
+    echo $pid > "/var/run/$NAME.pid"
+    touch "/var/lock/subsys/$NAME"
+    return 0
 }
 
 d_stop() {
-    killproc -p /var/run/solr.pid $NAME >> /dev/null 2&>1
+    killproc -p /var/run/solr.pid "$NAME" >> /dev/null 2>&1
     RETVAL=$?
-    [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/$NAME
+    [ $RETVAL -eq 0 ] && rm -f "/var/lock/subsys/$NAME"
     return $RETVAL
 }
 
 d_restart() {
-    d_stop >> /dev/null 2&>1
+    d_stop  > /dev/null 2>&1
     sleep 1
-    d_start >> /dev/null 2&>1
+    d_start > /dev/null 2>&1
 }
 
 d_reload() {
-    killproc -p /var/run/solr.pid $NAME -HUP 2&>1
+    killproc -p /var/run/solr.pid "$NAME" -HUP > /dev/null 2>&1
     RETVAL=$?
     return $RETVAL
 }
 
 d_status() {
-    status -p /var/run/solr.pid $NAME >> /dev/null 2&>1
+    status -p /var/run/solr.pid "$NAME" > /dev/null 2>&1
     return $?
 }
 

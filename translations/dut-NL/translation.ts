@@ -132,7 +132,7 @@
     </message>
     <message>
         <source>No results were found when searching for &quot;%1&quot;</source>
-        <translation>Geen resultaten gevonden bij het zoeken naar &quot;&lt;%1&gt;&quot;</translation>
+        <translation>Geen resultaten gevonden bij het zoeken naar &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Search tips</source>
@@ -156,7 +156,7 @@
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>Het zoeken naar &quot;&lt;%1&gt;&quot; leverde %2 resultaten op</translation>
+        <translation>Het zoeken naar &quot;%1&quot; leverde %2 resultaten op</translation>
     </message>
 </context>
 <context>
@@ -241,7 +241,7 @@
     </message>
     <message>
         <source>No results were found when searching for &quot;%1&quot;.</source>
-        <translation>Geen resultaten gevonden bij het zoeken naar &quot;&lt;%1&gt;&quot;.</translation>
+        <translation>Geen resultaten gevonden bij het zoeken naar &quot;%1&quot;.</translation>
     </message>
     <message>
         <source>Search tips</source>
@@ -265,7 +265,7 @@
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>Het zoeken naar &quot;&lt;%1&gt;&quot; leverde %2 resultaten op</translation>
+        <translation>Het zoeken naar &quot;%1&quot; leverde %2 resultaten op</translation>
     </message>
     <message>
         <source>Help</source>
@@ -422,11 +422,11 @@
     </message>
     <message>
         <source>No results were found when searching for &quot;%1&quot;</source>
-        <translation>Geen resultaten gevonden bij het zoeken naar &quot;&lt;%1&gt;&quot;</translation>
+        <translation>Geen resultaten gevonden bij het zoeken naar &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Search for &quot;%1&quot; returned %2 matches</source>
-        <translation>Het zoeken naar &quot;&lt;%1&gt;&quot; leverde %2 resultaten op</translation>
+        <translation>Het zoeken naar &quot;%1&quot; leverde %2 resultaten op</translation>
     </message>
     <message>
         <source>Score</source>

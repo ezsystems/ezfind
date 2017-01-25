@@ -1,12 +1,12 @@
 <?php
 
 /**
- * @copyright Copyright (C) 1999-2013 eZ Systems AS. All rights reserved.
+ * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  *
- * @license http://ez.no/licenses/gnu_gpl GNU GPL v2
+ * @license For full copyright and license information view LICENSE file distributed with this source code.
  * @version //autogentag//
  * @package ezfind
- * @license GPL
+ * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
 
 
@@ -118,7 +118,9 @@ class eZSolrDoc
 
         if ($this->DocBoost !== null && is_numeric( $this->DocBoost ) )
         {
-            $this->DomRootElement->setAttribute( 'boost', $this->DocBoost );
+            // This will force the '.' as decimal separator and not depend on the locale
+            $docBoost = sprintf('%F',$this->DocBoost);
+            $this->DomRootElement->setAttribute( 'boost', $docBoost );
         }
 
         foreach ($this->Doc as $name => $field) {

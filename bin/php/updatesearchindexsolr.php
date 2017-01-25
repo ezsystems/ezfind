@@ -1,30 +1,10 @@
 #!/usr/bin/env php
 <?php
-//
-// ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
-// SOFTWARE NAME: eZ Find
-// SOFTWARE RELEASE: 1.0.x
-// COPYRIGHT NOTICE: Copyright (C) 1999-2013 eZ Systems AS
-// SOFTWARE LICENSE: GNU General Public License v2.0
-// NOTICE: >
-//   This program is free software; you can redistribute it and/or
-//   modify it under the terms of version 2.0  of the GNU General
-//   Public License as published by the Free Software Foundation.
-//
-//   This program is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU General Public License for more details.
-//
-//   You should have received a copy of version 2.0 of the GNU General
-//   Public License along with this program; if not, write to the Free
-//   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-//   MA 02110-1301, USA.
-//
-//
-// ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
-//
-//
+/**
+ * @copyright Copyright (C) eZ Systems AS. All rights reserved.
+ * @license For full copyright and license information view LICENSE file distributed with this source code.
+ * @version //autogentag//
+ */
 
 require 'autoload.php';
 
@@ -59,8 +39,7 @@ $script = eZScript::instance(
     )
 );
 
-
-$solrUpdate = new ezfUpdateSearchIndexSolr( $script, $cli );
+$solrUpdate = new ezfUpdateSearchIndexSolr( $script, $cli, $argv[0] );
 $solrUpdate->run();
 
 $script->shutdown( 0 );
@@ -71,16 +50,23 @@ $script->shutdown( 0 );
 class ezfUpdateSearchIndexSolr
 {
     /**
+     * @var string
+     */
+    protected $executedScript;
+
+    /**
      * Constructor
      *
      * @param eZScript $script
      * @param eZCLI $cli
+     * @param string $executedScript
      */
-    function ezfUpdateSearchIndexSolr( eZScript $script, eZCLI $cli )
+    function ezfUpdateSearchIndexSolr( eZScript $script, eZCLI $cli, $executedScript )
     {
         $this->Script = $script;
         $this->CLI = $cli;
         $this->Options = null;
+        $this->executedScript = $executedScript;
     }
 
     /**
@@ -91,7 +77,7 @@ class ezfUpdateSearchIndexSolr
         $this->Script->startup();
 
         $this->Options = $this->Script->getOptions(
-            "[db-host:][db-user:][db-password:][db-database:][db-type:|db-driver:][sql][clean][clean-all][conc:][offset:][limit:][topNodeID:][php-exec:][commit-within:]",
+            "[db-host:][db-user:][db-password:][db-database:][db-type:|db-driver:][sql][clean][clean-all][conc:][php-exec:][commit-within:]",
             "",
             array(
                 'db-host' => "Database host",
@@ -107,12 +93,16 @@ class ezfUpdateSearchIndexSolr
                 'php-exec' => 'Full path to PHP executable',
                 'commit-within' => 'Commit to Solr within this time in seconds (default '
                     . self::DEFAULT_COMMIT_WITHIN . ' seconds)',
-                'offset' => '*For internal use only*',
-                'limit' => '*For internal use only*',
-                'topNodeID' => '*For internal use only*',
             )
         );
         $this->Script->initialize();
+
+        // check if ezfind is enabled and exit if not
+        if ( ! in_array( 'ezfind', eZExtension::activeExtensions() ) )
+        {
+            $this->CLI->error( 'eZ Find extension is not enabled and because of that index process will fail. Please enable it and run this script again.' );
+            $this->Script->shutdown( 0 );
+        }
 
         // Fix siteaccess
         $siteAccess = $this->Options['siteaccess'] ? $this->Options['siteaccess'] : false;
@@ -149,89 +139,15 @@ class ezfUpdateSearchIndexSolr
             $this->commitWithin = (int)$this->Options['commit-within'];
         }
 
-        // Check if current instance is main or sub process.
-        // Main process can not have offset or limit set.
-        // sub process MUST have offset and limit set.
-        $offset = $this->Options['offset'];
-        $limit = $this->Options['limit'];
-        $topNodeID = $this->Options['topNodeID'];
-        if ( !is_numeric( $offset ) &&
-             !is_numeric( $limit ) &&
-             !is_numeric( $topNodeID ) )
-        {
-            $this->CLI->output( 'Starting object re-indexing' );
 
-            // Get PHP executable from user.
-            $this->getPHPExecutable();
+        $this->CLI->output( 'Starting object re-indexing' );
 
-            $this->runMain();
-        }
-        elseif ( is_numeric( $offset ) &&
-                 is_numeric( $limit ) &&
-                 is_numeric( $topNodeID ) )
-        {
-            $this->runSubProcess( $topNodeID, $offset, $limit );
-        }
-        else
-        {
-            //OBS !!, invalid.
-            $this->CLI->error( 'Invalid parameters provided.' );
-            $this->Script->shutdown( 2 );
-        }
+        // Get PHP executable from user.
+        $this->getPHPExecutable();
+
+        $this->runMain();
     }
 
-    /**
-     * Run sub process.
-     *
-     * @param int $nodeID
-     * @param int $offset
-     * @param int $limit
-     */
-    protected function runSubProcess( $nodeID, $offset, $limit )
-    {
-        $count = 0;
-        $node = eZContentObjectTreeNode::fetch( $nodeID );
-        if ( !is_object( $node ) )
-        {
-            $this->CLI->error( "An error occured while trying fetching node $nodeID" );
-            $this->Script->shutdown( 3 );
-        }
-        $searchEngine = new eZSolr();
-
-        if (
-            $subTree = $node->subTree(
-                array(
-                    'Offset' => $offset,
-                    'Limit' => $limit,
-                    'SortBy' => array(),
-                    'Limitation' => array(),
-                    'MainNodeOnly' => true
-                )
-            )
-        )
-        {
-            foreach ( $subTree as $innerNode )
-            {
-                $object = $innerNode->attribute( 'object' );
-                if ( !$object )
-                {
-                    continue;
-                }
-
-                //eZSearch::removeObject( $object );
-                //pass false as we are going to do a commit at the end
-                $result = $searchEngine->addObject( $object, false, $this->commitWithin * 1000 );
-                if ( !$result )
-                {
-                    $this->CLI->error( ' Failed indexing ' . $object->attribute('class_identifier') .  ' object with ID ' . $object->attribute( 'id' ) );
-                }
-                ++$count;
-            }
-        }
-
-        $this->CLI->output( $count );
-        $this->Script->shutdown( 0 );
-    }
 
     /**
      * Get PHP executable from user input. Exit if php executable cannot be
@@ -442,12 +358,16 @@ class ezfUpdateSearchIndexSolr
      */
     protected function forkAndExecute( $nodeID, $offset, $limit )
     {
+        eZDB::setInstance( null );
+
+        // Prepare DB-based cluster handler for fork (it will re-connect DB automatically).
+        eZClusterFileHandler::preFork();
+
         $pid = pcntl_fork();
-        $db = eZDB::instance();
-        $db->IsConnected = false;
-        $db = null;
-        eZDB::setInstance( $db );
+
+        // reinitialize DB after fork
         $this->initializeDB();
+
         if ( $pid == -1 )
         {
             die( 'could not fork' );
@@ -460,8 +380,14 @@ class ezfUpdateSearchIndexSolr
         else
         {
             // We are the child process
-            $this->execute( $nodeID, $offset, $limit, true );
-            $this->Script->shutdown( 0 );
+            if ( $this->execute( $nodeID, $offset, $limit ) > 0 )
+            {
+                $this->Script->shutdown( 0 );
+            }
+            else
+            {
+                $this->Script->shutdown( 3 );
+            }
         }
     }
 
@@ -471,60 +397,51 @@ class ezfUpdateSearchIndexSolr
      * @param int $nodeID
      * @param int $offset
      * @param int $limit
-     * @param bool $isSubProcess.
      *
      * @return int Number of objects indexed.
      */
-    protected function execute( $nodeID, $offset, $limit, $isSubProcess = false )
+    protected function execute( $nodeID, $offset, $limit )
     {
-        global $argv;
-        // Create options string.
-        $paramString = '';
-        $paramList = array( 'db-host', 'db-user', 'db-password', 'db-type', 'db-driver', 'db-database' );
-        foreach ( $paramList as $param )
+        $count = 0;
+        $node = eZContentObjectTreeNode::fetch( $nodeID );
+        if ( !( $node instanceof eZContentObjectTreeNode ) )
         {
-            if ( !empty( $this->Options[$param] ) )
+            $this->CLI->error( "An error occured while trying fetching node $nodeID" );
+            return 0;
+        }
+        $searchEngine = new eZSolr();
+
+        if (
+            $subTree = $node->subTree(
+                array(
+                    'Offset' => $offset,
+                    'Limit' => $limit,
+                    'SortBy' => array(),
+                    'Limitation' => array(),
+                    'MainNodeOnly' => true
+                )
+            )
+        )
+        {
+            foreach ( $subTree as $innerNode )
             {
-                $paramString .= ' --' . $param . '=' . escapeshellarg( $this->Options[$param] );
+                $object = $innerNode->attribute( 'object' );
+                if ( !$object )
+                {
+                    continue;
+                }
+
+                //pass false as we are going to do a commit at the end
+                $result = $searchEngine->addObject( $object, false, $this->commitWithin * 1000 );
+                if ( !$result )
+                {
+                    $this->CLI->error( ' Failed indexing ' . $object->attribute('class_identifier') .  ' object with ID ' . $object->attribute( 'id' ) );
+                }
+                ++$count;
             }
         }
 
-        if ( $this->Options['siteaccess'] )
-        {
-            $paramString .= ' -s ' . escapeshellarg( $this->Options['siteaccess'] );
-        }
-
-        $paramString .=
-            ' --commit-within=' . $this->commitWithin .
-            ' --limit=' . $limit .
-            ' --offset=' . $offset .
-            ' --topNodeID=' . $nodeID;
-
-        $output = array();
-        $command = $this->Executable . ' ' . $argv[0] . $paramString;
-        exec( $command, $output );
-//        wtf code follows, but leave it here commented for future enhancements
-//        if ( $isSubProcess )
-//        {
-//            exec( $command, $output );
-//        }
-//        else
-//        {
-//            exec( $command, $output );
-//        }
-
-        if ( !empty( $output ) )
-        {
-            $num = array_pop( $output );
-            if ( is_numeric( $num ) )
-            {
-                return $num;
-            }
-        }
-
-        $this->CLI->error( "\n" . 'Did not index content correctly: ' . "\n" . var_export( $output, 1 ) );
-
-        return 0;
+        return $count;
     }
 
     /**
@@ -627,12 +544,10 @@ class ezfUpdateSearchIndexSolr
      */
     protected function changeSiteAccessSetting( $siteaccess )
     {
-        global $isQuiet;
         $cli = eZCLI::instance();
         if ( !in_array( $siteaccess, eZINI::instance()->variable( 'SiteAccessSettings', 'AvailableSiteAccessList' ) ) )
         {
-            if ( !$isQuiet )
-                $cli->notice( "Siteaccess $siteaccess does not exist, using default siteaccess" );
+            $cli->notice( "Siteaccess $siteaccess does not exist, using default siteaccess" );
         }
     }
 

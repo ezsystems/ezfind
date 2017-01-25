@@ -1,30 +1,9 @@
 <?php
-//
-// ## BEGIN COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
-// SOFTWARE NAME: eZ Find
-// SOFTWARE RELEASE: 1.0.x
-// COPYRIGHT NOTICE: Copyright (C) 1999-2013 eZ Systems AS
-// SOFTWARE LICENSE: GNU General Public License v2.0
-// NOTICE: >
-//   This program is free software; you can redistribute it and/or
-//   modify it under the terms of version 2.0  of the GNU General
-//   Public License as published by the Free Software Foundation.
-//
-//   This program is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU General Public License for more details.
-//
-//   You should have received a copy of version 2.0 of the GNU General
-//   Public License along with this program; if not, write to the Free
-//   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-//   MA 02110-1301, USA.
-//
-//
-// ## END COPYRIGHT, LICENSE AND WARRANTY NOTICE ##
-//
-
-
+/**
+ * @copyright Copyright (C) eZ Systems AS. All rights reserved.
+ * @license For full copyright and license information view LICENSE file distributed with this source code.
+ * @version //autogentag//
+ */
 
 /*!
  eZSolrBase is a PHP library for connecting and performing operations
@@ -229,13 +208,17 @@ class eZSolrBase
         return $this->rawSolrRequest ( '/admin/ping' );
     }
 
-    /*!
-      Performs a commit in Solr, which means the index is made live after performing
-      all pending additions and deletes
+    /**
+     * Performs a commit in Solr, which means the index is made live after performing
+     * all pending additions and deletes
+     * Since eZFind 5.3 Solr 4.x, support softCommit parameter
+     * @param boolean $softCommit if set/evaluates to true, will perform a soft commit
+     *
      */
-    function commit()
+    function commit( $softCommit = false )
     {
-        return $this->postQuery (  '/update', '<commit/>', 'text/xml' );
+        $commitElement = $softCommit ? '<commit softCommit="true" />' : '<commit/>' ;
+        return $this->postQuery (  '/update', $commitElement, 'text/xml' );
     }
 
     /*!
@@ -272,6 +255,7 @@ class eZSolrBase
     {
         if ( empty( $updateResult ) )
         {
+            eZDebug::writeError( 'Empty response received from Solr', 'eZ Find' );
             return false;
         }
         $dom = new DOMDocument( '1.0' );
@@ -280,6 +264,7 @@ class eZSolrBase
 
         if ( !$status )
         {
+            eZDebug::writeError( 'Invalid XML received from Solr: '.$updateResult, 'eZ Find' );
             return false;
         }
 
@@ -287,6 +272,7 @@ class eZSolrBase
 
         if ( $intElements->length < 1 )
         {
+            eZDebug::writeError( 'Invalid response from Solr: '.$updateResult, 'eZ Find' );
             return false;
         }
 
@@ -301,6 +287,7 @@ class eZSolrBase
                 }
             }
         }
+        eZDebug::writeError( 'Invalid response from Solr: '.$updateResult, 'eZ Find' );
         return false;
     }
 
@@ -312,7 +299,7 @@ class eZSolrBase
      * @param integer $commitWithin specifies within how many milliseconds a commit should occur if no other commit
      *       is triggered in the meantime (Solr 1.4, eZ Find 2.2)
      */
-    function addDocs ( $docs = array(), $commit = true, $optimize = false, $commitWithin = 0  )
+    function addDocs ( $docs = array(), $commit = true, $optimize = false, $commitWithin = 0, $softCommit = false  )
     {
         if ( !is_array( $docs ) )
         {
@@ -347,7 +334,7 @@ class eZSolrBase
             }
             elseif ( $commit )
             {
-                $this->commit();
+                $this->commit( $softCommit );
             }
             return self::validateUpdateResult ( $updateResult );
         }
@@ -361,11 +348,18 @@ class eZSolrBase
      *              $query will be used to delete documents instead.
      * @param string $query Solr Query. This will be ignored if $docIDs is set.
      * @param bool $optimize set to true to perform a solr optimize after delete
+     * @param integer $commitWithin specifies within how many milliseconds a commit should occur if no other commit
      * @return bool
      **/
-    function deleteDocs ( $docIDs = array(), $query = false, $commit = true,  $optimize = false )
+    function deleteDocs ( $docIDs = array(), $query = false, $commit = true,  $optimize = false, $commitWithin = 0 )
     {
         $postString = '<delete>';
+
+        if ( is_numeric( $commitWithin ) && $commitWithin > 0 )
+        {
+            $postString = '<delete commitWithin="' . $commitWithin . '">';
+        }
+
         if ( empty( $query ) )
         {
             foreach ( $docIDs as $docID )
