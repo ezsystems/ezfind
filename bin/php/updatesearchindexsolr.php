@@ -363,10 +363,22 @@ class ezfUpdateSearchIndexSolr
         // Prepare DB-based cluster handler for fork (it will re-connect DB automatically).
         eZClusterFileHandler::preFork();
 
+        $conn = false;
+        $ezpKernelContainer = ezpKernel::instance()->getServiceContainer();
+        if ( $ezpKernelContainer ) // in case we are in pure-legacy mode
+        {
+            $conn = $ezpKernelContainer->get('doctrine')->getConnection();
+            $conn->close();
+        }
+
         $pid = pcntl_fork();
 
         // reinitialize DB after fork
         $this->initializeDB();
+        if ( $conn )
+        {
+            $conn->connect();
+        }
 
         if ( $pid == -1 )
         {
