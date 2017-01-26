@@ -140,7 +140,7 @@ class ezfUpdateSearchIndexSolr
         }
 
 
-        $this->CLI->output( 'Starting object re-indexing' );
+        $this->output( 'Starting object re-indexing' );
 
         // Get PHP executable from user.
         $this->getPHPExecutable();
@@ -204,14 +204,14 @@ class ezfUpdateSearchIndexSolr
                      function_exists( 'posix_kill' ) );
         if ( $useFork )
         {
-            $this->CLI->output( 'Using fork.' );
+            $this->output( 'Using fork.' );
         }
         else
         {
             $processLimit = 1;
         }
 
-        $this->CLI->output( 'Using ' . $processLimit . ' concurent process(es)' );
+        $this->output( 'Using ' . $processLimit . ' concurent process(es)' );
 
         $processList = array();
         for ( $i = 0; $i < $processLimit; $i++ )
@@ -220,7 +220,7 @@ class ezfUpdateSearchIndexSolr
         }
 
         $this->ObjectCount = $this->objectCount();
-        $this->CLI->output( 'Number of objects to index: ' . $this->ObjectCount );
+        $this->output( 'Number of objects to index: ' . $this->ObjectCount );
         $this->Script->resetIteration( $this->ObjectCount, 0 );
 
         $topNodeArray = eZPersistentObject::fetchObjectList(
@@ -246,8 +246,14 @@ class ezfUpdateSearchIndexSolr
                     {
                         if ( $pid === -1 || !posix_kill( $pid, 0 ) )
                         {
+                            if ($pid !== -1 )
+                            {
+                                $this->output( 'Process finished: ' . $pid );
+                            }
+
                             $newPid = $this->forkAndExecute( $nodeID, $offset, $this->Limit );
-                            $this->CLI->output( "\n" . 'Creating a new thread: ' . $newPid );
+                            $this->output( "\n" . 'Created a new process: ' . $newPid  . ' to handle '.$this->Limit.' nodes out of '.$subtreeCount.' children of node '.$nodeID.' starting at: '.$offset);
+
                             if ( $newPid > 0 )
                             {
                                 $offset += $this->Limit;
@@ -263,7 +269,7 @@ class ezfUpdateSearchIndexSolr
                     else
                     {
                         // Execute in same process
-                        $this->CLI->output( "\n" . 'Starting a new batch' );
+                        $this->output( "\n" . 'Starting a new batch' );
                         $count = $this->execute( $nodeID, $offset, $this->Limit );
                         $this->iterate( $count );
                         $offset += $this->Limit;
@@ -303,7 +309,7 @@ class ezfUpdateSearchIndexSolr
                     }
                     else
                     {
-                        $this->CLI->output( 'Process finished: ' . $pid );
+                        $this->output( 'Process finished: ' . $pid );
                         $processList[$i] = -1;
                     }
                 }
@@ -315,16 +321,16 @@ class ezfUpdateSearchIndexSolr
             usleep( 500000 );
         }
 
-        $this->CLI->output( 'Optimizing. Please wait ...' );
+        $this->output( 'Optimizing. Please wait ...' );
         $searchEngine->optimize( true );
         $endTS = microtime_float();
 
-        $this->CLI->output(
-            'Indexing took ' . ( $endTS - $startTS ) . ' secs ' .
-            '( average: ' . ( $this->ObjectCount / ( $endTS - $startTS ) ) . ' objects/sec )'
+        $this->output(
+            'Indexing took ' . sprintf( '%.3f', $endTS - $startTS ) . ' secs ' .
+            '( average: ' . sprintf( '%.3f', $this->ObjectCount / ( $endTS - $startTS ) ) . ' objects/sec )'
         );
 
-        $this->CLI->output( 'Finished updating the search index.' );
+        $this->output( 'Finished updating the search index.' );
     }
 
     /**
@@ -355,6 +361,7 @@ class ezfUpdateSearchIndexSolr
      * @param int $nodeid
      * @param int $offset
      * @param int $limit
+     * @return int
      */
     protected function forkAndExecute( $nodeID, $offset, $limit )
     {
@@ -473,7 +480,7 @@ class ezfUpdateSearchIndexSolr
     {
         if ( $this->Options['clean'] )
         {
-            $this->CLI->output( "eZSearchEngine: Cleaning up search data for current installation id" );
+            $this->output( "eZSearchEngine: Cleaning up search data for current installation id" );
             $searchEngine = new eZSolr();
             $allInstallations = false;
             $optimize = false;
@@ -489,7 +496,7 @@ class ezfUpdateSearchIndexSolr
     {
         if ( $this->Options['clean-all'] )
         {
-            $this->CLI->output( "eZSearchEngine: Cleaning up search data for all installations" );
+            $this->output( "eZSearchEngine: Cleaning up search data for all installations" );
             $searchEngine = new eZSolr();
             // The essence of teh All suffix
             $allInstallations = true;
@@ -606,6 +613,17 @@ class ezfUpdateSearchIndexSolr
             }
             return $ret;
         }
+    }
+
+    protected function output( $string = false, $addEOL = true )
+    {
+        if ( $this->CLI->isQuiet() )
+            return;
+        //print( $string );
+        fwrite(STDOUT, $string);
+        if ( $addEOL )
+            //print( $this->endlineString() );
+            fwrite(STDOUT, $this->CLI->endlineString());
     }
 
     const DEFAULT_COMMIT_WITHIN = 30;
