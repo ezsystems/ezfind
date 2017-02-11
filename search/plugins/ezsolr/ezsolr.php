@@ -889,7 +889,7 @@ class eZSolr implements ezpSearchEngine
          * the parameter $commit it is not set
          * Default behaviour is as before
          */
-        if ( !isset( $commit ) && ( $this->FindINI->variable( 'IndexOptions', 'DisableDeleteCommits' ) === 'true' ) )
+        if ( $this->FindINI->variable( 'IndexOptions', 'DisableDeleteCommits' ) === 'true' )
         {
             $commit = false;
         }
