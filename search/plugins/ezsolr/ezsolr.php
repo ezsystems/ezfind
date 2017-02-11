@@ -905,6 +905,10 @@ class eZSolr implements ezpSearchEngine
 
         // @todo Remove if accepted. Optimize is bad on runtime.
         $optimize = false;
+        if ( $this->FindINI->variable( 'IndexOptions', 'DisableDirectCommits' ) === 'true' )
+        {
+            $commit = false;
+        }
         if ( $commit && ( $this->FindINI->variable( 'IndexOptions', 'OptimizeOnCommit' ) === 'enabled' ) )
         {
             $optimize = true;
