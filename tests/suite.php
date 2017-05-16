@@ -9,20 +9,27 @@
 
 class eZFindTestSuite extends ezpDatabaseTestSuite
 {
+    protected $insertDefaultData = true;
+    
     public function __construct()
     {
         parent::__construct();
+
+        // Get a DB connection early on for the providerXyz functions
+        parent::setDatabaseEnv();
+
         ini_set( 'xdebug.show_exception_trace', 'Off' );
         $this->setName( "eZ Find Test Suite" );
 
-        $this->addTestSuite( 'ezfeZPSolrQueryBuilderTest' );
         $this->addTestSuite( 'ezfSolrDocumentFieldBaseTest' );
         $this->addTestSuite( 'ezfSolrDocumentFieldNameTest' );
+        $this->addTestSuite( 'ezfeZPSolrQueryBuilderTest' );
         $this->addTestSuite( 'eZSolrTest' );
         $this->addTestSuite( 'eZFindElevateConfigurationTest' );
         $this->addTestSuite( 'eZSolrMultiCoreBaseTest' );
         $this->addTestSuite( 'eZSolrBaseRegression' );
         $this->addTestSuite( 'eZFindFetchRegression' );
+        $this->addTestSuite( 'eZFindFetch' );
         $this->addTestSuite( 'eZSolrRegression' );
     }
 
@@ -33,8 +40,6 @@ class eZFindTestSuite extends ezpDatabaseTestSuite
 
     public function setUp()
     {
-        parent::setUp();
-
         // make sure extension is enabled and settings are read
         ezpExtensionHelper::load( 'ezfind' );
 
