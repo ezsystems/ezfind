@@ -931,6 +931,11 @@ class eZSolr implements ezpSearchEngine
                 $languageCode = $language;
             }
 
+            if ( !array_key_exists( $languageCode, $this->SolrLanguageShards ) )
+            {
+                continue;
+            }
+
             $docs[$languageCode] = $this->guid( $contentObjectId, $languageCode );
         }
         if ( $this->UseMultiLanguageCores === true )
