@@ -764,6 +764,11 @@ class eZSolr implements ezpSearchEngine
             $result = true;
             foreach ( $availableLanguages as $languageCode )
             {
+                if ( !array_key_exists( $languageCode, $this->SolrLanguageShards ) )
+                {       
+                        continue;
+                }
+                
                 $languageResult = $this->SolrLanguageShards[$languageCode]->addDocs( array( $docList[$languageCode] ), $commit, $optimize, $commitWithin );
                 if ( !$languageResult )
                 {
