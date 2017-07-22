@@ -226,7 +226,7 @@ class ezfSearchResultInfo
 
                         default:
                         {
-                            $fieldInfo = array( 'field' => $attr,
+                            $fieldInfo = array( 'field' => $field,
                                                 'count' => count( $facetField ),
                                                 'queryLimit' => array(),
                                                 'fieldList' => array(),
