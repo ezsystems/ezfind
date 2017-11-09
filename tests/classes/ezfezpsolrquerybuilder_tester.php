@@ -7,6 +7,8 @@ class ezfeZPSolrQueryBuilderTester extends ezfeZPSolrQueryBuilder
     public function __construct()
     {
         parent::__construct( new eZSolr() );
+        
+        eZINI::instance( 'ezfind.ini' )->loadCache( true );
     }
 
     /**

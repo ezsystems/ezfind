@@ -4,11 +4,6 @@
  **/
 class eZSolrTest extends ezpDatabaseTestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
    /**
     * Data provider for testGetFieldName
     **/
@@ -84,7 +79,7 @@ class eZSolrTest extends ezpDatabaseTestCase
                              ),
                         array( 'name'      => 'class_name',
                                'value'     => 'class_name-value',
-                               'fieldType' => 'text'
+                               'fieldType' => 'mstring'
                              ),
                         array( 'name'      => 'section_id',
                                'value'     => 'section_id-value',
@@ -104,15 +99,19 @@ class eZSolrTest extends ezpDatabaseTestCase
                              ),
                         array( 'name'      => 'remote_id',
                                'value'     => 'remote_id-value',
-                               'fieldType' => 'string'
+                               'fieldType' => 'mstring'
                              ),
                         array( 'name'      => 'class_identifier',
                                'value'     => 'class_identifier-value',
-                               'fieldType' => 'string'
+                               'fieldType' => 'mstring'
                              ),
                         array( 'name'      => 'main_node_id',
                                'value'     => 'main_node_id-value',
                                'fieldType' => 'sint'
+                             ),
+                        array( 'name' => 'always_available',
+                               'value' => 0,
+                               'fieldType' => 'boolean'
                              ),
                         array( 'name'      => 'modified',
                                'value'     => 'modified-value',
