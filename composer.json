@@ -11,7 +11,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "ezsystems/ezpublish-legacy-installer": "*"
+        "ezsystems/ezpublish-legacy-installer": "*",
+        "ezsystems/ezpublish-legacy": ">=2017.10"
     },
     "extra": {
         "ezpublish-legacy-extension-name": "ezfind"
