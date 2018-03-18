@@ -307,12 +307,6 @@ class ezfeZPSolrQueryBuilder
         //these are also in the list of query fields (dismax, ezpublish) request handlers
 	$queryFields = array_unique( $this->getClassAttributes( $contentClassID, $contentClassAttributeID, $fieldTypeExcludeList ) );
 
-        //highlighting only in the attributes, otherwise the object name is repeated in the highlight, which is already
-        //partly true as it is mostly composed of one or more attributes.
-        //maybe we should add meta data to the index to filter them out.
-
-        $highLightFields = $queryFields;
-
         //@since eZ Find 2.3
         //when dedicated attributes are searched for, don't add meta-fields to the $queryfields list
         if ( !$contentClassAttributeID )
@@ -386,12 +380,8 @@ class ezfeZPSolrQueryBuilder
 
             case 'simplestandard':
                 // not to do much, searching is against the default aggregated field
-                // only highlightfields
-                $highLightFields = array ( 'ezf_df_text' );
                 $handlerParameters = array ( 'q' => $searchText,
-                                             'qt' => 'standard',
-                                             'hl.usePhraseHighlighter' => 'true',
-                                             'hl.highlightMultiTerm' => 'true' );
+                                             'qt' => 'standard' );
                 break;
             case 'ezpublish':
                 // the dismax based handler, just keywordss input, most useful for ordinary queries by users
@@ -461,6 +451,7 @@ class ezfeZPSolrQueryBuilder
         $searchResultClusterParamList = $this->buildSearchResultClusterQuery($searchResultClusterParams);
         eZDebugSetting::writeDebug( 'extension-ezfind-query', $searchResultClusterParamList, 'Cluster params' );
 
+        $highlightParamList = $this->buildHighlightParameters( $queryHandler, $queryFields );
 
         $queryParams =  array_merge(
             $handlerParameters,
@@ -472,22 +463,15 @@ class ezfeZPSolrQueryBuilder
                 'version' => '2.2',
                 'fl' => $fieldsToReturnString,
                 'fq' => $filterQuery,
-                'hl' => $eZFindIni->variable( 'HighLighting', 'Enabled' ),
-                'hl.fl' => implode( ' ', $highLightFields ),
-                'hl.snippets' => $eZFindIni->variable( 'HighLighting', 'SnippetsPerField' ),
-                'hl.fragsize' => $eZFindIni->variable( 'HighLighting', 'FragmentSize' ),
-                'hl.requireFieldMatch' => $eZFindIni->variable( 'HighLighting', 'RequireFieldMatch' ),
-                'hl.simple.pre' => $eZFindIni->variable( 'HighLighting', 'SimplePre' ),
-                'hl.simple.post' => $eZFindIni->variable( 'HighLighting', 'SimplePost' ),
                 'wt' => 'php'
             ),
+            $highlightParamList,
             $facetQueryParamList,
             $spellCheckParamList,
             $boostFunctionsParamList,
             $elevateParamList,
             $searchResultClusterParamList
         );
-
 
         if( isset( $extendedAttributeFilter['id'] ) && isset( $extendedAttributeFilter['params'] ) )
         {
@@ -563,6 +547,39 @@ class ezfeZPSolrQueryBuilder
         }
 
         return $languageFilterString;
+    }
+
+    protected function buildHighlightParameters( $queryHandler, $queryFields )
+    {
+        $highlightParamList = array();
+        $eZFindIni = eZINI::instance( 'ezfind.ini' );
+
+        if ( $eZFindIni->variable( 'HighLighting', 'Enabled' ) == 'true' ) {
+            $highlightParamList = array(
+                'hl' => 'true',
+                'hl.snippets' => $eZFindIni->variable( 'HighLighting', 'SnippetsPerField' ),
+                'hl.fragsize' => $eZFindIni->variable( 'HighLighting', 'FragmentSize' ),
+                'hl.requireFieldMatch' => $eZFindIni->variable( 'HighLighting', 'RequireFieldMatch' ),
+                'hl.simple.pre' => $eZFindIni->variable( 'HighLighting', 'SimplePre' ),
+                'hl.simple.post' => $eZFindIni->variable( 'HighLighting', 'SimplePost' ),
+            );
+            switch ( $queryHandler )
+            {
+                case 'simplestandard':
+                    $highlightParamList['hl.fl'] = 'ezf_df_text';
+                    $highlightParamList['hl.usePhraseHighlighter'] = 'true';
+                    $highlightParamList['hl.highlightMultiTerm'] = 'true';
+                    break;
+                default:
+                    // highlighting only in the attributes, otherwise the object name is repeated in the highlight, which is already
+                    // partly true as it is mostly composed of one or more attributes.
+                    // maybe we should add meta data to the index to filter them out.
+                    $highlightParamList['hl.fl'] = implode( ' ', $queryFields );
+                    break;
+            }
+        }
+
+        return $highlightParamList;
     }
 
     /**
