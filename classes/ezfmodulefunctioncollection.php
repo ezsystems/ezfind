@@ -66,23 +66,57 @@ class ezfModuleFunctionCollection
     /**
      * Search function
      *
-     * @param string Query string
-     * @param int Offset
-     * @param int Limit
-     * @param array Facet definition
-     * @param array Filter parameters
-     * @param array Sort by parameters
-     * @param mixed Content class ID or list of content class IDs
-     * @param array list of subtree limitation node IDs
-     * @param boolean $enableElevation Controls whether elevation should be enabled or not
-     * @param boolean $forceElevation Controls whether elevation is forced. Applies when the srt criteria is NOT the default one ( 'score desc' ).
+     * @param string $query Query string
+     * @param int $offset Offset
+     * @param int $limit Limit
+     * @param array $facets Facet definition
+     * @param array $filters Filter parameters
+     * @param array $sortBy Sort by parameters
+     * @param mixed $classID Content class ID or list of content class IDs
+     * @param null $sectionID
+     * @param array $subtreeArray List of subtree limitation node IDs
+     * @param null $ignoreVisibility
+     * @param null $limitation
+     * @param bool $asObjects
+     * @param null $spellCheck
+     * @param null $boostFunctions
+     * @param string $queryHandler
+     * @param bool $enableElevation Controls whether elevation should be enabled or not
+     * @param bool $forceElevation Controls whether elevation is forced. Applies when the srt criteria is NOT the default one ( 'score desc' ).
+     * @param null $publishDate
+     * @param null $distributedSearch
+     * @param null $fieldsToReturn
+     * @param null $searchResultClustering
+     * @param array $extendedAttributeFilter
+     * @param bool $highlighted Controls whether highlighting is enabled or not
      *
      * @return array Search result
      */
-    public function search( $query, $offset = 0, $limit = 10, $facets = null,
-                            $filters = null, $sortBy = null, $classID = null, $sectionID = null,
-                            $subtreeArray = null, $ignoreVisibility = null, $limitation = null, $asObjects = true, $spellCheck = null, $boostFunctions = null, $queryHandler = 'ezpublish',
-                            $enableElevation = true, $forceElevation = false, $publishDate = null, $distributedSearch = null, $fieldsToReturn = null, $searchResultClustering = null, $extendedAttributeFilter = array() )
+    public function search(
+        $query,
+        $offset = 0,
+        $limit = 10,
+        $facets = null,
+        $filters = null,
+        $sortBy = null,
+        $classID = null,
+        $sectionID = null,
+        $subtreeArray = null,
+        $ignoreVisibility = null,
+        $limitation = null,
+        $asObjects = true,
+        $spellCheck = null,
+        $boostFunctions = null,
+        $queryHandler = 'ezpublish',
+        $enableElevation = true,
+        $forceElevation = false,
+        $publishDate = null,
+        $distributedSearch = null,
+        $fieldsToReturn = null,
+        $searchResultClustering = null,
+        $extendedAttributeFilter = array(),
+        $highlighted = false
+    )
     {
         $solrSearch = new eZSolr();
         $params = array( 'SearchOffset' => $offset,
@@ -105,7 +139,12 @@ class ezfModuleFunctionCollection
                          'DistributedSearch' => $distributedSearch,
                          'FieldsToReturn' => $fieldsToReturn,
                          'SearchResultClustering' => $searchResultClustering,
-                         'ExtendedAttributeFilter' => $extendedAttributeFilter );
+                         'ExtendedAttributeFilter' => $extendedAttributeFilter,
+                         'HighLightParams' => array(
+                             'hl' => $highlighted ? 'true': 'false'
+                         ),
+        );
+
         return array( 'result' => $solrSearch->search( $query, $params ) );
     }
 

@@ -140,10 +140,22 @@ class ezfeZPSolrQueryBuilder
         $enableElevation = isset( $params['EnableElevation'] )  ?  $params['EnableElevation'] : true;
         $distributedSearch = isset( $params['DistributedSearch'] ) ? $params['DistributedSearch'] : false;
         $fieldsToReturn = isset( $params['FieldsToReturn'] ) ? $params['FieldsToReturn'] : array();
-        $highlightParams = isset( $params['HighLightParams'] ) ? $params['HighLightParams'] : array();
         $searchResultClusterParams = isset( $params['SearchResultClustering'] ) ? $params['SearchResultClustering'] : array();
         $extendedAttributeFilter = isset( $params['ExtendedAttributeFilter'] ) ? $params['ExtendedAttributeFilter'] : array();
 
+        // Handling highlighting parameters
+        $highlightParams = array(
+            'hl' => $eZFindIni->variable( 'HighLighting', 'Enabled' ),
+            'hl.snippets' => $eZFindIni->variable( 'HighLighting', 'SnippetsPerField' ),
+            'hl.fragsize' => $eZFindIni->variable( 'HighLighting', 'FragmentSize' ),
+            'hl.requireFieldMatch' => $eZFindIni->variable( 'HighLighting', 'RequireFieldMatch' ),
+            'hl.simple.pre' => $eZFindIni->variable( 'HighLighting', 'SimplePre' ),
+            'hl.simple.post' => $eZFindIni->variable( 'HighLighting', 'SimplePost' ),
+        );
+        if( isset( $params[ 'HighLightParams' ] ) && !empty( $params[ 'HighLightParams' ] ) )
+        {
+            $highlightParams = array_merge( $highlightParams, $params[ 'HighLightParams' ] );
+        }
 
         // distributed search option
         // @since ezfind 2.2
@@ -305,7 +317,7 @@ class ezfeZPSolrQueryBuilder
         //the array_unique below is necessary because attribute identifiers are not unique .. and we get as
         //much highlight snippets as there are duplicate attribute identifiers
         //these are also in the list of query fields (dismax, ezpublish) request handlers
-	$queryFields = array_unique( $this->getClassAttributes( $contentClassID, $contentClassAttributeID, $fieldTypeExcludeList ) );
+        $queryFields = array_unique( $this->getClassAttributes( $contentClassID, $contentClassAttributeID, $fieldTypeExcludeList ) );
 
         //highlighting only in the attributes, otherwise the object name is repeated in the highlight, which is already
         //partly true as it is mostly composed of one or more attributes.
@@ -472,22 +484,16 @@ class ezfeZPSolrQueryBuilder
                 'version' => '2.2',
                 'fl' => $fieldsToReturnString,
                 'fq' => $filterQuery,
-                'hl' => $eZFindIni->variable( 'HighLighting', 'Enabled' ),
                 'hl.fl' => implode( ' ', $highLightFields ),
-                'hl.snippets' => $eZFindIni->variable( 'HighLighting', 'SnippetsPerField' ),
-                'hl.fragsize' => $eZFindIni->variable( 'HighLighting', 'FragmentSize' ),
-                'hl.requireFieldMatch' => $eZFindIni->variable( 'HighLighting', 'RequireFieldMatch' ),
-                'hl.simple.pre' => $eZFindIni->variable( 'HighLighting', 'SimplePre' ),
-                'hl.simple.post' => $eZFindIni->variable( 'HighLighting', 'SimplePost' ),
                 'wt' => 'php'
             ),
+            $highlightParams,
             $facetQueryParamList,
             $spellCheckParamList,
             $boostFunctionsParamList,
             $elevateParamList,
             $searchResultClusterParamList
         );
-
 
         if( isset( $extendedAttributeFilter['id'] ) && isset( $extendedAttributeFilter['params'] ) )
         {
