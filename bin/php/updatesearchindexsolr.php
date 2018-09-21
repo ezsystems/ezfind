@@ -61,7 +61,7 @@ class ezfUpdateSearchIndexSolr
      * @param eZCLI $cli
      * @param string $executedScript
      */
-    function ezfUpdateSearchIndexSolr( eZScript $script, eZCLI $cli, $executedScript )
+    function __construct( eZScript $script, eZCLI $cli, $executedScript )
     {
         $this->Script = $script;
         $this->CLI = $cli;
