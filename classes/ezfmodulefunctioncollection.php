@@ -14,7 +14,7 @@ class ezfModuleFunctionCollection
     /**
      * Constructor
      */
-    function ezfModuleFunctionCollection()
+    function __construct()
     {
     }
 
