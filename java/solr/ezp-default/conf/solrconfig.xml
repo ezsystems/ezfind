@@ -35,9 +35,9 @@
        that you fully re-index after changing this setting as it can
        affect both how text is indexed and queried.
   -->
-  <luceneMatchVersion>4.10.1</luceneMatchVersion>
+  <luceneMatchVersion>4.10.4</luceneMatchVersion>
 
-  <!-- <lib/> directives can be used to instruct Solr to load an Jars
+  <!-- <lib/> directives can be used to instruct Solr to load any Jars
        identified and use them to resolve any "plugins" specified in
        your solrconfig.xml or schema.xml (ie: Analyzers, Request
        Handlers, etc...).
@@ -301,6 +301,13 @@
          this is enabled here, and controlled through log4j.properties.
       -->
      <infoStream>true</infoStream>
+    
+    <!--
+        Use true to enable this safety check, which can help
+        reduce the risk of propagating index corruption from older segments 
+        into new ones, at the expense of slower merging.
+    -->
+     <checkIntegrityAtMerge>false</checkIntegrityAtMerge>
   </indexConfig>
 
 
@@ -356,7 +363,6 @@
          If the updateLog is enabled, then it's highly recommended to
          have some sort of hard autoCommit to limit the log size.
       -->
-
      <autoCommit>
        <maxTime>${solr.autoCommit.maxTime:15000}</maxTime>
        <openSearcher>false</openSearcher>
@@ -371,7 +377,7 @@
     <!-- <autoSoftCommit>
        <maxTime>${solr.autoSoftCommit.maxTime:-1}</maxTime>
      </autoSoftCommit>
-   -->
+    -->
     <!-- Update Related Event Listeners
 
          Various IndexWriter related events can trigger Listeners to
@@ -800,14 +806,14 @@
        of SearchComponents (see below) and supports distributed
        queries across multiple shards
     -->
-  <!--<requestHandler name="/select" class="solr.SearchHandler"> -->
+  <!-- <requestHandler name="/select" class="solr.SearchHandler"> -->
     <!-- default values for query parameters can be specified, these
          will be overridden by parameters in the request
           <lst name="defaults">
        <str name="echoParams">explicit</str>
        <int name="rows">10</int>
        <str name="df">ezf_df_text</str>
-     </lst>  -->
+     </lst> -->
 
     <!-- In addition to defaults, "appends" params can be specified
          to identify values which should be appended to the list of
@@ -863,7 +869,7 @@
       -->
   <!--  </requestHandler> -->
 
-    <requestHandler name="ezpublish" class="solr.SearchHandler" default="true" >
+  <requestHandler name="ezpublish" class="solr.SearchHandler" default="true" >
     <lst name="defaults">
       <str name="echoParams">explicit</str>
       <str name="defType">edismax</str>
@@ -915,7 +921,7 @@
       </arr>
   </requestHandler>
 
-<requestHandler name="standard" class="solr.SearchHandler">
+  <requestHandler name="standard" class="solr.SearchHandler">
     <!-- default values for query parameters -->
      <lst name="defaults">
        <str name="echoParams">explicit</str>
@@ -969,7 +975,15 @@
 
   <!-- realtime get handler, guaranteed to return the latest stored fields of
        any document, without the need to commit or open a new searcher.  The
-       current implementation relies on the updateLog feature being enabled. -->
+       current implementation relies on the updateLog feature being enabled.
+
+       ** WARNING **
+       Do NOT disable the realtime get handler at /get if you are using
+       SolrCloud otherwise any leader election will cause a full sync in ALL
+       replicas for the shard in question. Similarly, a replica recovery will
+       also always fetch the complete index from the leader because a partial
+       sync will not be possible in the absence of this handler.
+  -->
   <requestHandler name="/get" class="solr.RealTimeGetHandler">
      <lst name="defaults">
        <str name="omitHeader">true</str>
@@ -1019,6 +1033,7 @@
 
        <!-- Faceting defaults -->
        <str name="facet">on</str>
+       <!-- <str name="facet.missing">true</str> -->
        <str name="facet.field">cat</str>
        <str name="facet.field">manu_exact</str>
        <str name="facet.field">content_type</str>
@@ -1046,6 +1061,7 @@
        <!-- Highlighting defaults -->
        <str name="hl">on</str>
        <str name="hl.fl">content features title name</str>
+       <!-- <str name="hl.preserveMulti">true</str> -->
        <str name="hl.encoder">html</str>
        <str name="hl.simple.pre">&lt;b&gt;</str>
        <str name="hl.simple.post">&lt;/b&gt;</str>
@@ -1107,8 +1123,7 @@
        -->
   </requestHandler>
 
-  <!-- for back compat with clients using /update/json and /update/csv -->
-  <!--
+  <!-- The following are implicitly added
   <requestHandler name="/update/json" class="solr.UpdateRequestHandler">
         <lst name="defaults">
          <str name="stream.contentType">application/json</str>
@@ -1215,7 +1230,9 @@
      <requestHandler name="/admin/file"       class="solr.admin.ShowFileRequestHandler" >
     -->
   <!-- If you wish to hide files under ${solr.home}/conf, explicitly
-       register the ShowFileRequestHandler using:
+       register the ShowFileRequestHandler using the definition below. 
+       NOTE: The glob pattern ('*') is the only pattern supported at present, *.xml will
+             not exclude all files ending in '.xml'. Use it to exclude _all_ updates
     -->
   <!--
      <requestHandler name="/admin/file"
@@ -1223,6 +1240,7 @@
        <lst name="invariants">
          <str name="hidden">synonyms.txt</str>
          <str name="hidden">anotherfile.txt</str>
+         <str name="hidden">*</str>
        </lst>
      </requestHandler>
     -->
@@ -1483,7 +1501,7 @@
        http://carrot2.github.io/solr-integration-strategies/
     -->
   <searchComponent name="clustering"
-                   enable="true"
+                   enable="${solr.clustering.enabled:true}"
                    class="solr.clustering.ClusteringComponent" >
     <lst name="engine">
       <str name="name">lingo</str>
@@ -1580,8 +1598,9 @@
     -->
   <searchComponent name="terms" class="solr.TermsComponent"/>
 
-  <!-- A request handler for demonstrating the terms component -->
   <requestHandler name="/js" class="org.apache.solr.handler.js.JavaScriptRequestHandler" startup="lazy"/>
+
+  <!-- A request handler for demonstrating the terms component -->
   <requestHandler name="/terms" class="solr.SearchHandler" startup="lazy">
      <lst name="defaults">
       <bool name="terms">true</bool>
