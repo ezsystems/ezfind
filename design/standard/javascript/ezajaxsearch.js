@@ -22,8 +22,11 @@ var eZAJAXSearch = function()
                     // A spellcheck proposal was made, display it :
                     if ( spellCheck && spellCheck.collation )
                     {
+                        const scTempNode = Y.Node.create( '<div>' + spellCheck.collation + '</div>' );
+                        const scEscaped = scTempNode.get('innerHTML');
+
                         var scTemplate = ret.cfg.spellchecktemplate;
-                        scTemplate = scTemplate.replace( /\{+spellcheck+\}/g, spellCheck.collation );
+                        scTemplate = scTemplate.replace( /\{+spellcheck+\}/g, scEscaped );
                         var scDiv = Y.Node.create( scTemplate );
                         scDiv.on( 'click', handleClickFromSpellcheck );
                         resultsTarget.appendChild( scDiv );
