@@ -142,7 +142,7 @@
 
 {if $search_extras.spellcheck_collation}
      {def $spell_url=concat('/content/search/',$search_text|count_chars()|gt(0)|choose('',concat('?SearchText=',$search_extras.spellcheck_collation|urlencode)))|ezurl}
-     <p>{'Spell check suggestion: did you mean'|i18n('design/ezfind/search')} <b>{concat("<a href=",$spell_url,">")}{$search_extras.spellcheck_collation}</a></b> ?</p>
+     <p>{'Spell check suggestion: did you mean'|i18n('design/ezfind/search')} <b>{concat("<a href=",$spell_url,">")}{$search_extras.spellcheck_collation|wash}</a></b> ?</p>
 {/if}
 
     {def $adv_url=concat('/content/advancedsearch/',$search_text|count_chars()|gt(0)|choose('',concat('?SearchText=',$search_text|urlencode)))|ezurl}
@@ -166,7 +166,7 @@
       {$search_extras.error|wash}
   {/if}
   {*if $search_extras.spellcheck_collation}
-     <b>Did you mean {$search_extras.spellcheck_collation} ?</b>
+     <b>Did you mean {$search_extras.spellcheck_collation|wash} ?</b>
   {/if*}
   </div>
     <p>{'Search tips'|i18n('design/ezwebin/content/search')}</p>
