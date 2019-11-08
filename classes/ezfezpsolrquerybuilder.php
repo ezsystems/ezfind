@@ -936,7 +936,7 @@ class ezfeZPSolrQueryBuilder
                             eZDebug::writeNotice( 'Sort field does not exist in local installation, but may still be valid: ' .
                                                   $baseFieldName,
                                                   __METHOD__ );
-                            continue;
+                            continue 2;
                         }
                     } break;
                 }
@@ -1162,7 +1162,7 @@ class ezfeZPSolrQueryBuilder
                             eZDebug::writeNotice( 'Facet field does not exist in local installation, but may still be valid: ' .
                                                   $facetDefinition['field'],
                                                   __METHOD__ );
-                            continue;
+                            continue 2;
                         }
                         $queryPart['field'] = $fieldName;
                     } break;
@@ -1727,7 +1727,7 @@ class ezfeZPSolrQueryBuilder
                         else
                         {
                             eZDebug::writeDebug( $limitationType, __METHOD__ . ' unknown limitation type: ' . $limitationType );
-                            continue;
+                            continue 2;
                         }
                     }
                 }
