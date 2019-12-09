@@ -233,6 +233,23 @@ class ezfSolrDocumentFieldBase
             }
         }
 
+        $customAttributeMap = $eZFindIni->variable('SolrFieldMapSettings', 'CustomAttributeMap');
+        if ($customAttributeMap) {
+            $identifier = $classAttribute->attribute('identifier');
+            $contentClass = eZContentClass::fetch($classAttribute->attribute('contentclass_id'));
+            $identifierComposite = sprintf(
+                '%s/%s',
+                $contentClass->attribute('identifier'),
+                $identifier
+            );
+            if (array_key_exists($identifierComposite, $customAttributeMap)) {
+                $returnValue = call_user_func_array([$customAttributeMap[$identifierComposite], 'getFieldNameList'], [$classAttribute, $exclusiveTypeFilter]);
+                if ($returnValue) {
+                    return $returnValue;
+                }
+            }
+        }
+
         // fallback behaviour :
         if ( empty( $exclusiveTypeFilter ) or !in_array( self::getClassAttributeType( $classAttribute ), $exclusiveTypeFilter ) )
             return array( self::getFieldName( $classAttribute ) );
@@ -303,7 +320,22 @@ class ezfSolrDocumentFieldBase
     static function getInstance( eZContentObjectAttribute $objectAttribute )
     {
         $eZFindIni = eZINI::instance( 'ezfind.ini' );
-        
+
+        $attributeMapList = $eZFindIni->variable('SolrFieldMapSettings', 'CustomAttributeMap');
+        if (!empty($attributeMapList)) {
+            $contentClassId = $objectAttribute->attribute('contentclass_attribute')->attribute('contentclass_id');
+            $contentClass = eZContentClass::fetch($contentClassId);
+            $identifierComposite = sprintf(
+                '%s/%s',
+                $contentClass->attribute('identifier'),
+                $objectAttribute->attribute('contentclass_attribute_identifier')
+            );
+            if (array_key_exists($identifierComposite, $attributeMapList)) {
+                return self::$singletons[$objectAttribute->attribute('id')] = new $attributeMapList[$identifierComposite]($objectAttribute);
+            }
+            unset($identifierComposite, $contentClass);
+        }
+
         $datatypeString = $objectAttribute->attribute( 'data_type_string' );
 
         // Check if using custom handler.

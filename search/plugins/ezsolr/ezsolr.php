@@ -1654,11 +1654,14 @@ class eZSolr implements ezpSearchEngine
                 {
                     $tmpNodeRowList = array( $tmpNodeRowList );
                 }
-                if ( $tmpNodeRowList )
-                {
-                    foreach ( $tmpNodeRowList as $nodeRow )
-                    {
-                        $nodeRowList[$nodeRow['node_id']] = $nodeRow;
+
+                if ($tmpNodeRowList) {
+                    if (isset($tmpNodeRowList[0])) {
+                        foreach ($tmpNodeRowList as $nodeRow) {
+                            $nodeRowList[$nodeRow['node_id']] = $nodeRow;
+                        }
+                    } else {
+                        $nodeRowList[$tmpNodeRowList['node_id']] = $tmpNodeRowList;
                     }
                 }
                 unset( $tmpNodeRowList );
