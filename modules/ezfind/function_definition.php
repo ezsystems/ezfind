@@ -100,7 +100,11 @@ $FunctionList['search'] = array( 'name' => 'search',
                                                         array ( 'name'  => 'extended_attribute_filter',
                                                                 'type' => 'array',
                                                                 'required' => false,
-                                                                'default' => array() )) );
+                                                                'default' => array() ),
+                                                        array( 'name' => 'raw_filter',
+                                                               'type' => 'array',
+                                                               'required' => false,
+                                                               'default' => null ) ) );
 
 
 $FunctionList['getDefaultSearchFacets'] = array( 'name' => 'getDefaultSearchFacets',
