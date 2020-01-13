@@ -296,9 +296,9 @@ class ezfSearchResultInfo
             } break;
             case 'facet_dates':
             {
-                if ( isset( $this->ResultArray['facet_dates'] ) )
+                if ( isset( $this->ResultArray['facet_counts']['facet_dates'] ) )
                 {
-                    return $this->ResultArray['facet_dates'];
+                    return $this->ResultArray['facet_counts']['facet_dates'];
                 }
                 else
                 {
