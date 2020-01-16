@@ -21,7 +21,7 @@ class ezuserSolrStorage extends ezdatatypeSolrStorage
         $user = eZUser::fetch( $contentObjectAttribute->attribute( "contentobject_id" ) );
         return array(
             'content' => array(
-                'id' => $user->attribute( 'id' ),
+                'id' => $user->attribute( 'contentobject_id' ),
                 'login' => $user->attribute( 'login' ),
                 'email' => $user->attribute( 'email' ),
             ),
