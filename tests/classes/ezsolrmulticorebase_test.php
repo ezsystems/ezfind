@@ -20,6 +20,8 @@ class eZSolrMultiCoreBaseTest extends ezpDatabaseTestCase
      * Test for eZSolrBase::solrURL()
      * @dataProvider providerForTestSolrURL
      */
+    
+    /* Class does not exists anymore
     public function testSolrURL( $request, $languages, $expected, $iniOverrides = array() )
     {
         ezpINIHelper::setINISettings( $iniOverrides );
@@ -29,7 +31,8 @@ class eZSolrMultiCoreBaseTest extends ezpDatabaseTestCase
 
         ezpINIHelper::restoreINISettings();
     }
-
+    */
+    
     /**
      * Data provider for testSolrURI()
      * We consider in all these tests that the search URI is set to
@@ -54,6 +57,7 @@ class eZSolrMultiCoreBaseTest extends ezpDatabaseTestCase
      * Test for eZSolrBase::getLanguageCore()
      * @dataProvider providerForTestGetLanguageCore
      */
+    /* class does not exists anymore
     public function testGetLanguageCore( $expected, $languageCode, $iniOverrides )
     {
         ezpINIHelper::setINISettings( $iniOverrides );
@@ -63,7 +67,8 @@ class eZSolrMultiCoreBaseTest extends ezpDatabaseTestCase
 
         ezpINIHelper::restoreINISettings();
     }
-
+    */
+    
     public static function providerForTestGetLanguageCore()
     {
         return array(

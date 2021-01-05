@@ -122,13 +122,13 @@ class ezfeZPSolrQueryBuilderTest extends ezpDatabaseTestCase
 
         // test with searchMainLanguageOnly = disabled
         self::$findINI->setVariable( 'LanguageSearch', 'SearchMainLanguageOnly', 'disabled' );
-        $expectedValue = "meta_language_code_s:eng-GB OR ( meta_language_code_s:fre-FR  AND -meta_available_language_codes_s:eng-GB ) OR ( meta_language_code_s:nor-NO  AND -meta_available_language_codes_s:eng-GB AND -meta_available_language_codes_s:fre-FR )";
+        $expectedValue = 'meta_language_code_ms:eng-GB OR ( meta_language_code_ms:fre-FR  AND -meta_available_language_codes_ms:eng-GB ) OR ( meta_language_code_ms:nor-NO  AND -meta_available_language_codes_ms:eng-GB AND -meta_available_language_codes_ms:fre-FR ) OR ( meta_always_available_b:true  AND -meta_available_language_codes_ms:eng-GB AND -meta_available_language_codes_ms:fre-FR AND -meta_available_language_codes_ms:nor-NO)';
         $value = self::$qb->buildLanguageFilterQuery();
         self::assertEquals( $expectedValue, $value, "SearchMainLanguageOnly=disabled" );
 
         // test with searchMainLanguageOnly = enabled
         self::$findINI->setVariable( 'LanguageSearch', 'SearchMainLanguageOnly', 'enabled' );
-        $expectedValue = "meta_language_code_s:eng-GB";
+        $expectedValue = "meta_language_code_ms:eng-GB";
         $value = self::$qb->buildLanguageFilterQuery();
         self::assertEquals( $expectedValue, $value, "SearchMainLanguageOnly=enabled" );
     }
@@ -145,16 +145,16 @@ class ezfeZPSolrQueryBuilderTest extends ezpDatabaseTestCase
 
             array( array( 'published' => 'asc' ),             'meta_published_dt asc' ),
             array( array( 'modified' => 'asc' ),              'meta_modified_dt asc' ),
-            array( array( 'class_name' => 'asc' ),            'meta_class_name_t asc' ),
-            array( array( 'class_identifier' => 'asc' ),      'meta_class_identifier_s asc' ),
-            array( array( 'name' => 'asc' ),                  'meta_name_t asc' ),
-            array( array( 'path' => 'asc' ),                  'meta_path_si asc' ),
+            array( array( 'class_name' => 'asc' ),            'meta_class_name_ms asc' ),
+            array( array( 'class_identifier' => 'asc' ),      'meta_class_identifier_ms asc' ),
+            array( array( 'name' => 'asc' ),                  'meta_sort_name_ms asc' ),
+            array( array( 'path' => 'asc' ),                  'meta_main_path_string_ms asc' ),
             array( array( 'section_id' => 'asc' ),            'meta_section_id_si asc' ),
             array( array( 'author' => 'asc' ),                'meta_owner_name_t asc' ),
 
             // a few attributes
-            array( array( 'article/title' => 'asc' ),         ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'title_t asc' ),
-            array( array( 'folder/name' => 'asc' ),           ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'name_t asc' ),
+            array( array( 'article/title' => 'asc' ),         ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'title_s asc' ),
+            array( array( 'folder/name' => 'asc' ),           ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'name_s asc' ),
             array( array( 'article/body' => 'asc' ),          ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . 'body_t asc' ),
         );
     }

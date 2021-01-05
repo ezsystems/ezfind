@@ -2,7 +2,7 @@
 /**
  * Test suite for eZFindElevateConfiguration
  **/
-class eZFindElevateConfigurationTest extends ezpDatabaseTestCase
+class eZFindElevateConfigurationTest extends ezFindTestCase
 {
     protected $backupGlobals = false;
 
