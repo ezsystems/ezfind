@@ -1021,6 +1021,33 @@ class eZSolr implements ezpSearchEngine
 
             eZDebug::createAccumulator( 'Engine time', 'eZ Find' );
             eZDebug::accumulatorStart( 'Engine time' );
+
+            // Since 2015-04-12 PBo : query time plugins
+            $generalSearchPlugins = $this->FindINI->variable('QueryPlugins', 'Search');
+            if (!empty($generalSearchPlugins))
+            {
+                $pluginParameters = isset( $params['PluginParameters'] ) ? $params['PluginParameters'] : array();
+                foreach ($generalSearchPlugins as $pluginClassString)
+                {
+                    if (!class_exists($pluginClassString))
+                    {
+                        eZDebug::writeError("Unable to find the PHP class '$pluginClassString' defined for query time plugins for eZ Find", __METHOD__);
+                        continue;
+                    }
+                    $plugin = new $pluginClassString;
+                    if ($plugin instanceof ezfQuerySearchPlugin)
+                    {
+                        $plugin->modify( $queryParams, $pluginParameters );
+                        eZDebugSetting::writeDebug( 'extension-ezfind-query', $queryParams, 'Query plugin modified parameters sent to Solr backend' );
+                    }
+                    else
+                    {
+                        eZDebug::writeError("Provided plugin '$pluginClassString' is not of the correct type: ezfQuerySearchPlugin", __METHOD__);
+                        continue;
+                    }
+                }
+            }
+
             $resultArray = $coreToUse->rawSearch( $queryParams );
             eZDebug::accumulatorStop( 'Engine time' );
         }
@@ -1380,7 +1407,7 @@ class eZSolr implements ezpSearchEngine
         $extensionInfo = ezpExtension::getInstance( 'ezfind' )->getInfo();
         return ezpI18n::tr(
             'ezfind',
-            'eZ Find %version search plugin &copy; 1999-2014 eZ Systems AS, powered by Apache Solr 4.7.0',
+            'eZ Find %version search plugin &copy; 1999-2014 eZ Systems AS, powered by Apache Solr 4.10.1',
             null,
             array( '%version' => $extensionInfo['version'] )
         );

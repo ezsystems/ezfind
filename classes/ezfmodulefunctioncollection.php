@@ -82,7 +82,7 @@ class ezfModuleFunctionCollection
     public function search( $query, $offset = 0, $limit = 10, $facets = null,
                             $filters = null, $sortBy = null, $classID = null, $sectionID = null,
                             $subtreeArray = null, $ignoreVisibility = null, $limitation = null, $asObjects = true, $spellCheck = null, $boostFunctions = null, $queryHandler = 'ezpublish',
-                            $enableElevation = true, $forceElevation = false, $publishDate = null, $distributedSearch = null, $fieldsToReturn = null, $searchResultClustering = null, $extendedAttributeFilter = array() )
+                            $enableElevation = true, $forceElevation = false, $publishDate = null, $distributedSearch = null, $fieldsToReturn = null, $searchResultClustering = null, $extendedAttributeFilter = array(), $pluginParameters = array() )
     {
         $solrSearch = new eZSolr();
         $params = array( 'SearchOffset' => $offset,
@@ -105,7 +105,9 @@ class ezfModuleFunctionCollection
                          'DistributedSearch' => $distributedSearch,
                          'FieldsToReturn' => $fieldsToReturn,
                          'SearchResultClustering' => $searchResultClustering,
-                         'ExtendedAttributeFilter' => $extendedAttributeFilter );
+                         'ExtendedAttributeFilter' => $extendedAttributeFilter,
+                         'PluginParameters' => $pluginParameters,
+        );
         return array( 'result' => $solrSearch->search( $query, $params ) );
     }
 
