@@ -1401,7 +1401,7 @@ class eZSolr implements ezpSearchEngine
      */
     public function needRemoveWithUpdate()
     {
-        return false;
+        return true;
     }
 
     /**
