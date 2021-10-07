@@ -42,7 +42,9 @@
                               'filter', $filterParameters,
                               'publish_date', $dateFilter,
                               'spell_check', array( true() ),
-                              'search_result_clustering', hash( 'clustering', false() ) )
+                              'search_result_clustering', hash( 'clustering', false() ),
+                              'highlighted', true()
+                        )
                              )}
     {set $search_result=$search['SearchResult']}
     {set $search_count=$search['SearchCount']}
