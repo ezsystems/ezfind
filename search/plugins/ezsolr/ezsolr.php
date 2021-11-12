@@ -1444,7 +1444,7 @@ class eZSolr implements ezpSearchEngine
     /**
      * Called when a node's visibility is modified.
      * Will re-index content identified by $nodeID.
-     * If the node has children, they will be also re-indexed, but this action is deferred to ezfindexsubtree cronjob.
+     * If the node has children, they will be also re-indexed, but this action is deferred to ezfindexsubtree cronjob, just like addNodeAssignment() when a node is moved
      *
      * @todo when Solr supports it: update fields only
      *
@@ -1478,10 +1478,10 @@ class eZSolr implements ezpSearchEngine
     }
 
     /**
-     * Called when a node assignement is added to an object.
+     * Called when a node assignment is added to an object.
      * Simply re-index for now.
+     * If the node has children, they will be also re-indexed, but this action is deferred to ezfindexsubtree cronjob, just like updateNodeVisibility()
      *
-     * @todo: defer to cron if there are children involved and re-index these too
      * @todo when Solr supports it: update fields only
      *
      * @param $mainNodeID
@@ -1494,6 +1494,32 @@ class eZSolr implements ezpSearchEngine
     public function addNodeAssignment( $mainNodeID, $objectID, $nodeAssignmentIDList, $isMoved )
     {
         eZContentOperationCollection::registerSearchObject( $objectID, null, $isMoved );
+
+        // Re-index the children, if any
+        if ( $isMoved )
+        {
+            // When moving, the node ID list contains only the node being moved
+            // Ref: eZContentObjectTreeNodeOperations::move()
+            $nodeID = $nodeAssignmentIDList[0];
+            $node = eZContentObjectTreeNode::fetch( $nodeID );
+            $params = array(
+                'Depth'             => 1,
+                'DepthOperator'     => 'eq',
+                'Limitation'        => array(),
+                'IgnoreVisibility'  => true,
+            );
+            if ( $node->subTreeCount( $params ) > 0 )
+            {
+                $pendingAction = new eZPendingActions(
+                    array(
+                        'action' => self::PENDING_ACTION_INDEX_SUBTREE,
+                        'created' => time(),
+                        'param' => $nodeID
+                    )
+                );
+                $pendingAction->store();
+            }
+        }
     }
 
     /**
